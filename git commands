@@ -1,0 +1,14 @@
+ stripe listen --forward-to localhost:3000/api/webhook
+
+
+# Änderungen zur Staging-Area hinzufügen:
+git add .
+
+# oder nur eine bestimmte Datei:
+git add dateiname.txt
+
+# Commit erstellen:
+git commit -m "Kurze, prägnante Commit-Nachricht"
+
+# Änderungen pushen:
+git push
