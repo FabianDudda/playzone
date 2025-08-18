@@ -57,3 +57,82 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom Leaflet map styles */
+.leaflet-container {
+  font-family: inherit;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  padding: 0;
+}
+
+.leaflet-popup-content {
+  margin: 0;
+}
+
+.leaflet-control-button:hover {
+  background-color: #f3f4f6 !important;
+}
+
+.custom-sport-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.user-location-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.selected-location-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Custom layer control styling */
+.leaflet-control-custom-layers {
+  background: hsl(var(--background)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  padding: 4px !important;
+}
+
+.layer-select {
+  background-color: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  border-radius: 6px !important;
+  font-family: inherit !important;
+  font-size: 14px !important;
+  padding: 8px 12px !important;
+  min-width: 100px !important;
+  cursor: pointer !important;
+  outline: none !important;
+}
+
+.layer-select:hover {
+  background-color: hsl(var(--accent)) !important;
+}
+
+.layer-select:focus {
+  border-color: hsl(var(--primary)) !important;
+  box-shadow: 0 0 0 2px hsl(var(--primary) / 0.2) !important;
+}
+
+.layer-select option {
+  background-color: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+  padding: 8px !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .layer-select {
+    min-width: 80px !important;
+    font-size: 13px !important;
+    padding: 6px 10px !important;
+  }
+}

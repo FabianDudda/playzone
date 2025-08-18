@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import dynamic from 'next/dynamic'
 import { useAuth } from '@/components/providers/auth-provider'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -10,7 +11,18 @@ import { Input } from '@/components/ui/input'
 import { useQuery } from '@tanstack/react-query'
 import { database } from '@/lib/supabase/database'
 import { Court, SportType } from '@/lib/supabase/types'
-import CourtMap from '@/components/map/court-map'
+// Dynamic import to prevent SSR issues with Leaflet
+const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-full bg-gray-100 rounded-lg">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+        <p className="text-sm text-muted-foreground">Loading map...</p>
+      </div>
+    </div>
+  )
+})
 import { MapPin, Plus, Search, Filter } from 'lucide-react'
 import Link from 'next/link'
 
@@ -108,7 +120,7 @@ export default function CourtsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0">
-              <CourtMap 
+              <LeafletCourtMap 
                 courts={filteredCourts}
                 onCourtSelect={handleCourtSelect}
                 height="500px"

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/components/providers/auth-provider'
 import { Button } from '@/components/ui/button'
@@ -13,7 +14,18 @@ import { useToast } from '@/hooks/use-toast'
 import { SportType } from '@/lib/supabase/types'
 import { database } from '@/lib/supabase/database'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import CourtMap from '@/components/map/court-map'
+// Dynamic import to prevent SSR issues with Leaflet
+const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-full bg-gray-100 rounded-lg">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+        <p className="text-sm text-muted-foreground">Loading map...</p>
+      </div>
+    </div>
+  )
+})
 import { MapPin, Plus, Check } from 'lucide-react'
 
 const SPORTS = [
@@ -224,7 +236,7 @@ export default function NewCourtPage() {
                   Click on the map to set the exact location of the court. Use "My Location" button to center on your current position if needed.
                 </p>
                 <div className="border rounded-lg overflow-hidden">
-                  <CourtMap 
+                  <LeafletCourtMap 
                     courts={[]}
                     onMapClick={handleMapClick}
                     height="300px"

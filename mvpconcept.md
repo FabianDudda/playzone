@@ -10,7 +10,7 @@ A web application where users can find, add, and track sports courts, log matche
 - **UI Library**: shadcn/ui (Tailwind-based, modular components)
 - **Routing**: Next.js App Router
 - **State Management**: React Query for server state
-- **Map Integration**: Mapbox GL JS
+- **Map Integration**: Leaflet with OpenStreetMap (free, no API key required)
 - **Styling**: Tailwind CSS
 - **PWA**: Progressive Web App ready
 
@@ -87,8 +87,9 @@ match_participants {
 ## Core Features
 
 ### 1. Court Discovery
-- **Interactive Map**: Mapbox map with court markers
+- **Interactive Map**: Leaflet map with sport-colored court markers
 - **Court Details**: Popups with court information
+- **Sport-Specific Colors**: Visual markers for each sport (tennis=green, basketball=amber, etc.)
 - **Filtering**: By sport type or city
 - **Search**: Text-based court search
 
@@ -193,17 +194,18 @@ def update_team_elo(team_a, team_b, sport, team_a_wins):
 19. Implement sport-specific rankings
 20. Add filtering and search functionality
 
-### Phase 6: Map Integration & Court Discovery
-21. Integrate Mapbox GL JS
-22. Create interactive court markers
-23. Build court detail popups
+### Phase 6: Map Integration & Court Discovery ✅ COMPLETED
+21. Integrate Leaflet with OpenStreetMap (free alternative)
+22. Create sport-colored interactive court markers
+23. Build court detail popups with sport badges
 24. Implement add new court with map pin dropping
+25. Add user location finding and custom marker styles
 
 ### Phase 7: PWA & Polish
-25. Configure service worker for PWA
-26. Add offline functionality basics
-27. Create app manifest for installability
-28. Implement loading states and error handling
+26. Configure service worker for PWA
+27. Add offline functionality basics
+28. Create app manifest for installability
+29. Implement loading states and error handling
 
 ## Future Extensions (Post-MVP)
 
