@@ -16,6 +16,7 @@ interface CourtMapProps {
   onMapClick?: (lng: number, lat: number) => void
   height?: string
   allowAddCourt?: boolean
+  selectedLocation?: { lat: number; lng: number } | null
 }
 
 export default function CourtMap({ 
@@ -23,15 +24,19 @@ export default function CourtMap({
   onCourtSelect, 
   onMapClick, 
   height = '400px',
-  allowAddCourt = false 
+  allowAddCourt = false,
+  selectedLocation = null
 }: CourtMapProps) {
   const mapContainer = useRef<HTMLDivElement>(null)
   const map = useRef<mapboxgl.Map | null>(null)
   const [selectedCourt, setSelectedCourt] = useState<Court | null>(null)
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null)
+  const selectedLocationMarker = useRef<mapboxgl.Marker | null>(null)
+  const courtMarkersRef = useRef<mapboxgl.Marker[]>([])
 
+  // Initialize map only once
   useEffect(() => {
-    if (!mapContainer.current) return
+    if (!mapContainer.current || map.current) return
 
     // Check if Mapbox token is available
     const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
@@ -53,40 +58,36 @@ export default function CourtMap({
     // Add navigation control
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right')
 
-    // Get user location
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const userCoords: [number, number] = [
-            position.coords.longitude,
-            position.coords.latitude
-          ]
-          setUserLocation(userCoords)
-          
-          if (map.current) {
-            map.current.setCenter(userCoords)
-            map.current.setZoom(12)
-            
-            // Add user location marker
-            new mapboxgl.Marker({ color: '#3B82F6' })
-              .setLngLat(userCoords)
-              .setPopup(new mapboxgl.Popup().setHTML('<div>Your Location</div>'))
-              .addTo(map.current)
-          }
-        },
-        (error) => {
-          console.warn('Could not get user location:', error)
-        }
-      )
+    // Global function for popup buttons
+    ;(window as any).selectCourt = (courtId: string) => {
+      const court = courts.find(c => c.id === courtId)
+      if (court) {
+        setSelectedCourt(court)
+        onCourtSelect?.(court)
+      }
     }
 
-    // Add courts as markers
-    courts.forEach((court) => {
-      if (!map.current) return
+    return () => {
+      selectedLocationMarker.current?.remove()
+      courtMarkersRef.current.forEach(marker => marker.remove())
+      map.current?.remove()
+      map.current = null
+    }
+  }, []) // No dependencies - only initialize once
 
+  // Handle courts markers
+  useEffect(() => {
+    if (!map.current) return
+
+    // Clear existing court markers
+    courtMarkersRef.current.forEach(marker => marker.remove())
+    courtMarkersRef.current = []
+
+    // Add new court markers
+    courts.forEach((court) => {
       const marker = new mapboxgl.Marker({ color: '#10B981' })
         .setLngLat([court.longitude, court.latitude])
-        .addTo(map.current)
+        .addTo(map.current!)
 
       // Create popup content
       const popupContent = `
@@ -108,28 +109,52 @@ export default function CourtMap({
       `
 
       marker.setPopup(new mapboxgl.Popup().setHTML(popupContent))
+      courtMarkersRef.current.push(marker)
     })
+  }, [courts, onCourtSelect])
 
-    // Handle map clicks for adding new courts
-    if (allowAddCourt && onMapClick) {
-      map.current.on('click', (e) => {
+  // Handle map click events for adding courts
+  useEffect(() => {
+    if (!map.current) return
+
+    const handleClick = (e: mapboxgl.MapMouseEvent) => {
+      if (allowAddCourt && onMapClick) {
         onMapClick(e.lngLat.lng, e.lngLat.lat)
-      })
-    }
-
-    // Global function for popup buttons
-    ;(window as any).selectCourt = (courtId: string) => {
-      const court = courts.find(c => c.id === courtId)
-      if (court) {
-        setSelectedCourt(court)
-        onCourtSelect?.(court)
       }
     }
 
-    return () => {
-      map.current?.remove()
+    if (allowAddCourt && onMapClick) {
+      map.current.on('click', handleClick)
     }
-  }, [courts, onCourtSelect, onMapClick, allowAddCourt])
+
+    return () => {
+      if (map.current) {
+        map.current.off('click', handleClick)
+      }
+    }
+  }, [allowAddCourt, onMapClick])
+
+  // Handle selected location marker
+  useEffect(() => {
+    if (!map.current) return
+
+    // Remove existing selected location marker
+    if (selectedLocationMarker.current) {
+      selectedLocationMarker.current.remove()
+      selectedLocationMarker.current = null
+    }
+
+    // Add new selected location marker if location is set
+    if (selectedLocation) {
+      selectedLocationMarker.current = new mapboxgl.Marker({ 
+        color: '#EF4444', // Red color for selected location
+        scale: 1.2 // Slightly larger
+      })
+        .setLngLat([selectedLocation.lng, selectedLocation.lat])
+        .setPopup(new mapboxgl.Popup().setHTML('<div>Selected Court Location</div>'))
+        .addTo(map.current)
+    }
+  }, [selectedLocation])
 
   const centerOnUserLocation = () => {
     if (userLocation && map.current) {
@@ -142,12 +167,24 @@ export default function CourtMap({
         (position) => {
           const coords: [number, number] = [position.coords.longitude, position.coords.latitude]
           setUserLocation(coords)
+          
           if (map.current) {
             map.current.flyTo({
               center: coords,
               zoom: 14
             })
+            
+            // Add user location marker
+            new mapboxgl.Marker({ color: '#3B82F6' })
+              .setLngLat(coords)
+              .setPopup(new mapboxgl.Popup().setHTML('<div>Your Location</div>'))
+              .addTo(map.current)
           }
+        },
+        (error) => {
+          console.warn('Could not get user location:', error)
+          // Show user-friendly error message instead of just console warning
+          alert('Could not access your location. Please check your browser settings and try again.')
         }
       )
     }

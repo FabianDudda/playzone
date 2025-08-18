@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/components/providers/auth-provider'
 import { Button } from '@/components/ui/button'
@@ -70,9 +70,9 @@ export default function NewCourtPage() {
     },
   })
 
-  const handleMapClick = (lng: number, lat: number) => {
+  const handleMapClick = useCallback((lng: number, lat: number) => {
     setLocation({ lat, lng })
-  }
+  }, [])
 
   const handleSportToggle = (sport: SportType) => {
     setSelectedSports(prev => 
@@ -221,7 +221,7 @@ export default function NewCourtPage() {
               <div className="space-y-3">
                 <Label>Court Location *</Label>
                 <p className="text-sm text-muted-foreground">
-                  Click on the map to set the exact location of the court
+                  Click on the map to set the exact location of the court. Use "My Location" button to center on your current position if needed.
                 </p>
                 <div className="border rounded-lg overflow-hidden">
                   <CourtMap 
@@ -229,12 +229,18 @@ export default function NewCourtPage() {
                     onMapClick={handleMapClick}
                     height="300px"
                     allowAddCourt={true}
+                    selectedLocation={location}
                   />
                 </div>
-                {location && (
-                  <div className="flex items-center gap-2 text-sm text-green-600">
+                {location ? (
+                  <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 p-3 rounded-lg border border-green-200">
                     <MapPin className="h-4 w-4" />
-                    Location set: {location.lat.toFixed(6)}, {location.lng.toFixed(6)}
+                    <span className="font-medium">Location set:</span> {location.lat.toFixed(6)}, {location.lng.toFixed(6)}
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 text-sm text-amber-600 bg-amber-50 p-3 rounded-lg border border-amber-200">
+                    <MapPin className="h-4 w-4" />
+                    <span className="font-medium">Click on the map to set court location</span>
                   </div>
                 )}
               </div>
