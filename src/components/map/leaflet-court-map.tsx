@@ -202,7 +202,7 @@ export default function LeafletCourtMap({
             attribution={currentLayer.attribution}
             url={currentLayer.url}
             maxZoom={currentLayer.maxZoom}
-            {...(currentLayer.subdomains && { subdomains: currentLayer.subdomains })}
+            {...(currentLayer.subdomains !== undefined && currentLayer.subdomains.length > 0 && { subdomains: currentLayer.subdomains })}
           />
           
           {/* Court markers */}

@@ -32,7 +32,8 @@ export const MAP_LAYERS: Record<string, MapLayer> = {
     name: 'Street',
     url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom: 19
+    maxZoom: 19,
+    subdomains: 'abc'
   },
   satellite: {
     id: 'satellite',
@@ -49,11 +50,17 @@ export const DEFAULT_LAYER_ID = 'light'
 
 // Create Leaflet TileLayer from configuration
 export function createTileLayer(layerConfig: MapLayer): L.TileLayer {
-  return L.tileLayer(layerConfig.url, {
+  const options: any = {
     attribution: layerConfig.attribution,
     maxZoom: layerConfig.maxZoom || 18,
-    subdomains: layerConfig.subdomains || 'abc'
-  })
+  }
+  
+  // Only add subdomains if they are defined and not empty
+  if (layerConfig.subdomains !== undefined && layerConfig.subdomains.length > 0) {
+    options.subdomains = layerConfig.subdomains
+  }
+  
+  return L.tileLayer(layerConfig.url, options)
 }
 
 // Get user's preferred layer from localStorage
