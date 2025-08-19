@@ -15,6 +15,8 @@ import { useToast } from '@/hooks/use-toast'
 import { SportType } from '@/lib/supabase/types'
 import { database } from '@/lib/supabase/database'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { reverseGeocode, AddressComponents } from '@/lib/geocoding'
+import { uploadCourtImage, UploadProgress } from '@/lib/supabase/storage'
 // Dynamic import to prevent SSR issues with Leaflet
 const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map'), {
   ssr: false,
@@ -27,7 +29,7 @@ const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map
     </div>
   )
 })
-import { MapPin, Plus, Check, Upload, X, Image } from 'lucide-react'
+import { MapPin, Plus, Check, Upload, X, Image, Loader2, RefreshCcw } from 'lucide-react'
 
 const SPORTS = [
   { id: 'tennis', label: 'Tennis' },
@@ -70,8 +72,13 @@ export default function NewCourtPage() {
   const [selectedSports, setSelectedSports] = useState<SportType[]>([])
   const [courtDetails, setCourtDetails] = useState<Record<SportType, CourtDetails>>({})
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null)
+  const [address, setAddress] = useState<AddressComponents>({})
+  const [isDetectingAddress, setIsDetectingAddress] = useState(false)
+  const [addressAutoDetected, setAddressAutoDetected] = useState(false)
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [isUploadingImage, setIsUploadingImage] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null)
 
   // Create court mutation
   const createCourtMutation = useMutation({
@@ -84,6 +91,7 @@ export default function NewCourtPage() {
       image_url?: string
       added_by_user: string
       courts: CourtDetails[]
+      address?: AddressComponents
     }) => {
       // First create the place
       const { data: place, error: placeError } = await database.courts.addCourt({
@@ -95,7 +103,16 @@ export default function NewCourtPage() {
         image_url: placeData.image_url,
         added_by_user: placeData.added_by_user,
         source: 'user_submitted',
-        import_date: new Date().toISOString()
+        import_date: new Date().toISOString(),
+        // Include address information if available
+        street: placeData.address?.street || null,
+        house_number: placeData.address?.house_number || null,
+        city: placeData.address?.city || null,
+        county: placeData.address?.county || null,
+        state: placeData.address?.state || null,
+        country: placeData.address?.country || null,
+        postcode: placeData.address?.postcode || null,
+        district: placeData.address?.district || null
       })
       
       if (placeError || !place) {
@@ -142,9 +159,42 @@ export default function NewCourtPage() {
     },
   })
 
-  const handleMapClick = useCallback((lng: number, lat: number) => {
+  const handleMapClick = useCallback(async (lng: number, lat: number) => {
     setLocation({ lat, lng })
-  }, [])
+    setIsDetectingAddress(true)
+    setAddressAutoDetected(false)
+    
+    try {
+      const addressComponents = await reverseGeocode(lat, lng)
+      
+      if (addressComponents) {
+        setAddress(addressComponents)
+        setAddressAutoDetected(true)
+        toast({
+          title: 'Address detected',
+          description: 'Address information has been auto-filled. You can edit it if needed.',
+        })
+      } else {
+        // Clear previous address if detection failed
+        setAddress({})
+        toast({
+          title: 'Address detection failed',
+          description: 'Please enter the address manually.',
+          variant: 'destructive',
+        })
+      }
+    } catch (error) {
+      console.error('Error detecting address:', error)
+      setAddress({})
+      toast({
+        title: 'Address detection error',
+        description: 'Failed to detect address. Please enter it manually.',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsDetectingAddress(false)
+    }
+  }, [toast])
 
   const handleSportToggle = (sport: SportType) => {
     setSelectedSports(prev => {
@@ -181,15 +231,31 @@ export default function NewCourtPage() {
       }
     }))
   }
+
+  const updateAddressField = (field: keyof AddressComponents, value: string) => {
+    setAddress(prev => ({
+      ...prev,
+      [field]: value.trim() || undefined
+    }))
+    // Mark as manually edited if user changes anything
+    if (addressAutoDetected && value.trim()) {
+      setAddressAutoDetected(false)
+    }
+  }
+
+  const clearAddress = () => {
+    setAddress({})
+    setAddressAutoDetected(false)
+  }
   
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      // Validate file size (5MB limit)
-      if (file.size > 5 * 1024 * 1024) {
+      // Validate file size (10MB limit)
+      if (file.size > 10 * 1024 * 1024) {
         toast({
           title: 'File too large',
-          description: 'Please select an image smaller than 5MB.',
+          description: 'Please select an image smaller than 10MB.',
           variant: 'destructive',
         })
         return
@@ -217,6 +283,7 @@ export default function NewCourtPage() {
   const removeImage = () => {
     setImageFile(null)
     setImagePreview(null)
+    setUploadProgress(null)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -271,12 +338,41 @@ export default function NewCourtPage() {
       return
     }
 
-    // TODO: Handle image upload to storage service
+    // Handle image upload if present
     let imageUrl: string | undefined
     
     if (imageFile) {
-      // For now, we'll skip image upload - implement with your preferred storage solution
-      console.log('Image upload not yet implemented:', imageFile.name)
+      try {
+        setIsUploadingImage(true)
+        setUploadProgress({ loaded: 0, total: 100, percentage: 0 })
+        
+        const uploadResult = await uploadCourtImage(imageFile, (progress) => {
+          setUploadProgress(progress)
+        })
+        
+        imageUrl = uploadResult.url
+        
+        toast({
+          title: 'Image uploaded successfully',
+          description: 'Your court image has been uploaded.',
+        })
+      } catch (error) {
+        console.error('Image upload failed:', error)
+        const errorMessage = error instanceof Error ? error.message : 'Unknown upload error'
+        
+        toast({
+          title: 'Image upload failed',
+          description: errorMessage,
+          variant: 'destructive',
+        })
+        
+        // Don't prevent form submission if image upload fails
+        // User can try again later or submit without image
+        imageUrl = undefined
+      } finally {
+        setIsUploadingImage(false)
+        setUploadProgress(null)
+      }
     }
     
     const courts = Object.values(courtDetails)
@@ -289,7 +385,8 @@ export default function NewCourtPage() {
       description: description.trim() || undefined,
       image_url: imageUrl,
       added_by_user: user.id,
-      courts
+      courts,
+      address: Object.values(address).some(v => v) ? address : undefined
     }
 
     createCourtMutation.mutate(placeData)
@@ -482,7 +579,10 @@ export default function NewCourtPage() {
                           className="hidden"
                         />
                         <p className="text-sm text-muted-foreground">
-                          Upload a photo of the court (JPG, PNG, WebP up to 5MB)
+                          Upload a photo of the court (JPG, PNG, WebP up to 10MB)
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Large images will be automatically compressed for faster loading
                         </p>
                       </div>
                     </div>
@@ -518,14 +618,158 @@ export default function NewCourtPage() {
                 )}
               </div>
 
+              {/* Address Information */}
+              {location && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-base font-medium">Address Information</Label>
+                    {address && Object.values(address).some(v => v) && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={clearAddress}
+                        className="text-sm"
+                      >
+                        <RefreshCcw className="h-3 w-3 mr-1" />
+                        Clear
+                      </Button>
+                    )}
+                  </div>
+                  
+                  {isDetectingAddress && (
+                    <div className="flex items-center gap-2 text-sm text-blue-600 bg-blue-50 p-3 rounded-lg border border-blue-200">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span>Detecting address information...</span>
+                    </div>
+                  )}
+                  
+                  {addressAutoDetected && !isDetectingAddress && (
+                    <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 p-3 rounded-lg border border-green-200">
+                      <Check className="h-4 w-4" />
+                      <span>Address auto-detected. You can edit the fields below if needed.</span>
+                    </div>
+                  )}
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2 sm:col-span-2">
+                      <Label htmlFor="street">Street Address</Label>
+                      <Input
+                        id="street"
+                        placeholder="e.g., 123 Main Street"
+                        value={address.street && address.house_number ? 
+                          `${address.street} ${address.house_number}` : 
+                          address.street || ''
+                        }
+                        onChange={(e) => {
+                          const value = e.target.value
+                          // Try to split into street and house number if possible
+                          const parts = value.trim().split(' ')
+                          const possibleNumber = parts[parts.length - 1]
+                          if (parts.length > 1 && /^\d+[a-zA-Z]?$/.test(possibleNumber)) {
+                            updateAddressField('street', parts.slice(0, -1).join(' '))
+                            updateAddressField('house_number', possibleNumber)
+                          } else {
+                            updateAddressField('street', value)
+                          }
+                        }}
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="city">City</Label>
+                      <Input
+                        id="city"
+                        placeholder="e.g., New York"
+                        value={address.city || ''}
+                        onChange={(e) => updateAddressField('city', e.target.value)}
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="state">State/Province</Label>
+                      <Input
+                        id="state"
+                        placeholder="e.g., NY"
+                        value={address.state || ''}
+                        onChange={(e) => updateAddressField('state', e.target.value)}
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="country">Country</Label>
+                      <Input
+                        id="country"
+                        placeholder="e.g., United States"
+                        value={address.country || ''}
+                        onChange={(e) => updateAddressField('country', e.target.value)}
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="postcode">Postal Code</Label>
+                      <Input
+                        id="postcode"
+                        placeholder="e.g., 10001"
+                        value={address.postcode || ''}
+                        onChange={(e) => updateAddressField('postcode', e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  
+                  {address.district && (
+                    <div className="space-y-2">
+                      <Label htmlFor="district">District/Neighborhood</Label>
+                      <Input
+                        id="district"
+                        placeholder="e.g., Manhattan"
+                        value={address.district || ''}
+                        onChange={(e) => updateAddressField('district', e.target.value)}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Submit Button */}
               <Button 
                 type="submit" 
                 className="w-full" 
-                disabled={createCourtMutation.isPending}
+                disabled={createCourtMutation.isPending || isUploadingImage}
               >
-                {createCourtMutation.isPending ? 'Adding Court...' : 'Add Court'}
+                {isUploadingImage ? (
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Uploading Image...
+                    {uploadProgress && (
+                      <span className="text-sm">({uploadProgress.percentage.toFixed(0)}%)</span>
+                    )}
+                  </div>
+                ) : createCourtMutation.isPending ? (
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Adding Court...
+                  </div>
+                ) : (
+                  'Add Court'
+                )}
               </Button>
+
+              {/* Upload Progress Bar */}
+              {isUploadingImage && uploadProgress && (
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>Uploading image...</span>
+                    <span>{uploadProgress.percentage.toFixed(0)}%</span>
+                  </div>
+                  <div className="w-full bg-muted rounded-full h-2">
+                    <div 
+                      className="bg-primary h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${uploadProgress.percentage}%` }}
+                    />
+                  </div>
+                </div>
+              )}
             </form>
           </CardContent>
         </Card>

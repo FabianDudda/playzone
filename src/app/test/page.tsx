@@ -139,10 +139,36 @@ export default function TestPage() {
       </div>
       
       <div className="mb-6 space-y-4">
+        {/* Data Statistics */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Card className="p-4">
+            <div className="text-2xl font-bold text-primary">{displayPlaces.length}</div>
+            <div className="text-sm text-muted-foreground">Total Places</div>
+          </Card>
+          <Card className="p-4">
+            <div className="text-2xl font-bold text-blue-600">
+              {displayPlaces.reduce((sum, place) => sum + (place.courts?.length || 0), 0)}
+            </div>
+            <div className="text-sm text-muted-foreground">Total Courts</div>
+          </Card>
+          <Card className="p-4">
+            <div className="text-2xl font-bold text-green-600">
+              {displayPlaces.filter(p => p.street && p.city).length}
+            </div>
+            <div className="text-sm text-muted-foreground">With Addresses</div>
+          </Card>
+          <Card className="p-4">
+            <div className="text-2xl font-bold text-purple-600">
+              {displayPlaces.filter(p => p.image_url).length}
+            </div>
+            <div className="text-sm text-muted-foreground">With Images</div>
+          </Card>
+        </div>
+        
         <div className="flex items-center justify-between">
           <p className="text-muted-foreground">
-            Total places found: {displayPlaces.length}
-            {enrichedPlaces.length > 0 && ` (${enrichedPlaces.length} enriched)`}
+            All available data fields are displayed below
+            {enrichedPlaces.length > 0 && ` (${enrichedPlaces.length} places enriched)`}
           </p>
           <div className="flex gap-2">
             <Button 
@@ -296,26 +322,90 @@ export default function TestPage() {
                       </div>
                     )}
 
-                    {/* Metadata */}
+                    {/* Image */}
+                    {place.image_url && (
+                      <div>
+                        <h4 className="text-sm font-medium mb-2">Court Image:</h4>
+                        <div className="relative w-full h-48 rounded-md overflow-hidden bg-muted">
+                          <img 
+                            src={place.image_url} 
+                            alt={place.name}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement
+                              target.style.display = 'none'
+                              target.parentElement!.innerHTML = `
+                                <div class="w-full h-full flex items-center justify-center text-sm text-muted-foreground">
+                                  ❌ Image failed to load
+                                </div>
+                              `
+                            }}
+                          />
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          URL: <a href={place.image_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{place.image_url}</a>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Additional Location Fields */}
+                    {(place.area || place.district || place.neighborhood) && (
+                      <div>
+                        <h4 className="text-sm font-medium mb-1">Location Details:</h4>
+                        <div className="text-sm text-muted-foreground space-y-1">
+                          {place.area && <div>Area: {place.area}</div>}
+                          {place.district && <div>District: {place.district}</div>}
+                          {place.neighborhood && <div>Neighborhood: {place.neighborhood}</div>}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Complete Metadata */}
                     <div className="pt-2 border-t">
+                      <h4 className="text-sm font-medium mb-2">Complete Metadata:</h4>
                       <div className="text-xs text-muted-foreground space-y-1">
-                        <div>ID: {place.id}</div>
-                        <div>Source: {place.source || 'unknown'}</div>
-                        {place.source_id && <div>Source ID: {place.source_id}</div>}
+                        <div><span className="font-medium">ID:</span> {place.id}</div>
+                        <div><span className="font-medium">Source:</span> {place.source || 'unknown'}</div>
+                        {place.source_id && <div><span className="font-medium">Source ID:</span> {place.source_id}</div>}
                         {place.features && place.features.length > 0 && (
-                          <div>Features: {place.features.join(', ')}</div>
+                          <div><span className="font-medium">Features:</span> {place.features.join(', ')}</div>
                         )}
-                        <div>Added: {new Date(place.created_at).toLocaleDateString()}</div>
+                        <div><span className="font-medium">Added By:</span> {place.added_by_user}</div>
+                        <div><span className="font-medium">Created:</span> {new Date(place.created_at).toLocaleString()}</div>
+                        {place.import_date && (
+                          <div><span className="font-medium">Import Date:</span> {new Date(place.import_date).toLocaleString()}</div>
+                        )}
+                        <div><span className="font-medium">Coordinates:</span> {place.latitude}, {place.longitude}</div>
                         <div className="flex items-center gap-2">
-                          Address Status: 
+                          <span className="font-medium">Address Status:</span>
                           {(place.street && place.city) ? (
                             <Badge variant="default" className="text-xs">✅ Enriched</Badge>
                           ) : (
                             <Badge variant="secondary" className="text-xs">📍 Coordinates Only</Badge>
                           )}
                         </div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">Image Status:</span>
+                          {place.image_url ? (
+                            <Badge variant="default" className="text-xs">📸 Has Image</Badge>
+                          ) : (
+                            <Badge variant="secondary" className="text-xs">📷 No Image</Badge>
+                          )}
+                        </div>
                       </div>
                     </div>
+
+                    {/* Raw JSON Data (Collapsible) */}
+                    <details className="pt-2 border-t">
+                      <summary className="text-sm font-medium cursor-pointer hover:text-primary">
+                        🔍 Raw JSON Data (Click to expand)
+                      </summary>
+                      <div className="mt-2 p-3 bg-muted rounded-md">
+                        <pre className="text-xs text-muted-foreground overflow-x-auto whitespace-pre-wrap break-words">
+                          {JSON.stringify(place, null, 2)}
+                        </pre>
+                      </div>
+                    </details>
                   </div>
                 </CardContent>
               </Card>
