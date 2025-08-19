@@ -8,9 +8,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useQuery } from '@tanstack/react-query'
 import { database } from '@/lib/supabase/database'
-import { Court, SportType } from '@/lib/supabase/types'
+import { PlaceWithCourts, SportType } from '@/lib/supabase/types'
 // Dynamic import to prevent SSR issues with Leaflet
 const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map'), {
   ssr: false,
@@ -23,7 +24,7 @@ const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map
     </div>
   )
 })
-import { MapPin, Plus, Search, Filter } from 'lucide-react'
+import { MapPin, Plus, Search, Filter, Map, List, Grid3X3 } from 'lucide-react'
 import Link from 'next/link'
 
 const SPORTS = ['tennis', 'basketball', 'volleyball', 'spikeball', 'badminton', 'squash', 'pickleball'] as const
@@ -32,26 +33,30 @@ export default function CourtsPage() {
   const { user } = useAuth()
   const [selectedSport, setSelectedSport] = useState<SportType | 'all'>('all')
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCourt, setSelectedCourt] = useState<Court | null>(null)
+  const [selectedPlace, setSelectedPlace] = useState<PlaceWithCourts | null>(null)
 
-  // Fetch all courts
-  const { data: courts = [], isLoading } = useQuery({
-    queryKey: ['courts'],
+  // Fetch all places (formerly courts)
+  const { data: places = [], isLoading } = useQuery({
+    queryKey: ['places'],
     queryFn: () => database.courts.getAllCourts(),
   })
 
-  // Filter courts based on sport and search
-  const filteredCourts = courts.filter((court) => {
-    const matchesSport = selectedSport === 'all' || court.sports.includes(selectedSport)
+  // Filter places based on sport and search
+  const filteredPlaces = places.filter((place) => {
+    // Check if place has courts with the selected sport
+    const matchesSport = selectedSport === 'all' || 
+      place.courts?.some(court => court.sport === selectedSport) ||
+      place.sports?.includes(selectedSport) // fallback to legacy sports array
+      
     const matchesSearch = !searchQuery || 
-      court.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      court.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      place.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      place.description?.toLowerCase().includes(searchQuery.toLowerCase())
     
     return matchesSport && matchesSearch
   })
 
-  const handleCourtSelect = (court: Court) => {
-    setSelectedCourt(court)
+  const handlePlaceSelect = (place: PlaceWithCourts) => {
+    setSelectedPlace(place)
   }
 
   return (
@@ -109,105 +114,250 @@ export default function CourtsPage() {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Map */}
-        <div className="lg:col-span-2">
+      <Tabs defaultValue="both" className="w-full">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="map" className="flex items-center gap-2">
+            <Map className="h-4 w-4" />
+            Map
+          </TabsTrigger>
+          <TabsTrigger value="list" className="flex items-center gap-2">
+            <List className="h-4 w-4" />
+            List
+          </TabsTrigger>
+          <TabsTrigger value="both" className="flex items-center gap-2">
+            <Grid3X3 className="h-4 w-4" />
+            Both
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Map Only View */}
+        <TabsContent value="map" className="mt-6">
           <Card>
             <CardHeader>
               <CardTitle>Court Locations</CardTitle>
               <CardDescription>
-                {filteredCourts.length} court{filteredCourts.length !== 1 ? 's' : ''} found
+                {filteredPlaces.length} place{filteredPlaces.length !== 1 ? 's' : ''} found
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0">
               <LeafletCourtMap 
-                courts={filteredCourts}
-                onCourtSelect={handleCourtSelect}
-                height="500px"
+                courts={filteredPlaces}
+                onCourtSelect={handlePlaceSelect}
+                height="600px"
               />
             </CardContent>
           </Card>
-        </div>
+        </TabsContent>
 
-        {/* Court List */}
-        <div className="space-y-4">
+        {/* List Only View */}
+        <TabsContent value="list" className="mt-6">
           <div>
-            <h2 className="text-lg font-semibold mb-4">Courts List</h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-semibold">Places List</h2>
+              <p className="text-sm text-muted-foreground">
+                {filteredPlaces.length} place{filteredPlaces.length !== 1 ? 's' : ''} found
+              </p>
+            </div>
             {isLoading ? (
-              <div className="text-center py-8">Loading courts...</div>
-            ) : filteredCourts.length === 0 ? (
+              <div className="text-center py-8">Loading places...</div>
+            ) : filteredPlaces.length === 0 ? (
               <Card>
                 <CardContent className="text-center py-8">
                   <MapPin className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No courts found</h3>
+                  <h3 className="text-lg font-semibold mb-2">No places found</h3>
                   <p className="text-muted-foreground mb-4">
                     {selectedSport || searchQuery 
-                      ? 'Try adjusting your filters to find more courts.'
-                      : 'Be the first to add a court in your area!'
+                      ? 'Try adjusting your filters to find more places.'
+                      : 'Be the first to add a place in your area!'
                     }
                   </p>
                   {user && (
                     <Button asChild size="sm">
-                      <Link href="/courts/new">Add First Court</Link>
+                      <Link href="/courts/new">Add First Place</Link>
                     </Button>
                   )}
                 </CardContent>
               </Card>
             ) : (
-              <div className="space-y-3 max-h-[500px] overflow-y-auto">
-                {filteredCourts.map((court) => (
-                  <Card 
-                    key={court.id}
-                    className={`cursor-pointer transition-colors hover:bg-accent ${
-                      selectedCourt?.id === court.id ? 'ring-2 ring-primary' : ''
-                    }`}
-                    onClick={() => handleCourtSelect(court)}
-                  >
-                    <CardContent className="p-4">
-                      <div className="space-y-2">
-                        <h3 className="font-semibold">{court.name}</h3>
-                        
-                        <div className="flex flex-wrap gap-1">
-                          {court.sports.map((sport) => (
-                            <Badge key={sport} variant="secondary" className="text-xs">
-                              {sport}
-                            </Badge>
-                          ))}
-                        </div>
-                        
-                        {court.description && (
-                          <p className="text-sm text-muted-foreground">
-                            {court.description}
-                          </p>
-                        )}
-                        
-                        <div className="flex justify-between items-center text-xs text-muted-foreground">
-                          <span>Click to view on map</span>
-                          {user && (
-                            <Button 
-                              size="sm" 
-                              variant="outline"
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                // Navigate to match creation with this court pre-selected
-                                const url = new URL('/matches/new', window.location.origin)
-                                url.searchParams.set('court', court.id)
-                                window.location.href = url.toString()
-                              }}
-                            >
-                              Log Match
-                            </Button>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {filteredPlaces.map((place) => {
+                  // Get unique sports from the courts array, fallback to legacy sports array
+                  const availableSports = place.courts?.length > 0 
+                    ? [...new Set(place.courts.map(court => court.sport))]
+                    : (place.sports || [])
+                    
+                  return (
+                    <Card 
+                      key={place.id}
+                      className="cursor-pointer transition-colors hover:bg-accent"
+                      onClick={() => handlePlaceSelect(place)}
+                    >
+                      <CardContent className="p-4">
+                        <div className="space-y-2">
+                          <h3 className="font-semibold">{place.name}</h3>
+                          
+                          <div className="flex flex-wrap gap-1">
+                            {availableSports.map((sport) => (
+                              <Badge key={sport} variant="secondary" className="text-xs">
+                                {sport}
+                              </Badge>
+                            ))}
+                          </div>
+                          
+                          {place.courts && place.courts.length > 0 && (
+                            <p className="text-xs text-muted-foreground">
+                              {place.courts.length} court{place.courts.length !== 1 ? 's' : ''} available
+                            </p>
                           )}
+                          
+                          {place.description && (
+                            <p className="text-sm text-muted-foreground line-clamp-2">
+                              {place.description}
+                            </p>
+                          )}
+                          
+                          <div className="flex justify-between items-center pt-2">
+                            {user && (
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                className="w-full"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  const url = new URL('/matches/new', window.location.origin)
+                                  url.searchParams.set('place', place.id)
+                                  window.location.href = url.toString()
+                                }}
+                              >
+                                Log Match
+                              </Button>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                      </CardContent>
+                    </Card>
+                  )
+                })}
               </div>
             )}
           </div>
-        </div>
-      </div>
+        </TabsContent>
+
+        {/* Both Views */}
+        <TabsContent value="both" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Map */}
+            <div className="lg:col-span-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Court Locations</CardTitle>
+                  <CardDescription>
+                    {filteredPlaces.length} place{filteredPlaces.length !== 1 ? 's' : ''} found
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <LeafletCourtMap 
+                    courts={filteredPlaces}
+                    onCourtSelect={handlePlaceSelect}
+                    height="500px"
+                  />
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Court List */}
+            <div className="space-y-4">
+              <div>
+                <h2 className="text-lg font-semibold mb-4">Courts List</h2>
+                {isLoading ? (
+                  <div className="text-center py-8">Loading places...</div>
+                ) : filteredPlaces.length === 0 ? (
+                  <Card>
+                    <CardContent className="text-center py-8">
+                      <MapPin className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                      <h3 className="text-lg font-semibold mb-2">No places found</h3>
+                      <p className="text-muted-foreground mb-4">
+                        {selectedSport || searchQuery 
+                          ? 'Try adjusting your filters to find more places.'
+                          : 'Be the first to add a court in your area!'
+                        }
+                      </p>
+                      {user && (
+                        <Button asChild size="sm">
+                          <Link href="/courts/new">Add First Court</Link>
+                        </Button>
+                      )}
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <div className="space-y-3 max-h-[500px] overflow-y-auto">
+                    {filteredPlaces.map((place) => {
+                      // Get unique sports from the courts array, fallback to legacy sports array
+                      const availableSports = place.courts?.length > 0 
+                        ? [...new Set(place.courts.map(court => court.sport))]
+                        : (place.sports || [])
+                        
+                      return (
+                        <Card 
+                          key={place.id}
+                          className={`cursor-pointer transition-colors hover:bg-accent ${
+                            selectedPlace?.id === place.id ? 'ring-2 ring-primary' : ''
+                          }`}
+                          onClick={() => handlePlaceSelect(place)}
+                        >
+                          <CardContent className="p-4">
+                            <div className="space-y-2">
+                              <h3 className="font-semibold">{place.name}</h3>
+                              
+                              <div className="flex flex-wrap gap-1">
+                                {availableSports.map((sport) => (
+                                  <Badge key={sport} variant="secondary" className="text-xs">
+                                    {sport}
+                                  </Badge>
+                                ))}
+                              </div>
+                              
+                              {place.courts && place.courts.length > 0 && (
+                                <p className="text-xs text-muted-foreground">
+                                  {place.courts.length} court{place.courts.length !== 1 ? 's' : ''} available
+                                </p>
+                              )}
+                              
+                              {place.description && (
+                                <p className="text-sm text-muted-foreground">
+                                  {place.description}
+                                </p>
+                              )}
+                              
+                              <div className="flex justify-between items-center text-xs text-muted-foreground">
+                                <span>Click to view on map</span>
+                                {user && (
+                                  <Button 
+                                    size="sm" 
+                                    variant="outline"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      const url = new URL('/matches/new', window.location.origin)
+                                      url.searchParams.set('place', place.id)
+                                      window.location.href = url.toString()
+                                    }}
+                                  >
+                                    Log Match
+                                  </Button>
+                                )}
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

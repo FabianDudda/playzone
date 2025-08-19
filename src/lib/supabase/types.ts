@@ -9,7 +9,7 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      courts: {
+      places: {
         Row: {
           added_by_user: string
           created_at: string
@@ -19,7 +19,22 @@ export type Database = {
           latitude: number
           longitude: number
           name: string
-          sports: Database["public"]["Enums"]["sport_type"][]
+          sports: Database["public"]["Enums"]["sport_type"][] | null
+          source: string
+          source_id: string | null
+          district: string | null
+          neighborhood: string | null
+          area: string | null
+          features: string[] | null
+          import_date: string
+          // Address fields from reverse geocoding
+          street: string | null
+          house_number: string | null
+          city: string | null
+          county: string | null
+          state: string | null
+          country: string | null
+          postcode: string | null
         }
         Insert: {
           added_by_user: string
@@ -30,7 +45,22 @@ export type Database = {
           latitude: number
           longitude: number
           name: string
-          sports: Database["public"]["Enums"]["sport_type"][]
+          sports?: Database["public"]["Enums"]["sport_type"][] | null
+          source?: string
+          source_id?: string | null
+          district?: string | null
+          neighborhood?: string | null
+          area?: string | null
+          features?: string[] | null
+          import_date?: string
+          // Address fields from reverse geocoding
+          street?: string | null
+          house_number?: string | null
+          city?: string | null
+          county?: string | null
+          state?: string | null
+          country?: string | null
+          postcode?: string | null
         }
         Update: {
           added_by_user?: string
@@ -41,14 +71,67 @@ export type Database = {
           latitude?: number
           longitude?: number
           name?: string
-          sports?: Database["public"]["Enums"]["sport_type"][]
+          sports?: Database["public"]["Enums"]["sport_type"][] | null
+          source?: string
+          source_id?: string | null
+          district?: string | null
+          neighborhood?: string | null
+          area?: string | null
+          features?: string[] | null
+          import_date?: string
+          // Address fields from reverse geocoding
+          street?: string | null
+          house_number?: string | null
+          city?: string | null
+          county?: string | null
+          state?: string | null
+          country?: string | null
+          postcode?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "courts_added_by_user_fkey"
+            foreignKeyName: "places_added_by_user_fkey"
             columns: ["added_by_user"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      courts: {
+        Row: {
+          id: string
+          place_id: string
+          sport: Database["public"]["Enums"]["sport_type"]
+          quantity: number
+          surface: string | null
+          notes: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          place_id: string
+          sport: Database["public"]["Enums"]["sport_type"]
+          quantity?: number
+          surface?: string | null
+          notes?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          place_id?: string
+          sport?: Database["public"]["Enums"]["sport_type"]
+          quantity?: number
+          surface?: string | null
+          notes?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "courts_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
             referencedColumns: ["id"]
           },
         ]
@@ -226,9 +309,18 @@ export type SportType = Database["public"]["Enums"]["sport_type"]
 export type MatchResult = Database["public"]["Enums"]["match_result"]
 
 export type Profile = Database["public"]["Tables"]["profiles"]["Row"]
+export type Place = Database["public"]["Tables"]["places"]["Row"]
 export type Court = Database["public"]["Tables"]["courts"]["Row"]
 export type Match = Database["public"]["Tables"]["matches"]["Row"]
 export type MatchParticipant = Database["public"]["Tables"]["match_participants"]["Row"]
+
+// Legacy type for backward compatibility (maps to Place)
+export type LegacyCourt = Place
+
+// Combined type for places with their courts
+export interface PlaceWithCourts extends Place {
+  courts: Court[]
+}
 
 export interface EloRatings {
   tennis: number

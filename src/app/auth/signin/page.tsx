@@ -32,6 +32,9 @@ export default function SignInPage() {
         callback_failed: 'OAuth callback processing failed.',
         no_session: 'No session was created. Please try again.',
         processing_failed: 'Failed to process authentication. Please try again.',
+        session_timeout: 'Authentication took too long. Please try again.',
+        oauth_access_denied: 'Access was denied during Google sign in.',
+        oauth_invalid_request: 'Invalid OAuth request. Please try again.',
       }
       
       toast({

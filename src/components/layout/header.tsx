@@ -12,16 +12,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { MapPin, Trophy, Plus, User, LogOut, Menu } from 'lucide-react'
+import { MapPin, Trophy, Plus, User, LogOut, Menu, TestTube } from 'lucide-react'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '@/components/ui/sheet'
 
 export default function Header() {
   const { user, profile, signOut, loading } = useAuth()
 
   const navigation = [
-    { name: 'Courts', href: '/', icon: MapPin },
+    { name: 'Courts', href: '/courts', icon: MapPin },
     { name: 'Rankings', href: '/rankings', icon: Trophy },
     { name: 'Add Match', href: '/matches/new', icon: Plus },
+    { name: 'Test', href: '/test', icon: TestTube },
   ]
 
   const UserMenu = () => (

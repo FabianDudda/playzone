@@ -34,3 +34,19 @@ I have data for courts from my city. Its an array with these informations per co
 Analyze this data structure. Think about possible improvements for this data structure.
 Remember that i have a map, where different courts are shown. I have cases where only one sport is available, but also courts with multiple sports. What are important things to consider? Also what do you recommend to handle the data in front end or backend?
 
+#####################################################################
+#####################################################################
+#####################################################################
+
+Analyze the code in courts/new/page and make change to the form:
+- Autodetect adress information with geocode
+
+## 
+
+Bug mit Court anlegen (geht manchmal nicht)
+
+###
+
+Bug mit Login (dauert lange)
+
+##

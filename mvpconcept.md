@@ -23,36 +23,65 @@ A web application where users can find, add, and track sports courts, log matche
 
 ## Database Schema
 
-### Users Table
+### Users Table (Profiles)
 ```sql
-users {
-  id: uuid (primary key)
+profiles {
+  id: uuid (primary key, references auth.users)
   name: text
-  email: text (unique)
   avatar: text (url)
   elo: jsonb {
     tennis: 1500,
     basketball: 1500,
     volleyball: 1500,
-    spikeball: 1500
+    spikeball: 1500,
+    badminton: 1500,
+    squash: 1500,
+    pickleball: 1500
   }
   created_at: timestamp
   updated_at: timestamp
 }
 ```
 
-### Courts Table
+### Places Table (Locations/Facilities)
 ```sql
-courts {
+places {
   id: uuid (primary key)
   name: text
   latitude: float8
   longitude: float8
-  sport: text[]
   description: text
-  added_by_user: uuid (foreign key -> users.id)
   image_url: text (optional)
+  added_by_user: uuid (foreign key -> profiles.id)
+  
+  -- Enhanced location tracking
+  source: text (default: 'user_added')
+  source_id: text (for city imports)
+  district: text
+  neighborhood: text
+  area: text
+  features: text[] (amenities, facilities)
+  
+  -- Legacy compatibility
+  sports: sport_type[] (optional, for backward compatibility)
+  
   created_at: timestamp
+  import_date: timestamp (default: now())
+}
+```
+
+### Courts Table (Individual Sports Courts)
+```sql
+courts {
+  id: uuid (primary key)
+  place_id: uuid (foreign key -> places.id)
+  sport: sport_type (enum)
+  quantity: integer (default: 1)
+  surface: text (clay, grass, hardcourt, etc.)
+  notes: text
+  created_at: timestamp
+  
+  UNIQUE(place_id, sport) -- One record per sport per place
 }
 ```
 
@@ -61,10 +90,10 @@ courts {
 matches {
   id: uuid (primary key)
   court_id: uuid (foreign key -> courts.id)
-  sport: text
-  team_a_players: uuid[] (foreign keys -> users.id)
-  team_b_players: uuid[] (foreign keys -> users.id)
-  winner: text ('team_a' | 'team_b')
+  sport: sport_type (enum)
+  team_a_players: uuid[] (foreign keys -> profiles.id)
+  team_b_players: uuid[] (foreign keys -> profiles.id)
+  winner: match_result ('team_a' | 'team_b' | 'draw')
   score: jsonb (optional, flexible format)
   created_at: timestamp
 }
@@ -86,23 +115,27 @@ match_participants {
 
 ## Core Features
 
-### 1. Court Discovery
-- **Interactive Map**: Leaflet map with sport-colored court markers
-- **Court Details**: Popups with court information
+### 1. Place & Court Discovery
+- **Interactive Map**: Leaflet map with sport-colored place markers
+- **Place Details**: Popups with place information and available courts
 - **Sport-Specific Colors**: Visual markers for each sport (tennis=green, basketball=amber, etc.)
-- **Filtering**: By sport type or city
-- **Search**: Text-based court search
+- **Filtering**: By sport type, city, or facility features
+- **Search**: Text-based place and court search
+- **Court Details**: Individual sport courts with surface type, quantity, and notes
 
-### 2. Add New Court
+### 2. Add New Place & Courts
 - **Map Interaction**: Drop pin on map location
-- **Form Input**: Court name, sport types, description
-- **Image Upload**: Optional court images
+- **Place Input**: Facility name, description, location details
+- **Court Management**: Add multiple sports courts per place
+- **Enhanced Data**: Surface types, court quantities, special features
+- **Image Upload**: Optional place images
 - **Validation**: Ensure required fields are filled
 
 ### 3. Match Logging
 - **Player Selection**: Choose participants for teams
 - **Score Entry**: Optional score tracking
-- **Court Association**: Link match to specific court
+- **Court Association**: Link match to specific court within a place
+- **Surface Context**: Track matches on different court surfaces
 - **Auto Elo Update**: Automatic ranking calculations
 
 ### 4. Elo Ranking System
@@ -171,41 +204,59 @@ def update_team_elo(team_a, team_b, sport, team_a_wins):
 4. Install and configure shadcn/ui CLI
 
 ### Phase 2: Supabase Backend Setup
-5. Create database schema (Users, Courts, Matches tables)
-6. Set up Supabase client configuration
+5. Create normalized database schema (Profiles, Places, Courts, Matches tables)
+6. Set up Supabase client configuration with new schema
 7. Configure authentication with email/Google providers
-8. Implement Row Level Security (RLS) policies
+8. Implement Row Level Security (RLS) policies for all tables
+9. Create database functions for Elo calculations and leaderboards
 
 ### Phase 3: Core UI Components & Layout
-9. Install essential shadcn/ui components
-10. Create main layout with navigation
-11. Build responsive mobile-first design
-12. Implement protected route wrapper
+10. Install essential shadcn/ui components
+11. Create main layout with navigation
+12. Build responsive mobile-first design
+13. Implement protected route wrapper
 
 ### Phase 4: Match Logging & Elo System
-13. Build match creation flow
-14. Implement Elo calculation engine
-15. Create match history display
-16. Add player selection interface
+14. Build match creation flow with court selection
+15. Implement Elo calculation engine
+16. Create match history display
+17. Add player selection interface
 
 ### Phase 5: Ranking & Leaderboards
-17. Build leaderboard components
-18. Create user profile pages
-19. Implement sport-specific rankings
-20. Add filtering and search functionality
+18. Build leaderboard components
+19. Create user profile pages
+20. Implement sport-specific rankings
+21. Add filtering and search functionality
 
-### Phase 6: Map Integration & Court Discovery ✅ COMPLETED
-21. Integrate Leaflet with OpenStreetMap (free alternative)
-22. Create sport-colored interactive court markers
-23. Build court detail popups with sport badges
-24. Implement add new court with map pin dropping
-25. Add user location finding and custom marker styles
+### Phase 6: Map Integration & Place Discovery ✅ COMPLETED
+22. Integrate Leaflet with OpenStreetMap (free alternative)
+23. Create sport-colored interactive place markers
+24. Build place detail popups with court information
+25. Implement add new places with map pin dropping
+26. Add user location finding and custom marker styles
+27. Create tabbed view system (Map/List/Both views)
 
 ### Phase 7: PWA & Polish
-26. Configure service worker for PWA
-27. Add offline functionality basics
-28. Create app manifest for installability
-29. Implement loading states and error handling
+28. Configure service worker for PWA
+29. Add offline functionality basics
+30. Create app manifest for installability
+31. Implement loading states and error handling
+
+## Database Architecture Benefits
+
+### Normalized Structure Advantages
+- **Proper Data Modeling**: Places represent physical locations, courts represent individual playing areas
+- **Rich Sport Details**: Each court can have specific surface type, quantity, and notes
+- **Flexible Queries**: Easy to filter by sport characteristics, surface types, or facility features
+- **Source Tracking**: Distinguish between user-added places and city-imported data
+- **Extensibility**: Easy to add sport-specific fields or new facility types
+- **Data Integrity**: Foreign key constraints ensure consistent relationships
+
+### Support for Future Features
+- **Sports Clubs**: Places can represent club facilities with multiple courts
+- **Commercial Facilities**: Pricing, hours, and membership information
+- **City Integrations**: Bulk import of municipal sports facilities
+- **Enhanced Filtering**: By surface type, availability, features, or location details
 
 ## Future Extensions (Post-MVP)
 

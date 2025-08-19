@@ -1,5 +1,5 @@
 import { supabase } from './client'
-import { Profile, Court, Match, MatchParticipant, SportType, MatchResult, LeaderboardEntry } from './types'
+import { Profile, Place, Court, LegacyCourt, PlaceWithCourts, Match, MatchParticipant, SportType, MatchResult, LeaderboardEntry } from './types'
 
 export const database = {
   // Profile operations
@@ -82,13 +82,21 @@ export const database = {
     },
   },
 
-  // Court operations
+  // Place operations (legacy "courts" API - for backward compatibility)
   courts: {
-    getAllCourts: async (): Promise<Court[]> => {
+    // Returns places with their courts - maintains backward compatibility
+    getAllCourts: async (): Promise<PlaceWithCourts[]> => {
       const { data, error } = await supabase
-        .from('courts')
+        .from('places')
         .select(`
           *,
+          courts (
+            id,
+            sport,
+            quantity,
+            surface,
+            notes
+          ),
           profiles:added_by_user (
             name,
             avatar
@@ -97,46 +105,114 @@ export const database = {
         .order('created_at', { ascending: false })
       
       if (error) {
-        console.error('Error fetching courts:', error)
+        console.error('Error fetching places:', error)
         return []
       }
       return data || []
     },
 
-    getCourtsBySport: async (sport: SportType): Promise<Court[]> => {
+    getCourtsBySport: async (sport: SportType): Promise<PlaceWithCourts[]> => {
       const { data, error } = await supabase
-        .from('courts')
-        .select('*')
-        .contains('sports', [sport])
-        .order('created_at', { ascending: false })
-      
-      if (error) {
-        console.error('Error fetching courts by sport:', error)
-        return []
-      }
-      return data || []
-    },
-
-    getCourt: async (courtId: string): Promise<Court | null> => {
-      const { data, error } = await supabase
-        .from('courts')
+        .from('places')
         .select(`
           *,
+          courts!inner (
+            id,
+            sport,
+            quantity,
+            surface,
+            notes
+          ),
           profiles:added_by_user (
             name,
             avatar
           )
         `)
-        .eq('id', courtId)
+        .eq('courts.sport', sport)
+        .order('created_at', { ascending: false })
+      
+      if (error) {
+        console.error('Error fetching places by sport:', error)
+        return []
+      }
+      return data || []
+    },
+
+    getCourt: async (placeId: string): Promise<PlaceWithCourts | null> => {
+      const { data, error } = await supabase
+        .from('places')
+        .select(`
+          *,
+          courts (
+            id,
+            sport,
+            quantity,
+            surface,
+            notes
+          ),
+          profiles:added_by_user (
+            name,
+            avatar
+          )
+        `)
+        .eq('id', placeId)
         .single()
       
       if (error) {
-        console.error('Error fetching court:', error)
+        console.error('Error fetching place:', error)
         return null
       }
       return data
     },
 
+    addCourt: async (place: Omit<Place, 'id' | 'created_at' | 'import_date'>) => {
+      const { data, error } = await supabase
+        .from('places')
+        .insert(place)
+        .select()
+        .single()
+      
+      return { data, error }
+    },
+
+    updateCourt: async (placeId: string, updates: Partial<Place>) => {
+      const { data, error } = await supabase
+        .from('places')
+        .update(updates)
+        .eq('id', placeId)
+        .select()
+        .single()
+      
+      return { data, error }
+    },
+
+    deleteCourt: async (placeId: string) => {
+      const { data, error } = await supabase
+        .from('places')
+        .delete()
+        .eq('id', placeId)
+      
+      return { data, error }
+    },
+  },
+
+  // New place operations
+  places: {
+    getAllPlaces: async (): Promise<PlaceWithCourts[]> => {
+      return database.courts.getAllCourts()
+    },
+
+    getPlace: async (placeId: string): Promise<PlaceWithCourts | null> => {
+      return database.courts.getCourt(placeId)
+    },
+
+    addPlace: async (place: Omit<Place, 'id' | 'created_at' | 'import_date'>) => {
+      return database.courts.addCourt(place)
+    },
+  },
+
+  // Individual court operations  
+  courtDetails: {
     addCourt: async (court: Omit<Court, 'id' | 'created_at'>) => {
       const { data, error } = await supabase
         .from('courts')
@@ -176,9 +252,14 @@ export const database = {
         .select(`
           *,
           courts (
-            name,
-            latitude,
-            longitude
+            id,
+            sport,
+            surface,
+            places (
+              name,
+              latitude,
+              longitude
+            )
           )
         `)
         .order('created_at', { ascending: false })
@@ -196,9 +277,14 @@ export const database = {
         .select(`
           *,
           courts (
-            name,
-            latitude,
-            longitude
+            id,
+            sport,
+            surface,
+            places (
+              name,
+              latitude,
+              longitude
+            )
           )
         `)
         .eq('sport', sport)
@@ -217,9 +303,14 @@ export const database = {
         .select(`
           *,
           courts (
-            name,
-            latitude,
-            longitude
+            id,
+            sport,
+            surface,
+            places (
+              name,
+              latitude,
+              longitude
+            )
           )
         `)
         .or(`team_a_players.cs.{${userId}},team_b_players.cs.{${userId}}`)
@@ -285,7 +376,11 @@ export const database = {
               winner,
               created_at,
               courts (
-                name
+                sport,
+                surface,
+                places (
+                  name
+                )
               )
             )
           `)
@@ -309,7 +404,11 @@ export const database = {
               winner,
               created_at,
               courts (
-                name
+                sport,
+                surface,
+                places (
+                  name
+                )
               )
             )
           `)

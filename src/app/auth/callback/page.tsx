@@ -12,47 +12,50 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        // Handle URL fragments (modern Supabase OAuth)
+        console.log('Starting OAuth callback processing...')
+        console.log('Current URL:', window.location.href)
+        
+        // Check for OAuth errors in URL hash
         const hashParams = new URLSearchParams(window.location.hash.substring(1))
-        const accessToken = hashParams.get('access_token')
-        const refreshToken = hashParams.get('refresh_token')
+        const errorCode = hashParams.get('error')
+        const errorDescription = hashParams.get('error_description')
         
-        if (accessToken && refreshToken) {
-          // Set the session using the tokens from URL fragments
-          const { data, error } = await supabase.auth.setSession({
-            access_token: accessToken,
-            refresh_token: refreshToken,
-          })
-          
-          if (error) {
-            console.error('Error setting session:', error)
-            router.push('/auth/signin?error=session_failed')
-            return
-          }
-          
-          if (data.session) {
-            // Success! Redirect to main app
-            router.push('/')
-            return
-          }
-        }
-        
-        // Fallback: Handle query parameters (traditional OAuth)
-        const { data, error } = await supabase.auth.getSessionFromUrl()
-        
-        if (error) {
-          console.error('Auth callback error:', error)
-          router.push('/auth/signin?error=callback_failed')
+        if (errorCode) {
+          console.error('OAuth error from provider:', errorCode, errorDescription)
+          router.push(`/auth/signin?error=oauth_${errorCode}`)
           return
         }
         
-        if (data.session) {
-          // Success! Redirect to main app
-          router.push('/')
-        } else {
-          // No session found
-          router.push('/auth/signin?error=no_session')
+        // Let Supabase handle OAuth automatically, wait for session to be available
+        console.log('Waiting for Supabase to automatically process OAuth callback...')
+        
+        // Wait up to 5 seconds for Supabase to automatically handle the OAuth
+        let attempts = 0
+        const maxAttempts = 10
+        
+        const checkSession = async () => {
+          attempts++
+          console.log(`Checking session attempt ${attempts}/${maxAttempts}...`)
+          
+          const { data: { session } } = await supabase.auth.getSession()
+          
+          if (session) {
+            console.log('Session found after automatic processing, redirecting to home...')
+            router.push('/')
+            return true
+          }
+          
+          if (attempts < maxAttempts) {
+            setTimeout(checkSession, 500)
+          } else {
+            console.error('OAuth session creation timed out after 5 seconds')
+            router.push('/auth/signin?error=oauth_timeout')
+          }
+          return false
         }
+        
+        checkSession()
+        
       } catch (err) {
         console.error('Callback processing error:', err)
         router.push('/auth/signin?error=processing_failed')

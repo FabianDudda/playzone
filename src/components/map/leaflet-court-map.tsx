@@ -182,8 +182,8 @@ export default function LeafletCourtMap({
     setCurrentLayerId(layerId)
   }
 
-  // Default center (New York area)
-  const defaultCenter: [number, number] = [40, -74.5]
+  // Default center (Germany)
+  const defaultCenter: [number, number] = [51.165691, 10.451526]
   
   // Get current layer configuration
   const currentLayer = MAP_LAYERS[currentLayerId] || MAP_LAYERS[DEFAULT_LAYER_ID]
@@ -193,7 +193,7 @@ export default function LeafletCourtMap({
       <div style={{ height }} className="rounded-lg overflow-hidden">
         <MapContainer
           center={defaultCenter}
-          zoom={9}
+          zoom={7}
           style={{ height: '100%', width: '100%' }}
           scrollWheelZoom={true}
         >
