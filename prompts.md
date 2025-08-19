@@ -38,15 +38,75 @@ Remember that i have a map, where different courts are shown. I have cases where
 #####################################################################
 #####################################################################
 
-Analyze the code in courts/new/page and make change to the form:
-- Autodetect adress information with geocode
 
-## 
+# Icons für Map Pins
 
-Bug mit Court anlegen (geht manchmal nicht)
+- welches Icon bei Plätzen mit mehreren Sportarten?
 
-###
+# Daten von Stadt Köln in DB einfügen
 
-Bug mit Login (dauert lange)
+- wie richtig einfügen?
+- Platzbelag nur für Fußball vorhanden
+- andere "Unbekannt" oder null machen?
 
-##
+I have a json file with this format:
+
+{
+  "places": [
+    {
+      "attributes": {
+        "name": "Rheinaustraße",
+        "district": "Sürth",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark_elemente": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 7.012481767734089,
+        "y": 50.863084651420266
+      }
+    },
+     {
+      "attributes": {
+        "name": "Rheinaustraße",
+        "district": "Sürth",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark_elemente": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 7.012481767734089,
+        "y": 50.863084651420266
+      }
+    },
+  ]
+}
+
+How can i add this json data to my supabase db.
+- "name" should be the "name" of places
+- "district" should be the "district" of places
+- if "fußballplätze" != null, its the quantity in courts for sport "fußball"
+- if "platzbelag_fußball" != null, its the "surface" of "fußball" court
+- if "basketballplätze" != null, its the quantity in courts for sport "basketball"
+- if "boulebahn" != null, its the quantity in courts for sport "boule"
+- if "skatepark" != null, its the quantity in courts for sport "skatepark"
+
+
+
+# Places editierbar machen
+
+- User können Daten bearbeiten (zB bei courts: sport, anzahl, boden usw. //  bei places: adress, location usw.)
+- User können Daten hinzufügen oder löschen
+- Bevor Daten gespeichert werden, müssen diese von Admin überprüft werden
+
+
+# Sub-page für jeden Place
+
+- Meta Daten wie Name, Bilder, Adresse usw
+- verfügbare Plätze

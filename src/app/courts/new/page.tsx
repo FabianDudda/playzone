@@ -32,26 +32,28 @@ const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map
 import { MapPin, Plus, Check, Upload, X, Image, Loader2, RefreshCcw } from 'lucide-react'
 
 const SPORTS = [
+  { id: 'fußball', label: 'Fußball' },
   { id: 'tennis', label: 'Tennis' },
+  { id: 'tischtennis', label: 'Tischtennis' },
   { id: 'basketball', label: 'Basketball' },
   { id: 'volleyball', label: 'Volleyball' },
+  { id: 'beachvolleyball', label: 'Beachvolleyball' },
   { id: 'spikeball', label: 'Spikeball' },
+  { id: 'boule', label: 'Boule' },
+  { id: 'skatepark', label: 'Skatepark' },
   { id: 'badminton', label: 'Badminton' },
   { id: 'squash', label: 'Squash' },
   { id: 'pickleball', label: 'Pickleball' },
 ] as const
 
 const SURFACE_TYPES = [
-  'Hard Court',
-  'Clay',
-  'Grass',
+  'Wiese',
+  'Hartplatz',
   'Asphalt',
-  'Concrete',
-  'Hardwood',
-  'Sand',
-  'Synthetic/Rubber',
-  'Artificial Turf',
-  'Other'
+  'Kunststoffbelag',
+  'Asche',
+  'Kunstrasen',
+  'Sonstiges',
 ] as const
 
 interface CourtDetails {
