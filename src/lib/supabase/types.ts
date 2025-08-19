@@ -297,7 +297,7 @@ export type Database = {
     }
     Enums: {
       match_result: "team_a" | "team_b" | "draw"
-      sport_type: "tennis" | "basketball" | "volleyball" | "spikeball" | "badminton" | "squash" | "pickleball"
+      sport_type: "tennis" | "basketball" | "volleyball" | "spikeball" | "badminton" | "squash" | "pickleball" | "fußball" | "tischtennis" | "boule" | "skatepark"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -330,6 +330,10 @@ export interface EloRatings {
   badminton: number
   squash: number
   pickleball: number
+  fußball: number
+  tischtennis: number
+  boule: number
+  skatepark: number
 }
 
 export interface LeaderboardEntry {

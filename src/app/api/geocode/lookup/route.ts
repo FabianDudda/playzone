@@ -4,7 +4,7 @@ import { reverseGeocode, formatAddress } from '@/lib/geocoding'
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { latitude, longitude } = body
+    const { latitude, longitude, language = 'de' } = body
 
     if (typeof latitude !== 'number' || typeof longitude !== 'number') {
       return NextResponse.json(
@@ -25,7 +25,8 @@ export async function POST(request: Request) {
 
     const address = await reverseGeocode(latitude, longitude, { 
       useRateLimit: true,
-      timeout: 10000 // 10 second timeout for user-facing requests
+      timeout: 10000, // 10 second timeout for user-facing requests
+      language
     })
 
     if (!address) {

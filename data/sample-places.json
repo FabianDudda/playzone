@@ -1,0 +1,6485 @@
+{
+  "places": [
+    {
+      "attributes": {
+        "name": "Rheinaustraße",
+        "district": "Sürth",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 7.012481767734089,
+        "y": 50.863084651420266
+      }
+    },
+    {
+      "attributes": {
+        "name": "Heinrich-Erpenbach-Straße/Elisabeth-Selbert-Straße",
+        "district": "Sürth",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.008332288825804,
+        "y": 50.867386393392174
+      }
+    },
+    {
+      "attributes": {
+        "name": "Grüner Weg",
+        "district": "Sürth",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.010666342955268,
+        "y": 50.86856085771727
+      }
+    },
+    {
+      "attributes": {
+        "name": "Schlehenweg",
+        "district": "Sürth",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.01411496689509,
+        "y": 50.87133288938749
+      }
+    },
+    {
+      "attributes": {
+        "name": "Katharinenstraße",
+        "district": "Godorf",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.969711462715619,
+        "y": 50.84921842893644
+      }
+    },
+    {
+      "attributes": {
+        "name": "Godorfer Hauptstraße",
+        "district": "Godorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.977066171167873,
+        "y": 50.84629819510744
+      }
+    },
+    {
+      "attributes": {
+        "name": "Wiechertstraße",
+        "district": "Immendorf",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.963707923698523,
+        "y": 50.857591688722906
+      }
+    },
+    {
+      "attributes": {
+        "name": "Euskirchener Straße",
+        "district": "Immendorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.966023608941218,
+        "y": 50.853101882732226
+      }
+    },
+    {
+      "attributes": {
+        "name": "Am Magerhof",
+        "district": "Meschenich",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.924046849076612,
+        "y": 50.85933436038142
+      }
+    },
+    {
+      "attributes": {
+        "name": "Honnefer Platz",
+        "district": "Klettenberg",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.930113281242797,
+        "y": 50.9127867803923
+      }
+    },
+    {
+      "attributes": {
+        "name": "Geisbergstraße",
+        "district": "Klettenberg",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.926381421746476,
+        "y": 50.904184867673536
+      }
+    },
+    {
+      "attributes": {
+        "name": "Siebengebirgsallee/Klettenbergpark Süd",
+        "district": "Klettenberg",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.921054745779052,
+        "y": 50.90793065039644
+      }
+    },
+    {
+      "attributes": {
+        "name": "Linzer Straße/Düstemichstraße",
+        "district": "Sülz",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Kunststoffbelag",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.934246303929044,
+        "y": 50.91809005747736
+      }
+    },
+    {
+      "attributes": {
+        "name": "Nikolausplatz",
+        "district": "Sülz",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.9280219493982464,
+        "y": 50.918514268059226
+      }
+    },
+    {
+      "attributes": {
+        "name": "Peter-Dedenbach-Straße/Innerer Grüngürtel Nord",
+        "district": "Neustadt/Nord",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.93268725833762,
+        "y": 50.944921303180145
+      }
+    },
+    {
+      "attributes": {
+        "name": "Helenenwallstraße",
+        "district": "Deutz",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Kunststoffbelag",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.97393543186255,
+        "y": 50.93310735275473
+      }
+    },
+    {
+      "attributes": {
+        "name": "Hafenpark/Festplatz Deutz",
+        "district": "Deutz",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "2",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.969833093658437,
+        "y": 50.93399787288807
+      }
+    },
+    {
+      "attributes": {
+        "name": "Suevenstraße",
+        "district": "Deutz",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.980596651735073,
+        "y": 50.93105156711001
+      }
+    },
+    {
+      "attributes": {
+        "name": "Bebelplatz",
+        "district": "Deutz",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.975111560257151,
+        "y": 50.929877461544756
+      }
+    },
+    {
+      "attributes": {
+        "name": "Alteburger Straße",
+        "district": "Bayenthal",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.969659030723675,
+        "y": 50.912172327849476
+      }
+    },
+    {
+      "attributes": {
+        "name": "Zaunhofstraße",
+        "district": "Meschenich",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.934295882043213,
+        "y": 50.86155598359082
+      }
+    },
+    {
+      "attributes": {
+        "name": "Mathiaskirchplatz",
+        "district": "Bayenthal",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.965064259402048,
+        "y": 50.90912155283791
+      }
+    },
+    {
+      "attributes": {
+        "name": "Cäsarstraße",
+        "district": "Bayenthal",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asphalt",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.967398283552706,
+        "y": 50.90858851226496
+      }
+    },
+    {
+      "attributes": {
+        "name": "Brohler Straße",
+        "district": "Marienburg",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.965780014270598,
+        "y": 50.90274278990156
+      }
+    },
+    {
+      "attributes": {
+        "name": "Rheinsteinstraße",
+        "district": "Raderberg",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.962260598442737,
+        "y": 50.90611052793568
+      }
+    },
+    {
+      "attributes": {
+        "name": "Kreuznacher Straße/Vorgebirgspark",
+        "district": "Zollstock",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "3"
+      },
+      "geometry": {
+        "x": 6.9534038456472045,
+        "y": 50.90824568006262
+      }
+    },
+    {
+      "attributes": {
+        "name": "Weilerswister Straße - West",
+        "district": "Raderthal",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asphalt",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.952699568422962,
+        "y": 50.901277004004754
+      }
+    },
+    {
+      "attributes": {
+        "name": "Kalscheurer Weg",
+        "district": "Zollstock",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.938802306468711,
+        "y": 50.90402959787908
+      }
+    },
+    {
+      "attributes": {
+        "name": "Marienplatz/Mühlenbach",
+        "district": "Altstadt/Süd",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.957142095665435,
+        "y": 50.933468121751375
+      }
+    },
+    {
+      "attributes": {
+        "name": "Rubensstraße/Oskar Platz",
+        "district": "Altstadt/Süd",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.942504212577386,
+        "y": 50.9338016164065
+      }
+    },
+    {
+      "attributes": {
+        "name": "Huhnsgasse",
+        "district": "Altstadt/Süd",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.944966390627031,
+        "y": 50.93245167517382
+      }
+    },
+    {
+      "attributes": {
+        "name": "Rothgerberbach",
+        "district": "Altstadt/Süd",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.947778720535717,
+        "y": 50.92985173318765
+      }
+    },
+    {
+      "attributes": {
+        "name": "Im Dau",
+        "district": "Altstadt/Süd",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.956712945401584,
+        "y": 50.926834483935785
+      }
+    },
+    {
+      "attributes": {
+        "name": "Quentelstraße",
+        "district": "Altstadt/Süd",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.960313596320719,
+        "y": 50.92617086450904
+      }
+    },
+    {
+      "attributes": {
+        "name": "An der Bottmühle",
+        "district": "Altstadt/Süd",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asphalt",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.963176470604959,
+        "y": 50.922639161117814
+      }
+    },
+    {
+      "attributes": {
+        "name": "Jean-Jülich-Weg/Stollwerckhof",
+        "district": "Altstadt/Süd",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.96380153809026,
+        "y": 50.92393726943682
+      }
+    },
+    {
+      "attributes": {
+        "name": "Trude-Herr-Park",
+        "district": "Altstadt/Süd",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.963284462986113,
+        "y": 50.92535054153284
+      }
+    },
+    {
+      "attributes": {
+        "name": "Ohmstraße",
+        "district": "Neustadt/Süd",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.958905107219534,
+        "y": 50.91882697268848
+      }
+    },
+    {
+      "attributes": {
+        "name": "Zugweg",
+        "district": "Neustadt/Süd",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.958146636134026,
+        "y": 50.91953321100179
+      }
+    },
+    {
+      "attributes": {
+        "name": "Claudiusstraße/Römerpark",
+        "district": "Neustadt/Süd",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "3"
+      },
+      "geometry": {
+        "x": 6.966037009022163,
+        "y": 50.92038938065582
+      }
+    },
+    {
+      "attributes": {
+        "name": "Agrippinaufer",
+        "district": "Neustadt/Süd",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Kunstrasen",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.9680580072074845,
+        "y": 50.91865267189792
+      }
+    },
+    {
+      "attributes": {
+        "name": "Skatefläche Rheinauhafen",
+        "district": "Neustadt/Süd",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": "1",
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.970174140214243,
+        "y": 50.9177746652809
+      }
+    },
+    {
+      "attributes": {
+        "name": "Vorgebirgstraße",
+        "district": "Neustadt/Süd",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "3"
+      },
+      "geometry": {
+        "x": 6.949758144339228,
+        "y": 50.91994756345482
+      }
+    },
+    {
+      "attributes": {
+        "name": "Rathenauplatz Nord",
+        "district": "Neustadt/Süd",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Kunststoffbelag",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.9353669164988965,
+        "y": 50.93185024821867
+      }
+    },
+    {
+      "attributes": {
+        "name": "Volksgartenstraße",
+        "district": "Neustadt/Süd",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.948184042092461,
+        "y": 50.92163299919044
+      }
+    },
+    {
+      "attributes": {
+        "name": "Klingelpütz-Anlage",
+        "district": "Altstadt/Nord",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "2",
+        "boulebahn": null,
+        "skatepark": "1",
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.950260572054175,
+        "y": 50.94600723448889
+      }
+    },
+    {
+      "attributes": {
+        "name": "Alte Wallgasse",
+        "district": "Altstadt/Nord",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.942270113640952,
+        "y": 50.93892184275275
+      }
+    },
+    {
+      "attributes": {
+        "name": "Spichernstraße/Stadtgarten",
+        "district": "Neustadt/Nord",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.935162540763991,
+        "y": 50.943798240779344
+      }
+    },
+    {
+      "attributes": {
+        "name": "Prälat-Otto-Müller-Platz",
+        "district": "Neustadt/Nord",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.954207574789569,
+        "y": 50.95452178535057
+      }
+    },
+    {
+      "attributes": {
+        "name": "Melchiorstraße",
+        "district": "Neustadt/Nord",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.954185719654844,
+        "y": 50.95316039070519
+      }
+    },
+    {
+      "attributes": {
+        "name": "Skateanlage Lentstraße",
+        "district": "Neustadt/Nord",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": "1",
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.96309520798589,
+        "y": 50.958389898450086
+      }
+    },
+    {
+      "attributes": {
+        "name": "Theodor-Heuss-Ring Süd",
+        "district": "Neustadt/Nord",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.963204998974633,
+        "y": 50.95023936309501
+      }
+    },
+    {
+      "attributes": {
+        "name": "Höninger Weg (Eichi)",
+        "district": "Raderthal",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.944522377772095,
+        "y": 50.89930279787822
+      }
+    },
+    {
+      "attributes": {
+        "name": "Neuenahrer Straße/Vorgebirgspark",
+        "district": "Zollstock",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": "1",
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.95064257246511,
+        "y": 50.90707206561504
+      }
+    },
+    {
+      "attributes": {
+        "name": "Schwalbacher Straße/Vorgebirgspark",
+        "district": "Zollstock",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.948578170004315,
+        "y": 50.90805512348671
+      }
+    },
+    {
+      "attributes": {
+        "name": "Kierberger Straße/Vorgebirgspark ",
+        "district": "Zollstock",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "2",
+        "boulebahn": null,
+        "skatepark": "1",
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.950522067454674,
+        "y": 50.90993937348471
+      }
+    },
+    {
+      "attributes": {
+        "name": "Theophanoplatz",
+        "district": "Zollstock",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.942452887677995,
+        "y": 50.91183808478682
+      }
+    },
+    {
+      "attributes": {
+        "name": "Homburger Straße/Vorgebirgspark",
+        "district": "Zollstock",
+        "fußballplätze": null,
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.947783878549983,
+        "y": 50.91195852797915
+      }
+    },
+    {
+      "attributes": {
+        "name": "Rondorfer Hauptstraße",
+        "district": "Rondorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.954941412096846,
+        "y": 50.86892805852896
+      }
+    },
+    {
+      "attributes": {
+        "name": "Westerwaldstraße",
+        "district": "Rondorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.948933069000556,
+        "y": 50.86983636428309
+      }
+    },
+    {
+      "attributes": {
+        "name": "Kapellenstraße",
+        "district": "Rondorf",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.951152255379556,
+        "y": 50.87217987163256
+      }
+    },
+    {
+      "attributes": {
+        "name": "Sperberweg",
+        "district": "Rondorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.959934711831025,
+        "y": 50.87136999776162
+      }
+    },
+    {
+      "attributes": {
+        "name": "Hansaplatz",
+        "district": "Altstadt/Nord",
+        "fußballplätze": "2",
+        "platzbelag_fußball": "Kunststoffbelag",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.947411215384865,
+        "y": 50.94627610650167
+      }
+    },
+    {
+      "attributes": {
+        "name": "Venloer Straße/Innerer Grüngürtel Nord",
+        "district": "Neustadt/Nord",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.930818410023988,
+        "y": 50.94493696954608
+      }
+    },
+    {
+      "attributes": {
+        "name": "Merlinweg",
+        "district": "Rondorf",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.96546804566252,
+        "y": 50.87342476279961
+      }
+    },
+    {
+      "attributes": {
+        "name": "Waldkauzweg/Reiherstraße",
+        "district": "Rondorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.96206920590039,
+        "y": 50.8743826851281
+      }
+    },
+    {
+      "attributes": {
+        "name": "Kyllstraße/Siegstraße",
+        "district": "Rodenkirchen",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.99618513862382,
+        "y": 50.88349576032603
+      }
+    },
+    {
+      "attributes": {
+        "name": "Barbarastraße",
+        "district": "Rodenkirchen",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.997026002760835,
+        "y": 50.89331431254078
+      }
+    },
+    {
+      "attributes": {
+        "name": "Zum Hedelsberg/Im Salzgrund",
+        "district": "Weiß",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.0260147112883065,
+        "y": 50.87549200037107
+      }
+    },
+    {
+      "attributes": {
+        "name": "Ensener Weg",
+        "district": "Weiß",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.03317029160927,
+        "y": 50.88012658175281
+      }
+    },
+    {
+      "attributes": {
+        "name": "An den Maien ",
+        "district": "Poll",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.98917931570996,
+        "y": 50.92066101758011
+      }
+    },
+    {
+      "attributes": {
+        "name": "Käulchensweg",
+        "district": "Poll",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.985829174645986,
+        "y": 50.91295298366613
+      }
+    },
+    {
+      "attributes": {
+        "name": "Mendener Straße",
+        "district": "Poll",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.993795934701869,
+        "y": 50.90962531780962
+      }
+    },
+    {
+      "attributes": {
+        "name": "Im Forst",
+        "district": "Poll",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.997342028190918,
+        "y": 50.9151364634521
+      }
+    },
+    {
+      "attributes": {
+        "name": "Im Wasserfeld/Wahnheider Straße",
+        "district": "Poll",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.0069684694723255,
+        "y": 50.91299268275552
+      }
+    },
+    {
+      "attributes": {
+        "name": "Augustastraße/Sophienstraße",
+        "district": "Westhoven",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.02772410049449,
+        "y": 50.9037461302203
+      }
+    },
+    {
+      "attributes": {
+        "name": "Schildgenweg/Heidbergweg",
+        "district": "Ensen",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.047671796860023,
+        "y": 50.895936536944866
+      }
+    },
+    {
+      "attributes": {
+        "name": "Auf dem Streitacker ",
+        "district": "Gremberghoven",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.058028404586251,
+        "y": 50.90279124630198
+      }
+    },
+    {
+      "attributes": {
+        "name": "Kurt-Schumacher-Straße/Carlebachstraße",
+        "district": "Eil",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": "1",
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.071788092299942,
+        "y": 50.8956548583454
+      }
+    },
+    {
+      "attributes": {
+        "name": "Mülheimer Straße",
+        "district": "Eil",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.076337071444391,
+        "y": 50.88942135219988
+      }
+    },
+    {
+      "attributes": {
+        "name": "Martin-Luther-Straße/Frankfurter Straße",
+        "district": "Eil",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.0786529723172995,
+        "y": 50.887654442444926
+      }
+    },
+    {
+      "attributes": {
+        "name": "Hirschgraben Mitte ",
+        "district": "Eil",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.085266997594317,
+        "y": 50.89613879117032
+      }
+    },
+    {
+      "attributes": {
+        "name": "Glashüttenstraße",
+        "district": "Porz",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.05941439003763,
+        "y": 50.88685184490757
+      }
+    },
+    {
+      "attributes": {
+        "name": "Friedrichstraße/Klingerstraße",
+        "district": "Porz",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.061170602687654,
+        "y": 50.88452301509729
+      }
+    },
+    {
+      "attributes": {
+        "name": "Aachener Straße/Krefelder Straße",
+        "district": "Porz",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.068139976049437,
+        "y": 50.88873264788937
+      }
+    },
+    {
+      "attributes": {
+        "name": "Stormstraße/Ludwig-Jahn-Straße",
+        "district": "Weiden",
+        "fußballplätze": null,
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.844475959546787,
+        "y": 50.94166692944085
+      }
+    },
+    {
+      "attributes": {
+        "name": "Müllergasse ",
+        "district": "Poll",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.98617850440593,
+        "y": 50.915082523830584
+      }
+    },
+    {
+      "attributes": {
+        "name": "Eiler Schützenplatz",
+        "district": "Eil",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.079525526666955,
+        "y": 50.896818645150184
+      }
+    },
+    {
+      "attributes": {
+        "name": "Kronstädter Straße/Grünzug",
+        "district": "Weiden",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.844668533615171,
+        "y": 50.92972490444196
+      }
+    },
+    {
+      "attributes": {
+        "name": "Mittelweg/Nerzweg",
+        "district": "Lövenich",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.836331825337072,
+        "y": 50.949144307160005
+      }
+    },
+    {
+      "attributes": {
+        "name": "Lahnstraße/Rurseeallee",
+        "district": "Lövenich",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.820174376205992,
+        "y": 50.94476455214562
+      }
+    },
+    {
+      "attributes": {
+        "name": "An der Ronne Nord",
+        "district": "Lövenich",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.82044112004632,
+        "y": 50.949437544064224
+      }
+    },
+    {
+      "attributes": {
+        "name": "An der Ronne Süd",
+        "district": "Lövenich",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.8182745688982695,
+        "y": 50.947725214569196
+      }
+    },
+    {
+      "attributes": {
+        "name": "Marie-Hüllenkremer-Straße",
+        "district": "Lövenich",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.830183800228445,
+        "y": 50.95438344464658
+      }
+    },
+    {
+      "attributes": {
+        "name": "Eichenweg",
+        "district": "Widdersdorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.835411738249054,
+        "y": 50.96968299337737
+      }
+    },
+    {
+      "attributes": {
+        "name": "Iltisweg",
+        "district": "Widdersdorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.826484519308591,
+        "y": 50.9686111629038
+      }
+    },
+    {
+      "attributes": {
+        "name": "Im Buschfelde",
+        "district": "Widdersdorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.83919050720187,
+        "y": 50.96798055982466
+      }
+    },
+    {
+      "attributes": {
+        "name": "Bethlehem-Platz",
+        "district": "Widdersdorf",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.836126974282384,
+        "y": 50.97393188573455
+      }
+    },
+    {
+      "attributes": {
+        "name": "Am Mertenshof",
+        "district": "Widdersdorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.826362166227351,
+        "y": 50.962423200651905
+      }
+    },
+    {
+      "attributes": {
+        "name": "Auf der Aspel/Sibilla-Sester-Straße ",
+        "district": "Widdersdorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.827041844875853,
+        "y": 50.961295287069824
+      }
+    },
+    {
+      "attributes": {
+        "name": "Meisenweg/Stieglitzweg",
+        "district": "Vogelsang",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.874803895752329,
+        "y": 50.95424069893142
+      }
+    },
+    {
+      "attributes": {
+        "name": "Goldhähnchenweg",
+        "district": "Vogelsang",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.886224898299647,
+        "y": 50.95914760332848
+      }
+    },
+    {
+      "attributes": {
+        "name": "Börnestraße/Michelsweg (Vogelwäldchen)",
+        "district": "Bocklemünd/Mengenich",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.863233702720169,
+        "y": 50.98049091547647
+      }
+    },
+    {
+      "attributes": {
+        "name": "Gerhard-Bruders-Straße/Jüssenstraße",
+        "district": "Ossendorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.902418386104589,
+        "y": 50.96902711226012
+      }
+    },
+    {
+      "attributes": {
+        "name": "Am Pistorhof",
+        "district": "Ossendorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.906725602135839,
+        "y": 50.96553868558688
+      }
+    },
+    {
+      "attributes": {
+        "name": "König-Baudouin-Platz",
+        "district": "Ossendorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.913374579824289,
+        "y": 50.96979318358544
+      }
+    },
+    {
+      "attributes": {
+        "name": "Rochusstraße",
+        "district": "Ossendorf",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.901088919325275,
+        "y": 50.965915621696446
+      }
+    },
+    {
+      "attributes": {
+        "name": "Willi-Sieke-Straße",
+        "district": "Ossendorf",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.901790761005992,
+        "y": 50.971864383468066
+      }
+    },
+    {
+      "attributes": {
+        "name": "Hartwichstraße",
+        "district": "Nippes",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.944591220852243,
+        "y": 50.95797736684695
+      }
+    },
+    {
+      "attributes": {
+        "name": "Neue Sandkaul",
+        "district": "Widdersdorf",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.836644483729562,
+        "y": 50.9655163119828
+      }
+    },
+    {
+      "attributes": {
+        "name": "Goswin-Peter-Gath-Straße/Thielenstraße/Marienstraße",
+        "district": "Ehrenfeld",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.912012840533992,
+        "y": 50.954845281681436
+      }
+    },
+    {
+      "attributes": {
+        "name": "Schönsteinstraße",
+        "district": "Ehrenfeld",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.916270350237456,
+        "y": 50.95226340224016
+      }
+    },
+    {
+      "attributes": {
+        "name": "Lessingstraße",
+        "district": "Ehrenfeld",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": "1",
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.912580935598847,
+        "y": 50.953560767811744
+      }
+    },
+    {
+      "attributes": {
+        "name": "Helmholtzplatz",
+        "district": "Ehrenfeld",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "4"
+      },
+      "geometry": {
+        "x": 6.9041184867350625,
+        "y": 50.95396297893867
+      }
+    },
+    {
+      "attributes": {
+        "name": "Takufeld I/Subbelrather Straße",
+        "district": "Ehrenfeld",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.9088749301349806,
+        "y": 50.95971761687926
+      }
+    },
+    {
+      "attributes": {
+        "name": "Takufeld II",
+        "district": "Ehrenfeld",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.909960248523193,
+        "y": 50.958355414910784
+      }
+    },
+    {
+      "attributes": {
+        "name": "Leo-Amann-Park/Venloer Straße  ",
+        "district": "Ehrenfeld",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "3"
+      },
+      "geometry": {
+        "x": 6.91164458434008,
+        "y": 50.95314724094622
+      }
+    },
+    {
+      "attributes": {
+        "name": "Glasstraße/Wißmannstraße",
+        "district": "Ehrenfeld",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.922397843199886,
+        "y": 50.95128660862362
+      }
+    },
+    {
+      "attributes": {
+        "name": "Grimmstraße/Wißmannstraße",
+        "district": "Ehrenfeld",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.923367050319163,
+        "y": 50.95094816796196
+      }
+    },
+    {
+      "attributes": {
+        "name": "Klarastraße/Wahlenstraße",
+        "district": "Ehrenfeld",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.921364134808639,
+        "y": 50.94926243664676
+      }
+    },
+    {
+      "attributes": {
+        "name": "Everhardstraße/Christian-Schult-Straße",
+        "district": "Ehrenfeld",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.928474203334761,
+        "y": 50.94799957648873
+      }
+    },
+    {
+      "attributes": {
+        "name": "Peter-Röser-Straße",
+        "district": "Ossendorf",
+        "fußballplätze": "Stelen aus Metall",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.913490423898795,
+        "y": 50.96791879465439
+      }
+    },
+    {
+      "attributes": {
+        "name": "Fröbelstraße",
+        "district": "Ehrenfeld",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.9142996001060455,
+        "y": 50.94518023982921
+      }
+    },
+    {
+      "attributes": {
+        "name": "Fröbelplatz",
+        "district": "Ehrenfeld",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.917435188911791,
+        "y": 50.94620680492766
+      }
+    },
+    {
+      "attributes": {
+        "name": "Roßstraße",
+        "district": "Ehrenfeld",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.921426612702231,
+        "y": 50.944609980809524
+      }
+    },
+    {
+      "attributes": {
+        "name": "Baadenberger Straße/Gotthelfstraße",
+        "district": "Neuehrenfeld",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.922003256358752,
+        "y": 50.96113579733085
+      }
+    },
+    {
+      "attributes": {
+        "name": "Hinter den Höfen",
+        "district": "Wahn",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asphalt",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.084624470716382,
+        "y": 50.86059322774077
+      }
+    },
+    {
+      "attributes": {
+        "name": "Liebigstraße/Herkulesstraße",
+        "district": "Neuehrenfeld",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.931985107891762,
+        "y": 50.95408750374257
+      }
+    },
+    {
+      "attributes": {
+        "name": "Hans-Wild-Straße",
+        "district": "Neuehrenfeld",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.933784627489206,
+        "y": 50.95435117908946
+      }
+    },
+    {
+      "attributes": {
+        "name": "Max-Fremery-Straße",
+        "district": "Bickendorf",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asphalt",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.888130977493383,
+        "y": 50.96564946091454
+      }
+    },
+    {
+      "attributes": {
+        "name": "Ossendorfer Weg/Mathias-Brüggen-Straße",
+        "district": "Bickendorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.893626866331526,
+        "y": 50.96869950978569
+      }
+    },
+    {
+      "attributes": {
+        "name": "Rotdornweg",
+        "district": "Bickendorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.897554988815392,
+        "y": 50.96393787542246
+      }
+    },
+    {
+      "attributes": {
+        "name": "Am Rosenhof",
+        "district": "Bickendorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.896959990575429,
+        "y": 50.96128259039043
+      }
+    },
+    {
+      "attributes": {
+        "name": "Grüner Brunnenweg",
+        "district": "Bickendorf",
+        "fußballplätze": "Bolzwiese ohne Tore",
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.892362477546019,
+        "y": 50.96268780047504
+      }
+    },
+    {
+      "attributes": {
+        "name": "Geschäftszentrum Neu-Vogelsang/Goldammerweg",
+        "district": "Vogelsang",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.873115108866535,
+        "y": 50.962248287354306
+      }
+    },
+    {
+      "attributes": {
+        "name": "Manderscheider Platz",
+        "district": "Sülz",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.922746492291708,
+        "y": 50.9145606859916
+      }
+    },
+    {
+      "attributes": {
+        "name": "Münstereifeler Straße/Sülzburgstraße",
+        "district": "Sülz",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Kunststoffbelag",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.922480781991004,
+        "y": 50.919228865714494
+      }
+    },
+    {
+      "attributes": {
+        "name": "Asbergplatz",
+        "district": "Sülz",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.9196756415832334,
+        "y": 50.9101028915171
+      }
+    },
+    {
+      "attributes": {
+        "name": "Neuenhöfer Allee/Beethovenpark Süd",
+        "district": "Sülz",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.91652262684676,
+        "y": 50.91292415252881
+      }
+    },
+    {
+      "attributes": {
+        "name": "Euskirchener Straße/Hollerather Straße",
+        "district": "Sülz",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.915727818057345,
+        "y": 50.916888201020434
+      }
+    },
+    {
+      "attributes": {
+        "name": "Hochwaldstraße",
+        "district": "Sülz",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.906755071351104,
+        "y": 50.91546758445834
+      }
+    },
+    {
+      "attributes": {
+        "name": "Münstereifeler Platz",
+        "district": "Sülz",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": "1",
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.918909305188593,
+        "y": 50.91691751083576
+      }
+    },
+    {
+      "attributes": {
+        "name": "Erlenweg/Grüner Brunnenweg",
+        "district": "Bickendorf",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.892559443397833,
+        "y": 50.96485722892809
+      }
+    },
+    {
+      "attributes": {
+        "name": "Lortzingplatz",
+        "district": "Lindenthal",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.911965062767657,
+        "y": 50.93108189709359
+      }
+    },
+    {
+      "attributes": {
+        "name": "Immermannstraße",
+        "district": "Lindenthal",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.9182585388677325,
+        "y": 50.929639517170195
+      }
+    },
+    {
+      "attributes": {
+        "name": "Frechener Platz",
+        "district": "Lindenthal",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.908480987435089,
+        "y": 50.92028433977809
+      }
+    },
+    {
+      "attributes": {
+        "name": "Lindenthalgürtel/Hans-A.-Müllerheim-Park",
+        "district": "Lindenthal",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.912652791427827,
+        "y": 50.92290979562363
+      }
+    },
+    {
+      "attributes": {
+        "name": "Mommsenstraße/Gleueler Straße",
+        "district": "Lindenthal",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.906912343332889,
+        "y": 50.92162074986242
+      }
+    },
+    {
+      "attributes": {
+        "name": "Stadtwald/Wildpark",
+        "district": "Lindenthal",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.898811880002776,
+        "y": 50.93148561629514
+      }
+    },
+    {
+      "attributes": {
+        "name": "Dürener Straße/Stadtwaldgürtel",
+        "district": "Lindenthal",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.90667894557846,
+        "y": 50.927423102304466
+      }
+    },
+    {
+      "attributes": {
+        "name": "Skatefläche Friedrich-Schmidt-Straße/Stadtwald",
+        "district": "Lindenthal",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": "Halfpipe",
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.890623392622054,
+        "y": 50.93324924632235
+      }
+    },
+    {
+      "attributes": {
+        "name": "Alsdorfer Straße",
+        "district": "Braunsfeld",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.900156743585657,
+        "y": 50.94297744470125
+      }
+    },
+    {
+      "attributes": {
+        "name": "Pauliplatz",
+        "district": "Braunsfeld",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.898206823640004,
+        "y": 50.93823390900478
+      }
+    },
+    {
+      "attributes": {
+        "name": "Losheimer Straße/Echternacher Straße",
+        "district": "Braunsfeld",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.891472763860864,
+        "y": 50.93870067974473
+      }
+    },
+    {
+      "attributes": {
+        "name": "Manstedter Weg",
+        "district": "Müngersdorf",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.880975365778473,
+        "y": 50.944017380203334
+      }
+    },
+    {
+      "attributes": {
+        "name": "Kämpchensweg",
+        "district": "Müngersdorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.874328537075944,
+        "y": 50.940482181656584
+      }
+    },
+    {
+      "attributes": {
+        "name": "Im Rapsfeld/Egelspfad",
+        "district": "Müngersdorf",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.85744295835015,
+        "y": 50.948321507850544
+      }
+    },
+    {
+      "attributes": {
+        "name": "Vogelsanger Platz",
+        "district": "Junkersdorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.851989632076959,
+        "y": 50.938686178211796
+      }
+    },
+    {
+      "attributes": {
+        "name": "Blumenallee/Ginsterweg",
+        "district": "Junkersdorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.856061424328537,
+        "y": 50.93448856998861
+      }
+    },
+    {
+      "attributes": {
+        "name": "Kronstädter Straße/Bistritzer Straße",
+        "district": "Weiden",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.843570411091849,
+        "y": 50.930983487223024
+      }
+    },
+    {
+      "attributes": {
+        "name": "Osloer Straße/Athener Ring",
+        "district": "Chorweiler",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.896597780308443,
+        "y": 51.02445182883533
+      }
+    },
+    {
+      "attributes": {
+        "name": "Tiberstraße/Olof-Palme-Park",
+        "district": "Chorweiler",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.891371120078236,
+        "y": 51.02456712001234
+      }
+    },
+    {
+      "attributes": {
+        "name": "Wezelostraße/Windröschenweg",
+        "district": "Volkhoven/Weiler",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.880137968621608,
+        "y": 51.02105432288143
+      }
+    },
+    {
+      "attributes": {
+        "name": "Willi-Suth-Allee Nord",
+        "district": "Chorweiler",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.900894216255646,
+        "y": 51.02218147528796
+      }
+    },
+    {
+      "attributes": {
+        "name": "Elbeallee",
+        "district": "Chorweiler",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asphalt",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.886808327305842,
+        "y": 51.028154495498555
+      }
+    },
+    {
+      "attributes": {
+        "name": "Leineweg Ost",
+        "district": "Chorweiler",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.888585124940143,
+        "y": 51.029903547581775
+      }
+    },
+    {
+      "attributes": {
+        "name": "Muldeweg",
+        "district": "Chorweiler",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": "2",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.897754939578007,
+        "y": 51.02875496660075
+      }
+    },
+    {
+      "attributes": {
+        "name": "Arembergstraße/Malbergstraße",
+        "district": "Blumenberg",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.886386727305641,
+        "y": 51.040859731428625
+      }
+    },
+    {
+      "attributes": {
+        "name": "Ernstbergstraße",
+        "district": "Blumenberg",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.883255147212427,
+        "y": 51.03788072092603
+      }
+    },
+    {
+      "attributes": {
+        "name": "Langenbergstraße Süd (Eimer)",
+        "district": "Blumenberg",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.889156305184093,
+        "y": 51.03424495280444
+      }
+    },
+    {
+      "attributes": {
+        "name": "Weichselring/Langenbergstraße",
+        "district": "Blumenberg",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "2",
+        "boulebahn": null,
+        "skatepark": "8",
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.8872296567560545,
+        "y": 51.033211088637955
+      }
+    },
+    {
+      "attributes": {
+        "name": "Geiersbergstraße",
+        "district": "Blumenberg",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.880813625347684,
+        "y": 51.036559964527875
+      }
+    },
+    {
+      "attributes": {
+        "name": "St.-Tönnis-Straße",
+        "district": "Worringen",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.861634210937588,
+        "y": 51.061914086443835
+      }
+    },
+    {
+      "attributes": {
+        "name": "Bolligstraße",
+        "district": "Worringen",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.862322095937059,
+        "y": 51.0676589684621
+      }
+    },
+    {
+      "attributes": {
+        "name": "Hackhauser Weg",
+        "district": "Worringen",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.851992807105957,
+        "y": 51.060117336330215
+      }
+    },
+    {
+      "attributes": {
+        "name": "Krebelspfad/Ernst-Wolff-Straße",
+        "district": "Worringen",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.855106449716796,
+        "y": 51.057929395540704
+      }
+    },
+    {
+      "attributes": {
+        "name": "Krückelstraße",
+        "district": "Poll",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.986865340878554,
+        "y": 50.918073894777905
+      }
+    },
+    {
+      "attributes": {
+        "name": "Martinusstraße/Meisenweg",
+        "district": "Esch/Auweiler",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.853716176329111,
+        "y": 51.011802504066175
+      }
+    },
+    {
+      "attributes": {
+        "name": "Greesberger Straße",
+        "district": "Esch/Auweiler",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.8515150018508795,
+        "y": 51.00842356838316
+      }
+    },
+    {
+      "attributes": {
+        "name": "Auweiler Dorfplatz/Auweilerstraße",
+        "district": "Esch/Auweiler",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": "1",
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.852328737343546,
+        "y": 51.00269324364361
+      }
+    },
+    {
+      "attributes": {
+        "name": "Hermann-Löns-Straße/Am Köchhof",
+        "district": "Esch/Auweiler",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.854543529893184,
+        "y": 51.00347872139976
+      }
+    },
+    {
+      "attributes": {
+        "name": "Pescher Holzweg/Toni-Welter-Straße",
+        "district": "Volkhoven/Weiler",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.887743490447741,
+        "y": 51.01319412416516
+      }
+    },
+    {
+      "attributes": {
+        "name": "Planckstraße/Bonner Straße",
+        "district": "Porz",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.06735206132037,
+        "y": 50.8876841376021
+      }
+    },
+    {
+      "attributes": {
+        "name": "Dorotheenstraße",
+        "district": "Porz",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.07335325488753,
+        "y": 50.884898154652724
+      }
+    },
+    {
+      "attributes": {
+        "name": "Ampérestraße ",
+        "district": "Porz",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.068091813571275,
+        "y": 50.88375536962367
+      }
+    },
+    {
+      "attributes": {
+        "name": "Kupfergasse",
+        "district": "Urbach",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.082102225978219,
+        "y": 50.879528093671595
+      }
+    },
+    {
+      "attributes": {
+        "name": "Mühlenweg/Pappelallee",
+        "district": "Urbach",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.088213182352192,
+        "y": 50.87791843513402
+      }
+    },
+    {
+      "attributes": {
+        "name": "Bieselweg (Neue Heide)",
+        "district": "Wahnheide",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.099446142341268,
+        "y": 50.861951367131084
+      }
+    },
+    {
+      "attributes": {
+        "name": "Senkelsgraben",
+        "district": "Wahnheide",
+        "fußballplätze": "2",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 7.098010944644664,
+        "y": 50.85635929038476
+      }
+    },
+    {
+      "attributes": {
+        "name": "Auf dem Acker/Feldstraße",
+        "district": "Wahn",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.084947097629369,
+        "y": 50.853121821506875
+      }
+    },
+    {
+      "attributes": {
+        "name": "Swinestraße-Nord",
+        "district": "Chorweiler",
+        "fußballplätze": null,
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.89481598625567,
+        "y": 51.031594433826385
+      }
+    },
+    {
+      "attributes": {
+        "name": "Gilsonstraße",
+        "district": "Elsdorf",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.080862212163848,
+        "y": 50.872724509421204
+      }
+    },
+    {
+      "attributes": {
+        "name": "S-Bahnhof Wahn",
+        "district": "Wahn",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.081469348865636,
+        "y": 50.85893986200159
+      }
+    },
+    {
+      "attributes": {
+        "name": "Pastor-Huthmacher-Straße/Freiheit",
+        "district": "Libur",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.069673665378415,
+        "y": 50.83650496594376
+      }
+    },
+    {
+      "attributes": {
+        "name": "Liburer Straße",
+        "district": "Libur",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.07337516009854,
+        "y": 50.840978330211904
+      }
+    },
+    {
+      "attributes": {
+        "name": "Tulpenweg",
+        "district": "Zündorf",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 7.052485451368263,
+        "y": 50.87071856735812
+      }
+    },
+    {
+      "attributes": {
+        "name": "Alfons-Kafka-Straße",
+        "district": "Zündorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.036903810964445,
+        "y": 50.86160385171535
+      }
+    },
+    {
+      "attributes": {
+        "name": "An der Wielermaar",
+        "district": "Zündorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.0417900406833995,
+        "y": 50.86314327837431
+      }
+    },
+    {
+      "attributes": {
+        "name": "In der Adelenhütte ",
+        "district": "Zündorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.052889840811472,
+        "y": 50.87695594363943
+      }
+    },
+    {
+      "attributes": {
+        "name": "Freesienweg/Christrosenweg",
+        "district": "Zündorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.058111093697235,
+        "y": 50.87577905566089
+      }
+    },
+    {
+      "attributes": {
+        "name": "Frongasse ",
+        "district": "Langel",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.001689730576704,
+        "y": 50.847416051852875
+      }
+    },
+    {
+      "attributes": {
+        "name": "An der Mühle",
+        "district": "Langel",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 7.017535333463348,
+        "y": 50.85109187087451
+      }
+    },
+    {
+      "attributes": {
+        "name": "Am Weißen Stein",
+        "district": "Langel",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.011260870296641,
+        "y": 50.85058091549453
+      }
+    },
+    {
+      "attributes": {
+        "name": "Festplatz Langel",
+        "district": "Langel",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.015383757262737,
+        "y": 50.852814259233305
+      }
+    },
+    {
+      "attributes": {
+        "name": "Stresemannstraße",
+        "district": "Finkenberg",
+        "fußballplätze": "2",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.061250492643948,
+        "y": 50.90172891437762
+      }
+    },
+    {
+      "attributes": {
+        "name": "Taunusplatz",
+        "district": "Humboldt/Gremberg",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.997793819746274,
+        "y": 50.93412361147511
+      }
+    },
+    {
+      "attributes": {
+        "name": "Camberger Straße ",
+        "district": "Humboldt/Gremberg",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.991946342414922,
+        "y": 50.93345886445186
+      }
+    },
+    {
+      "attributes": {
+        "name": "Burgenlandstraße ",
+        "district": "Humboldt/Gremberg",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.99067261034657,
+        "y": 50.93196197466224
+      }
+    },
+    {
+      "attributes": {
+        "name": "Humboldtpark",
+        "district": "Humboldt/Gremberg",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.992836083378125,
+        "y": 50.93208519106349
+      }
+    },
+    {
+      "attributes": {
+        "name": "Odenwaldstraße/Taunusstraße",
+        "district": "Humboldt/Gremberg",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.995491298350159,
+        "y": 50.93067936868586
+      }
+    },
+    {
+      "attributes": {
+        "name": "Am Grauen Stein",
+        "district": "Humboldt/Gremberg",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.995090610662829,
+        "y": 50.92855886032467
+      }
+    },
+    {
+      "attributes": {
+        "name": "Roddergasse",
+        "district": "Humboldt/Gremberg",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.007822095001898,
+        "y": 50.92694013262778
+      }
+    },
+    {
+      "attributes": {
+        "name": "Kannebäckerstraße",
+        "district": "Humboldt/Gremberg",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.990433733911365,
+        "y": 50.92847034968981
+      }
+    },
+    {
+      "attributes": {
+        "name": "Kalker Markt ",
+        "district": "Kalk",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.005523576679531,
+        "y": 50.94067986055156
+      }
+    },
+    {
+      "attributes": {
+        "name": "Steprathstraße",
+        "district": "Kalk",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 7.006706800764171,
+        "y": 50.93938502556947
+      }
+    },
+    {
+      "attributes": {
+        "name": "Engelsstraße",
+        "district": "Kalk",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.000753560061923,
+        "y": 50.94119896878928
+      }
+    },
+    {
+      "attributes": {
+        "name": "Bürgerpark Kalk",
+        "district": "Kalk",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.996396911516937,
+        "y": 50.93998111896278
+      }
+    },
+    {
+      "attributes": {
+        "name": "Albermannstraße",
+        "district": "Kalk",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.00728246723347,
+        "y": 50.94406950335417
+      }
+    },
+    {
+      "attributes": {
+        "name": "Josef-Boschbach-Weg",
+        "district": "Vingst",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.0228648650194945,
+        "y": 50.93061524318086
+      }
+    },
+    {
+      "attributes": {
+        "name": "Limbachstraße/Homarstraße",
+        "district": "Vingst",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.01717608054704,
+        "y": 50.929643122170475
+      }
+    },
+    {
+      "attributes": {
+        "name": "Marktplatz Vingst - Spielplatz",
+        "district": "Vingst",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.024713077928566,
+        "y": 50.9318921518352
+      }
+    },
+    {
+      "attributes": {
+        "name": "Marktplatz Vingst - Bolzplatz",
+        "district": "Vingst",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.025121855271458,
+        "y": 50.93146741281835
+      }
+    },
+    {
+      "attributes": {
+        "name": "An St. Theodor",
+        "district": "Vingst",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": "1",
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.0230773561940945,
+        "y": 50.93437956189674
+      }
+    },
+    {
+      "attributes": {
+        "name": "Würzburger Straße/Oranienstraße",
+        "district": "Vingst",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.019857141315664,
+        "y": 50.93556471537062
+      }
+    },
+    {
+      "attributes": {
+        "name": "Würzburger Straße/Bayreuther Straße",
+        "district": "Vingst",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asphalt",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.018059876425613,
+        "y": 50.935673026074355
+      }
+    },
+    {
+      "attributes": {
+        "name": "Kuthstraße",
+        "district": "Vingst",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.022374507761969,
+        "y": 50.932377624387755
+      }
+    },
+    {
+      "attributes": {
+        "name": "Auerstraße/Lis-Böhle-Park",
+        "district": "Nippes",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.958425984099005,
+        "y": 50.959442459100615
+      }
+    },
+    {
+      "attributes": {
+        "name": "Leipziger Platz",
+        "district": "Nippes",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.955736405268932,
+        "y": 50.96606180842401
+      }
+    },
+    {
+      "attributes": {
+        "name": "Neusser Straße/Innere Kanalstraße",
+        "district": "Nippes",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.951535507048907,
+        "y": 50.95689272804024
+      }
+    },
+    {
+      "attributes": {
+        "name": "Niehler Straße/Innerer Grünzug",
+        "district": "Nippes",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.957302202071778,
+        "y": 50.958565252789825
+      }
+    },
+    {
+      "attributes": {
+        "name": "An der Lenzwiese",
+        "district": "Humboldt/Gremberg",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.002312268502781,
+        "y": 50.926754451014446
+      }
+    },
+    {
+      "attributes": {
+        "name": "Niehler Kirchweg/Nippeser Tälchen",
+        "district": "Nippes",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.951208402753859,
+        "y": 50.968432577065606
+      }
+    },
+    {
+      "attributes": {
+        "name": "Lohse-Rampe - Lohsestraße",
+        "district": "Nippes",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": "Halfpipe mit Erweiterung",
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.954149036908494,
+        "y": 50.95780611617122
+      }
+    },
+    {
+      "attributes": {
+        "name": "Xantener Straße/Johannes-Giesberts-Park",
+        "district": "Nippes",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.9651208246019305,
+        "y": 50.9654063506315
+      }
+    },
+    {
+      "attributes": {
+        "name": "Nordpark/Amsterdamer Straße",
+        "district": "Nippes",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.967155247899047,
+        "y": 50.970149325612546
+      }
+    },
+    {
+      "attributes": {
+        "name": "Am Nordpark/Amsterdamer Straße",
+        "district": "Nippes",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.967546988346735,
+        "y": 50.96933967597062
+      }
+    },
+    {
+      "attributes": {
+        "name": "Parkgürtel/Kempener Straße/Nippeser Bürgerpark",
+        "district": "Nippes",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.942404648796958,
+        "y": 50.96806860295555
+      }
+    },
+    {
+      "attributes": {
+        "name": "Lokomotivstraße/An der alten Kantine",
+        "district": "Nippes",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.943356833463999,
+        "y": 50.96366242577372
+      }
+    },
+    {
+      "attributes": {
+        "name": "Brunhildplatz",
+        "district": "Mauenheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.9372292840954115,
+        "y": 50.97657340051863
+      }
+    },
+    {
+      "attributes": {
+        "name": "Etzelstraße",
+        "district": "Mauenheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.941112576836121,
+        "y": 50.972274810789465
+      }
+    },
+    {
+      "attributes": {
+        "name": "Bergstraße",
+        "district": "Mauenheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.943227247741871,
+        "y": 50.973786565443625
+      }
+    },
+    {
+      "attributes": {
+        "name": "Brehmstraße",
+        "district": "Riehl",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.972007092314205,
+        "y": 50.96707408083464
+      }
+    },
+    {
+      "attributes": {
+        "name": "Garthestraße",
+        "district": "Riehl",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.975097567113,
+        "y": 50.96574945457899
+      }
+    },
+    {
+      "attributes": {
+        "name": "Riehler Aue",
+        "district": "Riehl",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.988670115648263,
+        "y": 50.964714584868105
+      }
+    },
+    {
+      "attributes": {
+        "name": "Spechtstraße",
+        "district": "Niehl",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.962247696785917,
+        "y": 50.980001479099535
+      }
+    },
+    {
+      "attributes": {
+        "name": "Scheibenstraße",
+        "district": "Niehl",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.954841952182008,
+        "y": 50.98603691285184
+      }
+    },
+    {
+      "attributes": {
+        "name": "Pastor-Wolff-Straße",
+        "district": "Niehl",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.954242459073874,
+        "y": 50.99381361334892
+      }
+    },
+    {
+      "attributes": {
+        "name": "Niehler Damm",
+        "district": "Niehl",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.964501804405924,
+        "y": 50.98955659703858
+      }
+    },
+    {
+      "attributes": {
+        "name": "Leuthenstraße/Neusser Straße",
+        "district": "Weidenpesch",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.947475745711217,
+        "y": 50.97902848214463
+      }
+    },
+    {
+      "attributes": {
+        "name": "Scheinerstraße",
+        "district": "Longerich",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.935004352900183,
+        "y": 50.9922231557973
+      }
+    },
+    {
+      "attributes": {
+        "name": "Bielefelder Straße",
+        "district": "Longerich",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": "1",
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.9244892318124,
+        "y": 50.996976883311184
+      }
+    },
+    {
+      "attributes": {
+        "name": "Graseggerstraße",
+        "district": "Longerich",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": "1",
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.924290303398323,
+        "y": 50.99350900273428
+      }
+    },
+    {
+      "attributes": {
+        "name": "Wilhelm-Leuschner-Straße",
+        "district": "Longerich",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.914617052477887,
+        "y": 50.99041425131445
+      }
+    },
+    {
+      "attributes": {
+        "name": "Hansenstraße",
+        "district": "Longerich",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.917192778390159,
+        "y": 50.99345085302128
+      }
+    },
+    {
+      "attributes": {
+        "name": "Gloedenstraße",
+        "district": "Longerich",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": "1",
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.9178746101361055,
+        "y": 50.99161136661689
+      }
+    },
+    {
+      "attributes": {
+        "name": "Lohmüllerstraße",
+        "district": "Longerich",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.92208389042245,
+        "y": 50.991668440973484
+      }
+    },
+    {
+      "attributes": {
+        "name": "Am Balsamhof",
+        "district": "Longerich",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.906527875878596,
+        "y": 50.995140827477876
+      }
+    },
+    {
+      "attributes": {
+        "name": "Altleinigenweg/Gertrud-Robertz-Platz",
+        "district": "Bilderstöckchen",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.9304500776793825,
+        "y": 50.97117185625939
+      }
+    },
+    {
+      "attributes": {
+        "name": "Vogesenstraße",
+        "district": "Bilderstöckchen",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.92716129404406,
+        "y": 50.97565894013193
+      }
+    },
+    {
+      "attributes": {
+        "name": "Am Bilderstöckchen",
+        "district": "Bilderstöckchen",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.923660000607295,
+        "y": 50.973967221475704
+      }
+    },
+    {
+      "attributes": {
+        "name": "Blücherpark I/Am Plateau",
+        "district": "Bilderstöckchen",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.925626117394338,
+        "y": 50.9642689893383
+      }
+    },
+    {
+      "attributes": {
+        "name": "Blücherpark III/Lindenplatz",
+        "district": "Bilderstöckchen",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.92804458242908,
+        "y": 50.96122631206789
+      }
+    },
+    {
+      "attributes": {
+        "name": "Stuttgarter Straße/Reutlinger Straße",
+        "district": "Bilderstöckchen",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.931693631750694,
+        "y": 50.96725918279002
+      }
+    },
+    {
+      "attributes": {
+        "name": "Ebersbacher Straße",
+        "district": "Bilderstöckchen",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.932538212006882,
+        "y": 50.966532829348914
+      }
+    },
+    {
+      "attributes": {
+        "name": "Geldernstraße",
+        "district": "Bilderstöckchen",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.940959718428991,
+        "y": 50.96458591239202
+      }
+    },
+    {
+      "attributes": {
+        "name": "Hitdorfer Fährweg/Am Königsweg",
+        "district": "Merkenich",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.913075087742745,
+        "y": 51.05163185210049
+      }
+    },
+    {
+      "attributes": {
+        "name": "Merkenicher Hauptstraße/Kaplanshof",
+        "district": "Merkenich",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.961276008072213,
+        "y": 51.02255328282267
+      }
+    },
+    {
+      "attributes": {
+        "name": "Kasselberger Weg/Merkenicher Hauptstraße (Hinterm Deich)",
+        "district": "Merkenich",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.956996870563548,
+        "y": 51.029001127976194
+      }
+    },
+    {
+      "attributes": {
+        "name": "Feldblumenweg",
+        "district": "Fühlingen",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.904588718584018,
+        "y": 51.03808235527814
+      }
+    },
+    {
+      "attributes": {
+        "name": "Abendrothstraße",
+        "district": "Seeberg",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.904687206522825,
+        "y": 51.020726114469184
+      }
+    },
+    {
+      "attributes": {
+        "name": "Geranienweg",
+        "district": "Seeberg",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.915305701551181,
+        "y": 51.0169388893697
+      }
+    },
+    {
+      "attributes": {
+        "name": "Stallagsweg",
+        "district": "Heimersdorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.89911954175942,
+        "y": 51.01286731393949
+      }
+    },
+    {
+      "attributes": {
+        "name": "Oleanderweg",
+        "district": "Heimersdorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.9020752135496615,
+        "y": 51.01106346058509
+      }
+    },
+    {
+      "attributes": {
+        "name": "Altenhofer Weg",
+        "district": "Heimersdorf",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.900894537891381,
+        "y": 51.009466232320115
+      }
+    },
+    {
+      "attributes": {
+        "name": "Marienberger  Weg",
+        "district": "Lindweiler",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.8891516402351485,
+        "y": 51.00459395809218
+      }
+    },
+    {
+      "attributes": {
+        "name": "Erbacher Weg",
+        "district": "Lindweiler",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.884116175871961,
+        "y": 51.010135488402774
+      }
+    },
+    {
+      "attributes": {
+        "name": "Pingenweg",
+        "district": "Lindweiler",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.89464073393644,
+        "y": 51.00145383707963
+      }
+    },
+    {
+      "attributes": {
+        "name": "Schulstraße",
+        "district": "Pesch",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.869384337976073,
+        "y": 50.997115505063135
+      }
+    },
+    {
+      "attributes": {
+        "name": "Andreasstraße",
+        "district": "Esch/Auweiler",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.854628808937378,
+        "y": 51.01288572632791
+      }
+    },
+    {
+      "attributes": {
+        "name": "Katzenbuschweg",
+        "district": "Höhenhaus",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.038793196414947,
+        "y": 50.98550668365179
+      }
+    },
+    {
+      "attributes": {
+        "name": "Am Emberg",
+        "district": "Höhenhaus",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.02766414331281,
+        "y": 50.99090264828142
+      }
+    },
+    {
+      "attributes": {
+        "name": "Glockenblumenweg",
+        "district": "Höhenhaus",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.043556463677702,
+        "y": 50.97714288605942
+      }
+    },
+    {
+      "attributes": {
+        "name": "Am Kiefernwald",
+        "district": "Höhenhaus",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.031781282951316,
+        "y": 50.99190511524925
+      }
+    },
+    {
+      "attributes": {
+        "name": "Embergweg",
+        "district": "Dünnwald",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 7.0260452820988775,
+        "y": 50.9964295895931
+      }
+    },
+    {
+      "attributes": {
+        "name": "Am Katzenberg",
+        "district": "Dünnwald",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.052293703508971,
+        "y": 50.99717936705568
+      }
+    },
+    {
+      "attributes": {
+        "name": "Von-Diergardt-Straße",
+        "district": "Dünnwald",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.040937896860292,
+        "y": 50.99928604253629
+      }
+    },
+    {
+      "attributes": {
+        "name": "Gerbirgis-Weg",
+        "district": "Dünnwald",
+        "fußballplätze": "2",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.02708167321093,
+        "y": 51.002818085475425
+      }
+    },
+    {
+      "attributes": {
+        "name": "Ricarda-Huch-Straße",
+        "district": "Stammheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.995221104319169,
+        "y": 50.9870023257726
+      }
+    },
+    {
+      "attributes": {
+        "name": "Wiesdorfer Straße/Am Wasserturm",
+        "district": "Stammheim",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asphalt",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.997645518733842,
+        "y": 50.98041226361403
+      }
+    },
+    {
+      "attributes": {
+        "name": "Am Oberhof",
+        "district": "Stammheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.9877856805450005,
+        "y": 50.98713798038275
+      }
+    },
+    {
+      "attributes": {
+        "name": "Egonstraße",
+        "district": "Stammheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.986360595878276,
+        "y": 50.99041098906809
+      }
+    },
+    {
+      "attributes": {
+        "name": "Im Weingartskamp",
+        "district": "Flittard",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.978988220681005,
+        "y": 50.999306349017566
+      }
+    },
+    {
+      "attributes": {
+        "name": "Paracelsusplatz",
+        "district": "Flittard",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.993884436442111,
+        "y": 50.99988431408237
+      }
+    },
+    {
+      "attributes": {
+        "name": "Hubertusstraße",
+        "district": "Flittard",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.971650514603788,
+        "y": 51.00001897823062
+      }
+    },
+    {
+      "attributes": {
+        "name": "Am Pescher Holz/Escher Straße",
+        "district": "Pesch",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.871566084992015,
+        "y": 51.00233678649937
+      }
+    },
+    {
+      "attributes": {
+        "name": "Butzweilerhof/Rita-Maiburg-Straße",
+        "district": "Ossendorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.89764410297212,
+        "y": 50.979504838443376
+      }
+    },
+    {
+      "attributes": {
+        "name": "Pionierstraße",
+        "district": "Riehl",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.978396286171491,
+        "y": 50.964613692663704
+      }
+    },
+    {
+      "attributes": {
+        "name": "Karl-Marx-Allee/Merianstraße/Grünzug Seeberg",
+        "district": "Seeberg",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.907056414948074,
+        "y": 51.024745510393885
+      }
+    },
+    {
+      "attributes": {
+        "name": "Buchheimer Weg",
+        "district": "Ostheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.039039005958664,
+        "y": 50.93335941368834
+      }
+    },
+    {
+      "attributes": {
+        "name": "Nußbaumerstraße/Herkulesstraße",
+        "district": "Neuehrenfeld",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.929955760465286,
+        "y": 50.95563212835268
+      }
+    },
+    {
+      "attributes": {
+        "name": "Heckweg",
+        "district": "Longerich",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Kunststoffbelag",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.909309104202534,
+        "y": 50.99312416360866
+      }
+    },
+    {
+      "attributes": {
+        "name": "Else-Lang-Straße",
+        "district": "Junkersdorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.870600534003163,
+        "y": 50.92455827348147
+      }
+    },
+    {
+      "attributes": {
+        "name": "Sürther Feldallee/Feldhamsterstraße",
+        "district": "Rodenkirchen",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.011476620463125,
+        "y": 50.87915041607107
+      }
+    },
+    {
+      "attributes": {
+        "name": "Holzmarkt",
+        "district": "Altstadt/Süd",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Kunstrasen",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.961623409405197,
+        "y": 50.93025397834833
+      }
+    },
+    {
+      "attributes": {
+        "name": "Homarstraße/Kampgasse",
+        "district": "Vingst",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.017737643346177,
+        "y": 50.930627916938505
+      }
+    },
+    {
+      "attributes": {
+        "name": "Weimarer Platz",
+        "district": "Höhenberg",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.021121865837821,
+        "y": 50.94492023336454
+      }
+    },
+    {
+      "attributes": {
+        "name": "Göttinger Straße",
+        "district": "Höhenberg",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asphalt",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.0242447482247234,
+        "y": 50.941816666925845
+      }
+    },
+    {
+      "attributes": {
+        "name": "Brückenauer Straße",
+        "district": "Höhenberg",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.0244573511184365,
+        "y": 50.94327206524415
+      }
+    },
+    {
+      "attributes": {
+        "name": "Mathias-Kann-Pfad",
+        "district": "Höhenberg",
+        "fußballplätze": null,
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 7.025803273052601,
+        "y": 50.937076366246565
+      }
+    },
+    {
+      "attributes": {
+        "name": "Augsburger Straße",
+        "district": "Höhenberg",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.022873144684134,
+        "y": 50.93858938029403
+      }
+    },
+    {
+      "attributes": {
+        "name": "Höhenberger Straße",
+        "district": "Höhenberg",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.0266777391499335,
+        "y": 50.94186456920825
+      }
+    },
+    {
+      "attributes": {
+        "name": "Merheimer Heide ",
+        "district": "Höhenberg",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 7.033457968532474,
+        "y": 50.945691139545694
+      }
+    },
+    {
+      "attributes": {
+        "name": "Merheimer Heideweg/Frankfurter Straße",
+        "district": "Höhenberg",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": "1",
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.029073173045274,
+        "y": 50.942456877525814
+      }
+    },
+    {
+      "attributes": {
+        "name": "Servatiusstraße/Uckermarkstraße",
+        "district": "Ostheim",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.04525560809322,
+        "y": 50.9362673057407
+      }
+    },
+    {
+      "attributes": {
+        "name": "Vingster Berg ",
+        "district": "Ostheim",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.034562751169685,
+        "y": 50.93279222543504
+      }
+    },
+    {
+      "attributes": {
+        "name": "Loorweg",
+        "district": "Zündorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.032349755165787,
+        "y": 50.85867914488592
+      }
+    },
+    {
+      "attributes": {
+        "name": "Alter Deutzer Postweg (West)",
+        "district": "Ostheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.031187291677061,
+        "y": 50.92075518911034
+      }
+    },
+    {
+      "attributes": {
+        "name": "Fußfallstraße/Kieskaulerweg",
+        "district": "Merheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": "1",
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.046402387453241,
+        "y": 50.94814068741349
+      }
+    },
+    {
+      "attributes": {
+        "name": "Walnussweg Süd (Spielplatz) ",
+        "district": "Merheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 7.061066505886036,
+        "y": 50.942925632259325
+      }
+    },
+    {
+      "attributes": {
+        "name": "Walnussweg Nord (Bolzplatz)",
+        "district": "Merheim",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.060401485788463,
+        "y": 50.94360133131463
+      }
+    },
+    {
+      "attributes": {
+        "name": "Änne-Schulte-Straße",
+        "district": "Merheim",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.056544496177141,
+        "y": 50.94559391112948
+      }
+    },
+    {
+      "attributes": {
+        "name": "Am Gräfenhof/Flehbachaue",
+        "district": "Brück",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.077132259351979,
+        "y": 50.94351401094871
+      }
+    },
+    {
+      "attributes": {
+        "name": "An der Rather Burg",
+        "district": "Rath/Heumar",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.084065932939165,
+        "y": 50.92316106985377
+      }
+    },
+    {
+      "attributes": {
+        "name": "Veilchenweg ",
+        "district": "Rath/Heumar",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 7.0868289674969756,
+        "y": 50.91812187700762
+      }
+    },
+    {
+      "attributes": {
+        "name": "Moosweg/An der Fock",
+        "district": "Rath/Heumar",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.088039533057141,
+        "y": 50.91808997108533
+      }
+    },
+    {
+      "attributes": {
+        "name": "Böhmweg",
+        "district": "Neubrück",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": "1",
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.057911851813213,
+        "y": 50.93368341638826
+      }
+    },
+    {
+      "attributes": {
+        "name": "Paul-Klee-Straße",
+        "district": "Neubrück",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.056554802599065,
+        "y": 50.93031864206327
+      }
+    },
+    {
+      "attributes": {
+        "name": "An St. Adelheid ",
+        "district": "Neubrück",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "3"
+      },
+      "geometry": {
+        "x": 7.061119024059511,
+        "y": 50.93464099556906
+      }
+    },
+    {
+      "attributes": {
+        "name": "Präses-Richter-Platz",
+        "district": "Mülheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": "1",
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.011110515511223,
+        "y": 50.959472196838675
+      }
+    },
+    {
+      "attributes": {
+        "name": "Rendsburger Platz",
+        "district": "Mülheim",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asphalt",
+        "basketballplätze": "2",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.001863735140471,
+        "y": 50.95698618942879
+      }
+    },
+    {
+      "attributes": {
+        "name": "Mülheimer Stadtgarten",
+        "district": "Mülheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": "1",
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 7.0042409611632825,
+        "y": 50.959162651102105
+      }
+    },
+    {
+      "attributes": {
+        "name": "Ratsstraße/Stürmerstraße",
+        "district": "Mülheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.002816717187235,
+        "y": 50.96654515633083
+      }
+    },
+    {
+      "attributes": {
+        "name": "Keupstraße",
+        "district": "Mülheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": "1",
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.005045944543313,
+        "y": 50.96729666943833
+      }
+    },
+    {
+      "attributes": {
+        "name": "Holweider Straße",
+        "district": "Mülheim",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asphalt",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.010809139990796,
+        "y": 50.96335323269305
+      }
+    },
+    {
+      "attributes": {
+        "name": "Knauffstraße",
+        "district": "Mülheim",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asphalt",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.007555429276169,
+        "y": 50.973649847137686
+      }
+    },
+    {
+      "attributes": {
+        "name": "Im Winkel",
+        "district": "Mülheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.007257487906888,
+        "y": 50.98079766577885
+      }
+    },
+    {
+      "attributes": {
+        "name": "Rixdorfer Straße",
+        "district": "Mülheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.012298933231517,
+        "y": 50.97641738125119
+      }
+    },
+    {
+      "attributes": {
+        "name": "Georgestraße",
+        "district": "Neubrück",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Kunstrasen",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 7.052920129277549,
+        "y": 50.932137958367214
+      }
+    },
+    {
+      "attributes": {
+        "name": "Buchholzstraße",
+        "district": "Mülheim",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.000717763085983,
+        "y": 50.98335182841814
+      }
+    },
+    {
+      "attributes": {
+        "name": "Familienpark",
+        "district": "Mülheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "2",
+        "boulebahn": null,
+        "skatepark": "7",
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.9788668205921205,
+        "y": 50.952709538993965
+      }
+    },
+    {
+      "attributes": {
+        "name": "Böckingstraße/Böcking-Park",
+        "district": "Mülheim",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.004809576110576,
+        "y": 50.97033989922342
+      }
+    },
+    {
+      "attributes": {
+        "name": "Am Faulbach/Düsseldorfer Straße",
+        "district": "Mülheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": "1",
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.9998005905427485,
+        "y": 50.97728598585276
+      }
+    },
+    {
+      "attributes": {
+        "name": "Rudolf-Clausius-Straße",
+        "district": "Buchforst",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.009684935065089,
+        "y": 50.95281071452597
+      }
+    },
+    {
+      "attributes": {
+        "name": "Kopernikusstraße",
+        "district": "Buchforst",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.010886773006815,
+        "y": 50.95193609265651
+      }
+    },
+    {
+      "attributes": {
+        "name": "Wichheimer Straße",
+        "district": "Buchheim",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 7.023679489994115,
+        "y": 50.963203214765706
+      }
+    },
+    {
+      "attributes": {
+        "name": "Bergisch Gladbacher Straße/Am Marienstift",
+        "district": "Holweide",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": "1",
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.041818777848464,
+        "y": 50.9681762901519
+      }
+    },
+    {
+      "attributes": {
+        "name": "Ringenstraße",
+        "district": "Holweide",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.035690266284182,
+        "y": 50.97065632504473
+      }
+    },
+    {
+      "attributes": {
+        "name": "Walter-Meckauer-Straße/Piccoloministraße",
+        "district": "Holweide",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.054775172725897,
+        "y": 50.974456427473214
+      }
+    },
+    {
+      "attributes": {
+        "name": "Hermann-Stehr-Straße",
+        "district": "Holweide",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.0525299352274144,
+        "y": 50.975042174992566
+      }
+    },
+    {
+      "attributes": {
+        "name": "Märchenstraße/Andersenstraße",
+        "district": "Holweide",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.057636601454929,
+        "y": 50.97270174988805
+      }
+    },
+    {
+      "attributes": {
+        "name": "Schlagbaumsweg",
+        "district": "Holweide",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.045894538601779,
+        "y": 50.95753191076972
+      }
+    },
+    {
+      "attributes": {
+        "name": "Wiesenstraße",
+        "district": "Dellbrück",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.076118954324335,
+        "y": 50.977473156837654
+      }
+    },
+    {
+      "attributes": {
+        "name": "Hyazinthenweg",
+        "district": "Dellbrück",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.065627649066241,
+        "y": 50.98545071867894
+      }
+    },
+    {
+      "attributes": {
+        "name": "Hochwinkel/Folwiese",
+        "district": "Dellbrück",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.065304109770356,
+        "y": 50.96420743860133
+      }
+    },
+    {
+      "attributes": {
+        "name": "Dabringhauser Straße/Dellbrücker Mauspfad ",
+        "district": "Dellbrück",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 7.064206129239555,
+        "y": 50.97019330183324
+      }
+    },
+    {
+      "attributes": {
+        "name": "Rommerscheider Straße",
+        "district": "Dellbrück",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 7.077599843668453,
+        "y": 50.97623872975883
+      }
+    },
+    {
+      "attributes": {
+        "name": "Kühzällerweg",
+        "district": "Holweide",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": "1",
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.050416661452398,
+        "y": 50.977033666307406
+      }
+    },
+    {
+      "attributes": {
+        "name": "Im Bischofsacker",
+        "district": "Buchforst",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Kunstrasen",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.00012371656416,
+        "y": 50.94862199127049
+      }
+    },
+    {
+      "attributes": {
+        "name": "Bruder-Klaus-Platz (Grünanlage)",
+        "district": "Mülheim",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 7.008423330184059,
+        "y": 50.98463434711216
+      }
+    },
+    {
+      "attributes": {
+        "name": "Brambachstraße",
+        "district": "Dellbrück",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.086677020165235,
+        "y": 50.97401544752872
+      }
+    },
+    {
+      "attributes": {
+        "name": "Hasenacker",
+        "district": "Dellbrück",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.090185176578156,
+        "y": 50.96718669983205
+      }
+    },
+    {
+      "attributes": {
+        "name": "Unterste Sauerwiese",
+        "district": "Dellbrück",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.094285683203241,
+        "y": 50.966023888453705
+      }
+    },
+    {
+      "attributes": {
+        "name": "Von-Bodelschwingh-Straße",
+        "district": "Höhenhaus",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.0269772853025705,
+        "y": 50.98522067862743
+      }
+    },
+    {
+      "attributes": {
+        "name": "Am Flachsrosterweg",
+        "district": "Höhenhaus",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.019047892796405,
+        "y": 50.984850702418214
+      }
+    },
+    {
+      "attributes": {
+        "name": "Am Rosenmaar",
+        "district": "Höhenhaus",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.036616389708359,
+        "y": 50.992200899405766
+      }
+    },
+    {
+      "attributes": {
+        "name": "Butzweilerhofallee",
+        "district": "Ossendorf",
+        "fußballplätze": "1",
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.896287051874013,
+        "y": 50.98127481743447
+      }
+    },
+    {
+      "attributes": {
+        "name": "Uferstraße",
+        "district": "Rodenkirchen",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.00549325732644,
+        "y": 50.89238447849682
+      }
+    },
+    {
+      "attributes": {
+        "name": "Nohlenweg/Fort X",
+        "district": "Merheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.036619886136422,
+        "y": 50.93877271341133
+      }
+    },
+    {
+      "attributes": {
+        "name": "Kreutzerstraße",
+        "district": "Neustadt-Nord",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Kunststoffbelag",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.928833697356858,
+        "y": 50.94343642198389
+      }
+    },
+    {
+      "attributes": {
+        "name": "Weißdornweg",
+        "district": "Rondorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.961647941273379,
+        "y": 50.88119032448777
+      }
+    },
+    {
+      "attributes": {
+        "name": "Weichselring/Blumenberg Süd",
+        "district": "Chorweiler",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.887119874675639,
+        "y": 51.03248471436661
+      }
+    },
+    {
+      "attributes": {
+        "name": "Am Rolshover Hof",
+        "district": "Poll",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.9969594546760385,
+        "y": 50.91748319314018
+      }
+    },
+    {
+      "attributes": {
+        "name": "Wuppertaler Straße/Stegwiese",
+        "district": "Buchheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.0246060376367065,
+        "y": 50.96118586835773
+      }
+    },
+    {
+      "attributes": {
+        "name": "Ubierring",
+        "district": "Neustadt-Süd",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.96530727284517,
+        "y": 50.92198072199414
+      }
+    },
+    {
+      "attributes": {
+        "name": "Mühlenweg/Westendstraße",
+        "district": "Bickendorf",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.889339960335253,
+        "y": 50.97032793205301
+      }
+    },
+    {
+      "attributes": {
+        "name": "Brucknerstraße/Karl-Schwering-Platz",
+        "district": "Lindenthal",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.917381359284603,
+        "y": 50.93265135299393
+      }
+    },
+    {
+      "attributes": {
+        "name": "De-Noel-Platz",
+        "district": "Sülz",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Kunststoffbelag",
+        "basketballplätze": "1 ",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.927558289840699,
+        "y": 50.9228004407269
+      }
+    },
+    {
+      "attributes": {
+        "name": "Feldhasenweg",
+        "district": "Widdersdorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1 "
+      },
+      "geometry": {
+        "x": 6.829189663405621,
+        "y": 50.96938851578952
+      }
+    },
+    {
+      "attributes": {
+        "name": "Am Feldrain",
+        "district": "Sürth",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.008040443153959,
+        "y": 50.87043277363269
+      }
+    },
+    {
+      "attributes": {
+        "name": "Robertstraße",
+        "district": "Kalk",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2 "
+      },
+      "geometry": {
+        "x": 6.999643793159954,
+        "y": 50.93573250177519
+      }
+    },
+    {
+      "attributes": {
+        "name": "Buschgasse/An der Eiche",
+        "district": "Altstadt/Süd",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asphalt",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.960566132368626,
+        "y": 50.925207280014305
+      }
+    },
+    {
+      "attributes": {
+        "name": "Rosenzweigweg/Bornheimer Platz",
+        "district": "Zollstock",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.944645651149446,
+        "y": 50.90905661410557
+      }
+    },
+    {
+      "attributes": {
+        "name": "Kattowitzer Straße/Beuthener Straße",
+        "district": "Buchheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.01895270177286,
+        "y": 50.953214561937045
+      }
+    },
+    {
+      "attributes": {
+        "name": "Kösliner Straße/An den Kreutzmorgen",
+        "district": "Weidenpesch",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.945328214985355,
+        "y": 50.9844645570616
+      }
+    },
+    {
+      "attributes": {
+        "name": "Vorgebirgsplatz",
+        "district": "Zollstock",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.945303038147049,
+        "y": 50.91162103106776
+      }
+    },
+    {
+      "attributes": {
+        "name": "Schmalbeinstraße/Innerer Grüngürtel Süd",
+        "district": "Neustadt/Nord",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2 "
+      },
+      "geometry": {
+        "x": 6.928849847404397,
+        "y": 50.93869004407289
+      }
+    },
+    {
+      "attributes": {
+        "name": "Hansemannstraße/Philippstraße",
+        "district": "Ehrenfeld",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Hartplatz",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.920115793841311,
+        "y": 50.95055423263341
+      }
+    },
+    {
+      "attributes": {
+        "name": "An der Groov",
+        "district": "Zündorf",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 7.0411164434945075,
+        "y": 50.86860293618828
+      }
+    },
+    {
+      "attributes": {
+        "name": "Annastraße/Leonorenweg",
+        "district": "Ensen",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Wiese",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 7.04054975910858,
+        "y": 50.89937878315611
+      }
+    },
+    {
+      "attributes": {
+        "name": "Eythstraße",
+        "district": "Kalk",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Kunststoffbelag",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 7.011156253640985,
+        "y": 50.9453276797115
+      }
+    },
+    {
+      "attributes": {
+        "name": "Fühlinger See/Bootshaus",
+        "district": "Fühlingen",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null,
+        "beachvolleyball": "1"
+      },
+      "geometry": {
+        "x": 6.925529138992164,
+        "y": 51.02168578775489
+      }
+    },
+    {
+      "attributes": {
+        "name": "Rektor-Schmitz-Straße/Vastersstraße",
+        "district": "Neuehrenfeld",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.915980670574526,
+        "y": 50.96685690677958
+      }
+    },
+    {
+      "attributes": {
+        "name": "Am Urbacher Wall",
+        "district": "Urbach",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.093614579998928,
+        "y": 50.87906344275797
+      }
+    },
+    {
+      "attributes": {
+        "name": "Fort X/Neusser Wall Ost",
+        "district": "Neustadt/Nord",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.9626272890595375,
+        "y": 50.957600299057795
+      }
+    },
+    {
+      "attributes": {
+        "name": "Fort X/Neusser Wall West",
+        "district": "Neustadt/Nord",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.960409052404666,
+        "y": 50.95747098692745
+      }
+    },
+    {
+      "attributes": {
+        "name": "Pionierpark",
+        "district": "Raderberg",
+        "fußballplätze": "2 ",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": "1",
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": null
+      },
+      "geometry": {
+        "x": 6.954282099692867,
+        "y": 50.915401043543255
+      }
+    },
+    {
+      "attributes": {
+        "name": "Astrid-Lindgren-Allee",
+        "district": "Brück",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.0705612717206705,
+        "y": 50.940100212179566
+      }
+    },
+    {
+      "attributes": {
+        "name": "Karl-Marx-Allee/Otto-Braun-Straße/Grünzug Seeberg",
+        "district": "Seeberg",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.9105768036154185,
+        "y": 51.019390159519375
+      }
+    },
+    {
+      "attributes": {
+        "name": "Akazienweg/Hermann-Löns-Straße",
+        "district": "Grengel",
+        "fußballplätze": "1",
+        "platzbelag_fußball": "Asche",
+        "basketballplätze": "1",
+        "boulebahn": "1",
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 7.098736293154609,
+        "y": 50.87316809486479
+      }
+    },
+    {
+      "attributes": {
+        "name": "Swinestraße - Süd",
+        "district": "Chorweiler",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.896294401136505,
+        "y": 51.0314473577828
+      }
+    },
+    {
+      "attributes": {
+        "name": "Weserplatz",
+        "district": "Chorweiler",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "2"
+      },
+      "geometry": {
+        "x": 6.89358266910663,
+        "y": 51.02672642482198
+      }
+    },
+    {
+      "attributes": {
+        "name": "Wallensteinstraße/Holweider Marktplatz",
+        "district": "Holweide",
+        "fußballplätze": "2",
+        "platzbelag_fußball": "Kunstrasen",
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.043954310234865,
+        "y": 50.97146188506838
+      }
+    },
+    {
+      "attributes": {
+        "name": "Lenauplatz",
+        "district": "Neuehrenfeld",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 6.9190896903835055,
+        "y": 50.95713740293732
+      }
+    },
+    {
+      "attributes": {
+        "name": "Amalie-Struve-Weg",
+        "district": "Ostheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "1"
+      },
+      "geometry": {
+        "x": 7.037259308106802,
+        "y": 50.92640618999053
+      }
+    },
+    {
+      "attributes": {
+        "name": "Schwetzinger Straße / Hövilandweg",
+        "district": "Ostheim",
+        "fußballplätze": null,
+        "platzbelag_fußball": null,
+        "basketballplätze": null,
+        "boulebahn": null,
+        "skatepark": null,
+        "tischtennisplatten": "3"
+      },
+      "geometry": {
+        "x": 7.031822158348123,
+        "y": 50.92810465568228
+      }
+    }
+  ]
+}

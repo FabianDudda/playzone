@@ -209,6 +209,77 @@ export const database = {
     addPlace: async (place: Omit<Place, 'id' | 'created_at' | 'import_date'>) => {
       return database.courts.addCourt(place)
     },
+
+    bulkImport: async (places: Array<{
+      place: Omit<Place, 'id' | 'created_at'>,
+      courts: Array<{
+        sport: SportType,
+        quantity: number,
+        surface?: string | null,
+        notes?: string | null
+      }>
+    }>) => {
+      const results = {
+        success: [] as string[],
+        errors: [] as { place: string, error: any }[],
+        duplicates: [] as string[]
+      }
+
+      for (const { place, courts } of places) {
+        try {
+          // Check for duplicates (within ~10m radius)
+          const { data: existing } = await supabase
+            .from('places')
+            .select('id, name')
+            .gte('latitude', place.latitude - 0.0001)
+            .lte('latitude', place.latitude + 0.0001)
+            .gte('longitude', place.longitude - 0.0001) 
+            .lte('longitude', place.longitude + 0.0001)
+
+          if (existing && existing.length > 0) {
+            results.duplicates.push(place.name)
+            continue
+          }
+
+          // Insert place
+          const { data: insertedPlace, error: placeError } = await supabase
+            .from('places')
+            .insert(place)
+            .select()
+            .single()
+
+          if (placeError) {
+            results.errors.push({ place: place.name, error: placeError })
+            continue
+          }
+
+          // Insert courts if any
+          if (courts.length > 0) {
+            const courtData = courts.map(court => ({
+              place_id: insertedPlace.id,
+              sport: court.sport,
+              quantity: court.quantity,
+              surface: court.surface || null,
+              notes: court.notes || null
+            }))
+
+            const { error: courtsError } = await supabase
+              .from('courts')
+              .insert(courtData)
+
+            if (courtsError) {
+              console.warn(`Warning: Failed to insert some courts for ${place.name}:`, courtsError)
+            }
+          }
+
+          results.success.push(place.name)
+        } catch (error) {
+          results.errors.push({ place: place.name, error })
+        }
+      }
+
+      return results
+    },
   },
 
   // Individual court operations  

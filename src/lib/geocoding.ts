@@ -58,9 +58,10 @@ export async function reverseGeocode(
   options: {
     useRateLimit?: boolean
     timeout?: number
+    language?: string
   } = {}
 ): Promise<AddressComponents | null> {
-  const { useRateLimit = true, timeout = 5000 } = options
+  const { useRateLimit = true, timeout = 5000, language = 'de' } = options
 
   try {
     // Apply rate limiting for Nominatim
@@ -76,7 +77,7 @@ export async function reverseGeocode(
     url.searchParams.set('lat', latitude.toString())
     url.searchParams.set('lon', longitude.toString())
     url.searchParams.set('addressdetails', '1')
-    url.searchParams.set('accept-language', 'en') // Get results in English
+    url.searchParams.set('accept-language', language) // Get results in specified language
     
     const response = await fetch(url.toString(), {
       headers: {
@@ -136,6 +137,7 @@ export async function batchReverseGeocode(
   options: {
     onProgress?: (completed: number, total: number) => void
     onError?: (id: string, error: string) => void
+    language?: string
   } = {}
 ): Promise<Array<{ id: string; address: AddressComponents | null }>> {
   const results: Array<{ id: string; address: AddressComponents | null }> = []
@@ -144,7 +146,9 @@ export async function batchReverseGeocode(
     const coord = coordinates[i]
     
     try {
-      const address = await reverseGeocode(coord.latitude, coord.longitude)
+      const address = await reverseGeocode(coord.latitude, coord.longitude, {
+        language: options.language
+      })
       results.push({ id: coord.id, address })
       
       options.onProgress?.(i + 1, coordinates.length)

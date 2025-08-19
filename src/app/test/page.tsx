@@ -7,12 +7,18 @@ import { PlaceWithCourts } from '@/lib/supabase/types'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { MapPin, TestTube, MapIcon, Loader2 } from 'lucide-react'
+import { Checkbox } from '@/components/ui/checkbox'
+import { MapPin, TestTube, MapIcon, Loader2, Save } from 'lucide-react'
 
 export default function TestPage() {
   const [isGeocoding, setIsGeocoding] = useState(false)
+  const [isSavingAddresses, setIsSavingAddresses] = useState(false)
+  const [geocodingPlace, setGeocodingPlace] = useState<string | null>(null)
+  const [savingPlace, setSavingPlace] = useState<string | null>(null)
   const [geocodingResults, setGeocodingResults] = useState<string | null>(null)
   const [enrichedPlaces, setEnrichedPlaces] = useState<PlaceWithCourts[]>([])
+  const [selectedPlaces, setSelectedPlaces] = useState<Set<string>>(new Set())
+  const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(null)
   const queryClient = useQueryClient()
 
   const { data: places = [], isLoading, error } = useQuery({
@@ -23,20 +29,63 @@ export default function TestPage() {
   // Use enriched places if available, otherwise use original places
   const displayPlaces = enrichedPlaces.length > 0 ? enrichedPlaces : places
 
+  // Selection helper functions
+  const getSelectedPlacesData = () => {
+    return displayPlaces.filter(place => selectedPlaces.has(place.id))
+  }
+
+  const handleSelectAll = () => {
+    if (selectedPlaces.size === displayPlaces.length) {
+      setSelectedPlaces(new Set())
+    } else {
+      setSelectedPlaces(new Set(displayPlaces.map(place => place.id)))
+    }
+    setLastSelectedIndex(null)
+  }
+
+  const handlePlaceSelect = (placeId: string, event: React.MouseEvent, placeIndex: number) => {
+    setSelectedPlaces(prev => {
+      const newSelected = new Set(prev)
+      
+      if (event.shiftKey && lastSelectedIndex !== null) {
+        // Range selection
+        const start = Math.min(lastSelectedIndex, placeIndex)
+        const end = Math.max(lastSelectedIndex, placeIndex)
+        
+        for (let i = start; i <= end; i++) {
+          if (i < displayPlaces.length) {
+            newSelected.add(displayPlaces[i].id)
+          }
+        }
+      } else {
+        // Single selection
+        if (newSelected.has(placeId)) {
+          newSelected.delete(placeId)
+        } else {
+          newSelected.add(placeId)
+        }
+      }
+      
+      return newSelected
+    })
+    
+    setLastSelectedIndex(placeIndex)
+  }
+
   const handleBulkGeocode = async () => {
-    if (places.length === 0) return
+    const selectedPlacesData = getSelectedPlacesData()
+    if (selectedPlacesData.length === 0) return
     
     setIsGeocoding(true)
     setGeocodingResults(null)
     
     try {
-      const enrichedPlacesArray = [...places]
       let successCount = 0
       let errorCount = 0
       
-      // Process each place individually for real-time feedback
-      for (let i = 0; i < places.length; i++) {
-        const place = places[i]
+      // Process each selected place individually for real-time feedback
+      for (let i = 0; i < selectedPlacesData.length; i++) {
+        const place = selectedPlacesData[i]
         
         try {
           // Fetch address for this place
@@ -47,30 +96,43 @@ export default function TestPage() {
             },
             body: JSON.stringify({
               latitude: place.latitude,
-              longitude: place.longitude
+              longitude: place.longitude,
+              language: 'de'
             }),
           })
           
           if (response.ok) {
             const result = await response.json()
             
-            // Update the place with address data
-            enrichedPlacesArray[i] = {
+            // Update the place with address data (preserve existing district)
+            const enrichedPlace = {
               ...place,
               street: result.address.street || null,
               house_number: result.address.house_number || null,
               city: result.address.city || null,
+              district: result.address.district || place.district || null,
               county: result.address.county || null,
               state: result.address.state || null,
               country: result.address.country || null,
               postcode: result.address.postcode || null,
             }
             
+            // Update enriched places array
+            setEnrichedPlaces(prev => {
+              const existing = prev.find(p => p.id === place.id)
+              if (existing) {
+                // Update existing enriched place
+                return prev.map(p => p.id === place.id ? enrichedPlace : p)
+              } else {
+                // Add new enriched place
+                return [...prev, enrichedPlace]
+              }
+            })
+            
             successCount++
             
             // Update UI with progress
-            setGeocodingResults(`🔄 Processing... ${i + 1}/${places.length} (${successCount} successful)`)
-            setEnrichedPlaces([...enrichedPlacesArray])
+            setGeocodingResults(`🔄 Processing... ${i + 1}/${selectedPlacesData.length} (${successCount} successful)`)
             
           } else {
             console.error(`Failed to geocode place ${place.id}:`, response.status)
@@ -82,7 +144,7 @@ export default function TestPage() {
         }
         
         // Add a small delay to respect rate limits
-        if (i < places.length - 1) {
+        if (i < selectedPlacesData.length - 1) {
           await new Promise(resolve => setTimeout(resolve, 1100)) // 1.1 second delay
         }
       }
@@ -93,6 +155,305 @@ export default function TestPage() {
       setGeocodingResults(`❌ Request failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
     } finally {
       setIsGeocoding(false)
+    }
+  }
+
+  const handleSaveAddresses = async () => {
+    // Generate unique operation ID for tracking
+    const operationId = `save-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+    console.log(`🚀 [${operationId}] Starting handleSaveAddresses...`)
+    
+    const selectedPlacesData = getSelectedPlacesData()
+    console.log(`📊 [${operationId}] Selected places: ${selectedPlacesData.length}`, selectedPlacesData.map(p => ({ id: p.id, name: p.name, street: p.street, city: p.city })))
+    
+    if (selectedPlacesData.length === 0) {
+      console.log(`❌ [${operationId}] No places selected, returning early`)
+      return
+    }
+    
+    setIsSavingAddresses(true)
+    setGeocodingResults(null)
+    
+    try {
+      // Filter only selected places that have enriched address data
+      const placesToUpdate = selectedPlacesData.filter(place => place.street && place.city)
+      console.log(`📋 [${operationId}] Places to update (with street & city): ${placesToUpdate.length}`, placesToUpdate.map(p => ({ id: p.id, name: p.name, street: p.street, city: p.city })))
+      
+      if (placesToUpdate.length === 0) {
+        console.log(`❌ [${operationId}] No places have both street and city data`)
+        setGeocodingResults('❌ No enriched addresses to save')
+        return
+      }
+      
+      let successCount = 0
+      let errorCount = 0
+      const failedPlaces: string[] = []
+      const succeededPlaces: string[] = []
+      const BATCH_SIZE = 10 // Process in batches of 10
+      const DELAY_MS = 300 // Delay between operations to prevent overwhelming the database
+      
+      console.log(`📦 [${operationId}] Processing ${placesToUpdate.length} places in batches of ${BATCH_SIZE}`)
+      
+      // Process places in batches
+      for (let batchStart = 0; batchStart < placesToUpdate.length; batchStart += BATCH_SIZE) {
+        const batchEnd = Math.min(batchStart + BATCH_SIZE, placesToUpdate.length)
+        const currentBatch = placesToUpdate.slice(batchStart, batchEnd)
+        const batchNumber = Math.floor(batchStart / BATCH_SIZE) + 1
+        const totalBatches = Math.ceil(placesToUpdate.length / BATCH_SIZE)
+        
+        console.log(`🔄 [${operationId}] Starting batch ${batchNumber}/${totalBatches} with ${currentBatch.length} places`)
+        console.log(`📝 [${operationId}] Batch ${batchNumber} places:`, currentBatch.map(p => ({ id: p.id, name: p.name })))
+        
+        // Process each place in the current batch
+        for (let i = 0; i < currentBatch.length; i++) {
+          const place = currentBatch[i]
+          const overallIndex = batchStart + i
+          
+          console.log(`🔍 [${operationId}] Processing place ${overallIndex + 1}/${placesToUpdate.length}: ${place.name} (${place.id})`)
+          
+          // Retry logic for database operations
+          let retryCount = 0
+          const maxRetries = 3
+          let success = false
+          
+          while (!success && retryCount < maxRetries) {
+            try {
+              console.log(`🔄 [${operationId}] Starting retry loop iteration for ${place.id}, attempt ${retryCount + 1}`)
+              console.log(`💾 [${operationId}] Attempt ${retryCount + 1}/${maxRetries} to save place ${place.id}`)
+              console.log(`📝 [${operationId}] Update data for ${place.id}:`, {
+                street: place.street,
+                house_number: place.house_number,
+                city: place.city,
+                district: place.district,
+                county: place.county,
+                state: place.state,
+                country: place.country,
+                postcode: place.postcode,
+              })
+              
+              // Update the place with address data in database with timeout
+              const startTime = Date.now()
+              console.log(`🚀 [${operationId}] About to call database.courts.updateCourt for ${place.id}`)
+              
+              // Test if the database module is accessible
+              console.log(`🔍 [${operationId}] Database module check:`, typeof database?.courts?.updateCourt)
+              
+              // Create a timeout promise
+              const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => {
+                  console.error(`⏰ [${operationId}] TIMEOUT: Database operation for ${place.id} exceeded 30 seconds`)
+                  reject(new Error('Database operation timeout after 30 seconds'))
+                }, 30000)
+              })
+              
+              let updateResult
+              try {
+                // Race the database call against the timeout
+                updateResult = await Promise.race([
+                  database.courts.updateCourt(place.id, {
+                    street: place.street,
+                    house_number: place.house_number,
+                    city: place.city,
+                    district: place.district,
+                    county: place.county,
+                    state: place.state,
+                    country: place.country,
+                    postcode: place.postcode,
+                  }),
+                  timeoutPromise
+                ]) as any
+              } catch (raceError) {
+                console.error(`🏁 [${operationId}] Promise.race failed for ${place.id}:`, raceError)
+                throw raceError
+              }
+              
+              const { data, error } = updateResult
+              
+              const endTime = Date.now()
+              const duration = endTime - startTime
+              console.log(`🎯 [${operationId}] Database call completed for ${place.id}`)
+              
+              console.log(`⏱️ [${operationId}] Database operation took ${duration}ms for place ${place.id}`)
+              console.log(`🔄 [${operationId}] Database response for ${place.id}:`, { data: data ? 'received' : 'null', error: error || 'none' })
+              
+              if (error) {
+                console.error(`🚨 [${operationId}] Database error details for ${place.id}:`, error)
+                throw new Error(`Database error: ${error.message || JSON.stringify(error)}`)
+              } else {
+                successCount++
+                succeededPlaces.push(place.id)
+                success = true
+                console.log(`✅ [${operationId}] Successfully saved place ${place.id} (${place.name}) - database returned:`, data ? 'data received' : 'no data')
+              }
+              
+            } catch (error) {
+              retryCount++
+              console.error(`❌ [${operationId}] Attempt ${retryCount} failed for place ${place.id}:`, error)
+              console.error(`🔍 [${operationId}] Error type:`, typeof error)
+              console.error(`🔍 [${operationId}] Error name:`, error?.constructor?.name)
+              console.error(`🔍 [${operationId}] Error stack:`, error?.stack)
+              
+              if (retryCount >= maxRetries) {
+                errorCount++
+                failedPlaces.push(place.id)
+                console.error(`💥 [${operationId}] Failed to save addresses for place ${place.id} after ${maxRetries} attempts:`, error)
+              } else {
+                // Wait before retry with exponential backoff
+                const retryDelay = 500 * retryCount
+                console.log(`⏳ [${operationId}] Waiting ${retryDelay}ms before retry ${retryCount + 1} for place ${place.id}`)
+                await new Promise(resolve => setTimeout(resolve, retryDelay))
+              }
+            }
+          }
+          
+          // Update UI with progress
+          setGeocodingResults(
+            `💾 Saving batch ${batchNumber}/${totalBatches}... ${overallIndex + 1}/${placesToUpdate.length} (${successCount} successful, ${errorCount} failed)`
+          )
+          
+          // Add delay between operations to prevent overwhelming the database
+          if (overallIndex < placesToUpdate.length - 1) {
+            console.log(`⏳ [${operationId}] Waiting ${DELAY_MS}ms before next operation`)
+            await new Promise(resolve => setTimeout(resolve, DELAY_MS))
+          }
+        }
+        
+        console.log(`✅ [${operationId}] Completed batch ${batchNumber}/${totalBatches}. Success: ${successCount}, Errors: ${errorCount}`)
+        
+        // NOTE: Removed per-batch query invalidation to prevent race conditions
+        // Query will be invalidated once at the end of the entire operation
+      }
+      
+      console.log(`📊 [${operationId}] Final results: ${successCount} succeeded, ${errorCount} failed`)
+      console.log(`✅ [${operationId}] Succeeded places:`, succeededPlaces)
+      if (failedPlaces.length > 0) {
+        console.log(`❌ [${operationId}] Failed places:`, failedPlaces)
+      }
+      
+      // Only invalidate queries and update state AFTER all operations are complete
+      if (successCount > 0) {
+        console.log(`🔄 [${operationId}] Invalidating queries for ${successCount} successful updates`)
+        await queryClient.invalidateQueries({ queryKey: ['test-places'] })
+        
+        // Only remove successfully saved places from enriched places array
+        const successfullyUpdatedPlaces = placesToUpdate.filter(p => succeededPlaces.includes(p.id))
+        console.log(`🧹 [${operationId}] Removing ${successfullyUpdatedPlaces.length} successfully saved places from enriched state`)
+        setEnrichedPlaces(prev => prev.filter(p => !successfullyUpdatedPlaces.some(saved => saved.id === p.id)))
+        
+        // Clear selection only for successfully saved places
+        setSelectedPlaces(prev => {
+          const newSelected = new Set(prev)
+          successfullyUpdatedPlaces.forEach(place => newSelected.delete(place.id))
+          return newSelected
+        })
+      }
+      
+      setGeocodingResults(`✅ Addresses saved! ${successCount} places updated${errorCount > 0 ? `, ${errorCount} errors` : ''}`)
+      
+    } catch (error) {
+      console.error(`💥 [${operationId}] Critical error in handleSaveAddresses:`, error)
+      setGeocodingResults(`❌ Save failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    } finally {
+      console.log(`🏁 [${operationId}] Finished handleSaveAddresses`)
+      setIsSavingAddresses(false)
+    }
+  }
+
+  const handleSingleGeocode = async (place: PlaceWithCourts) => {
+    setGeocodingPlace(place.id)
+    setGeocodingResults(null)
+    
+    try {
+      // Fetch address for this place
+      const response = await fetch('/api/geocode/lookup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          latitude: place.latitude,
+          longitude: place.longitude,
+          language: 'de'
+        }),
+      })
+      
+      if (response.ok) {
+        const result = await response.json()
+        
+        // Update the place with address data (preserve existing district)
+        const enrichedPlace = {
+          ...place,
+          street: result.address.street || null,
+          house_number: result.address.house_number || null,
+          city: result.address.city || null,
+          district: result.address.district || place.district || null,
+          county: result.address.county || null,
+          state: result.address.state || null,
+          country: result.address.country || null,
+          postcode: result.address.postcode || null,
+        }
+        
+        // Update enriched places array
+        setEnrichedPlaces(prev => {
+          const existing = prev.find(p => p.id === place.id)
+          if (existing) {
+            // Update existing enriched place
+            return prev.map(p => p.id === place.id ? enrichedPlace : p)
+          } else {
+            // Add new enriched place
+            return [...prev, enrichedPlace]
+          }
+        })
+        
+        setGeocodingResults(`✅ Address enriched for ${place.name}`)
+      } else {
+        console.error(`Failed to geocode place ${place.id}:`, response.status)
+        setGeocodingResults(`❌ Failed to enrich address for ${place.name}`)
+      }
+    } catch (error) {
+      console.error(`Error geocoding place ${place.id}:`, error)
+      setGeocodingResults(`❌ Error enriching address for ${place.name}`)
+    } finally {
+      setGeocodingPlace(null)
+    }
+  }
+
+  const handleSingleSaveAddress = async (place: PlaceWithCourts) => {
+    if (!place.street || !place.city) return
+    
+    setSavingPlace(place.id)
+    setGeocodingResults(null)
+    
+    try {
+      // Update the place with address data in database
+      const { error } = await database.courts.updateCourt(place.id, {
+        street: place.street,
+        house_number: place.house_number,
+        city: place.city,
+        district: place.district,
+        county: place.county,
+        state: place.state,
+        country: place.country,
+        postcode: place.postcode,
+      })
+      
+      if (error) {
+        console.error(`Failed to save addresses for place ${place.id}:`, error)
+        setGeocodingResults(`❌ Failed to save address for ${place.name}`)
+      } else {
+        // Invalidate and refetch the query to get updated data from database
+        await queryClient.invalidateQueries({ queryKey: ['test-places'] })
+        
+        // Remove this place from enriched places since it's now saved to database
+        setEnrichedPlaces(prev => prev.filter(p => p.id !== place.id))
+        
+        setGeocodingResults(`✅ Address saved for ${place.name}`)
+      }
+    } catch (error) {
+      console.error(`Error saving addresses for place ${place.id}:`, error)
+      setGeocodingResults(`❌ Error saving address for ${place.name}`)
+    } finally {
+      setSavingPlace(null)
     }
   }
 
@@ -166,10 +527,22 @@ export default function TestPage() {
         </div>
         
         <div className="flex items-center justify-between">
-          <p className="text-muted-foreground">
-            All available data fields are displayed below
-            {enrichedPlaces.length > 0 && ` (${enrichedPlaces.length} places enriched)`}
-          </p>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="select-all"
+                checked={selectedPlaces.size === displayPlaces.length && displayPlaces.length > 0}
+                onCheckedChange={handleSelectAll}
+              />
+              <label htmlFor="select-all" className="text-sm font-medium cursor-pointer">
+                Select All ({selectedPlaces.size}/{displayPlaces.length})
+              </label>
+            </div>
+            <p className="text-muted-foreground">
+              All available data fields are displayed below
+              {enrichedPlaces.length > 0 && ` (${enrichedPlaces.length} places enriched)`}
+            </p>
+          </div>
           <div className="flex gap-2">
             <Button 
               onClick={handleDebugData}
@@ -180,8 +553,26 @@ export default function TestPage() {
               🔍 Debug Data
             </Button>
             <Button 
+              onClick={handleSaveAddresses}
+              disabled={isSavingAddresses || selectedPlaces.size === 0 || getSelectedPlacesData().filter(p => p.street && p.city).length === 0}
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              {isSavingAddresses ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4" />
+                  Set Addresses ({getSelectedPlacesData().filter(p => p.street && p.city).length})
+                </>
+              )}
+            </Button>
+            <Button 
               onClick={handleBulkGeocode}
-              disabled={isGeocoding || displayPlaces.length === 0}
+              disabled={isGeocoding || selectedPlaces.size === 0}
               className="flex items-center gap-2"
             >
               {isGeocoding ? (
@@ -192,7 +583,7 @@ export default function TestPage() {
               ) : (
                 <>
                   <MapIcon className="h-4 w-4" />
-                  Enrich Addresses
+                  Enrich Addresses ({selectedPlaces.size})
                 </>
               )}
             </Button>
@@ -218,7 +609,7 @@ export default function TestPage() {
         </Card>
       ) : (
         <div className="space-y-4">
-          {displayPlaces.map((place: PlaceWithCourts) => {
+          {displayPlaces.map((place: PlaceWithCourts, index: number) => {
             // Get unique sports from the courts array, fallback to legacy sports array
             const availableSports = place.courts?.length > 0 
               ? [...new Set(place.courts.map(court => court.sport))]
@@ -228,10 +619,77 @@ export default function TestPage() {
               <Card key={place.id}>
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
-                    <span>{place.name}</span>
-                    <Badge variant="outline">
-                      {place.courts?.length || 0} court{place.courts?.length !== 1 ? 's' : ''}
-                    </Badge>
+                    <div className="flex items-center gap-3">
+                      <div 
+                        onClick={(event) => {
+                          if (event.shiftKey && lastSelectedIndex !== null) {
+                            // Range selection
+                            const start = Math.min(lastSelectedIndex, index)
+                            const end = Math.max(lastSelectedIndex, index)
+                            
+                            setSelectedPlaces(prev => {
+                              const newSelected = new Set(prev)
+                              for (let i = start; i <= end; i++) {
+                                if (i < displayPlaces.length) {
+                                  newSelected.add(displayPlaces[i].id)
+                                }
+                              }
+                              return newSelected
+                            })
+                          }
+                        }}
+                      >
+                        <Checkbox
+                          checked={selectedPlaces.has(place.id)}
+                          onCheckedChange={(checked) => {
+                            setSelectedPlaces(prev => {
+                              const newSelected = new Set(prev)
+                              if (checked) {
+                                newSelected.add(place.id)
+                              } else {
+                                newSelected.delete(place.id)
+                              }
+                              return newSelected
+                            })
+                            setLastSelectedIndex(index)
+                          }}
+                        />
+                      </div>
+                      <span>{place.name}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="flex gap-1">
+                        <Button
+                          onClick={() => handleSingleSaveAddress(place)}
+                          disabled={!place.street || !place.city || savingPlace === place.id}
+                          variant="outline"
+                          size="sm"
+                          className="h-7 px-2 text-xs"
+                        >
+                          {savingPlace === place.id ? (
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                          ) : (
+                            <Save className="h-3 w-3" />
+                          )}
+                        </Button>
+                        <Button
+                          onClick={() => handleSingleGeocode(place)}
+                          disabled={geocodingPlace === place.id || (place.street && place.city)}
+                          variant="outline"
+                          size="sm"
+                          className="h-7 px-2 text-xs"
+                        >
+                          {geocodingPlace === place.id ? (
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                          ) : (
+                            <MapIcon className="h-3 w-3" />
+                          )}
+                        </Button>
+                      </div>
+                      <Badge variant="outline">
+                        {place.courts?.length || 0} court{(place.courts?.length || 0) !== 1 ? 's' : ''}
+                      </Badge>
+                    </div>
                   </CardTitle>
                   <CardDescription>
                     📍 {place.latitude}, {place.longitude}
@@ -278,11 +736,9 @@ export default function TestPage() {
                               <div className="font-medium">
                                 Court {index + 1}: {court.sport}
                               </div>
-                              {court.quantity > 1 && (
-                                <div className="text-muted-foreground">
-                                  Quantity: {court.quantity}
-                                </div>
-                              )}
+                              <div className="text-muted-foreground">
+                                Quantity: {court.quantity}
+                              </div>
                               {court.surface && (
                                 <div className="text-muted-foreground">
                                   Surface: {court.surface}
@@ -308,12 +764,13 @@ export default function TestPage() {
                     )}
 
                     {/* Address Details */}
-                    {(place.street || place.city || place.country) && (
+                    {(place.street || place.city || place.district || place.country) && (
                       <div>
                         <h4 className="text-sm font-medium mb-1">Address Details:</h4>
                         <div className="text-sm text-muted-foreground space-y-1">
                           {place.street && <div>Street: {place.street}{place.house_number && ` ${place.house_number}`}</div>}
                           {place.city && <div>City: {place.city}</div>}
+                          {place.district && <div>District: {place.district}</div>}
                           {place.county && <div>County: {place.county}</div>}
                           {place.state && <div>State: {place.state}</div>}
                           {place.country && <div>Country: {place.country}</div>}
@@ -348,18 +805,7 @@ export default function TestPage() {
                       </div>
                     )}
 
-                    {/* Additional Location Fields */}
-                    {(place.area || place.district || place.neighborhood) && (
-                      <div>
-                        <h4 className="text-sm font-medium mb-1">Location Details:</h4>
-                        <div className="text-sm text-muted-foreground space-y-1">
-                          {place.area && <div>Area: {place.area}</div>}
-                          {place.district && <div>District: {place.district}</div>}
-                          {place.neighborhood && <div>Neighborhood: {place.neighborhood}</div>}
-                        </div>
-                      </div>
-                    )}
-
+   
                     {/* Complete Metadata */}
                     <div className="pt-2 border-t">
                       <h4 className="text-sm font-medium mb-2">Complete Metadata:</h4>
