@@ -2,7 +2,7 @@
 
 // Load environment variables from .env.local
 import { config } from 'dotenv'
-import { join } from 'path'
+import { join, basename } from 'path'
 config({ path: join(process.cwd(), '.env.local') })
 
 import { createClient } from '@supabase/supabase-js'
@@ -51,7 +51,7 @@ interface JsonData {
 // System user ID for data attribution - will be created automatically
 const SYSTEM_USER_ID = 'a0000000-0000-0000-0000-000000000001' // Import system user
 
-function transformJsonPlace(jsonPlace: JsonPlace) {
+function transformJsonPlace(jsonPlace: JsonPlace, sourceFilename: string) {
   const { attributes, geometry } = jsonPlace
   
   // Extract available sports and their details
@@ -105,7 +105,7 @@ function transformJsonPlace(jsonPlace: JsonPlace) {
     longitude: geometry.x,
     district: attributes.district || null,
     sports: courts.map(c => c.sport as Database['public']['Enums']['sport_type']),
-    source: 'json_import',
+    source: sourceFilename,
     import_date: new Date().toISOString()
   }
   
@@ -133,8 +133,8 @@ async function checkForDuplicates(latitude: number, longitude: number, name: str
   )
 }
 
-async function importPlace(jsonPlace: JsonPlace, userId: string) {
-  const { place, courts } = transformJsonPlace(jsonPlace)
+async function importPlace(jsonPlace: JsonPlace, userId: string, sourceFilename: string) {
+  const { place, courts } = transformJsonPlace(jsonPlace, sourceFilename)
   
   // Set the user attribution
   const placeWithUser = {
@@ -239,6 +239,10 @@ async function main() {
   
   console.log(`📦 Found ${jsonData.places.length} places to import`)
   
+  // Extract filename for source attribution
+  const sourceFilename = basename(jsonFilePath, '.json')
+  console.log(`📄 Using source: ${sourceFilename}`)
+  
   // Find a user for attribution
   let systemUserId: string
   try {
@@ -257,7 +261,7 @@ async function main() {
     const place = jsonData.places[i]
     console.log(`\n[${i + 1}/${jsonData.places.length}] Processing: ${place.attributes.name}`)
     
-    const result = await importPlace(place, systemUserId)
+    const result = await importPlace(place, systemUserId, sourceFilename)
     
     if (result.success) {
       if (result.skipped) {

@@ -1,0 +1,474 @@
+{
+  "places": [
+    {
+      "geometry": {
+        "x": 7.1479366456,
+        "y": 50.6863768275
+      },
+      "attributes": {
+        "name": "Aennchenstr. I",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0656640293,
+        "y": 50.7333619954
+      },
+      "attributes": {
+        "name": "Auf dem Hügel, Am Probsthof",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.1770870031,
+        "y": 50.732690931
+      },
+      "attributes": {
+        "name": "Am Waldrand",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.1646891903,
+        "y": 50.7493780648
+      },
+      "attributes": {
+        "name": "Am Kautexweiher/ Finkenweg",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0653114767,
+        "y": 50.708541501
+      },
+      "attributes": {
+        "name": "Auf dem Kirchbüchel",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.1869728581,
+        "y": 50.7241699391
+      },
+      "attributes": {
+        "name": "Burghofstr. II",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0638060881,
+        "y": 50.7024550041
+      },
+      "attributes": {
+        "name": "Erfurtstr.",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.1277990431,
+        "y": 50.7608038758
+      },
+      "attributes": {
+        "name": "Fabristr. II",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.1472493061,
+        "y": 50.7250487843
+      },
+      "attributes": {
+        "name": "Schießbergweg",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0820002977,
+        "y": 50.7437283614
+      },
+      "attributes": {
+        "name": "Gerhardsplatz",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0601152926,
+        "y": 50.7367293965
+      },
+      "attributes": {
+        "name": "Gerhart-Hauptmann-Str.",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.1618093099,
+        "y": 50.7446316924
+      },
+      "attributes": {
+        "name": "Holzlarer Weg",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.1848960633,
+        "y": 50.6637951554
+      },
+      "attributes": {
+        "name": "Honnefer Str.",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.060220958,
+        "y": 50.6928178396
+      },
+      "attributes": {
+        "name": "Hermann-Schlösser-Str.",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0461271268,
+        "y": 50.7469141741
+      },
+      "attributes": {
+        "name": "Hohe Str./ KBE Dreieck",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0757709251,
+        "y": 50.7106747828
+      },
+      "attributes": {
+        "name": "Im Brandengarten",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.1726570103,
+        "y": 50.7047815536
+      },
+      "attributes": {
+        "name": "In der Proffe",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.1701666907,
+        "y": 50.6783899815
+      },
+      "attributes": {
+        "name": "Kapellenweg II",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0907895512,
+        "y": 50.7224008713
+      },
+      "attributes": {
+        "name": "Kirschallee/ Wielsgäßchen",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.1349524212,
+        "y": 50.7281623
+      },
+      "attributes": {
+        "name": "Kreuzherrenstr. II",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0737643645,
+        "y": 50.7554742762
+      },
+      "attributes": {
+        "name": "Luxemburger Str.",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.097602786,
+        "y": 50.7182449199
+      },
+      "attributes": {
+        "name": "Lotharstr.",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.1272517825,
+        "y": 50.7321077078
+      },
+      "attributes": {
+        "name": "Limpericher Str.",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.123648729,
+        "y": 50.6966949356
+      },
+      "attributes": {
+        "name": "Margaretenstr.",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0429698423,
+        "y": 50.7369999118
+      },
+      "attributes": {
+        "name": "Mörikestr.",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0531560199,
+        "y": 50.7209916071
+      },
+      "attributes": {
+        "name": "Maarweg",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0922295945,
+        "y": 50.7380662717
+      },
+      "attributes": {
+        "name": "Maxstr.",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0530562079,
+        "y": 50.7481635066
+      },
+      "attributes": {
+        "name": "Oppelner Str.",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.1455834617,
+        "y": 50.6747931749
+      },
+      "attributes": {
+        "name": "Petersbergstr.",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0517350222,
+        "y": 50.6993445291
+      },
+      "attributes": {
+        "name": "Pascalstr.",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.1643230944,
+        "y": 50.6973249074
+      },
+      "attributes": {
+        "name": "Plittersdorfer Str.",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0511797966,
+        "y": 50.7114467141
+      },
+      "attributes": {
+        "name": "Robelstr. II",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.14131063,
+        "y": 50.7095341232
+      },
+      "attributes": {
+        "name": "Rheinaue",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0740580481,
+        "y": 50.7582172736
+      },
+      "attributes": {
+        "name": "Stockholmer Str.",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0548106759,
+        "y": 50.7364499102
+      },
+      "attributes": {
+        "name": "Siemensstr. III",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0807364272,
+        "y": 50.7241737875
+      },
+      "attributes": {
+        "name": "Theodor-Brinkmann-/Sebastianstr.",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0330567279,
+        "y": 50.7122677949
+      },
+      "attributes": {
+        "name": "TÜV Medinghoven",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.1562195192,
+        "y": 50.6933474021
+      },
+      "attributes": {
+        "name": "Viktoriaplatz",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.1157568844,
+        "y": 50.7429002089
+      },
+      "attributes": {
+        "name": "Von-Sandt-Str.",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0739145329,
+        "y": 50.6719975625
+      },
+      "attributes": {
+        "name": "Villiper Allee",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0359360756,
+        "y": 50.7088485093
+      },
+      "attributes": {
+        "name": "Waldspielplatz Medinghoven",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0390160415,
+        "y": 50.7148792817
+      },
+      "attributes": {
+        "name": "Weilbergstr.",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0736085154,
+        "y": 50.7435852522
+      },
+      "attributes": {
+        "name": "Zeisigweg II",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.1483458845,
+        "y": 50.7607346962
+      },
+      "attributes": {
+        "name": "Mendener Weg",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0388285536,
+        "y": 50.7374347684
+      },
+      "attributes": {
+        "name": "Roisdorfer Weg",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0705116236,
+        "y": 50.7209711923
+      },
+      "attributes": {
+        "name": "Flodelingsweg",
+        "fußballplätze": "1"
+      }
+    },
+    {
+      "geometry": {
+        "x": 7.0399799568,
+        "y": 50.7267514524
+      },
+      "attributes": {
+        "name": "Hinter den Lessenicher Gärten",
+        "fußballplätze": "1"
+      }
+    }
+  ]
+}

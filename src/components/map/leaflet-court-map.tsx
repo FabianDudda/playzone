@@ -10,9 +10,11 @@ import { MapPin, Navigation, Plus } from 'lucide-react'
 import { createSportIcon, createUserLocationIcon, createSelectedLocationIcon, sportNames } from '@/lib/utils/sport-styles'
 import { MAP_LAYERS, DEFAULT_LAYER_ID, createTileLayer, getSavedLayerPreference, saveLayerPreference } from '@/lib/utils/map-layers'
 import L from 'leaflet'
+import MarkerClusterGroup from './marker-cluster-group'
 
 // Import Leaflet CSS
 import 'leaflet/dist/leaflet.css'
+import './cluster-styles.css'
 
 interface LeafletCourtMapProps {
   courts: Court[]
@@ -21,6 +23,7 @@ interface LeafletCourtMapProps {
   height?: string
   allowAddCourt?: boolean
   selectedLocation?: { lat: number; lng: number } | null
+  enableClustering?: boolean
 }
 
 // Component to handle map clicks
@@ -163,7 +166,8 @@ export default function LeafletCourtMap({
   onMapClick, 
   height = '400px',
   allowAddCourt = false,
-  selectedLocation = null
+  selectedLocation = null,
+  enableClustering = true
 }: LeafletCourtMapProps) {
   const [selectedCourt, setSelectedCourt] = useState<Court | null>(null)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
@@ -205,37 +209,45 @@ export default function LeafletCourtMap({
             {...(currentLayer.subdomains !== undefined && currentLayer.subdomains.length > 0 && { subdomains: currentLayer.subdomains })}
           />
           
-          {/* Court markers */}
-          {courts.map((court) => (
-            <Marker 
-              key={court.id} 
-              position={[court.latitude, court.longitude]}
-              icon={createSportIcon(court.sports, selectedCourt?.id === court.id)}
-            >
-              <Popup>
-                <div className="p-2 min-w-[200px]">
-                  <h3 className="font-semibold text-sm mb-1">{court.name}</h3>
-                  <div className="flex flex-wrap gap-1 mb-2">
-                    {court.sports.map(sport => (
-                      <Badge key={sport} variant="secondary" className="text-xs">
-                        {sportNames[sport]}
-                      </Badge>
-                    ))}
+          {/* Court markers - with optional clustering */}
+          {enableClustering && courts.length > 10 ? (
+            <MarkerClusterGroup 
+              courts={courts}
+              onCourtSelect={handleCourtSelect}
+              selectedCourt={selectedCourt}
+            />
+          ) : (
+            courts.map((court) => (
+              <Marker 
+                key={court.id} 
+                position={[court.latitude, court.longitude]}
+                icon={createSportIcon(court.sports, selectedCourt?.id === court.id)}
+              >
+                <Popup>
+                  <div className="p-2 min-w-[200px]">
+                    <h3 className="font-semibold text-sm mb-1">{court.name}</h3>
+                    <div className="flex flex-wrap gap-1 mb-2">
+                      {court.sports.map(sport => (
+                        <Badge key={sport} variant="secondary" className="text-xs">
+                          {sportNames[sport]}
+                        </Badge>
+                      ))}
+                    </div>
+                    {court.description && (
+                      <p className="text-xs text-gray-600 mb-2">{court.description}</p>
+                    )}
+                    <Button 
+                      size="sm" 
+                      className="w-full"
+                      onClick={() => handleCourtSelect(court)}
+                    >
+                      Select Court
+                    </Button>
                   </div>
-                  {court.description && (
-                    <p className="text-xs text-gray-600 mb-2">{court.description}</p>
-                  )}
-                  <Button 
-                    size="sm" 
-                    className="w-full"
-                    onClick={() => handleCourtSelect(court)}
-                  >
-                    Select Court
-                  </Button>
-                </div>
-              </Popup>
-            </Marker>
-          ))}
+                </Popup>
+              </Marker>
+            ))
+          )}
           
           {/* User location marker */}
           {userLocation && (

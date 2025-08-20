@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import React from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { database } from '@/lib/supabase/database'
 import { PlaceWithCourts } from '@/lib/supabase/types'
@@ -8,17 +9,21 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import { MapPin, TestTube, MapIcon, Loader2, Save } from 'lucide-react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { MapPin, TestTube, MapIcon, Loader2, Save, Trash2, Filter } from 'lucide-react'
 
 export default function TestPage() {
   const [isGeocoding, setIsGeocoding] = useState(false)
   const [isSavingAddresses, setIsSavingAddresses] = useState(false)
+  const [isDeletingPlaces, setIsDeletingPlaces] = useState(false)
   const [geocodingPlace, setGeocodingPlace] = useState<string | null>(null)
   const [savingPlace, setSavingPlace] = useState<string | null>(null)
+  const [deletingPlace, setDeletingPlace] = useState<string | null>(null)
   const [geocodingResults, setGeocodingResults] = useState<string | null>(null)
   const [enrichedPlaces, setEnrichedPlaces] = useState<PlaceWithCourts[]>([])
   const [selectedPlaces, setSelectedPlaces] = useState<Set<string>>(new Set())
   const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(null)
+  const [selectedCity, setSelectedCity] = useState<string>('all')
   const queryClient = useQueryClient()
 
   const { data: places = [], isLoading, error } = useQuery({
@@ -27,7 +32,25 @@ export default function TestPage() {
   })
 
   // Use enriched places if available, otherwise use original places
-  const displayPlaces = enrichedPlaces.length > 0 ? enrichedPlaces : places
+  const allPlaces = enrichedPlaces.length > 0 ? enrichedPlaces : places
+  
+  // Get unique cities for filter dropdown
+  const uniqueCities = React.useMemo(() => {
+    const cities = allPlaces
+      .map(place => place.city)
+      .filter(Boolean) // Remove null/undefined cities
+      .filter((city, index, array) => array.indexOf(city) === index) // Remove duplicates
+      .sort() // Sort alphabetically
+    return cities
+  }, [allPlaces])
+  
+  // Apply city filter
+  const displayPlaces = React.useMemo(() => {
+    if (selectedCity === 'all') {
+      return allPlaces
+    }
+    return allPlaces.filter(place => place.city === selectedCity)
+  }, [allPlaces, selectedCity])
 
   // Helper function to check if place has any address data
   const hasAddressData = (place: PlaceWithCourts) => {
@@ -364,6 +387,154 @@ export default function TestPage() {
     }
   }
 
+  const handleBulkDelete = async () => {
+    const selectedPlacesData = getSelectedPlacesData()
+    if (selectedPlacesData.length === 0) return
+
+    // Confirmation dialog
+    const confirmed = window.confirm(
+      `⚠️ Are you sure you want to delete ${selectedPlacesData.length} place${selectedPlacesData.length !== 1 ? 's' : ''} and all their associated courts?\n\n` +
+      `This action cannot be undone!\n\n` +
+      `Places to delete:\n${selectedPlacesData.map(p => `• ${p.name}`).join('\n')}`
+    )
+
+    if (!confirmed) return
+
+    // Generate unique operation ID for tracking
+    const operationId = `delete-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+    console.log(`🗑️ [${operationId}] Starting handleBulkDelete for ${selectedPlacesData.length} places...`)
+
+    setIsDeletingPlaces(true)
+    setGeocodingResults(null)
+
+    try {
+      let successCount = 0
+      let errorCount = 0
+      const failedPlaces: string[] = []
+      const succeededPlaces: string[] = []
+      const BATCH_SIZE = 5 // Smaller batches for delete operations
+      const DELAY_MS = 500 // Longer delay for delete operations
+
+      console.log(`📦 [${operationId}] Processing ${selectedPlacesData.length} places in batches of ${BATCH_SIZE}`)
+
+      // Process places in batches
+      for (let batchStart = 0; batchStart < selectedPlacesData.length; batchStart += BATCH_SIZE) {
+        const batchEnd = Math.min(batchStart + BATCH_SIZE, selectedPlacesData.length)
+        const currentBatch = selectedPlacesData.slice(batchStart, batchEnd)
+        const batchNumber = Math.floor(batchStart / BATCH_SIZE) + 1
+        const totalBatches = Math.ceil(selectedPlacesData.length / BATCH_SIZE)
+
+        console.log(`🔄 [${operationId}] Starting batch ${batchNumber}/${totalBatches} with ${currentBatch.length} places`)
+
+        // Process each place in the current batch
+        for (let i = 0; i < currentBatch.length; i++) {
+          const place = currentBatch[i]
+          const overallIndex = batchStart + i
+
+          console.log(`🗑️ [${operationId}] Deleting place ${overallIndex + 1}/${selectedPlacesData.length}: ${place.name} (${place.id})`)
+
+          // Retry logic for database operations
+          let retryCount = 0
+          const maxRetries = 3
+          let success = false
+
+          while (!success && retryCount < maxRetries) {
+            try {
+              console.log(`🔄 [${operationId}] Attempt ${retryCount + 1}/${maxRetries} to delete place ${place.id}`)
+
+              // Step 1: Delete all associated courts first (to respect foreign key constraints)
+              if (place.courts && place.courts.length > 0) {
+                console.log(`🏟️ [${operationId}] Deleting ${place.courts.length} courts for place ${place.id}`)
+                
+                for (const court of place.courts) {
+                  const courtDeleteResult = await database.courts.deleteCourt(court.id)
+                  if (courtDeleteResult.error) {
+                    console.error(`❌ [${operationId}] Failed to delete court ${court.id}:`, courtDeleteResult.error)
+                    throw new Error(`Failed to delete court ${court.id}: ${courtDeleteResult.error.message}`)
+                  }
+                  console.log(`✅ [${operationId}] Successfully deleted court ${court.id}`)
+                }
+              }
+
+              // Step 2: Delete the place itself
+              console.log(`🏠 [${operationId}] Deleting place ${place.id}`)
+              const placeDeleteResult = await database.courts.deleteCourt(place.id)
+
+              if (placeDeleteResult.error) {
+                console.error(`❌ [${operationId}] Failed to delete place ${place.id}:`, placeDeleteResult.error)
+                throw new Error(`Failed to delete place: ${placeDeleteResult.error.message}`)
+              }
+
+              successCount++
+              succeededPlaces.push(place.id)
+              success = true
+              console.log(`✅ [${operationId}] Successfully deleted place ${place.id} (${place.name})`)
+
+            } catch (error) {
+              retryCount++
+              console.error(`❌ [${operationId}] Attempt ${retryCount} failed for place ${place.id}:`, error)
+
+              if (retryCount >= maxRetries) {
+                errorCount++
+                failedPlaces.push(place.id)
+                console.error(`💥 [${operationId}] Failed to delete place ${place.id} after ${maxRetries} attempts:`, error)
+              } else {
+                // Wait before retry with exponential backoff
+                const retryDelay = 1000 * retryCount
+                console.log(`⏳ [${operationId}] Waiting ${retryDelay}ms before retry ${retryCount + 1} for place ${place.id}`)
+                await new Promise(resolve => setTimeout(resolve, retryDelay))
+              }
+            }
+          }
+
+          // Update UI with progress
+          setGeocodingResults(
+            `🗑️ Deleting batch ${batchNumber}/${totalBatches}... ${overallIndex + 1}/${selectedPlacesData.length} (${successCount} deleted, ${errorCount} failed)`
+          )
+
+          // Add delay between operations
+          if (overallIndex < selectedPlacesData.length - 1) {
+            console.log(`⏳ [${operationId}] Waiting ${DELAY_MS}ms before next operation`)
+            await new Promise(resolve => setTimeout(resolve, DELAY_MS))
+          }
+        }
+
+        console.log(`✅ [${operationId}] Completed batch ${batchNumber}/${totalBatches}. Success: ${successCount}, Errors: ${errorCount}`)
+      }
+
+      console.log(`📊 [${operationId}] Final results: ${successCount} deleted, ${errorCount} failed`)
+      console.log(`✅ [${operationId}] Deleted places:`, succeededPlaces)
+      if (failedPlaces.length > 0) {
+        console.log(`❌ [${operationId}] Failed places:`, failedPlaces)
+      }
+
+      // Update UI state after successful deletions
+      if (successCount > 0) {
+        console.log(`🔄 [${operationId}] Invalidating queries for ${successCount} successful deletions`)
+        await queryClient.invalidateQueries({ queryKey: ['test-places'] })
+
+        // Remove successfully deleted places from enriched places array
+        setEnrichedPlaces(prev => prev.filter(p => !succeededPlaces.includes(p.id)))
+
+        // Clear selection for successfully deleted places
+        setSelectedPlaces(prev => {
+          const newSelected = new Set(prev)
+          succeededPlaces.forEach(placeId => newSelected.delete(placeId))
+          return newSelected
+        })
+      }
+
+      setGeocodingResults(`✅ Deletion complete! ${successCount} places deleted${errorCount > 0 ? `, ${errorCount} errors` : ''}`)
+
+    } catch (error) {
+      console.error(`💥 [${operationId}] Critical error in handleBulkDelete:`, error)
+      setGeocodingResults(`❌ Delete failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    } finally {
+      console.log(`🏁 [${operationId}] Finished handleBulkDelete`)
+      setIsDeletingPlaces(false)
+    }
+  }
+
   const handleSingleGeocode = async (place: PlaceWithCourts) => {
     setGeocodingPlace(place.id)
     setGeocodingResults(null)
@@ -462,6 +633,71 @@ export default function TestPage() {
     }
   }
 
+  const handleSingleDelete = async (place: PlaceWithCourts) => {
+    // Confirmation dialog
+    const confirmed = window.confirm(
+      `⚠️ Are you sure you want to delete "${place.name}" and all its associated courts?\n\n` +
+      `This action cannot be undone!`
+    )
+
+    if (!confirmed) return
+
+    setDeletingPlace(place.id)
+    setGeocodingResults(null)
+
+    try {
+      console.log(`🗑️ Starting deletion of place: ${place.name} (${place.id})`)
+
+      // Step 1: Delete all associated courts first (to respect foreign key constraints)
+      if (place.courts && place.courts.length > 0) {
+        console.log(`🏟️ Deleting ${place.courts.length} courts for place ${place.id}`)
+        
+        for (const court of place.courts) {
+          const courtDeleteResult = await database.courts.deleteCourt(court.id)
+          if (courtDeleteResult.error) {
+            console.error(`❌ Failed to delete court ${court.id}:`, courtDeleteResult.error)
+            throw new Error(`Failed to delete court ${court.id}: ${courtDeleteResult.error.message}`)
+          }
+          console.log(`✅ Successfully deleted court ${court.id}`)
+        }
+      }
+
+      // Step 2: Delete the place itself
+      console.log(`🏠 Deleting place ${place.id}`)
+      const placeDeleteResult = await database.courts.deleteCourt(place.id)
+
+      if (placeDeleteResult.error) {
+        console.error(`❌ Failed to delete place ${place.id}:`, placeDeleteResult.error)
+        setGeocodingResults(`❌ Failed to delete ${place.name}`)
+        return
+      }
+
+      // Success - update UI
+      console.log(`✅ Successfully deleted place ${place.id} (${place.name})`)
+      
+      // Invalidate and refetch the query to get updated data from database
+      await queryClient.invalidateQueries({ queryKey: ['test-places'] })
+      
+      // Remove this place from enriched places since it's now deleted from database
+      setEnrichedPlaces(prev => prev.filter(p => p.id !== place.id))
+      
+      // Remove from selection
+      setSelectedPlaces(prev => {
+        const newSelected = new Set(prev)
+        newSelected.delete(place.id)
+        return newSelected
+      })
+      
+      setGeocodingResults(`✅ Successfully deleted ${place.name}`)
+
+    } catch (error) {
+      console.error(`❌ Error deleting place ${place.id}:`, error)
+      setGeocodingResults(`❌ Error deleting ${place.name}: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    } finally {
+      setDeletingPlace(null)
+    }
+  }
+
   const handleDebugData = () => {
     console.log('Original places data:', places)
     console.log('Display places data (enriched):', displayPlaces)
@@ -506,10 +742,12 @@ export default function TestPage() {
       
       <div className="mb-6 space-y-4">
         {/* Data Statistics */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <Card className="p-4">
             <div className="text-2xl font-bold text-primary">{displayPlaces.length}</div>
-            <div className="text-sm text-muted-foreground">Total Places</div>
+            <div className="text-sm text-muted-foreground">
+              {selectedCity === 'all' ? 'Total Places' : 'Filtered Places'}
+            </div>
           </Card>
           <Card className="p-4">
             <div className="text-2xl font-bold text-blue-600">
@@ -529,6 +767,12 @@ export default function TestPage() {
             </div>
             <div className="text-sm text-muted-foreground">With Images</div>
           </Card>
+          <Card className="p-4">
+            <div className="text-2xl font-bold text-orange-600">
+              {uniqueCities.length}
+            </div>
+            <div className="text-sm text-muted-foreground">Unique Cities</div>
+          </Card>
         </div>
         
         <div className="flex items-center justify-between">
@@ -543,8 +787,32 @@ export default function TestPage() {
                 Select All ({selectedPlaces.size}/{displayPlaces.length})
               </label>
             </div>
+            
+            {/* City Filter */}
+            <div className="flex items-center gap-2">
+              <Filter className="h-4 w-4 text-muted-foreground" />
+              <Select value={selectedCity} onValueChange={setSelectedCity}>
+                <SelectTrigger className="w-48">
+                  <SelectValue placeholder="Filter by city" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">
+                    All Cities ({allPlaces.length})
+                  </SelectItem>
+                  {uniqueCities.map(city => {
+                    const count = allPlaces.filter(place => place.city === city).length
+                    return (
+                      <SelectItem key={city} value={city}>
+                        {city} ({count})
+                      </SelectItem>
+                    )
+                  })}
+                </SelectContent>
+              </Select>
+            </div>
+            
             <p className="text-muted-foreground">
-              All available data fields are displayed below
+              {selectedCity === 'all' ? 'All cities' : `Filtered by: ${selectedCity}`}
               {enrichedPlaces.length > 0 && ` (${enrichedPlaces.length} places enriched)`}
             </p>
           </div>
@@ -556,6 +824,25 @@ export default function TestPage() {
               className="flex items-center gap-2"
             >
               🔍 Debug Data
+            </Button>
+            <Button 
+              onClick={handleBulkDelete}
+              disabled={isDeletingPlaces || selectedPlaces.size === 0}
+              variant="destructive"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              {isDeletingPlaces ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="h-4 w-4" />
+                  Delete Places ({selectedPlaces.size})
+                </>
+              )}
             </Button>
             <Button 
               onClick={handleSaveAddresses}
@@ -664,6 +951,20 @@ export default function TestPage() {
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="flex gap-1">
+                        <Button
+                          onClick={() => handleSingleDelete(place)}
+                          disabled={deletingPlace === place.id}
+                          variant="destructive"
+                          size="sm"
+                          className="h-7 px-2 text-xs"
+                          title="Delete place and all courts"
+                        >
+                          {deletingPlace === place.id ? (
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                          ) : (
+                            <Trash2 className="h-3 w-3" />
+                          )}
+                        </Button>
                         <Button
                           onClick={() => handleSingleSaveAddress(place)}
                           disabled={!hasAddressData(place) || savingPlace === place.id}

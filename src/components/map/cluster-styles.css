@@ -1,0 +1,144 @@
+/* Custom cluster icon styles */
+.custom-cluster-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+.cluster-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  position: relative;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  border: 2px solid white;
+}
+
+.cluster-small {
+  width: 30px;
+  height: 30px;
+  font-size: 11px;
+}
+
+.cluster-medium {
+  width: 40px;
+  height: 40px;
+  font-size: 12px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.cluster-large {
+  width: 50px;
+  height: 50px;
+  font-size: 14px;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.cluster-count {
+  line-height: 1;
+  margin-bottom: 1px;
+}
+
+.cluster-sports {
+  display: flex;
+  gap: 1px;
+  margin-top: 1px;
+}
+
+.sport-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8);
+  display: inline-block;
+}
+
+.sport-more {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1;
+}
+
+/* Custom popup styles */
+.custom-popup .leaflet-popup-content {
+  margin: 8px 12px;
+  font-family: inherit;
+}
+
+.place-popup h3 {
+  margin: 0 0 8px 0;
+  color: #1f2937;
+}
+
+.place-popup p {
+  margin: 4px 0;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+.place-popup button {
+  transition: background-color 0.2s;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.place-popup button:hover {
+  background-color: #2563eb !important;
+}
+
+/* Override default cluster styles */
+.marker-cluster-small {
+  background-color: rgba(59, 130, 246, 0.6) !important;
+}
+
+.marker-cluster-small div {
+  background-color: rgba(59, 130, 246, 0.8) !important;
+}
+
+.marker-cluster-medium {
+  background-color: rgba(245, 158, 11, 0.6) !important;
+}
+
+.marker-cluster-medium div {
+  background-color: rgba(245, 158, 11, 0.8) !important;
+}
+
+.marker-cluster-large {
+  background-color: rgba(239, 68, 68, 0.6) !important;
+}
+
+.marker-cluster-large div {
+  background-color: rgba(239, 68, 68, 0.8) !important;
+}
+
+/* Cluster hover effects */
+.marker-cluster:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+/* Responsive cluster sizes */
+@media (max-width: 768px) {
+  .cluster-small {
+    width: 28px;
+    height: 28px;
+    font-size: 10px;
+  }
+  
+  .cluster-medium {
+    width: 36px;
+    height: 36px;
+    font-size: 11px;
+  }
+  
+  .cluster-large {
+    width: 44px;
+    height: 44px;
+    font-size: 12px;
+  }
+}
