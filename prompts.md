@@ -2,6 +2,13 @@
 
 - save multiple addresses to places at once
 
+
+I want to change the following Activation Requirements:  3. Selected Places Must Have Required Address Data
+
+- eligible, when at least one of the following fields available: street, city, district, state, country, county, postcode
+
+
+
 ----------------------------------------------------------------------------------------------------------------------
 
 # Sub-page für jeden Place

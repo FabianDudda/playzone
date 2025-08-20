@@ -29,6 +29,11 @@ export default function TestPage() {
   // Use enriched places if available, otherwise use original places
   const displayPlaces = enrichedPlaces.length > 0 ? enrichedPlaces : places
 
+  // Helper function to check if place has any address data
+  const hasAddressData = (place: PlaceWithCourts) => {
+    return !!(place.street || place.city || place.district || place.state || place.country || place.county || place.postcode)
+  }
+
   // Selection helper functions
   const getSelectedPlacesData = () => {
     return displayPlaces.filter(place => selectedPlaces.has(place.id))
@@ -176,11 +181,11 @@ export default function TestPage() {
     
     try {
       // Filter only selected places that have enriched address data
-      const placesToUpdate = selectedPlacesData.filter(place => place.street && place.city)
-      console.log(`📋 [${operationId}] Places to update (with street & city): ${placesToUpdate.length}`, placesToUpdate.map(p => ({ id: p.id, name: p.name, street: p.street, city: p.city })))
+      const placesToUpdate = selectedPlacesData.filter(place => hasAddressData(place))
+      console.log(`📋 [${operationId}] Places to update (with address data): ${placesToUpdate.length}`, placesToUpdate.map(p => ({ id: p.id, name: p.name, street: p.street, city: p.city })))
       
       if (placesToUpdate.length === 0) {
-        console.log(`❌ [${operationId}] No places have both street and city data`)
+        console.log(`❌ [${operationId}] No places have address data`)
         setGeocodingResults('❌ No enriched addresses to save')
         return
       }
@@ -419,7 +424,7 @@ export default function TestPage() {
   }
 
   const handleSingleSaveAddress = async (place: PlaceWithCourts) => {
-    if (!place.street || !place.city) return
+    if (!hasAddressData(place)) return
     
     setSavingPlace(place.id)
     setGeocodingResults(null)
@@ -554,7 +559,7 @@ export default function TestPage() {
             </Button>
             <Button 
               onClick={handleSaveAddresses}
-              disabled={isSavingAddresses || selectedPlaces.size === 0 || getSelectedPlacesData().filter(p => p.street && p.city).length === 0}
+              disabled={isSavingAddresses || selectedPlaces.size === 0 || getSelectedPlacesData().filter(p => hasAddressData(p)).length === 0}
               variant="outline"
               className="flex items-center gap-2"
             >
@@ -566,7 +571,7 @@ export default function TestPage() {
               ) : (
                 <>
                   <Save className="h-4 w-4" />
-                  Set Addresses ({getSelectedPlacesData().filter(p => p.street && p.city).length})
+                  Set Addresses ({getSelectedPlacesData().filter(p => hasAddressData(p)).length})
                 </>
               )}
             </Button>
@@ -661,7 +666,7 @@ export default function TestPage() {
                       <div className="flex gap-1">
                         <Button
                           onClick={() => handleSingleSaveAddress(place)}
-                          disabled={!place.street || !place.city || savingPlace === place.id}
+                          disabled={!hasAddressData(place) || savingPlace === place.id}
                           variant="outline"
                           size="sm"
                           className="h-7 px-2 text-xs"

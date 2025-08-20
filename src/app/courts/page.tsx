@@ -216,12 +216,23 @@ export default function CourtsPage() {
                             </p>
                           )}
                           
-                          <div className="flex justify-between items-center pt-2">
+                          <div className="flex gap-2 pt-2">
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              className="flex-1"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                window.location.href = `/places/${place.id}`
+                              }}
+                            >
+                              View Details
+                            </Button>
                             {user && (
                               <Button 
                                 size="sm" 
                                 variant="outline"
-                                className="w-full"
+                                className="flex-1"
                                 onClick={(e) => {
                                   e.stopPropagation()
                                   const url = new URL('/matches/new', window.location.origin)
@@ -329,22 +340,36 @@ export default function CourtsPage() {
                                 </p>
                               )}
                               
-                              <div className="flex justify-between items-center text-xs text-muted-foreground">
-                                <span>Click to view on map</span>
-                                {user && (
+                              <div className="space-y-2">
+                                <p className="text-xs text-muted-foreground">Click to view on map</p>
+                                <div className="flex gap-2">
                                   <Button 
                                     size="sm" 
                                     variant="outline"
+                                    className="flex-1"
                                     onClick={(e) => {
                                       e.stopPropagation()
-                                      const url = new URL('/matches/new', window.location.origin)
-                                      url.searchParams.set('place', place.id)
-                                      window.location.href = url.toString()
+                                      window.location.href = `/places/${place.id}`
                                     }}
                                   >
-                                    Log Match
+                                    View Details
                                   </Button>
-                                )}
+                                  {user && (
+                                    <Button 
+                                      size="sm" 
+                                      variant="outline"
+                                      className="flex-1"
+                                      onClick={(e) => {
+                                        e.stopPropagation()
+                                        const url = new URL('/matches/new', window.location.origin)
+                                        url.searchParams.set('place', place.id)
+                                        window.location.href = url.toString()
+                                      }}
+                                    >
+                                      Log Match
+                                    </Button>
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </CardContent>
