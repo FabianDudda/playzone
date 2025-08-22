@@ -1,4 +1,4 @@
- stripe listen --forward-to localhost:3000/api/webhook
+
 
 
 # Änderungen zur Staging-Area hinzufügen:

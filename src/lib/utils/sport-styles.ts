@@ -144,94 +144,240 @@ export function getSportBadgeStyles(sport: string): { backgroundColor: string, c
   return { backgroundColor, color: textColor }
 }
 
-// Create simple sport icon with badge for multiple sports
+// Create horizontal sport icons layout within pin
 function createSimpleSportIcon(sports: string[], baseSize: number, isSelected: boolean = false): string {
-  const pinSize = baseSize
   const borderWidth = isSelected ? 3 : 2
   const borderColor = isSelected ? '#1F2937' : '#FFFFFF'
   const primaryColor = sportColors[sports[0]] || '#6B7280'
-  const primaryIcon = sportIcons[sports[0]] || '📍'
-  const isMultiSport = sports.length > 1
   
+  // Determine how many icons to show and if we need +X indicator
+  const maxDisplayIcons = 3
+  const sportsToShow = sports.slice(0, Math.min(maxDisplayIcons, sports.length))
+  const remainingCount = Math.max(0, sports.length - maxDisplayIcons)
+  const showOverflow = remainingCount > 0
+  
+  // If we have overflow, show first 2 icons + "+X" indicator (replaces 3rd position)
+  const iconsToShow = showOverflow ? sportsToShow.slice(0, 2) : sportsToShow
+  
+  // All pins use consistent size - unified width
+  const pinSize = 44
+  
+  // Dynamic icon sizing based on number of sports
+  let iconSizeRatio
+  if (sports.length === 0) {
+    iconSizeRatio = 0.5 // Large for question mark
+  } else if (sports.length === 1) {
+    iconSizeRatio = 0.425 // Large icon for single sport
+  } else if (iconsToShow.length === 2 && !showOverflow) {
+    iconSizeRatio = 0.375 // Medium icons for 2 sports
+  } else {
+    // For 3 sports OR 4+ sports with overflow (triangular layout)
+    iconSizeRatio = 0.35 // Icons for triangular layout
+  }
+  
+  // const iconSize = Math.round(pinSize * iconSizeRatio)
+  const iconSize = Math.round(pinSize * iconSizeRatio)
+  const fontSize = Math.max(8, Math.round(iconSize * 0.8))
+  const verticalSpacing = Math.round(iconSize * 0.1) // Spacing between rows
+  const horizontalSpacing = Math.round(iconSize * 0.2) // Spacing between top icons
+  
+  // Calculate positions for layout - icons positioned in circular head
+  const topRowY = Math.round(pinSize * 0.2) // Top row position in circular head
+  const bottomRowY = topRowY + iconSize + Math.round(verticalSpacing * 0.7) // Bottom row position
+  
+  // Generate all icon elements based on sport count
+  let iconElements = ''
+  
+  if (sports.length === 0) {
+    // Question mark for no sports - centered
+    const centerX = (pinSize - iconSize) / 2
+    const centerY = (pinSize - iconSize) / 2
+    iconElements = `
+      <div style="
+        position: absolute;
+        top: ${centerY}px;
+        left: ${centerX}px;
+        width: ${iconSize}px;
+        height: ${iconSize}px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: ${fontSize}px;
+        color: #6B7280;
+        font-weight: bold;
+        z-index: 11;
+      ">
+        ?
+      </div>
+    `
+  } else if (sports.length === 1) {
+    // Single centered icon
+    const icon = sportIcons[sports[0]] || '📍'
+    const centerX = (pinSize - iconSize) / 2
+    const centerY = (pinSize - iconSize) / 2
+    iconElements = `
+      <div style="
+        position: absolute;
+        top: ${centerY}px;
+        left: ${centerX}px;
+        width: ${iconSize}px;
+        height: ${iconSize}px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: ${fontSize}px;
+        color: white;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        z-index: 11;
+      ">
+        ${icon}
+      </div>
+    `
+  } else if (iconsToShow.length === 2 && !showOverflow) {
+    // Two sports side by side - vertically centered
+    const totalTopWidth = 2 * iconSize + horizontalSpacing
+    const topRowStartX = (pinSize - totalTopWidth) / 2
+    const centerY = (pinSize - iconSize) / 2 // Vertically center the row
+    
+    iconElements = iconsToShow.map((sport, index) => {
+      const icon = sportIcons[sport] || '📍'
+      const left = topRowStartX + index * (iconSize + horizontalSpacing)
+      
+      return `
+        <div style="
+          position: absolute;
+          left: ${left}px;
+          top: ${centerY}px;
+          width: ${iconSize}px;
+          height: ${iconSize}px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: ${fontSize}px;
+          color: white;
+          text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+          z-index: 11;
+        ">
+          ${icon}
+        </div>
+      `
+    }).join('')
+  } else {
+    // Triangular layout for 3+ sports
+    const totalTopWidth = 2 * iconSize + horizontalSpacing
+    const topRowStartX = (pinSize - totalTopWidth) / 2
+    const bottomIconX = (pinSize - iconSize) / 2
+    
+    // Top row icons (first 2)
+    const topIconElements = iconsToShow.slice(0, 2).map((sport, index) => {
+      const icon = sportIcons[sport] || '📍'
+      const left = topRowStartX + index * (iconSize + horizontalSpacing)
+      
+      return `
+        <div style="
+          position: absolute;
+          left: ${left}px;
+          top: ${topRowY}px;
+          width: ${iconSize}px;
+          height: ${iconSize}px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: ${fontSize}px;
+          color: white;
+          text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+          z-index: 11;
+        ">
+          ${icon}
+        </div>
+      `
+    }).join('')
+    
+    // Bottom element: either 3rd sport icon OR "+X" indicator
+    const bottomElement = showOverflow ? `
+      <div style="
+        position: absolute;
+        left: ${bottomIconX}px;
+        top: ${bottomRowY}px;
+        width: ${iconSize}px;
+        height: ${iconSize}px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: ${Math.max(6, fontSize - 2)}px;
+        font-weight: bold;
+        color: #374151;
+        z-index: 12;
+      ">
+        +${remainingCount}
+      </div>
+    ` : `
+      <div style="
+        position: absolute;
+        left: ${bottomIconX}px;
+        top: ${bottomRowY}px;
+        width: ${iconSize}px;
+        height: ${iconSize}px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: ${fontSize}px;
+        color: white;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        z-index: 11;
+      ">
+        ${sportIcons[iconsToShow[2]] || '📍'}
+      </div>
+    `
+    
+    iconElements = topIconElements + bottomElement
+  }
+  
+  // Single unified teardrop background for ALL cases
   return `
-    <!-- Pin background -->
+    <!-- Unified teardrop pin background -->
     <div style="
       position: absolute;
       top: 0;
       left: 0;
       width: ${pinSize}px;
-      height: ${pinSize}px;
-      background-color: ${primaryColor};
-      border: ${borderWidth}px solid ${borderColor};
+      height: ${Math.round(pinSize)}px;
+      background-color: white;
       border-radius: 50% 50% 50% 0;
       transform: rotate(-45deg);
+      transform-origin: center center;
       box-shadow: 0 3px 8px rgba(0,0,0,0.3);
       z-index: 10;
     "></div>
     
-    <!-- Primary sport icon -->
-    <div style="
-      position: absolute;
-      top: ${Math.round(pinSize * 0.15)}px;
-      left: ${Math.round(pinSize * 0.15)}px;
-      width: ${Math.round(pinSize * 0.7)}px;
-      height: ${Math.round(pinSize * 0.7)}px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: ${Math.round(pinSize * 0.5)}px;
-      color: white;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-      z-index: 11;
-    ">
-      ${primaryIcon}
-    </div>
-    
-    ${isMultiSport ? `
-    <!-- Multi-sport badge -->
-    <div style="
-      position: absolute;
-      top: -4px;
-      right: -4px;
-      width: 18px;
-      height: 18px;
-      background-color: #8B5CF6;
-      border: 2px solid white;
-      border-radius: 50%;
-      font-size: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-      z-index: 12;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    ">
-      ${sports.length}
-    </div>
-    ` : ''}
+    ${iconElements}
   `
 }
 
 // Create custom Leaflet icon for a sport
 export function createSportIcon(sports: string[], isSelected = false): L.DivIcon {
-  const baseSize = isSelected ? 36 : 28
-  const containerSize = baseSize + 8 // Add space for badge overflow
+  // All pins now use consistent teardrop size
+  const pinSize = 40 // Updated to match current pin size
+  const containerWidth = pinSize + 8
+  const containerHeight = Math.round(pinSize * 1.3) + 8 // Account for teardrop height
   
   return L.divIcon({
     className: 'custom-sport-marker',
     html: `
       <div style="
         position: relative;
-        width: ${containerSize}px;
-        height: ${containerSize}px;
+        width: ${containerWidth}px;
+        height: ${containerHeight}px;
       ">
-        ${createSimpleSportIcon(sports, baseSize, isSelected)}
+        ${createSimpleSportIcon(sports, pinSize, isSelected)}
       </div>
     `,
-    iconSize: [containerSize, containerSize],
-    iconAnchor: [containerSize / 2, containerSize - 4],
-    popupAnchor: [0, -(containerSize - 4)]
+    iconSize: [containerWidth, containerHeight],
+    iconAnchor: [containerWidth / 2, containerHeight - 4], // Anchor at bottom point
+    popupAnchor: [0, -(containerHeight - 8)] // Popup above the pin
   })
 }
 
