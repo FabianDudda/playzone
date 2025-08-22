@@ -181,10 +181,13 @@ export default function CourtsPage() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {filteredPlaces.map((place) => {
-                  // Get unique sports from the courts array, fallback to legacy sports array
-                  const availableSports = place.courts?.length > 0 
-                    ? [...new Set(place.courts.map(court => court.sport))]
-                    : (place.sports || [])
+                  // Calculate sport quantities from courts array, fallback to legacy sports array
+                  const sportsWithCounts = place.courts?.length > 0 
+                    ? place.courts.reduce((acc, court) => {
+                        acc[court.sport] = (acc[court.sport] || 0) + (court.quantity || 1)
+                        return acc
+                      }, {} as Record<string, number>)
+                    : (place.sports?.reduce((acc, sport) => ({ ...acc, [sport]: 1 }), {} as Record<string, number>) || {})
                     
                   return (
                     <Card 
@@ -197,18 +200,12 @@ export default function CourtsPage() {
                           <h3 className="font-semibold">{place.name}</h3>
                           
                           <div className="flex flex-wrap gap-1">
-                            {availableSports.map((sport) => (
+                            {Object.entries(sportsWithCounts).map(([sport, count]) => (
                               <Badge key={sport} variant="secondary" className="text-xs">
-                                {sport}
+                                {sport} ({count})
                               </Badge>
                             ))}
                           </div>
-                          
-                          {place.courts && place.courts.length > 0 && (
-                            <p className="text-xs text-muted-foreground">
-                              {place.courts.length} court{place.courts.length !== 1 ? 's' : ''} available
-                            </p>
-                          )}
                           
                           {place.description && (
                             <p className="text-sm text-muted-foreground line-clamp-2">
@@ -303,10 +300,13 @@ export default function CourtsPage() {
                 ) : (
                   <div className="space-y-3 max-h-[500px] overflow-y-auto">
                     {filteredPlaces.map((place) => {
-                      // Get unique sports from the courts array, fallback to legacy sports array
-                      const availableSports = place.courts?.length > 0 
-                        ? [...new Set(place.courts.map(court => court.sport))]
-                        : (place.sports || [])
+                      // Calculate sport quantities from courts array, fallback to legacy sports array
+                      const sportsWithCounts = place.courts?.length > 0 
+                        ? place.courts.reduce((acc, court) => {
+                            acc[court.sport] = (acc[court.sport] || 0) + (court.quantity || 1)
+                            return acc
+                          }, {} as Record<string, number>)
+                        : (place.sports?.reduce((acc, sport) => ({ ...acc, [sport]: 1 }), {} as Record<string, number>) || {})
                         
                       return (
                         <Card 
@@ -321,18 +321,12 @@ export default function CourtsPage() {
                               <h3 className="font-semibold">{place.name}</h3>
                               
                               <div className="flex flex-wrap gap-1">
-                                {availableSports.map((sport) => (
+                                {Object.entries(sportsWithCounts).map(([sport, count]) => (
                                   <Badge key={sport} variant="secondary" className="text-xs">
-                                    {sport}
+                                    {sport} ({count})
                                   </Badge>
                                 ))}
                               </div>
-                              
-                              {place.courts && place.courts.length > 0 && (
-                                <p className="text-xs text-muted-foreground">
-                                  {place.courts.length} court{place.courts.length !== 1 ? 's' : ''} available
-                                </p>
-                              )}
                               
                               {place.description && (
                                 <p className="text-sm text-muted-foreground">

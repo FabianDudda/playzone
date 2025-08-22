@@ -28,31 +28,29 @@ const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
 
 // Types for the JSON data
 interface JsonPlace {
-  attributes: {
-    name: string
-    district?: string
-    fußballplätze?: string | null
-    platzbelag_fußball?: string | null
-    basketballplätze?: string | null
-    boulebahn?: string | null
-    skatepark_elemente?: string | null
-    tischtennisplatten?: string | null
-  }
+  street?: string
+  name: string
+  district?: string
+  fußballplätze?: number | null
+  platzbelag_fußball?: string | null
+  basketballplätze?: number | null
+  beachvolleyballplätze?: number | null
+  bouleplätze?: number | null
+  skatepark?: number | null
+  tischtennisplatten?: number | null
   geometry: {
     x: number // longitude
     y: number // latitude
   }
 }
 
-interface JsonData {
-  places: JsonPlace[]
-}
+type JsonData = JsonPlace[]
 
 // System user ID for data attribution - will be created automatically
 const SYSTEM_USER_ID = 'a0000000-0000-0000-0000-000000000001' // Import system user
 
 function transformJsonPlace(jsonPlace: JsonPlace, sourceFilename: string) {
-  const { attributes, geometry } = jsonPlace
+  const { geometry } = jsonPlace
   
   // Extract available sports and their details
   const courts: Array<{
@@ -62,48 +60,55 @@ function transformJsonPlace(jsonPlace: JsonPlace, sourceFilename: string) {
   }> = []
   
   // Map each sport field to court data
-  if (attributes.fußballplätze && parseInt(attributes.fußballplätze) > 0) {
+  if (jsonPlace.fußballplätze && jsonPlace.fußballplätze > 0) {
     courts.push({
       sport: 'fußball',
-      quantity: parseInt(attributes.fußballplätze),
-      surface: attributes.platzbelag_fußball || undefined
+      quantity: jsonPlace.fußballplätze,
+      surface: jsonPlace.platzbelag_fußball || undefined
     })
   }
   
-  if (attributes.basketballplätze && parseInt(attributes.basketballplätze) > 0) {
+  if (jsonPlace.basketballplätze && jsonPlace.basketballplätze > 0) {
     courts.push({
       sport: 'basketball',
-      quantity: parseInt(attributes.basketballplätze)
+      quantity: jsonPlace.basketballplätze
     })
   }
   
-  if (attributes.boulebahn && parseInt(attributes.boulebahn) > 0) {
+  if (jsonPlace.beachvolleyballplätze && jsonPlace.beachvolleyballplätze > 0) {
+    courts.push({
+      sport: 'beachvolleyball',
+      quantity: jsonPlace.beachvolleyballplätze
+    })
+  }
+  
+  if (jsonPlace.bouleplätze && jsonPlace.bouleplätze > 0) {
     courts.push({
       sport: 'boule',
-      quantity: parseInt(attributes.boulebahn)
+      quantity: jsonPlace.bouleplätze
     })
   }
   
-  if (attributes.skatepark_elemente && parseInt(attributes.skatepark_elemente) > 0) {
+  if (jsonPlace.skatepark && jsonPlace.skatepark > 0) {
     courts.push({
       sport: 'skatepark',
-      quantity: parseInt(attributes.skatepark_elemente)
+      quantity: jsonPlace.skatepark
     })
   }
   
-  if (attributes.tischtennisplatten && parseInt(attributes.tischtennisplatten) > 0) {
+  if (jsonPlace.tischtennisplatten && jsonPlace.tischtennisplatten > 0) {
     courts.push({
       sport: 'tischtennis',
-      quantity: parseInt(attributes.tischtennisplatten)
+      quantity: jsonPlace.tischtennisplatten
     })
   }
   
   // Create the place data (added_by_user will be set later)
   const place = {
-    name: attributes.name,
+    name: jsonPlace.name,
     latitude: geometry.y,
     longitude: geometry.x,
-    district: attributes.district || null,
+    district: jsonPlace.district || null,
     sports: courts.map(c => c.sport as Database['public']['Enums']['sport_type']),
     source: sourceFilename,
     import_date: new Date().toISOString()
@@ -232,12 +237,12 @@ async function main() {
     process.exit(1)
   }
   
-  if (!jsonData.places || !Array.isArray(jsonData.places)) {
-    console.error('❌ Invalid JSON format. Expected { "places": [...] }')
+  if (!Array.isArray(jsonData)) {
+    console.error('❌ Invalid JSON format. Expected array of places [...] ')
     process.exit(1)
   }
   
-  console.log(`📦 Found ${jsonData.places.length} places to import`)
+  console.log(`📦 Found ${jsonData.length} places to import`)
   
   // Extract filename for source attribution
   const sourceFilename = basename(jsonFilePath, '.json')
@@ -257,9 +262,9 @@ async function main() {
   let skipCount = 0
   let errorCount = 0
   
-  for (let i = 0; i < jsonData.places.length; i++) {
-    const place = jsonData.places[i]
-    console.log(`\n[${i + 1}/${jsonData.places.length}] Processing: ${place.attributes.name}`)
+  for (let i = 0; i < jsonData.length; i++) {
+    const place = jsonData[i]
+    console.log(`\n[${i + 1}/${jsonData.length}] Processing: ${place.name}`)
     
     const result = await importPlace(place, systemUserId, sourceFilename)
     
@@ -282,7 +287,7 @@ async function main() {
   console.log(`✅ Successful imports: ${successCount}`)
   console.log(`⚠️  Skipped (duplicates): ${skipCount}`)
   console.log(`❌ Errors: ${errorCount}`)
-  console.log(`📦 Total processed: ${jsonData.places.length}`)
+  console.log(`📦 Total processed: ${jsonData.length}`)
   
   if (errorCount === 0) {
     console.log('\n🎉 Import completed successfully!')

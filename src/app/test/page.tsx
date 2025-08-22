@@ -24,6 +24,7 @@ export default function TestPage() {
   const [selectedPlaces, setSelectedPlaces] = useState<Set<string>>(new Set())
   const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(null)
   const [selectedCity, setSelectedCity] = useState<string>('all')
+  const [selectedAddressStatus, setSelectedAddressStatus] = useState<string>('all')
   const queryClient = useQueryClient()
 
   const { data: places = [], isLoading, error } = useQuery({
@@ -44,13 +45,24 @@ export default function TestPage() {
     return cities
   }, [allPlaces])
   
-  // Apply city filter
+  // Apply city and address status filters
   const displayPlaces = React.useMemo(() => {
-    if (selectedCity === 'all') {
-      return allPlaces
+    let filtered = allPlaces
+    
+    // Apply city filter
+    if (selectedCity !== 'all') {
+      filtered = filtered.filter(place => place.city === selectedCity)
     }
-    return allPlaces.filter(place => place.city === selectedCity)
-  }, [allPlaces, selectedCity])
+    
+    // Apply address status filter
+    if (selectedAddressStatus === 'enriched') {
+      filtered = filtered.filter(place => place.street && place.city)
+    } else if (selectedAddressStatus === 'coordinates-only') {
+      filtered = filtered.filter(place => !(place.street && place.city))
+    }
+    
+    return filtered
+  }, [allPlaces, selectedCity, selectedAddressStatus])
 
   // Helper function to check if place has any address data
   const hasAddressData = (place: PlaceWithCourts) => {
@@ -811,9 +823,30 @@ export default function TestPage() {
               </Select>
             </div>
             
+            {/* Address Status Filter */}
+            <div className="flex items-center gap-2">
+              <Select value={selectedAddressStatus} onValueChange={setSelectedAddressStatus}>
+                <SelectTrigger className="w-48">
+                  <SelectValue placeholder="Filter by address status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">
+                    All Places ({allPlaces.length})
+                  </SelectItem>
+                  <SelectItem value="enriched">
+                    ✅ Enriched ({allPlaces.filter(place => place.street && place.city).length})
+                  </SelectItem>
+                  <SelectItem value="coordinates-only">
+                    📍 Coordinates Only ({allPlaces.filter(place => !(place.street && place.city)).length})
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
             <p className="text-muted-foreground">
-              {selectedCity === 'all' ? 'All cities' : `Filtered by: ${selectedCity}`}
-              {enrichedPlaces.length > 0 && ` (${enrichedPlaces.length} places enriched)`}
+              {selectedCity === 'all' ? 'All cities' : `City: ${selectedCity}`}
+              {selectedAddressStatus !== 'all' && ` • ${selectedAddressStatus === 'enriched' ? 'Enriched addresses' : 'Coordinates only'}`}
+              {enrichedPlaces.length > 0 && ` • ${enrichedPlaces.length} places enriched`}
             </p>
           </div>
           <div className="flex gap-2">

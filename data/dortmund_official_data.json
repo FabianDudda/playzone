@@ -1,0 +1,2222 @@
+[
+  {
+    "name": "GRA Hansemannpark",
+    "tischtennisplatten": 0,
+    "geometry": {
+      "x": 7.3774448545,
+      "y": 51.5657569776
+    },
+    "fußballplätze": 2,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 1,
+    "bouleplätze": 2
+  },
+  {
+    "name": "WP - Westfalenpark",
+    "tischtennisplatten": 0,
+    "geometry": {
+      "x": 7.4707649146,
+      "y": 51.4968985851
+    },
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 4,
+    "bouleplätze": 0
+  },
+  {
+    "name": "KSP Kesselborn",
+    "tischtennisplatten": 1,
+    "fußballplätze": 2,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.3600959853,
+      "y": 51.498836594
+    }
+  },
+  {
+    "name": "GRA Uhlandstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 1,
+    "geometry": {
+      "x": 7.4602082735,
+      "y": 51.5228714833
+    }
+  },
+  {
+    "name": "KSP Westpark Lange Straße",
+    "tischtennisplatten": 4,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4480184342,
+      "y": 51.5100068493
+    }
+  },
+  {
+    "name": "KSP Varziner Straße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 2,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4061340305,
+      "y": 51.5387023499
+    }
+  },
+  {
+    "name": "FBP GRA Fredenbaumpark",
+    "tischtennisplatten": 2,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4388734596,
+      "y": 51.536939173
+    }
+  },
+  {
+    "name": "GRA Hoeschpark",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.48961696,
+      "y": 51.5248906319
+    }
+  },
+  {
+    "name": "KSP Pottenkamp",
+    "tischtennisplatten": 2,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5225521926,
+      "y": 51.4721832109
+    }
+  },
+  {
+    "name": "KSP Meuselwitzstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5307764191,
+      "y": 51.5524934633
+    }
+  },
+  {
+    "name": "GRA Gustav-Heinemann-Park",
+    "tischtennisplatten": 3,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4074420953,
+      "y": 51.5338691358
+    }
+  },
+  {
+    "name": "KSP Singerhoffstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 2,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4379216982,
+      "y": 51.472015305
+    }
+  },
+  {
+    "name": "KSP Am Plack",
+    "tischtennisplatten": 2,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.364622273,
+      "y": 51.4836664405
+    }
+  },
+  {
+    "name": "KSP Funpark Hombruch Kieferstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4341301643,
+      "y": 51.4704334595
+    }
+  },
+  {
+    "name": "KSP Düsterstraße/Liboristraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5096342775,
+      "y": 51.5132574463
+    }
+  },
+  {
+    "name": "KSP Am Oldendieck",
+    "tischtennisplatten": 0,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 2,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5301801693,
+      "y": 51.4777000572
+    }
+  },
+  {
+    "name": "KSP Volksgarten Lütgendortmund",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.3347335714,
+      "y": 51.5060732859
+    }
+  },
+  {
+    "name": "GRA Bärenbruch",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.3695944388,
+      "y": 51.5178906085
+    }
+  },
+  {
+    "name": "KSP Haldenstraße/Tremoniastraße (Tremoniapark)",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4377204345,
+      "y": 51.5048392141
+    }
+  },
+  {
+    "name": "KSP Im Odemsloh",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.3681021353,
+      "y": 51.5474631652
+    }
+  },
+  {
+    "name": "KSP Stadewäldchen",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4731577201,
+      "y": 51.5050005427
+    }
+  },
+  {
+    "name": "KSP Flughafenstraße Blue Place",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5377327936,
+      "y": 51.5503797
+    }
+  },
+  {
+    "name": "KSP Kleiberweg/Nonnenweg",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.525615174,
+      "y": 51.4806286793
+    }
+  },
+  {
+    "name": "KSP Solbergweg/Heinrich-Staubach-Straße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4375099857,
+      "y": 51.4866043616
+    }
+  },
+  {
+    "name": "KSP Hostedder Straße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5366249225,
+      "y": 51.5656587917
+    }
+  },
+  {
+    "name": "KSP Leimkuhle",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5539090794,
+      "y": 51.5326355453
+    }
+  },
+  {
+    "name": "KSP Rebhuhn-/Zaunkönigweg",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4446751837,
+      "y": 51.4662737496
+    }
+  },
+  {
+    "name": "KSP Gneisenaustraße 3",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4495307246,
+      "y": 51.519836856
+    }
+  },
+  {
+    "name": "KSP Zimmerstraße/Leopoldstraße",
+    "tischtennisplatten": 2,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4624136959,
+      "y": 51.5226203871
+    }
+  },
+  {
+    "name": "KSP Auf der Hofstadt (Park der Generationen)",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.3336253034,
+      "y": 51.4981630099
+    }
+  },
+  {
+    "name": "KSP Schweizer Allee/Skate- und Funpark Aplerbeck",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 1,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5633372295,
+      "y": 51.4903962573
+    }
+  },
+  {
+    "name": "KSP Abenteuerspielplatz Scharnhorst",
+    "tischtennisplatten": 2,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.53683620875,
+      "y": 51.5567159118
+    }
+  },
+  {
+    "name": "KSP Speckacker",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5064910138,
+      "y": 51.5544428826
+    }
+  },
+  {
+    "name": "KSP Sölder Straße 66-68",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.58804482785,
+      "y": 51.4996809868
+    }
+  },
+  {
+    "name": "KSP Fine Frau 78",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.40225322045,
+      "y": 51.4999480888
+    }
+  },
+  {
+    "name": "KSP Karl-Millöcker-Straße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 1,
+    "geometry": {
+      "x": 7.6073023284,
+      "y": 51.5380010866
+    }
+  },
+  {
+    "name": "Bauspielplatz Jungferntal",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.390124399299999,
+      "y": 51.52986380715
+    }
+  },
+  {
+    "name": "KSP Kortental",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.41634172535,
+      "y": 51.507892970149996
+    }
+  },
+  {
+    "name": "KSP Olpketalstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 1,
+    "geometry": {
+      "x": 7.46886882335,
+      "y": 51.459988156950004
+    }
+  },
+  {
+    "name": "KSP Wielandstraße 15",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.45417797305,
+      "y": 51.53194519115
+    }
+  },
+  {
+    "name": "KSP Am Lohbach",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.514388499900001,
+      "y": 51.48144325125
+    }
+  },
+  {
+    "name": "KSP Am Kämpen/Oberholte",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.40201766815,
+      "y": 51.458073979999995
+    }
+  },
+  {
+    "name": "KSP Steiermarkstraße/Öztalerstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.485439545849999,
+      "y": 51.548970263200005
+    }
+  },
+  {
+    "name": "KSP Lütgenholthauser Straße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4462881303,
+      "y": 51.4620515638
+    }
+  },
+  {
+    "name": "KSP Weiße-Ewald-Straße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.55714705745,
+      "y": 51.5011083639
+    }
+  },
+  {
+    "name": "KSP Am Birkenbaum",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.46899687145,
+      "y": 51.573407724199996
+    }
+  },
+  {
+    "name": "KSP Phoenixsee Faßstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.50384741185,
+      "y": 51.492855327049995
+    }
+  },
+  {
+    "name": "KSP Karolinenstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.36808320345,
+      "y": 51.4992877409
+    }
+  },
+  {
+    "name": "KSP Bövinghauser Dorfstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.3161725024,
+      "y": 51.519469492499994
+    }
+  },
+  {
+    "name": "KSP Große Heimstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.44738313115,
+      "y": 51.50151327055
+    }
+  },
+  {
+    "name": "KSP Westhusener Straße/Welkenerstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.39466467315,
+      "y": 51.5322765684
+    }
+  },
+  {
+    "name": "KSP Pillauer-/Spichenerstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.418878121300001,
+      "y": 51.523350940300006
+    }
+  },
+  {
+    "name": "KSP Hedwigstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.374915555,
+      "y": 51.48471229345
+    }
+  },
+  {
+    "name": "KSP Yorckstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.44476030525,
+      "y": 51.5220110295
+    }
+  },
+  {
+    "name": "KSP Ruinenstraße/Am Bornacker",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5631218054,
+      "y": 51.49420430035
+    }
+  },
+  {
+    "name": "KSP Leibnizstraße Ost",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4565256332,
+      "y": 51.52225573145
+    }
+  },
+  {
+    "name": "KSP Silberhecke",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4841264537,
+      "y": 51.4709463355
+    }
+  },
+  {
+    "name": "KSP Düppelstraße/Missundestraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.468168341549999,
+      "y": 51.5236989763
+    }
+  },
+  {
+    "name": "KSP Jungferntalstraße 76-82/Bothestraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.3786444265,
+      "y": 51.528390551849995
+    }
+  },
+  {
+    "name": "KSP Resedastraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.59931305885,
+      "y": 51.48148569685
+    }
+  },
+  {
+    "name": "KSP Halmweg",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4245084734999995,
+      "y": 51.549424103549995
+    }
+  },
+  {
+    "name": "GRA Wielandstraße 15",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4541295235,
+      "y": 51.5319253945
+    }
+  },
+  {
+    "name": "KSP Volksgarten Mengede/Eckei",
+    "tischtennisplatten": 2,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.393853261149999,
+      "y": 51.57512883755
+    }
+  },
+  {
+    "name": "KSP Am Sommerberg",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.514836195599999,
+      "y": 51.495974561249994
+    }
+  },
+  {
+    "name": "KSP Erwinstraße",
+    "tischtennisplatten": 2,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4580054301,
+      "y": 51.527314327650004
+    }
+  },
+  {
+    "name": "KSP Troppauer Straße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4487813396,
+      "y": 51.4762177394
+    }
+  },
+  {
+    "name": "KSP Bülowstraße",
+    "tischtennisplatten": 2,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4497475823,
+      "y": 51.526158490949996
+    }
+  },
+  {
+    "name": "KSP Müllerstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.41724701695,
+      "y": 51.52989668395
+    }
+  },
+  {
+    "name": "KSP Baedekerstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.6252744109999995,
+      "y": 51.5428810026
+    }
+  },
+  {
+    "name": "KSP Im Schellenkai",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.52237250545,
+      "y": 51.5716453291
+    }
+  },
+  {
+    "name": "KSP Blücherstraße 60 Bolzplatz",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.450278314849999,
+      "y": 51.52250633375
+    }
+  },
+  {
+    "name": "KSP Arcostraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5583269700999995,
+      "y": 51.51524863065
+    }
+  },
+  {
+    "name": "KSP Glörstraße Nathebachtal",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.55542727025,
+      "y": 51.47377720865
+    }
+  },
+  {
+    "name": "GRA Werzenkamp/Alte Körne",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5514763062500005,
+      "y": 51.55527659795
+    }
+  },
+  {
+    "name": "KSP Ehmsenstraße (hinter 33)",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5374302688,
+      "y": 51.4810927083
+    }
+  },
+  {
+    "name": "KSP Arndtstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.48061670335,
+      "y": 51.51231520455
+    }
+  },
+  {
+    "name": "KSP Am Münzenkamp",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.60360642495,
+      "y": 51.53350318095
+    }
+  },
+  {
+    "name": "KSP Sckellstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4909602453,
+      "y": 51.49524657215
+    }
+  },
+  {
+    "name": "KSP Wambeler Heide",
+    "tischtennisplatten": 0,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5150300623,
+      "y": 51.53917649835
+    }
+  },
+  {
+    "name": "KSP Böckmannstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5693468589,
+      "y": 51.49480217295
+    }
+  },
+  {
+    "name": "KSP Tewaagstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4921300839,
+      "y": 51.49992256715
+    }
+  },
+  {
+    "name": "GRA An der Stipskuhle",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.51759916735,
+      "y": 51.5109805953
+    }
+  },
+  {
+    "name": "KSP Güntherstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4908423275,
+      "y": 51.51672192405
+    }
+  },
+  {
+    "name": "HABAD-West",
+    "tischtennisplatten": 0,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4164848910500005,
+      "y": 51.50765719815
+    }
+  },
+  {
+    "name": "KSP Stollenstraße/Stollenpark",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4702196453,
+      "y": 51.527694658
+    }
+  },
+  {
+    "name": "KSP Heroldwiese",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4754574407,
+      "y": 51.5213958475
+    }
+  },
+  {
+    "name": "KSP Höchstener Straße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5262395434,
+      "y": 51.4645233305
+    }
+  },
+  {
+    "name": "KSP Flimmweg",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.538017247,
+      "y": 51.5015877788
+    }
+  },
+  {
+    "name": "KSP Bleichmärsch",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4770772169,
+      "y": 51.5204591685
+    }
+  },
+  {
+    "name": "KSP Apolloweg",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5454094205,
+      "y": 51.4831887349
+    }
+  },
+  {
+    "name": "Hörder Neumarkt",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4949884031,
+      "y": 51.4859077196
+    }
+  },
+  {
+    "name": "KSP Alte Radstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4394213401,
+      "y": 51.5137611661
+    }
+  },
+  {
+    "name": "KSP Wittichstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4543923365,
+      "y": 51.5722834469
+    }
+  },
+  {
+    "name": "KSP Phoenixsee You Point",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5270114531,
+      "y": 51.4877581892
+    }
+  },
+  {
+    "name": "KSP Niergartenstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5343274723,
+      "y": 51.4921942083
+    }
+  },
+  {
+    "name": "KSP Schoppenbergweg",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5834828462,
+      "y": 51.5238282505
+    }
+  },
+  {
+    "name": "KSP Evinger Straße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4648722124,
+      "y": 51.5515428937
+    }
+  },
+  {
+    "name": "GRA Gürtlerstraße/Färberstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5641770113,
+      "y": 51.5803336537
+    }
+  },
+  {
+    "name": "KSP Brunnenstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4714754336,
+      "y": 51.5231378083
+    }
+  },
+  {
+    "name": "KSP Edelrosenstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.597544967,
+      "y": 51.4720932615
+    }
+  },
+  {
+    "name": "FBP Vorgelände KGA Hobertsburg",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.45077353,
+      "y": 51.5328315877
+    }
+  },
+  {
+    "name": "KSP Damaschkestraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5181470959,
+      "y": 51.5066416784
+    }
+  },
+  {
+    "name": "KSP Hopmanns Mühlenweg",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5007310264,
+      "y": 51.4697597639
+    }
+  },
+  {
+    "name": "KSP Flurstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4843823465,
+      "y": 51.5255970008
+    }
+  },
+  {
+    "name": "KSP Overgünne",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5082717026,
+      "y": 51.4732696965
+    }
+  },
+  {
+    "name": "KSP Schulte-Witten-Park",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4208545591,
+      "y": 51.5120359594
+    }
+  },
+  {
+    "name": "GRA Lohbachtal",
+    "tischtennisplatten": 0,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 1,
+    "geometry": {
+      "x": 7.5288068255,
+      "y": 51.4744712433
+    }
+  },
+  {
+    "name": "KSP Steinhammerstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.378006832,
+      "y": 51.5085784292
+    }
+  },
+  {
+    "name": "KSP Siepmannstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.3652231812,
+      "y": 51.5239403718
+    }
+  },
+  {
+    "name": "KSP Plauener Straße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4636149307,
+      "y": 51.5000542106
+    }
+  },
+  {
+    "name": "KSP Luisenplatz",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.3924000679,
+      "y": 51.5647456784
+    }
+  },
+  {
+    "name": "KSP Kastanienplatz",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5183213495,
+      "y": 51.5153990332
+    }
+  },
+  {
+    "name": "KSP Preußische Straße/Nachoderwäldchen",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4866028645,
+      "y": 51.5537992396
+    }
+  },
+  {
+    "name": "KSP Spohrstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.463035591,
+      "y": 51.5253846611
+    }
+  },
+  {
+    "name": "KSP Vorsteherstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5121274441,
+      "y": 51.5679421042
+    }
+  },
+  {
+    "name": "KSP Stuttgartstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5056838642,
+      "y": 51.5175501303
+    }
+  },
+  {
+    "name": "Schönaustraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4346866698,
+      "y": 51.4933293766
+    }
+  },
+  {
+    "name": "KSP Externberg",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4669639455,
+      "y": 51.5529108157
+    }
+  },
+  {
+    "name": "KSP Oberfeldstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4073374907,
+      "y": 51.5328234915
+    }
+  },
+  {
+    "name": "KSP Kreisstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5235576477,
+      "y": 51.448647268
+    }
+  },
+  {
+    "name": "KSP Auf dem Hohwart",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5269330842,
+      "y": 51.5092879575
+    }
+  },
+  {
+    "name": "KSP Papenacker",
+    "tischtennisplatten": 0,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.3629574201,
+      "y": 51.5198625858
+    }
+  },
+  {
+    "name": "KSP Lüdinghauser Straße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.476795449,
+      "y": 51.5567176258
+    }
+  },
+  {
+    "name": "KSP Lange Wiese",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5835689962,
+      "y": 51.5596818925
+    }
+  },
+  {
+    "name": "KSP Siegenstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.3817078723,
+      "y": 51.5780218468
+    }
+  },
+  {
+    "name": "KSP Haumannstraße/Barichstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.3796982281,
+      "y": 51.5092149767
+    }
+  },
+  {
+    "name": "KSP Zur Vielfalt (alt Beuthstraße)",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4389802842,
+      "y": 51.5121445694
+    }
+  },
+  {
+    "name": "KSP Außigring",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4431520321,
+      "y": 51.4770384735
+    }
+  },
+  {
+    "name": "KSP Hellingstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5487041249,
+      "y": 51.5269497653
+    }
+  },
+  {
+    "name": "KSP Staufenstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4604278778,
+      "y": 51.5015809995
+    }
+  },
+  {
+    "name": "KSP Am Westheck",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5405650801,
+      "y": 51.5250747296
+    }
+  },
+  {
+    "name": "KSP Menglinghauser/Kruckeler Straße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4106259185,
+      "y": 51.4608539875
+    }
+  },
+  {
+    "name": "KSP Krinkelweg",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5413035697,
+      "y": 51.456284285
+    }
+  },
+  {
+    "name": "KSP Stockumer Straße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4042434443,
+      "y": 51.482336445
+    }
+  },
+  {
+    "name": "KSP Schumannstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4609626229,
+      "y": 51.530260214
+    }
+  },
+  {
+    "name": "KSP Leipziger Straße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4663569733,
+      "y": 51.5027618009
+    }
+  },
+  {
+    "name": "KSP Petersmannweg/Holtingweg",
+    "tischtennisplatten": 0,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5617695224,
+      "y": 51.4803543702
+    }
+  },
+  {
+    "name": "KSP Schimmelstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5496577151,
+      "y": 51.5210990728
+    }
+  },
+  {
+    "name": "KSP Kranewinkel",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.567425352,
+      "y": 51.4989694202
+    }
+  },
+  {
+    "name": "KSP Hinter dem Garten 26",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.3898413639,
+      "y": 51.5675359754
+    }
+  },
+  {
+    "name": "KSP Zur Hunnenboke",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.3628422836,
+      "y": 51.5528247463
+    }
+  },
+  {
+    "name": "GRA Sülbeck-Ottweiler-Rybnik.K",
+    "tischtennisplatten": 0,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 1,
+    "geometry": {
+      "x": 7.5289191423,
+      "y": 51.5485958981
+    }
+  },
+  {
+    "name": "KSP Stockholmer Allee",
+    "tischtennisplatten": 0,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.528989857,
+      "y": 51.5048047351
+    }
+  },
+  {
+    "name": "KSP Körtingsweg/Kornblumenstraße in GRA Stadtteilpark Gneisenau",
+    "tischtennisplatten": 0,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5213186657,
+      "y": 51.5677663264
+    }
+  },
+  {
+    "name": "KSP Eichkamp",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5247353484,
+      "y": 51.5467620817
+    }
+  },
+  {
+    "name": "KSP Kopernikusstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5379887595,
+      "y": 51.5201836007
+    }
+  },
+  {
+    "name": "KSP Froschlake",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.3718032335,
+      "y": 51.5049805566
+    }
+  },
+  {
+    "name": "KSP Färberstraße/Büttnerstraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5631123987,
+      "y": 51.5787088043
+    }
+  },
+  {
+    "name": "KSP Hügelstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4105181342,
+      "y": 51.5038320306
+    }
+  },
+  {
+    "name": "KSP Belle-Alliance-Straße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4529836014,
+      "y": 51.5528560134
+    }
+  },
+  {
+    "name": "KSP Baroper Schulstaße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4294120229,
+      "y": 51.4803883012
+    }
+  },
+  {
+    "name": "KSP Adlerstraße/Siegfriedstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4439533091,
+      "y": 51.5121387042
+    }
+  },
+  {
+    "name": "KSP Bickestraße II",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5134024667,
+      "y": 51.4857794159
+    }
+  },
+  {
+    "name": "KSP Henriettenweg/Kleine Heide",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4140625201,
+      "y": 51.4821760255
+    }
+  },
+  {
+    "name": "KSP Grävingholzstraße/Friesenstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4544386197,
+      "y": 51.5555858419
+    }
+  },
+  {
+    "name": "Gilden-Europa-GrS Grdst.",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4112550625,
+      "y": 51.5353249873
+    }
+  },
+  {
+    "name": "KSP Am Surck 24-30",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.43517359,
+      "y": 51.4843102263
+    }
+  },
+  {
+    "name": "KSP Am Zehnthof/Zinsweg",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5111936896,
+      "y": 51.5078078767
+    }
+  },
+  {
+    "name": "KSP An den Teichen",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4799578463,
+      "y": 51.5441196683
+    }
+  },
+  {
+    "name": "KSP Amalienstraße/Humboldtstraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.454922715,
+      "y": 51.5120493283
+    }
+  },
+  {
+    "name": "KSP Portmannsweg",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.3247125746,
+      "y": 51.5124240348
+    }
+  },
+  {
+    "name": "KSP Robert-Koch-Straße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4909904921,
+      "y": 51.5115705264
+    }
+  },
+  {
+    "name": "KSP Sölder Straße 148",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5881954168,
+      "y": 51.4924194612
+    }
+  },
+  {
+    "name": "Arndtstraße, Kaiserbrunnen",
+    "tischtennisplatten": 0,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 1,
+    "geometry": {
+      "x": 7.4824229199,
+      "y": 51.5128722272
+    }
+  },
+  {
+    "name": "GRA Stadewäldchen",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4748313805,
+      "y": 51.5014653269
+    }
+  },
+  {
+    "name": "KSP Kleyer Feld",
+    "tischtennisplatten": 0,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.3601989227,
+      "y": 51.4879868465
+    }
+  },
+  {
+    "name": "GRA Missundestraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4676025498,
+      "y": 51.5235139727
+    }
+  },
+  {
+    "name": "KSP Am Rode / Lange Fuhr",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4091650612,
+      "y": 51.5010572581
+    }
+  },
+  {
+    "name": "KSP Saarbrücker Straße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4755508493,
+      "y": 51.5157641339
+    }
+  },
+  {
+    "name": "KSP Thranestraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5593748288,
+      "y": 51.5203306452
+    }
+  },
+  {
+    "name": "KSP Gleiwitzstraße Eichenwäldchen",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5339712437,
+      "y": 51.5520892553
+    }
+  },
+  {
+    "name": "GRA Haus Rodenberg",
+    "tischtennisplatten": 0,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 1,
+    "geometry": {
+      "x": 7.5538287383,
+      "y": 51.4922586641
+    }
+  },
+  {
+    "name": "KSP Köln-Berliner-Straße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5608045505,
+      "y": 51.494348226
+    }
+  },
+  {
+    "name": "KSP in GRA Ardeystraße / Am Segen",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.464908407,
+      "y": 51.4867422707
+    }
+  },
+  {
+    "name": "KSP Uhland-/Kleistraße",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4560345863,
+      "y": 51.531063865
+    }
+  },
+  {
+    "name": "KSP Stürzelbreite",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.3717817242,
+      "y": 51.5644861761
+    }
+  },
+  {
+    "name": "GRA Oberbecker Straße / Derner Kippshof",
+    "tischtennisplatten": 0,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 1,
+    "geometry": {
+      "x": 7.513285459,
+      "y": 51.5725242115
+    }
+  },
+  {
+    "name": "GRA Volksgarten Lütgendortmund",
+    "tischtennisplatten": 0,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.3344780984,
+      "y": 51.5062739179
+    }
+  },
+  {
+    "name": "GRA Westpark",
+    "tischtennisplatten": 0,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 1,
+    "geometry": {
+      "x": 7.4471491466,
+      "y": 51.5088477697
+    }
+  },
+  {
+    "name": "KSP Goerdeler Straße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4498386126,
+      "y": 51.4544910104
+    }
+  },
+  {
+    "name": "KSP Holtbrügge II",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4834774157,
+      "y": 51.4700520326
+    }
+  },
+  {
+    "name": "KSP Bolzplatz in GRA Rütlistraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 1,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5263562308,
+      "y": 51.5067499755
+    }
+  },
+  {
+    "name": "KSP Max-Eyth Straße/Huestraße",
+    "tischtennisplatten": 0,
+    "fußballplätze": 0,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.5124797104,
+      "y": 51.4971725312
+    }
+  },
+  {
+    "name": "KSP Wandweg",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.3778575644,
+      "y": 51.4898579174
+    }
+  },
+  {
+    "name": "GRA Leibnizstraße West",
+    "tischtennisplatten": 1,
+    "fußballplätze": 0,
+    "basketballplätze": 0,
+    "beachvolleyballplätze": 0,
+    "bouleplätze": 0,
+    "geometry": {
+      "x": 7.4537636479,
+      "y": 51.5220783305
+    }
+  }
+]

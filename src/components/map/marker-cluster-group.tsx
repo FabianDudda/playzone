@@ -88,13 +88,21 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
 
     // Add new markers
     courts.forEach((court) => {
-      // Get available sports for icon
+      // Get available sports for icon (still need unique list for icon)
       const availableSports = court.courts?.length > 0 
         ? [...new Set(court.courts.map(c => c.sport))]
         : (court.sports || [])
+      
+      // Calculate sport quantities for popup
+      const sportsWithCounts = court.courts?.length > 0 
+        ? court.courts.reduce((acc, c) => {
+            acc[c.sport] = (acc[c.sport] || 0) + (c.quantity || 1)
+            return acc
+          }, {} as Record<string, number>)
+        : (court.sports?.reduce((acc, sport) => ({ ...acc, [sport]: 1 }), {} as Record<string, number>) || {})
 
       const marker = L.marker([court.latitude, court.longitude], {
-        icon: createSportIcon(availableSports, selectedCourt?.id === court.id),
+        icon: createSportIcon(availableSports, false), // Remove selection dependency to prevent re-rendering
         placeData: court, // Store court data for cluster processing
       })
 
@@ -103,16 +111,15 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
         <div class="place-popup">
           <h3 class="font-semibold text-sm mb-2">${court.name}</h3>
           <div class="space-y-1 text-xs">
-            ${availableSports.length > 0 ? `
+            ${Object.keys(sportsWithCounts).length > 0 ? `
               <div class="flex flex-wrap gap-1 mb-2">
-                ${availableSports.map(sport => `<span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">${sport}</span>`).join('')}
+                ${Object.entries(sportsWithCounts).map(([sport, count]) => `<span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">${sport} (${count})</span>`).join('')}
               </div>
             ` : ''}
-            ${court.courts?.length ? `<p><strong>Courts:</strong> ${court.courts.length}</p>` : ''}
             ${court.description ? `<p class="text-gray-600">${court.description.substring(0, 100)}${court.description.length > 100 ? '...' : ''}</p>` : ''}
           </div>
           <button 
-            onclick="window.dispatchEvent(new CustomEvent('courtSelect', { detail: '${court.id}' }))"
+            onclick="window.location.href = '/places/${court.id}'"
             class="mt-2 bg-blue-500 text-white px-3 py-1 rounded text-xs hover:bg-blue-600"
           >
             View Details
@@ -139,7 +146,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
       clusterGroup.clearLayers()
       markersRef.current = []
     }
-  }, [courts, map, onCourtSelect, selectedCourt])
+  }, [courts, map, onCourtSelect])
 
   // Handle court selection events from popups
   useEffect(() => {

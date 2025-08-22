@@ -1,5 +1,4 @@
-{
-  "places": [
+[
     {
       "attributes": {
         "name": "Rheinaustraße",
@@ -7,7 +6,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -23,7 +22,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -39,7 +38,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -55,7 +54,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -71,7 +70,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -87,7 +86,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -103,7 +102,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -119,7 +118,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -135,7 +134,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -151,7 +150,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -167,7 +166,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -183,7 +182,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -199,7 +198,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Kunststoffbelag",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -215,7 +214,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -231,7 +230,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -247,7 +246,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Kunststoffbelag",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -263,7 +262,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "2",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -279,7 +278,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -295,7 +294,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -311,7 +310,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -327,7 +326,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -343,7 +342,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -359,7 +358,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asphalt",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -375,7 +374,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -391,7 +390,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -407,7 +406,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "3"
       },
@@ -423,7 +422,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asphalt",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -439,7 +438,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -455,7 +454,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -471,7 +470,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -487,7 +486,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -503,7 +502,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -519,7 +518,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -535,7 +534,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -551,7 +550,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asphalt",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -567,7 +566,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -583,7 +582,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -599,7 +598,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -615,7 +614,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -631,7 +630,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "3"
       },
@@ -647,7 +646,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Kunstrasen",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -663,7 +662,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": "1",
         "tischtennisplatten": null
       },
@@ -679,7 +678,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "3"
       },
@@ -695,7 +694,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Kunststoffbelag",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -711,7 +710,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -727,7 +726,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "2",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": "1",
         "tischtennisplatten": "2"
       },
@@ -743,7 +742,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -759,7 +758,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -775,7 +774,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -791,7 +790,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -807,7 +806,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": "1",
         "tischtennisplatten": null
       },
@@ -823,7 +822,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -839,7 +838,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -855,7 +854,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": "1",
+        "bouleplätze": "1",
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -871,7 +870,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -887,7 +886,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "2",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": "1",
         "tischtennisplatten": null
       },
@@ -903,7 +902,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -919,7 +918,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -935,7 +934,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -951,7 +950,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -967,7 +966,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -983,7 +982,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -999,7 +998,7 @@
         "fußballplätze": "2",
         "platzbelag_fußball": "Kunststoffbelag",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1015,7 +1014,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -1031,7 +1030,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -1047,7 +1046,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -1063,7 +1062,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -1079,7 +1078,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1095,7 +1094,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1111,7 +1110,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -1127,7 +1126,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -1143,7 +1142,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -1159,7 +1158,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -1175,7 +1174,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1191,7 +1190,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -1207,7 +1206,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1223,7 +1222,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1239,7 +1238,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1255,7 +1254,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": "1",
+        "bouleplätze": "1",
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -1271,7 +1270,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1287,7 +1286,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -1303,7 +1302,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -1319,7 +1318,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -1335,7 +1334,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1351,7 +1350,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1367,7 +1366,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -1383,7 +1382,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -1399,7 +1398,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1415,7 +1414,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -1431,7 +1430,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1447,7 +1446,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1463,7 +1462,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1479,7 +1478,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1495,7 +1494,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -1511,7 +1510,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1527,7 +1526,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1543,7 +1542,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -1559,7 +1558,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -1575,7 +1574,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1591,7 +1590,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1607,7 +1606,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -1623,7 +1622,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1639,7 +1638,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -1655,7 +1654,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -1671,7 +1670,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1687,7 +1686,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1703,7 +1702,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -1719,7 +1718,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1735,7 +1734,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -1751,7 +1750,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -1767,7 +1766,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1783,7 +1782,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1799,7 +1798,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": "1",
+        "bouleplätze": "1",
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -1815,7 +1814,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "4"
       },
@@ -1831,7 +1830,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1847,7 +1846,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -1863,7 +1862,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "3"
       },
@@ -1879,7 +1878,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1895,7 +1894,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1911,7 +1910,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1927,7 +1926,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -1943,7 +1942,7 @@
         "fußballplätze": "Stelen aus Metall",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -1959,7 +1958,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1975,7 +1974,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -1991,7 +1990,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2007,7 +2006,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2023,7 +2022,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asphalt",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2039,7 +2038,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2055,7 +2054,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -2071,7 +2070,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asphalt",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -2087,7 +2086,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -2103,7 +2102,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2119,7 +2118,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2135,7 +2134,7 @@
         "fußballplätze": "Bolzwiese ohne Tore",
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2151,7 +2150,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2167,7 +2166,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -2183,7 +2182,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Kunststoffbelag",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -2199,7 +2198,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2215,7 +2214,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2231,7 +2230,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2247,7 +2246,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2263,7 +2262,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": "1",
+        "bouleplätze": "1",
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2279,7 +2278,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -2295,7 +2294,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2311,7 +2310,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -2327,7 +2326,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2343,7 +2342,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2359,7 +2358,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2375,7 +2374,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2391,7 +2390,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2407,7 +2406,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": "Halfpipe",
         "tischtennisplatten": null
       },
@@ -2423,7 +2422,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2439,7 +2438,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2455,7 +2454,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2471,7 +2470,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -2487,7 +2486,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -2503,7 +2502,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2519,7 +2518,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2535,7 +2534,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2551,7 +2550,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -2567,7 +2566,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2583,7 +2582,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -2599,7 +2598,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2615,7 +2614,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -2631,7 +2630,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asphalt",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -2647,7 +2646,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2663,7 +2662,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": "2",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2679,7 +2678,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2695,7 +2694,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -2711,7 +2710,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -2727,8 +2726,8 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "2",
-        "boulebahn": null,
-        "skatepark": "8",
+        "bouleplätze": null,
+        "skatepark": "1",
         "tischtennisplatten": null
       },
       "geometry": {
@@ -2743,7 +2742,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -2759,7 +2758,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2775,7 +2774,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -2791,7 +2790,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2807,7 +2806,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2823,7 +2822,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2839,7 +2838,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2855,7 +2854,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -2871,7 +2870,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": "1",
+        "bouleplätze": "1",
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2887,7 +2886,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2903,7 +2902,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -2919,7 +2918,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -2935,7 +2934,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -2951,7 +2950,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2967,7 +2966,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -2983,7 +2982,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -2999,7 +2998,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -3015,7 +3014,7 @@
         "fußballplätze": "2",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -3031,7 +3030,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -3047,7 +3046,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -3063,7 +3062,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -3079,7 +3078,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3095,7 +3094,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -3111,7 +3110,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3127,7 +3126,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -3143,7 +3142,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3159,7 +3158,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3175,7 +3174,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3191,7 +3190,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3207,7 +3206,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3223,7 +3222,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -3239,7 +3238,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3255,7 +3254,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -3271,7 +3270,7 @@
         "fußballplätze": "2",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3287,7 +3286,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -3303,7 +3302,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -3319,7 +3318,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3335,7 +3334,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -3351,7 +3350,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3367,7 +3366,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -3383,7 +3382,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -3399,7 +3398,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -3415,7 +3414,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3431,7 +3430,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -3447,7 +3446,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3463,7 +3462,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -3479,7 +3478,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3495,7 +3494,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3511,7 +3510,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -3527,7 +3526,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3543,7 +3542,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -3559,7 +3558,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": "1",
+        "bouleplätze": "1",
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3575,7 +3574,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -3591,7 +3590,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asphalt",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -3607,7 +3606,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3623,7 +3622,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3639,7 +3638,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3655,7 +3654,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -3671,7 +3670,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3687,7 +3686,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -3703,7 +3702,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -3719,7 +3718,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": "Halfpipe mit Erweiterung",
         "tischtennisplatten": null
       },
@@ -3735,7 +3734,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3751,7 +3750,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3767,7 +3766,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3783,7 +3782,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3799,7 +3798,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -3815,7 +3814,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3831,7 +3830,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -3847,7 +3846,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3863,7 +3862,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3879,7 +3878,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3895,7 +3894,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -3911,7 +3910,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -3927,7 +3926,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3943,7 +3942,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3959,7 +3958,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3975,7 +3974,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -3991,7 +3990,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4007,7 +4006,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": "1",
         "tischtennisplatten": null
       },
@@ -4023,7 +4022,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": "1",
+        "bouleplätze": "1",
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -4039,7 +4038,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4055,7 +4054,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4071,7 +4070,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": "1",
+        "bouleplätze": "1",
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -4087,7 +4086,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -4103,7 +4102,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4119,7 +4118,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4135,7 +4134,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4151,7 +4150,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -4167,7 +4166,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -4183,7 +4182,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -4199,7 +4198,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4215,7 +4214,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4231,7 +4230,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -4247,7 +4246,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4263,7 +4262,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4279,7 +4278,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -4295,7 +4294,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4311,7 +4310,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -4327,7 +4326,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4343,7 +4342,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4359,7 +4358,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4375,7 +4374,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -4391,7 +4390,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -4407,7 +4406,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -4423,7 +4422,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4439,7 +4438,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -4455,7 +4454,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4471,7 +4470,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4487,7 +4486,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -4503,7 +4502,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4519,7 +4518,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -4535,7 +4534,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -4551,7 +4550,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4567,7 +4566,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4583,7 +4582,7 @@
         "fußballplätze": "2",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -4599,7 +4598,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -4615,7 +4614,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asphalt",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -4631,7 +4630,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4647,7 +4646,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4663,7 +4662,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4679,7 +4678,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4695,7 +4694,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -4711,7 +4710,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -4727,7 +4726,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4743,7 +4742,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -4759,7 +4758,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -4775,7 +4774,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4791,7 +4790,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -4807,7 +4806,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Kunststoffbelag",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -4823,7 +4822,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4839,7 +4838,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4855,7 +4854,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Kunstrasen",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -4871,7 +4870,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4887,7 +4886,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4903,7 +4902,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asphalt",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -4919,7 +4918,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4935,7 +4934,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": "Wiese",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -4951,7 +4950,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -4967,7 +4966,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -4983,7 +4982,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -4999,7 +4998,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": "1",
         "tischtennisplatten": null
       },
@@ -5015,7 +5014,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -5031,7 +5030,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5047,7 +5046,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5063,7 +5062,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5079,7 +5078,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": "1",
+        "bouleplätze": "1",
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -5095,7 +5094,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -5111,7 +5110,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -5127,7 +5126,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5143,7 +5142,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5159,7 +5158,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5175,7 +5174,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -5191,7 +5190,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -5207,7 +5206,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": "1",
+        "bouleplätze": "1",
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -5223,7 +5222,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5239,7 +5238,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "3"
       },
@@ -5255,7 +5254,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": "1",
+        "bouleplätze": "1",
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -5271,7 +5270,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asphalt",
         "basketballplätze": "2",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -5287,7 +5286,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": "1",
+        "bouleplätze": "1",
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -5303,7 +5302,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5319,7 +5318,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": "1",
         "tischtennisplatten": "1"
       },
@@ -5335,7 +5334,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asphalt",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5351,7 +5350,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asphalt",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -5367,7 +5366,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5383,7 +5382,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -5399,7 +5398,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Kunstrasen",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -5415,7 +5414,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -5431,8 +5430,8 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "2",
-        "boulebahn": null,
-        "skatepark": "7",
+        "bouleplätze": null,
+        "skatepark": "1",
         "tischtennisplatten": null
       },
       "geometry": {
@@ -5447,7 +5446,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -5463,7 +5462,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": "1",
         "tischtennisplatten": null
       },
@@ -5479,7 +5478,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5495,7 +5494,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -5511,7 +5510,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -5527,7 +5526,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": "1",
+        "bouleplätze": "1",
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5543,7 +5542,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -5559,7 +5558,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5575,7 +5574,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5591,7 +5590,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5607,7 +5606,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5623,7 +5622,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -5639,7 +5638,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -5655,7 +5654,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5671,7 +5670,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -5687,7 +5686,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -5703,7 +5702,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": "1",
         "tischtennisplatten": "1"
       },
@@ -5719,7 +5718,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Kunstrasen",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5735,7 +5734,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -5751,7 +5750,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5767,7 +5766,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5783,7 +5782,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5799,7 +5798,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -5815,7 +5814,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5831,7 +5830,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -5847,7 +5846,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -5863,7 +5862,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5879,7 +5878,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5895,7 +5894,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Kunststoffbelag",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5911,7 +5910,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5927,7 +5926,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -5943,7 +5942,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -5959,7 +5958,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5975,7 +5974,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -5991,7 +5990,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -6007,7 +6006,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -6023,7 +6022,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Kunststoffbelag",
         "basketballplätze": "1 ",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -6039,7 +6038,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1 "
       },
@@ -6055,7 +6054,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -6071,7 +6070,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2 "
       },
@@ -6087,7 +6086,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asphalt",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -6103,7 +6102,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -6119,7 +6118,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -6135,7 +6134,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -6151,7 +6150,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -6167,7 +6166,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2 "
       },
@@ -6183,7 +6182,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Hartplatz",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -6199,7 +6198,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -6215,7 +6214,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Wiese",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -6231,7 +6230,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Kunststoffbelag",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -6247,7 +6246,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null,
         "beachvolleyball": "1"
@@ -6264,7 +6263,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -6280,7 +6279,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -6296,7 +6295,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -6312,7 +6311,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -6328,7 +6327,7 @@
         "fußballplätze": "2 ",
         "platzbelag_fußball": "Asche",
         "basketballplätze": "1",
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": null
       },
@@ -6344,7 +6343,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -6360,7 +6359,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -6376,7 +6375,7 @@
         "fußballplätze": "1",
         "platzbelag_fußball": "Asche",
         "basketballplätze": "1",
-        "boulebahn": "1",
+        "bouleplätze": "1",
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -6392,7 +6391,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -6408,7 +6407,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "2"
       },
@@ -6424,7 +6423,7 @@
         "fußballplätze": "2",
         "platzbelag_fußball": "Kunstrasen",
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -6440,7 +6439,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -6456,7 +6455,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "1"
       },
@@ -6472,7 +6471,7 @@
         "fußballplätze": null,
         "platzbelag_fußball": null,
         "basketballplätze": null,
-        "boulebahn": null,
+        "bouleplätze": null,
         "skatepark": null,
         "tischtennisplatten": "3"
       },
@@ -6482,4 +6481,4 @@
       }
     }
   ]
-}
+

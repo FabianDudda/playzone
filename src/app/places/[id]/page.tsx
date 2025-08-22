@@ -212,7 +212,7 @@ export default async function PlacePage({ params }: PlacePageProps) {
                       <div className="flex items-start justify-between mb-2">
                         <div>
                           <h4 className="font-medium">
-                            Court {index + 1}: {court.sport}
+                            {court.sport}
                           </h4>
                           <p className="text-sm text-muted-foreground">
                             Quantity: {court.quantity}

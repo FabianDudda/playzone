@@ -55,7 +55,7 @@ Your JSON file should follow this format:
         "fußballplätze": "2",           // Number or null
         "platzbelag_fußball": "Wiese",   // Surface type for football
         "basketballplätze": "1",         // Number or null
-        "boulebahn": null,               // Number or null
+        "bouleplätze": null,               // Number or null
         "skatepark_elemente": null,      // Number or null
         "tischtennisplatten": "3"        // Number or null
       },
@@ -93,7 +93,7 @@ The import script maps your JSON fields as follows:
 | `attributes.fußballplätze` | `courts.quantity` | Creates football court if not null |
 | `attributes.platzbelag_fußball` | `courts.surface` | Football court surface |
 | `attributes.basketballplätze` | `courts.quantity` | Creates basketball court if not null |
-| `attributes.boulebahn` | `courts.quantity` | Creates boule court if not null |
+| `attributes.bouleplätze` | `courts.quantity` | Creates boule court if not null |
 | `attributes.skatepark_elemente` | `courts.quantity` | Creates skatepark if not null |
 | `attributes.tischtennisplatten` | `courts.quantity` | Creates table tennis courts if not null |
 

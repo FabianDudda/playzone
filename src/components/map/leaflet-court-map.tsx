@@ -174,8 +174,7 @@ export default function LeafletCourtMap({
   const [currentLayerId, setCurrentLayerId] = useState<string>(() => getSavedLayerPreference())
 
   const handleCourtSelect = (court: Court) => {
-    setSelectedCourt(court)
-    onCourtSelect?.(court)
+    // Skip parent callback to prevent re-renders that close popups
   }
 
   const handleLocationFound = (lat: number, lng: number) => {
@@ -217,19 +216,33 @@ export default function LeafletCourtMap({
               selectedCourt={selectedCourt}
             />
           ) : (
-            courts.map((court) => (
+            courts.map((court) => {
+              // Calculate sport quantities for this court
+              const sportsWithCounts = court.courts?.length > 0 
+                ? court.courts.reduce((acc, c) => {
+                    acc[c.sport] = (acc[c.sport] || 0) + (c.quantity || 1)
+                    return acc
+                  }, {} as Record<string, number>)
+                : (court.sports?.reduce((acc, sport) => ({ ...acc, [sport]: 1 }), {} as Record<string, number>) || {})
+              
+              return (
               <Marker 
                 key={court.id} 
                 position={[court.latitude, court.longitude]}
-                icon={createSportIcon(court.sports, selectedCourt?.id === court.id)}
+                icon={createSportIcon(court.sports, false)}
+                eventHandlers={{
+                  click: () => {
+                    handleCourtSelect(court)
+                  }
+                }}
               >
                 <Popup>
                   <div className="p-2 min-w-[200px]">
                     <h3 className="font-semibold text-sm mb-1">{court.name}</h3>
                     <div className="flex flex-wrap gap-1 mb-2">
-                      {court.sports.map(sport => (
+                      {Object.entries(sportsWithCounts).map(([sport, count]) => (
                         <Badge key={sport} variant="secondary" className="text-xs">
-                          {sportNames[sport]}
+                          {sportNames[sport] || sport} ({count})
                         </Badge>
                       ))}
                     </div>
@@ -239,14 +252,15 @@ export default function LeafletCourtMap({
                     <Button 
                       size="sm" 
                       className="w-full"
-                      onClick={() => handleCourtSelect(court)}
+                      onClick={() => window.location.href = `/places/${court.id}`}
                     >
-                      Select Court
+                      View Details
                     </Button>
                   </div>
                 </Popup>
               </Marker>
-            ))
+            )
+            })
           )}
           
           {/* User location marker */}
@@ -290,28 +304,7 @@ export default function LeafletCourtMap({
         </div>
       )}
 
-      {/* Selected Court Info */}
-      {selectedCourt && (
-        <Card className="absolute bottom-4 left-4 right-4 bg-white/95 shadow-lg">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">{selectedCourt.name}</CardTitle>
-            <div className="flex flex-wrap gap-1">
-              {selectedCourt.sports.map((sport) => (
-                <Badge key={sport} variant="secondary" className="text-xs">
-                  {sportNames[sport]}
-                </Badge>
-              ))}
-            </div>
-          </CardHeader>
-          {selectedCourt.description && (
-            <CardContent className="pt-0">
-              <CardDescription className="text-sm">
-                {selectedCourt.description}
-              </CardDescription>
-            </CardContent>
-          )}
-        </Card>
-      )}
+      {/* Selected Court Info - removed to prevent re-render issues */}
     </div>
   )
 }

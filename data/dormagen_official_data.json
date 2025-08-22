@@ -1,0 +1,172 @@
+[
+  {
+    "street": "Rudolf-Harbig-Weg",
+    "district": "Horrem",
+    "name": "Rudolf-Harbig-Weg",
+    "fußballplätze": "1",
+    "geometry": {
+      "x": 6.8053,
+      "y": 51.102997
+    }
+  },
+  {
+    "street": "Krefelder Straße",
+    "district": "Dormagen-Mitte",
+    "name": "Raphaelshaus",
+    "fußballplätze": "1",
+    "geometry": {
+      "x": 6.825246,
+      "y": 51.10576
+    }
+  },
+  {
+    "street": "Bruderschaftsweg",
+    "district": "Gohr",
+    "name": "Bruderschaftsweg",
+    "fußballplätze": "1",
+    "geometry": {
+      "x": 6.714574,
+      "y": 51.101813
+    }
+  },
+  {
+    "street": "Rheinberger Straße",
+    "district": "Stadt Zons",
+    "name": "Rheinberger Straße",
+    "fußballplätze": "1",
+    "geometry": {
+      "x": 6.834995,
+      "y": 51.123771
+    }
+  },
+  {
+    "street": "Claudiusstraße",
+    "district": "Hackenbroich",
+    "name": "Claudiusstraße",
+    "fußballplätze": "1",
+    "geometry": {
+      "x": 6.814727,
+      "y": 51.070541
+    }
+  },
+  {
+    "street": "Am Schneckenacker",
+    "district": "Stürzelberg",
+    "name": "Am Schneckenacker",
+    "fußballplätze": "1",
+    "geometry": {
+      "x": 6.813681,
+      "y": 51.132921
+    }
+  },
+  {
+    "street": "Bruchstraße",
+    "district": "Gohr",
+    "name": "Bruchstraße",
+    "fußballplätze": "1",
+    "geometry": {
+      "x": 6.723573,
+      "y": 51.100071
+    }
+  },
+  {
+    "street": "Kastanienweg",
+    "district": "Horrem",
+    "name": "Kastanienweg",
+    "fußballplätze": "1",
+    "geometry": {
+      "x": 6.802319,
+      "y": 51.099951
+    }
+  },
+  {
+    "street": "Am Sportplatz",
+    "district": "Nievenheim",
+    "name": "Am Sportplatz",
+    "fußballplätze": "1",
+    "geometry": {
+      "x": 6.766909,
+      "y": 51.109823
+    }
+  },
+  {
+    "street": "Mühlenbuschweg",
+    "district": "Straberg",
+    "name": "Mühlenbuschweg",
+    "fußballplätze": "1",
+    "geometry": {
+      "x": 6.75,
+      "y": 51.093628
+    }
+  },
+  {
+    "street": "Burgplatz",
+    "district": "Hackenbroich",
+    "name": "Burgplatz",
+    "fußballplätze": "1",
+    "geometry": {
+      "x": 6.810956,
+      "y": 51.064025
+    }
+  },
+  {
+    "street": "Klosterstraße",
+    "district": "Delhoven",
+    "name": "Klosterstraße",
+    "fußballplätze": "1",
+    "geometry": {
+      "x": 6.768763,
+      "y": 51.079334
+    }
+  },
+  {
+    "street": "Stommelner Straße",
+    "district": "Hackenbroich",
+    "name": "Stommelner Straße",
+    "fußballplätze": "1",
+    "geometry": {
+      "x": 6.808704,
+      "y": 51.065025
+    }
+  },
+  {
+    "street": "Johann-Blank-Weg",
+    "district": "Delrath",
+    "name": "Johann-Blank-Weg",
+    "fußballplätze": "1",
+    "geometry": {
+      "x": 6.793316,
+      "y": 51.126326
+    }
+  },
+  {
+    "street": "An der Sausweide",
+    "district": "Nievenheim",
+    "name": "An der Sausweide",
+    "fußballplätze": "1",
+    "geometry": {
+      "x": 6.767349,
+      "y": 51.120966
+    }
+  },
+  {
+    "street": "Holzweg",
+    "district": "Delhoven",
+    "name": "Holzweg",
+    "fußballplätze": "1",
+    "geometry": {
+      "x": 6.789201,
+      "y": 51.076897
+    }
+  },
+  {
+    "street": "Am Rübenweg",
+    "district": "Horrem",
+    "name": "Die Rübe",
+    "fußballplätze": "1",
+    "geometry": {
+      "x": 6.816769,
+      "y": 51.097386
+    }
+  }
+]
