@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { MapPin, Navigation, Plus } from 'lucide-react'
-import { createSportIcon, createUserLocationIcon, createSelectedLocationIcon, sportNames } from '@/lib/utils/sport-styles'
+import { createSportIcon, createUserLocationIcon, createSelectedLocationIcon, sportNames, getSportBadgeClasses } from '@/lib/utils/sport-styles'
 import { MAP_LAYERS, DEFAULT_LAYER_ID, createTileLayer, getSavedLayerPreference, saveLayerPreference } from '@/lib/utils/map-layers'
 import L from 'leaflet'
 import MarkerClusterGroup from './marker-cluster-group'
@@ -241,7 +241,10 @@ export default function LeafletCourtMap({
                     <h3 className="font-semibold text-sm mb-1">{court.name}</h3>
                     <div className="flex flex-wrap gap-1 mb-2">
                       {Object.entries(sportsWithCounts).map(([sport, count]) => (
-                        <Badge key={sport} variant="secondary" className="text-xs">
+                        <Badge 
+                          key={sport} 
+                          className={`text-xs border-0 ${getSportBadgeClasses(sport)}`}
+                        >
                           {sportNames[sport] || sport} ({count})
                         </Badge>
                       ))}

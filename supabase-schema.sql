@@ -10,6 +10,7 @@ create table public.profiles (
   id uuid references auth.users on delete cascade primary key,
   name text not null,
   avatar text,
+  user_role text not null default 'user' check (user_role in ('user', 'admin')),
   elo jsonb not null default '{
     "tennis": 1500,
     "basketball": 1500,

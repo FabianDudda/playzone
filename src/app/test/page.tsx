@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { MapPin, TestTube, MapIcon, Loader2, Save, Trash2, Filter } from 'lucide-react'
+import AdminGuard from '@/components/auth/admin-guard'
 
 export default function TestPage() {
   const [isGeocoding, setIsGeocoding] = useState(false)
@@ -746,7 +747,8 @@ export default function TestPage() {
   }
 
   return (
-    <div className="container px-4 py-8">
+    <AdminGuard>
+      <div className="container px-4 py-8">
       <div className="flex items-center gap-2 mb-6">
         <TestTube className="h-8 w-8" />
         <h1 className="text-3xl font-bold">Test Page - All Places</h1>
@@ -1198,6 +1200,7 @@ export default function TestPage() {
           })}
         </div>
       )}
-    </div>
+      </div>
+    </AdminGuard>
   )
 }

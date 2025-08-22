@@ -7,7 +7,7 @@ import 'leaflet.markercluster'
 import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 import { PlaceWithCourts } from '@/lib/supabase/types'
-import { createSportIcon } from '@/lib/utils/sport-styles'
+import { createSportIcon, getSportBadgeStyles } from '@/lib/utils/sport-styles'
 
 interface MarkerClusterGroupProps {
   courts: PlaceWithCourts[]
@@ -113,7 +113,10 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
           <div class="space-y-1 text-xs">
             ${Object.keys(sportsWithCounts).length > 0 ? `
               <div class="flex flex-wrap gap-1 mb-2">
-                ${Object.entries(sportsWithCounts).map(([sport, count]) => `<span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">${sport} (${count})</span>`).join('')}
+                ${Object.entries(sportsWithCounts).map(([sport, count]) => {
+                  const styles = getSportBadgeStyles(sport)
+                  return `<span style="background-color: ${styles.backgroundColor}; color: ${styles.color}; padding: 2px 8px; border-radius: 4px; font-size: 12px;">${sport} (${count})</span>`
+                }).join('')}
               </div>
             ` : ''}
             ${court.description ? `<p class="text-gray-600">${court.description.substring(0, 100)}${court.description.length > 100 ? '...' : ''}</p>` : ''}

@@ -26,6 +26,7 @@ const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map
 })
 import { MapPin, Plus, Search, Filter, Map, List, Grid3X3 } from 'lucide-react'
 import Link from 'next/link'
+import { getSportBadgeClasses } from '@/lib/utils/sport-styles'
 
 const SPORTS = ['tennis', 'basketball', 'volleyball', 'spikeball', 'badminton', 'squash', 'pickleball'] as const
 
@@ -201,7 +202,10 @@ export default function CourtsPage() {
                           
                           <div className="flex flex-wrap gap-1">
                             {Object.entries(sportsWithCounts).map(([sport, count]) => (
-                              <Badge key={sport} variant="secondary" className="text-xs">
+                              <Badge 
+                                key={sport} 
+                                className={`text-xs border-0 ${getSportBadgeClasses(sport)}`}
+                              >
                                 {sport} ({count})
                               </Badge>
                             ))}
@@ -322,7 +326,10 @@ export default function CourtsPage() {
                               
                               <div className="flex flex-wrap gap-1">
                                 {Object.entries(sportsWithCounts).map(([sport, count]) => (
-                                  <Badge key={sport} variant="secondary" className="text-xs">
+                                  <Badge 
+                                    key={sport} 
+                                    className={`text-xs border-0 ${getSportBadgeClasses(sport)}`}
+                                  >
                                     {sport} ({count})
                                   </Badge>
                                 ))}

@@ -232,6 +232,7 @@ export type Database = {
           elo: Json
           id: string
           name: string
+          user_role: string
           updated_at: string
         }
         Insert: {
@@ -240,6 +241,7 @@ export type Database = {
           elo?: Json
           id: string
           name: string
+          user_role?: string
           updated_at?: string
         }
         Update: {
@@ -248,6 +250,7 @@ export type Database = {
           elo?: Json
           id?: string
           name?: string
+          user_role?: string
           updated_at?: string
         }
         Relationships: [

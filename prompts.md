@@ -1,3 +1,4 @@
+- 
 
 # Places editierbar machen / bzw. Fehler melden (Korrigierte Fassung schicken)
 
@@ -10,3 +11,5 @@
 # Icons für Map Pins
 
 - welches Icon bei Plätzen mit mehreren Sportarten?
+
+--------------------

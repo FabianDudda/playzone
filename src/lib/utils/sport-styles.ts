@@ -11,7 +11,6 @@ export const sportColors: Record<string, string> = {
   badminton: '#8B5CF6',   // Purple/Violet
   squash: '#06B6D4',      // Cyan
   pickleball: '#F97316',  // Orange
-  // German sports
   fußball: '#22C55E',     // Bright Green
   tischtennis: '#EC4899', // Pink
   beachvolleyball: '#FCD34D', // Yellow
@@ -35,6 +34,24 @@ export const sportNames: Record<string, string> = {
   beachvolleyball: 'Beachvolleyball',
   boule: 'Boule',
   skatepark: 'Skatepark'
+}
+
+// Modern badge styling with subtle backgrounds and default text color using Tailwind
+export const sportBadgeStyles: Record<string, { bg: string, text: string }> = {
+  // Original sports
+  tennis: { bg: 'bg-emerald-50', text: 'text-foreground' },
+  basketball: { bg: 'bg-amber-50', text: 'text-foreground' },
+  volleyball: { bg: 'bg-blue-50', text: 'text-foreground' },
+  spikeball: { bg: 'bg-red-50', text: 'text-foreground' },
+  badminton: { bg: 'bg-violet-50', text: 'text-foreground' },
+  squash: { bg: 'bg-cyan-50', text: 'text-foreground' },
+  pickleball: { bg: 'bg-orange-50', text: 'text-foreground' },
+  // German sports
+  fußball: { bg: 'bg-green-50', text: 'text-foreground' },
+  tischtennis: { bg: 'bg-pink-50', text: 'text-foreground' },
+  beachvolleyball: { bg: 'bg-yellow-50', text: 'text-foreground' },
+  boule: { bg: 'bg-amber-50', text: 'text-foreground' },
+  skatepark: { bg: 'bg-gray-50', text: 'text-foreground' }
 }
 
 // Sport icon mapping - using Unicode symbols for visual representation
@@ -69,6 +86,62 @@ export function getCourtColor(sports: string[]): string {
 export function getPrimarySportIcon(sports: string[]): string {
   if (sports.length === 0) return '📍' // Default pin
   return sportIcons[sports[0]] || '📍'
+}
+
+// Helper function to determine text color based on background color brightness
+export function getContrastTextColor(backgroundColor: string): string {
+  // Remove # if present
+  const hex = backgroundColor.replace('#', '')
+  
+  // Convert to RGB
+  const r = parseInt(hex.substr(0, 2), 16)
+  const g = parseInt(hex.substr(2, 2), 16)
+  const b = parseInt(hex.substr(4, 2), 16)
+  
+  // Calculate brightness using relative luminance formula
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000
+  
+  // Return white text for dark backgrounds, black for light backgrounds
+  return brightness < 128 ? '#FFFFFF' : '#000000'
+}
+
+// Get modern badge Tailwind classes for a sport
+export function getSportBadgeClasses(sport: string): string {
+  const styles = sportBadgeStyles[sport]
+  if (!styles) {
+    // Fallback for unknown sports
+    return 'bg-gray-50 text-foreground'
+  }
+  return `${styles.bg} ${styles.text}`
+}
+
+// Get modern badge inline styles for HTML templates (fallback when Tailwind classes aren't available)
+export function getSportBadgeStyles(sport: string): { backgroundColor: string, color: string } {
+  // Map Tailwind 50-tone classes to CSS values for HTML templates
+  const tailwindToCSS: Record<string, string> = {
+    'bg-emerald-50': '#ecfdf5',
+    'bg-amber-50': '#fffbeb', 
+    'bg-blue-50': '#eff6ff',
+    'bg-red-50': '#fef2f2',
+    'bg-violet-50': '#f5f3ff',
+    'bg-cyan-50': '#ecfeff',
+    'bg-orange-50': '#fff7ed',
+    'bg-green-50': '#f0fdf4',
+    'bg-pink-50': '#fdf2f8',
+    'bg-yellow-50': '#fefce8',
+    'bg-gray-50': '#f9fafb'
+  }
+  
+  const styles = sportBadgeStyles[sport]
+  if (!styles) {
+    return { backgroundColor: '#f9fafb', color: '#0f172a' } // gray-50 fallback with default text
+  }
+  
+  const backgroundColor = tailwindToCSS[styles.bg] || '#f9fafb'
+  // Use default foreground color (typically dark) for all badges
+  const textColor = '#0f172a' // Default app text color
+  
+  return { backgroundColor, color: textColor }
 }
 
 // Create simple sport icon with badge for multiple sports
