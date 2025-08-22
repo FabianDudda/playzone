@@ -61,6 +61,7 @@
 /* Custom Leaflet map styles */
 .leaflet-container {
   font-family: inherit;
+  z-index: 30;
 }
 
 .leaflet-popup-content-wrapper {

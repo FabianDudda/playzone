@@ -47,7 +47,7 @@ const SPORTS = [
 ] as const
 
 const SURFACE_TYPES = [
-  'Wiese',
+  'Rasen',
   'Hartplatz',
   'Asphalt',
   'Kunststoffbelag',

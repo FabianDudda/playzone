@@ -13,3 +13,7 @@
 - welches Icon bei Plätzen mit mehreren Sportarten?
 
 --------------------
+
+
+Give me a short description of the app and a list of the available data for places and courts. because i want to design the ux/ui for the main user flow. Map -> Pop Up -> Place Details
+
