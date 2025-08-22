@@ -2,12 +2,12 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet'
-import { Court } from '@/lib/supabase/types'
+import { Court, SportType } from '@/lib/supabase/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { MapPin, Navigation, Plus } from 'lucide-react'
-import { createSportIcon, createUserLocationIcon, createSelectedLocationIcon, sportNames, getSportBadgeClasses } from '@/lib/utils/sport-styles'
+import { createSportIcon, createUserLocationIcon, createSelectedLocationIcon, sportNames, getSportBadgeClasses, sportIcons } from '@/lib/utils/sport-styles'
 import { MAP_LAYERS, DEFAULT_LAYER_ID, createTileLayer, getSavedLayerPreference, saveLayerPreference } from '@/lib/utils/map-layers'
 import L from 'leaflet'
 import MarkerClusterGroup from './marker-cluster-group'
@@ -24,6 +24,7 @@ interface LeafletCourtMapProps {
   allowAddCourt?: boolean
   selectedLocation?: { lat: number; lng: number } | null
   enableClustering?: boolean
+  selectedSport?: SportType | 'all'
 }
 
 // Component to handle map clicks
@@ -167,7 +168,8 @@ export default function LeafletCourtMap({
   height = '400px',
   allowAddCourt = false,
   selectedLocation = null,
-  enableClustering = true
+  enableClustering = true,
+  selectedSport = 'all'
 }: LeafletCourtMapProps) {
   const [selectedCourt, setSelectedCourt] = useState<Court | null>(null)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
@@ -214,6 +216,7 @@ export default function LeafletCourtMap({
               courts={courts}
               onCourtSelect={handleCourtSelect}
               selectedCourt={selectedCourt}
+              selectedSport={selectedSport}
             />
           ) : (
             courts.map((court) => {
@@ -225,11 +228,18 @@ export default function LeafletCourtMap({
                   }, {} as Record<string, number>)
                 : (court.sports?.reduce((acc, sport) => ({ ...acc, [sport]: 1 }), {} as Record<string, number>) || {})
               
+              // Filter sports for icon display based on selected sport filter
+              const sportsForIcon = selectedSport === 'all' 
+                ? (court.sports || [])
+                : (court.sports || []).includes(selectedSport) 
+                  ? [selectedSport]
+                  : (court.sports || [])
+              
               return (
               <Marker 
                 key={court.id} 
                 position={[court.latitude, court.longitude]}
-                icon={createSportIcon(court.sports, false)}
+                icon={createSportIcon(sportsForIcon, false)}
                 eventHandlers={{
                   click: () => {
                     handleCourtSelect(court)
@@ -243,9 +253,9 @@ export default function LeafletCourtMap({
                       {Object.entries(sportsWithCounts).map(([sport, count]) => (
                         <Badge 
                           key={sport} 
-                          className={`text-xs border-0 ${getSportBadgeClasses(sport)}`}
+                          className="text-xs border-0 bg-gray-100 text-foreground"
                         >
-                          {sportNames[sport] || sport} ({count})
+                          {sportIcons[sport] || '📍'}  {sportNames[sport] || sport} ({count})
                         </Badge>
                       ))}
                     </div>

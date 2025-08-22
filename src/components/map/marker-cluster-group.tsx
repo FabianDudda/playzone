@@ -6,13 +6,14 @@ import L from 'leaflet'
 import 'leaflet.markercluster'
 import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
-import { PlaceWithCourts } from '@/lib/supabase/types'
-import { createSportIcon, getSportBadgeStyles } from '@/lib/utils/sport-styles'
+import { PlaceWithCourts, SportType } from '@/lib/supabase/types'
+import { createSportIcon, getSportBadgeStyles, sportIcons, sportNames } from '@/lib/utils/sport-styles'
 
 interface MarkerClusterGroupProps {
   courts: PlaceWithCourts[]
   onCourtSelect?: (court: PlaceWithCourts) => void
   selectedCourt?: PlaceWithCourts | null
+  selectedSport?: SportType | 'all'
 }
 
 // Create custom cluster icon
@@ -58,7 +59,7 @@ function createClusterIcon(cluster: L.MarkerCluster) {
   })
 }
 
-export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCourt }: MarkerClusterGroupProps) {
+export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCourt, selectedSport = 'all' }: MarkerClusterGroupProps) {
   const map = useMap()
   const clusterGroupRef = useRef<L.MarkerClusterGroup | null>(null)
   const markersRef = useRef<L.Marker[]>([])
@@ -93,6 +94,13 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
         ? [...new Set(court.courts.map(c => c.sport))]
         : (court.sports || [])
       
+      // Filter sports for icon display based on selected sport filter
+      const sportsForIcon = selectedSport === 'all' 
+        ? availableSports
+        : availableSports.includes(selectedSport) 
+          ? [selectedSport]
+          : availableSports
+      
       // Calculate sport quantities for popup
       const sportsWithCounts = court.courts?.length > 0 
         ? court.courts.reduce((acc, c) => {
@@ -102,7 +110,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
         : (court.sports?.reduce((acc, sport) => ({ ...acc, [sport]: 1 }), {} as Record<string, number>) || {})
 
       const marker = L.marker([court.latitude, court.longitude], {
-        icon: createSportIcon(availableSports, false), // Remove selection dependency to prevent re-rendering
+        icon: createSportIcon(sportsForIcon, false), // Use filtered sports for icon
         placeData: court, // Store court data for cluster processing
       })
 
@@ -114,8 +122,9 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
             ${Object.keys(sportsWithCounts).length > 0 ? `
               <div class="flex flex-wrap gap-1 mb-2">
                 ${Object.entries(sportsWithCounts).map(([sport, count]) => {
-                  const styles = getSportBadgeStyles(sport)
-                  return `<span style="background-color: ${styles.backgroundColor}; color: ${styles.color}; padding: 2px 8px; border-radius: 4px; font-size: 12px;">${sport} (${count})</span>`
+                  const icon = sportIcons[sport] || '📍'
+                  const name = sportNames[sport] || sport
+                  return `<span style="background-color: #f3f4f6; color: #0f172a; padding: 2px 8px; border-radius: 4px; font-size: 12px;">${icon} ${name} ${count}</span>`
                 }).join('')}
               </div>
             ` : ''}
@@ -149,7 +158,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
       clusterGroup.clearLayers()
       markersRef.current = []
     }
-  }, [courts, map, onCourtSelect])
+  }, [courts, map, onCourtSelect, selectedSport])
 
   // Handle court selection events from popups
   useEffect(() => {

@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import { useAuth } from '@/components/providers/auth-provider'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { useQuery } from '@tanstack/react-query'
@@ -25,7 +25,7 @@ const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map
 })
 import { MapPin, Plus, Search, Filter } from 'lucide-react'
 import Link from 'next/link'
-import { getSportBadgeClasses } from '@/lib/utils/sport-styles'
+
 
 const SPORTS = [ 'fußball', 'basketball', 'tischtennis', 'volleyball', 'beachvolleyball', 'spikeball', 'boule', 'boldern', 'skatepark'] as const
 
@@ -172,6 +172,7 @@ export default function CourtsPage() {
             courts={filteredPlaces}
             onCourtSelect={handlePlaceSelect}
             height="600px"
+            selectedSport={selectedSport}
           />
         </CardContent>
       </Card>
