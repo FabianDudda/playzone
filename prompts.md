@@ -1,10 +1,4 @@
 
-# Test page
-
-- filter nach city
-
-----------------------------------------------------------------------------------------------------------------------
-
 # Places editierbar machen / bzw. Fehler melden (Korrigierte Fassung schicken)
 
 - User können Daten bearbeiten (zB bei courts: sport, anzahl, boden usw. //  bei places: adress, location usw.)
