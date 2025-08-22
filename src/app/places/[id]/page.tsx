@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { MapPin, ArrowLeft, Share2, Calendar, Users, Navigation } from 'lucide-react'
+import { getSportBadgeClasses, sportNames, sportIcons } from '@/lib/utils/sport-utils'
 import { Metadata } from 'next'
 
 interface PlacePageProps {
@@ -92,7 +93,7 @@ export default async function PlacePage({ params }: PlacePageProps) {
       {/* Breadcrumb Navigation */}
       <div className="flex items-center gap-2 mb-6">
         <Link 
-          href="/courts" 
+          href="/map" 
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -128,8 +129,8 @@ export default async function PlacePage({ params }: PlacePageProps) {
               <div className="flex flex-wrap gap-1">
                 {availableSports.length > 0 ? (
                   availableSports.map((sport) => (
-                    <Badge key={sport} variant="secondary" className="text-xs">
-                      {sport}
+                    <Badge key={sport} className={`text-xs ${getSportBadgeClasses(sport)}`}>
+                      {sportIcons[sport] || '📍'} {sportNames[sport] || sport}
                     </Badge>
                   ))
                 ) : (
@@ -218,7 +219,9 @@ export default async function PlacePage({ params }: PlacePageProps) {
                             Quantity: {court.quantity}
                           </p>
                         </div>
-                        <Badge variant="outline">{court.sport}</Badge>
+                        <Badge className={`${getSportBadgeClasses(court.sport)}`}>
+                          {sportIcons[court.sport] || '📍'} {sportNames[court.sport] || court.sport}
+                        </Badge>
                       </div>
                       
                       {court.surface && (

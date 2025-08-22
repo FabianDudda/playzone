@@ -150,7 +150,7 @@ export default function NewCourtPage() {
         description: 'Your court has been added to the map.',
       })
       queryClient.invalidateQueries({ queryKey: ['courts'] })
-      router.push('/courts')
+      router.push('/map')
     },
     onError: (error: Error) => {
       toast({

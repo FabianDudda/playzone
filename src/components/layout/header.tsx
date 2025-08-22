@@ -11,7 +11,7 @@ export default function Header() {
   const { user, profile, signOut, loading } = useAuth()
 
   const navigation = [
-    { name: 'Courts', href: '/courts', icon: MapPin },
+    { name: 'Map', href: '/map', icon: MapPin },
     { name: 'Rankings', href: '/rankings', icon: Trophy },
     { name: 'Add Match', href: '/matches/new', icon: Plus },
     { name: 'Test', href: '/test', icon: TestTube },

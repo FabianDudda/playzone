@@ -19,7 +19,7 @@ export default function Home() {
             <Link href="/auth/signup">Get Started</Link>
           </Button>
           <Button variant="outline" size="lg" asChild>
-            <Link href="/courts">Explore Courts</Link>
+            <Link href="/map">Map</Link>
           </Button>
         </div>
       </div>

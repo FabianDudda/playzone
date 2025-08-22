@@ -1,13 +1,14 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet'
 import { Court, SportType } from '@/lib/supabase/types'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { MapPin, Navigation, Plus } from 'lucide-react'
-import { createSportIcon, createUserLocationIcon, createSelectedLocationIcon, sportNames, getSportBadgeClasses, sportIcons } from '@/lib/utils/sport-styles'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
+import { Plus } from 'lucide-react'
+import { sportNames, getSportBadgeClasses, sportIcons } from '@/lib/utils/sport-utils'
+import { createSportIcon, createUserLocationIcon, createSelectedLocationIcon } from '@/lib/utils/sport-styles'
 import { MAP_LAYERS, DEFAULT_LAYER_ID, createTileLayer, getSavedLayerPreference, saveLayerPreference } from '@/lib/utils/map-layers'
 import L from 'leaflet'
 import MarkerClusterGroup from './marker-cluster-group'
@@ -174,9 +175,12 @@ export default function LeafletCourtMap({
   const [selectedCourt, setSelectedCourt] = useState<Court | null>(null)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [currentLayerId, setCurrentLayerId] = useState<string>(() => getSavedLayerPreference())
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
 
   const handleCourtSelect = (court: Court) => {
-    // Skip parent callback to prevent re-renders that close popups
+    setSelectedCourt(court)
+    setIsBottomSheetOpen(true)
+    onCourtSelect?.(court)
   }
 
   const handleLocationFound = (lat: number, lng: number) => {
@@ -245,33 +249,7 @@ export default function LeafletCourtMap({
                     handleCourtSelect(court)
                   }
                 }}
-              >
-                <Popup>
-                  <div className="p-2 min-w-[200px]">
-                    <h3 className="font-semibold text-sm mb-1">{court.name}</h3>
-                    <div className="flex flex-wrap gap-1 mb-2">
-                      {Object.entries(sportsWithCounts).map(([sport, count]) => (
-                        <Badge 
-                          key={sport} 
-                          className="text-xs border-0 bg-gray-100 text-foreground"
-                        >
-                          {sportIcons[sport] || '📍'}  {sportNames[sport] || sport} ({count})
-                        </Badge>
-                      ))}
-                    </div>
-                    {court.description && (
-                      <p className="text-xs text-gray-600 mb-2">{court.description}</p>
-                    )}
-                    <Button 
-                      size="sm" 
-                      className="w-full"
-                      onClick={() => window.location.href = `/places/${court.id}`}
-                    >
-                      View Details
-                    </Button>
-                  </div>
-                </Popup>
-              </Marker>
+              />
             )
             })
           )}
@@ -281,9 +259,7 @@ export default function LeafletCourtMap({
             <Marker 
               position={[userLocation.lat, userLocation.lng]}
               icon={createUserLocationIcon()}
-            >
-              <Popup>Your Location</Popup>
-            </Marker>
+            />
           )}
           
           {/* Selected location marker (for adding courts) */}
@@ -291,9 +267,7 @@ export default function LeafletCourtMap({
             <Marker 
               position={[selectedLocation.lat, selectedLocation.lng]}
               icon={createSelectedLocationIcon()}
-            >
-              <Popup>Selected Court Location</Popup>
-            </Marker>
+            />
           )}
           
           {/* Handle map clicks */}
@@ -317,7 +291,61 @@ export default function LeafletCourtMap({
         </div>
       )}
 
-      {/* Selected Court Info - removed to prevent re-render issues */}
+      {/* Bottom Sheet for Court Details */}
+      <Sheet open={isBottomSheetOpen} onOpenChange={setIsBottomSheetOpen}>
+        <SheetContent side="bottom" className="h-auto max-h-[80vh] border-0" hideOverlay>
+          {selectedCourt && (
+            <div className="space-y-4">
+              <SheetHeader>
+                <SheetTitle>{selectedCourt.name}</SheetTitle>
+                {selectedCourt.description && (
+                  <SheetDescription>
+                    {selectedCourt.description}
+                  </SheetDescription>
+                )}
+              </SheetHeader>
+              
+              <div className="space-y-3">
+                {/* Sports badges */}
+                {(() => {
+                  const sportsWithCounts = selectedCourt.courts?.length > 0 
+                    ? selectedCourt.courts.reduce((acc, c) => {
+                        acc[c.sport] = (acc[c.sport] || 0) + (c.quantity || 1)
+                        return acc
+                      }, {} as Record<string, number>)
+                    : (selectedCourt.sports?.reduce((acc, sport) => ({ ...acc, [sport]: 1 }), {} as Record<string, number>) || {})
+                  
+                  return Object.keys(sportsWithCounts).length > 0 && (
+                    <div>
+                      <h4 className="text-sm font-medium mb-2">Available Sports</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {Object.entries(sportsWithCounts).map(([sport, count]) => (
+                          <Badge 
+                            key={sport} 
+                            className={`text-sm ${getSportBadgeClasses(sport)}`}
+                          >
+                            {sportIcons[sport] || '📍'} {sportNames[sport] || sport} ({count})
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )
+                })()}
+                
+                {/* Action button */}
+                <div className="pt-2">
+                  <Button 
+                    className="w-full"
+                    onClick={() => window.location.href = `/places/${selectedCourt.id}`}
+                  >
+                    View Details
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }

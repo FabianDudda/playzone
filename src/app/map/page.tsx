@@ -95,7 +95,7 @@ export default function CourtsPage() {
         </div>
         {user && (
           <Button asChild>
-            <Link href="/courts/new">
+            <Link href="/map/new">
               <Plus className="h-4 w-4 mr-2" />
               Add Court
             </Link>

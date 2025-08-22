@@ -7,7 +7,7 @@ import 'leaflet.markercluster'
 import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 import { PlaceWithCourts, SportType } from '@/lib/supabase/types'
-import { createSportIcon, getSportBadgeStyles, sportIcons, sportNames } from '@/lib/utils/sport-styles'
+import { createSportIcon } from '@/lib/utils/sport-styles'
 
 interface MarkerClusterGroupProps {
   courts: PlaceWithCourts[]
@@ -114,37 +114,9 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
         placeData: court, // Store court data for cluster processing
       })
 
-      // Add popup with court info
-      const popupContent = `
-        <div class="place-popup">
-          <h3 class="font-semibold text-sm mb-2">${court.name}</h3>
-          <div class="space-y-1 text-xs">
-            ${Object.keys(sportsWithCounts).length > 0 ? `
-              <div class="flex flex-wrap gap-1 mb-2">
-                ${Object.entries(sportsWithCounts).map(([sport, count]) => {
-                  const icon = sportIcons[sport] || '📍'
-                  const name = sportNames[sport] || sport
-                  return `<span style="background-color: #f3f4f6; color: #0f172a; padding: 2px 8px; border-radius: 4px; font-size: 12px;">${icon} ${name} ${count}</span>`
-                }).join('')}
-              </div>
-            ` : ''}
-            ${court.description ? `<p class="text-gray-600">${court.description.substring(0, 100)}${court.description.length > 100 ? '...' : ''}</p>` : ''}
-          </div>
-          <button 
-            onclick="window.location.href = '/places/${court.id}'"
-            class="mt-2 bg-blue-500 text-white px-3 py-1 rounded text-xs hover:bg-blue-600"
-          >
-            View Details
-          </button>
-        </div>
-      `
-      
-      marker.bindPopup(popupContent, {
-        maxWidth: 250,
-        className: 'custom-popup'
-      })
+      // Remove popup binding - will use bottom sheet instead
 
-      // Handle marker clicks
+      // Handle marker clicks - trigger bottom sheet
       marker.on('click', () => {
         onCourtSelect?.(court)
       })
