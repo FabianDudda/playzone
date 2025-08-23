@@ -19,22 +19,6 @@ interface MarkerClusterGroupProps {
 // Create custom cluster icon
 function createClusterIcon(cluster: L.MarkerCluster) {
   const count = cluster.getChildCount()
-  const markers = cluster.getAllChildMarkers()
-  
-  // Get all sports from courts in this cluster
-  const allSports = new Set<string>()
-  markers.forEach((marker: any) => {
-    const court = marker.options.placeData as PlaceWithCourts
-    if (court.courts && court.courts.length > 0) {
-      court.courts.forEach(c => allSports.add(c.sport))
-    } else if (court.sports) {
-      court.sports.forEach(sport => allSports.add(sport))
-    }
-  })
-  
-  const sportsArray = Array.from(allSports)
-  const displaySports = sportsArray.slice(0, 3) // Show max 3 sports
-  const hasMore = sportsArray.length > 3
   
   // Determine cluster size class
   let sizeClass = 'small'
@@ -47,10 +31,6 @@ function createClusterIcon(cluster: L.MarkerCluster) {
     html: `
       <div class="cluster-icon cluster-${sizeClass}">
         <div class="cluster-count">${count}</div>
-        <div class="cluster-sports">
-          ${displaySports.map(sport => `<span class="sport-dot" title="${sport}"></span>`).join('')}
-          ${hasMore ? '<span class="sport-more">+</span>' : ''}
-        </div>
       </div>
     `,
     className: 'custom-cluster-icon',
