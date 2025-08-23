@@ -4,7 +4,6 @@ import { useState } from 'react'
 import dynamic from 'next/dynamic'
 import { useAuth } from '@/components/providers/auth-provider'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
@@ -84,98 +83,23 @@ export default function CourtsPage() {
   }
 
   return (
-    <div className="container px-4 py-8">
-      <div className="flex justify-between items-start mb-6">
-        <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            <MapPin className="h-8 w-8" />
-            Find Courts
-          </h1>
-          <p className="text-muted-foreground">Discover sports courts in your area</p>
-        </div>
-        {user && (
-          <Button asChild>
-            <Link href="/map/new">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Court
-            </Link>
-          </Button>
-        )}
-      </div>
-
-      {/* Filters */}
-      <Card className="mb-6">
-        <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search courts..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
-            <div className="sm:w-48">
-              <Select value={selectedSport} onValueChange={(value) => {
-                setSelectedSport(value as SportType | 'all')
-                setSelectedSurface('all') // Reset surface filter when sport changes
-              }}>
-                <SelectTrigger>
-                  <Filter className="h-4 w-4 mr-2" />
-                  <SelectValue placeholder="All sports" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All sports</SelectItem>
-                  {SPORTS.map((sport) => (
-                    <SelectItem key={sport} value={sport}>
-                      {sport.charAt(0).toUpperCase() + sport.slice(1)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            {selectedSport !== 'all' && (
-              <div className="sm:w-48">
-                <Select value={selectedSurface} onValueChange={(value) => setSelectedSurface(value)}>
-                  <SelectTrigger>
-                    <Filter className="h-4 w-4 mr-2" />
-                    <SelectValue placeholder="All surfaces" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All surfaces</SelectItem>
-                    {SURFACE_TYPES.map((surface) => (
-                      <SelectItem key={surface} value={surface}>
-                        {surface}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Map View */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Court Locations</CardTitle>
-          <CardDescription>
-            {filteredPlaces.length} place{filteredPlaces.length !== 1 ? 's' : ''} found
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-0">
-          <LeafletCourtMap 
-            courts={filteredPlaces}
-            onCourtSelect={handlePlaceSelect}
-            height="600px"
-            selectedSport={selectedSport}
-          />
-        </CardContent>
-      </Card>
+    <div className="h-screen pt-16">
+      <LeafletCourtMap 
+        courts={filteredPlaces}
+        onCourtSelect={handlePlaceSelect}
+        height="100%"
+        selectedSport={selectedSport}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onSportChange={(sport) => {
+          setSelectedSport(sport)
+          setSelectedSurface('all') // Reset surface filter when sport changes
+        }}
+        showSearchControls={true}
+        placesCount={filteredPlaces.length}
+        showAddCourtButton={!!user}
+        onAddCourtClick={() => window.location.href = '/map/new'}
+      />
     </div>
   )
 }

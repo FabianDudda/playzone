@@ -6,10 +6,12 @@ import { Court, SportType, PlaceWithCourts } from '@/lib/supabase/types'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
-import { Plus } from 'lucide-react'
+import { Plus, MapPin, Navigation, Share2, Heart, Search, Filter } from 'lucide-react'
+import FilterBottomSheet from './filter-bottom-sheet'
 import { sportNames, getSportBadgeClasses, sportIcons } from '@/lib/utils/sport-utils'
 import { createSportIcon, createUserLocationIcon, createSelectedLocationIcon } from '@/lib/utils/sport-styles'
 import { MAP_LAYERS, DEFAULT_LAYER_ID, createTileLayer, getSavedLayerPreference, saveLayerPreference } from '@/lib/utils/map-layers'
+import { getDistanceText } from '@/lib/utils/distance'
 import L from 'leaflet'
 import MarkerClusterGroup from './marker-cluster-group'
 
@@ -26,6 +28,14 @@ interface LeafletCourtMapProps {
   selectedLocation?: { lat: number; lng: number } | null
   enableClustering?: boolean
   selectedSport?: SportType | 'all'
+  // Search and filter props
+  searchQuery?: string
+  onSearchChange?: (query: string) => void
+  onSportChange?: (sport: SportType | 'all') => void
+  showSearchControls?: boolean
+  placesCount?: number
+  showAddCourtButton?: boolean
+  onAddCourtClick?: () => void
 }
 
 // Component to handle map clicks
@@ -40,68 +50,176 @@ function MapClickHandler({ onMapClick, allowAddCourt }: { onMapClick?: (lng: num
   return null
 }
 
-// Component to handle layer control - simplified approach
-function LayerControlHandler({ currentLayerId, onLayerChange }: { currentLayerId: string, onLayerChange: (layerId: string) => void }) {
+
+// Component to handle modern search control with filter button
+function SearchFilterControlHandler({ 
+  searchQuery = '', 
+  onSearchChange,
+  onFilterClick
+}: { 
+  searchQuery?: string
+  onSearchChange?: (query: string) => void
+  onFilterClick?: () => void
+}) {
   const map = useMap()
   
   useEffect(() => {
-    // Create custom layer control
-    const LayerSwitchControl = L.Control.extend({
+    // Create modern search control with filter button
+    const SearchControl = L.Control.extend({
       options: {
-        position: 'topright'
+        position: 'topleft'
       },
       onAdd: function(map: L.Map) {
-        const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom-layers')
-        
-        // Create dropdown
-        const select = L.DomUtil.create('select', 'layer-select', container)
-        select.style.cssText = `
-          background: white;
-          border: none;
-          padding: 8px 12px;
-          border-radius: 4px;
-          font-size: 14px;
-          cursor: pointer;
-          min-width: 100px;
+        // Main container centered
+        const mainContainer = L.DomUtil.create('div', 'leaflet-control-search-main')
+        mainContainer.style.cssText = `
+          position: absolute;
+          top: 10px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 100%;
+          max-width: 400px;
+          padding: 0 10px;
+          pointer-events: none;
+          z-index: 1000;
         `
         
-        // Add options
-        Object.values(MAP_LAYERS).forEach(layer => {
-          const option = L.DomUtil.create('option', '', select) as HTMLOptionElement
-          option.value = layer.id
-          option.text = layer.name
-          if (layer.id === currentLayerId) {
-            option.selected = true
-          }
+        // Search container
+        const searchContainer = L.DomUtil.create('div', 'search-container', mainContainer)
+        searchContainer.style.cssText = `
+          position: relative;
+          background: white;
+          border-radius: 12px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+          border: 1px solid rgba(0,0,0,0.1);
+          pointer-events: auto;
+          display: flex;
+          align-items: center;
+        `
+        
+        // Search icon (left)
+        const searchIcon = L.DomUtil.create('div', 'search-icon', searchContainer)
+        searchIcon.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="M21 21l-4.35-4.35"/>
+          </svg>
+        `
+        searchIcon.style.cssText = `
+          position: absolute;
+          left: 12px;
+          color: #6b7280;
+          pointer-events: none;
+          z-index: 1;
+          display: flex;
+          align-items: center;
+        `
+        
+        // Search input
+        const searchInput = L.DomUtil.create('input', 'search-input', searchContainer) as HTMLInputElement
+        searchInput.type = 'text'
+        searchInput.placeholder = 'Search courts...'
+        searchInput.value = searchQuery
+        searchInput.style.cssText = `
+          flex: 1;
+          border: none;
+          border-radius: 12px;
+          padding: 14px 52px 14px 44px;
+          font-size: 16px;
+          outline: none;
+          background: transparent;
+          transition: all 0.2s ease;
+          color: #374151;
+        `
+        
+        // Filter button (right)
+        const filterButton = L.DomUtil.create('button', 'filter-button', searchContainer)
+        filterButton.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+          </svg>
+        `
+        filterButton.style.cssText = `
+          position: absolute;
+          right: 8px;
+          width: 36px;
+          height: 36px;
+          border: none;
+          border-radius: 8px;
+          background: #f8fafc;
+          color: #374151;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s ease;
+          outline: none;
+        `
+        
+        // Add hover effects
+        L.DomEvent.on(searchContainer, 'mouseenter', () => {
+          searchContainer.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)'
+          searchContainer.style.transform = 'translateY(-1px)'
+        })
+        L.DomEvent.on(searchContainer, 'mouseleave', () => {
+          searchContainer.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)'
+          searchContainer.style.transform = 'translateY(0)'
         })
         
-        // Handle change events
-        L.DomEvent.on(select, 'change', (e: any) => {
-          const selectedLayerId = e.target.value
-          onLayerChange(selectedLayerId)
-          saveLayerPreference(selectedLayerId)
+        L.DomEvent.on(filterButton, 'mouseenter', () => {
+          filterButton.style.background = '#e2e8f0'
+          filterButton.style.color = '#1e293b'
+        })
+        L.DomEvent.on(filterButton, 'mouseleave', () => {
+          filterButton.style.background = '#f8fafc'
+          filterButton.style.color = '#374151'
         })
         
-        // Prevent map interactions when using the control
-        L.DomEvent.disableClickPropagation(container)
-        L.DomEvent.disableScrollPropagation(container)
+        // Add focus styles
+        L.DomEvent.on(searchInput, 'focus', () => {
+          searchContainer.style.borderColor = '#3b82f6'
+          searchContainer.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)'
+        })
+        L.DomEvent.on(searchInput, 'blur', () => {
+          searchContainer.style.borderColor = 'rgba(0,0,0,0.1)'
+          searchContainer.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)'
+        })
         
-        return container
+        // Handle events
+        L.DomEvent.on(searchInput, 'input', (e: any) => {
+          onSearchChange?.(e.target.value)
+        })
+        
+        L.DomEvent.on(filterButton, 'click', (e: any) => {
+          L.DomEvent.preventDefault(e)
+          onFilterClick?.()
+        })
+        
+        // Prevent map interactions
+        L.DomEvent.disableClickPropagation(mainContainer)
+        L.DomEvent.disableScrollPropagation(mainContainer)
+        
+        // Add to map container
+        map.getContainer().appendChild(mainContainer)
+        
+        return { remove: () => mainContainer.remove() }
       }
     })
     
-    const layerControl = new LayerSwitchControl()
-    map.addControl(layerControl)
+    const searchControl = new SearchControl()
+    const controlInstance = searchControl.onAdd(map)
     
     return () => {
-      map.removeControl(layerControl)
+      if (controlInstance && controlInstance.remove) {
+        controlInstance.remove()
+      }
     }
-  }, [map, currentLayerId, onLayerChange])
+  }, [map, searchQuery, onSearchChange, onFilterClick])
   
   return null
 }
 
-// Component to handle user location
+// Component to handle user location with modern bottom-right positioning
 function UserLocationHandler({ onLocationFound }: { onLocationFound: (lat: number, lng: number) => void }) {
   const map = useMap()
   
@@ -123,41 +241,373 @@ function UserLocationHandler({ onLocationFound }: { onLocationFound: (lat: numbe
   }
 
   useEffect(() => {
-    // Add custom control for user location
+    // Create modern location control positioned at bottom-right
     const LocationControl = L.Control.extend({
       options: {
-        position: 'topleft'
+        position: 'bottomright'
       },
       onAdd: function(map: L.Map) {
-        const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control')
-        const button = L.DomUtil.create('a', 'leaflet-control-button', container)
-        button.innerHTML = '📍'
-        button.title = 'Find my location'
-        button.style.backgroundColor = 'white'
-        button.style.width = '30px'
-        button.style.height = '30px'
-        button.style.display = 'flex'
-        button.style.alignItems = 'center'
-        button.style.justifyContent = 'center'
-        button.style.textDecoration = 'none'
-        button.style.color = '#666'
-        button.style.fontSize = '16px'
-        button.href = '#'
+        // Create location button container
+        const locationContainer = L.DomUtil.create('div', 'leaflet-control-location-modern')
+        locationContainer.style.cssText = `
+          position: absolute;
+          bottom: 10px;
+          right: 10px;
+          z-index: 1000;
+        `
         
-        L.DomEvent.on(button, 'click', L.DomEvent.preventDefault)
-        L.DomEvent.on(button, 'click', findUserLocation)
+        // Create modern location button
+        const locationButton = L.DomUtil.create('button', 'location-button', locationContainer)
+        locationButton.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+        `
+        locationButton.title = 'Find my location'
+        locationButton.style.cssText = `
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          border: none;
+          background: white;
+          color: #374151;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+          transition: all 0.2s ease;
+          outline: none;
+        `
+        
+        // Add hover and active effects
+        L.DomEvent.on(locationButton, 'mouseenter', () => {
+          locationButton.style.transform = 'scale(1.05)'
+          locationButton.style.boxShadow = '0 4px 20px rgba(0,0,0,0.2)'
+          locationButton.style.background = '#f8fafc'
+        })
+        
+        L.DomEvent.on(locationButton, 'mouseleave', () => {
+          locationButton.style.transform = 'scale(1)'
+          locationButton.style.boxShadow = '0 2px 10px rgba(0,0,0,0.15)'
+          locationButton.style.background = 'white'
+        })
+        
+        L.DomEvent.on(locationButton, 'mousedown', () => {
+          locationButton.style.transform = 'scale(0.95)'
+        })
+        
+        L.DomEvent.on(locationButton, 'mouseup', () => {
+          locationButton.style.transform = 'scale(1.05)'
+        })
+        
+        // Handle click events
+        L.DomEvent.on(locationButton, 'click', L.DomEvent.preventDefault)
+        L.DomEvent.on(locationButton, 'click', findUserLocation)
+        
+        // Prevent map interactions
+        L.DomEvent.disableClickPropagation(locationContainer)
+        L.DomEvent.disableScrollPropagation(locationContainer)
+        
+        // Add to map container
+        map.getContainer().appendChild(locationContainer)
+        
+        return { remove: () => locationContainer.remove() }
+      }
+    })
+    
+    const locationControl = new LocationControl()
+    const controlInstance = locationControl.onAdd(map)
+    
+    return () => {
+      if (controlInstance && controlInstance.remove) {
+        controlInstance.remove()
+      }
+    }
+  }, [map])
+  
+  return null
+}
+
+// Component to handle custom attribution control positioned at bottom-left
+function AttributionControlHandler({ attribution }: { attribution: string }) {
+  const map = useMap()
+  
+  useEffect(() => {
+    // Create custom attribution control
+    const CustomAttributionControl = L.Control.extend({
+      options: {
+        position: 'bottomleft'
+      },
+      onAdd: function(map: L.Map) {
+        const container = L.DomUtil.create('div', 'leaflet-control-attribution leaflet-control')
+        container.innerHTML = attribution
+        
+        // Prevent map interactions
+        L.DomEvent.disableClickPropagation(container)
+        L.DomEvent.disableScrollPropagation(container)
         
         return container
       }
     })
     
-    const locationControl = new LocationControl()
-    map.addControl(locationControl)
+    const attributionControl = new CustomAttributionControl()
+    map.addControl(attributionControl)
     
     return () => {
-      map.removeControl(locationControl)
+      map.removeControl(attributionControl)
     }
-  }, [map])
+  }, [map, attribution])
+  
+  return null
+}
+
+// Component to handle layer toggle button positioned above places count
+function LayerToggleHandler({ currentLayerId, onLayerChange }: { currentLayerId: string, onLayerChange: (layerId: string) => void }) {
+  const map = useMap()
+  
+  const toggleLayer = () => {
+    const newLayerId = currentLayerId === 'light' ? 'satellite' : 'light'
+    onLayerChange(newLayerId)
+  }
+  
+  const getLayersIcon = () => {
+    return `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+        <polyline points="2 17 12 22 22 17"/>
+        <polyline points="2 12 12 17 22 12"/>
+      </svg>
+    `
+  }
+
+  useEffect(() => {
+    // Create layer toggle button positioned at bottom-left above places count
+    const LayerToggleControl = L.Control.extend({
+      options: {
+        position: 'bottomleft'
+      },
+      onAdd: function(map: L.Map) {
+        // Create layer toggle button container
+        const layerContainer = L.DomUtil.create('div', 'leaflet-control-layer-toggle')
+        layerContainer.style.cssText = `
+          position: absolute;
+          bottom: 60px;
+          left: 8px;
+          z-index: 1000;
+        `
+        
+        // Create modern layer toggle button
+        const layerButton = L.DomUtil.create('button', 'layer-toggle-button', layerContainer)
+        layerButton.innerHTML = getLayersIcon()
+        layerButton.title = 'Toggle Map Style'
+        layerButton.style.cssText = `
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          border: none;
+          background: white;
+          color: #374151;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+          transition: all 0.2s ease;
+          outline: none;
+        `
+        
+        // Add hover and active effects
+        L.DomEvent.on(layerButton, 'mouseenter', () => {
+          layerButton.style.transform = 'scale(1.05)'
+          layerButton.style.boxShadow = '0 4px 20px rgba(0,0,0,0.2)'
+          layerButton.style.background = '#f8fafc'
+        })
+        
+        L.DomEvent.on(layerButton, 'mouseleave', () => {
+          layerButton.style.transform = 'scale(1)'
+          layerButton.style.boxShadow = '0 2px 10px rgba(0,0,0,0.15)'
+          layerButton.style.background = 'white'
+        })
+        
+        L.DomEvent.on(layerButton, 'mousedown', () => {
+          layerButton.style.transform = 'scale(0.95)'
+        })
+        
+        L.DomEvent.on(layerButton, 'mouseup', () => {
+          layerButton.style.transform = 'scale(1.05)'
+        })
+        
+        // Handle click events
+        L.DomEvent.on(layerButton, 'click', (e) => {
+          L.DomEvent.preventDefault(e)
+          toggleLayer()
+        })
+        
+        // Prevent map interactions
+        L.DomEvent.disableClickPropagation(layerContainer)
+        L.DomEvent.disableScrollPropagation(layerContainer)
+        
+        // Add to map container
+        map.getContainer().appendChild(layerContainer)
+        
+        return { remove: () => layerContainer.remove() }
+      }
+    })
+    
+    const layerToggleControl = new LayerToggleControl()
+    const controlInstance = layerToggleControl.onAdd(map)
+    
+    return () => {
+      if (controlInstance && controlInstance.remove) {
+        controlInstance.remove()
+      }
+    }
+  }, [map, currentLayerId, onLayerChange])
+  
+  return null
+}
+
+// Component to display places count above attribution
+function PlacesCountHandler({ count }: { count: number }) {
+  const map = useMap()
+  
+  useEffect(() => {
+    // Create places count display
+    const CountControl = L.Control.extend({
+      options: {
+        position: 'bottomleft'
+      },
+      onAdd: function(map: L.Map) {
+        const container = L.DomUtil.create('div', 'leaflet-control-places-count')
+        container.innerHTML = count.toString()
+        container.style.cssText = `
+          background: rgba(255, 255, 255, 0.9);
+          border-radius: 4px;
+          padding: 6px 10px;
+          font-size: 14px;
+          font-weight: 600;
+          color: #374151;
+          border: none;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+          backdrop-filter: blur(4px);
+          margin: 8px;
+          margin-bottom: 2px;
+          user-select: none;
+        `
+        
+        // Prevent map interactions
+        L.DomEvent.disableClickPropagation(container)
+        L.DomEvent.disableScrollPropagation(container)
+        
+        return container
+      }
+    })
+    
+    const countControl = new CountControl()
+    map.addControl(countControl)
+    
+    return () => {
+      map.removeControl(countControl)
+    }
+  }, [map, count])
+  
+  return null
+}
+
+// Component to handle add court button positioned above locate button
+function AddCourtButtonHandler({ onAddCourtClick }: { onAddCourtClick: () => void }) {
+  const map = useMap()
+  
+  useEffect(() => {
+    // Create add court button
+    const AddCourtControl = L.Control.extend({
+      options: {
+        position: 'bottomright'
+      },
+      onAdd: function(map: L.Map) {
+        // Create add court button container
+        const addCourtContainer = L.DomUtil.create('div', 'leaflet-control-add-court')
+        addCourtContainer.style.cssText = `
+          position: absolute;
+          bottom: 70px;
+          right: 10px;
+          z-index: 1000;
+        `
+        
+        // Create modern add court button
+        const addCourtButton = L.DomUtil.create('button', 'add-court-button', addCourtContainer)
+        addCourtButton.innerHTML = `
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        `
+        addCourtButton.title = 'Add court'
+        addCourtButton.style.cssText = `
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          border: none;
+          background: white;
+          color: #374151;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+          transition: all 0.2s ease;
+          outline: none;
+        `
+        
+        // Add hover and active effects
+        L.DomEvent.on(addCourtButton, 'mouseenter', () => {
+          addCourtButton.style.transform = 'scale(1.05)'
+          addCourtButton.style.boxShadow = '0 4px 20px rgba(0,0,0,0.2)'
+          addCourtButton.style.background = '#f8fafc'
+        })
+        
+        L.DomEvent.on(addCourtButton, 'mouseleave', () => {
+          addCourtButton.style.transform = 'scale(1)'
+          addCourtButton.style.boxShadow = '0 2px 10px rgba(0,0,0,0.15)'
+          addCourtButton.style.background = 'white'
+        })
+        
+        L.DomEvent.on(addCourtButton, 'mousedown', () => {
+          addCourtButton.style.transform = 'scale(0.95)'
+        })
+        
+        L.DomEvent.on(addCourtButton, 'mouseup', () => {
+          addCourtButton.style.transform = 'scale(1.05)'
+        })
+        
+        // Handle click events
+        L.DomEvent.on(addCourtButton, 'click', (e) => {
+          L.DomEvent.preventDefault(e)
+          onAddCourtClick()
+        })
+        
+        // Prevent map interactions
+        L.DomEvent.disableClickPropagation(addCourtContainer)
+        L.DomEvent.disableScrollPropagation(addCourtContainer)
+        
+        // Add to map container
+        map.getContainer().appendChild(addCourtContainer)
+        
+        return { remove: () => addCourtContainer.remove() }
+      }
+    })
+    
+    const addCourtControl = new AddCourtControl()
+    const controlInstance = addCourtControl.onAdd(map)
+    
+    return () => {
+      if (controlInstance && controlInstance.remove) {
+        controlInstance.remove()
+      }
+    }
+  }, [map, onAddCourtClick])
   
   return null
 }
@@ -170,16 +620,26 @@ export default function LeafletCourtMap({
   allowAddCourt = false,
   selectedLocation = null,
   enableClustering = true,
-  selectedSport = 'all'
+  selectedSport = 'all',
+  searchQuery = '',
+  onSearchChange,
+  onSportChange,
+  showSearchControls = false,
+  placesCount = 0,
+  showAddCourtButton = false,
+  onAddCourtClick
 }: LeafletCourtMapProps) {
   const [selectedCourt, setSelectedCourt] = useState<PlaceWithCourts | null>(null)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [currentLayerId, setCurrentLayerId] = useState<string>(() => getSavedLayerPreference())
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
+  const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false)
 
   const handleCourtSelect = (court: PlaceWithCourts) => {
     setSelectedCourt(court)
-    setIsBottomSheetOpen(true)
+    if (!isBottomSheetOpen) {
+      setIsBottomSheetOpen(true)
+    }
     onCourtSelect?.(court)
   }
 
@@ -189,6 +649,7 @@ export default function LeafletCourtMap({
 
   const handleLayerChange = (layerId: string) => {
     setCurrentLayerId(layerId)
+    saveLayerPreference(layerId)
   }
 
   // Default center (Germany)
@@ -198,13 +659,15 @@ export default function LeafletCourtMap({
   const currentLayer = MAP_LAYERS[currentLayerId] || MAP_LAYERS[DEFAULT_LAYER_ID]
 
   return (
-    <div className="relative">
-      <div style={{ height }} className="rounded-lg overflow-hidden">
+    <div className="relative" style={{ height }}>
+      <div style={{ height: '100%' }} className="rounded-lg overflow-hidden">
         <MapContainer
           center={defaultCenter}
           zoom={7}
           style={{ height: '100%', width: '100%' }}
           scrollWheelZoom={true}
+          zoomControl={false}
+          attributionControl={false}
         >
           {/* Dynamic tile layer based on user selection */}
           <TileLayer
@@ -276,8 +739,29 @@ export default function LeafletCourtMap({
           {/* User location control */}
           <UserLocationHandler onLocationFound={handleLocationFound} />
           
-          {/* Layer control */}
-          <LayerControlHandler currentLayerId={currentLayerId} onLayerChange={handleLayerChange} />
+          {/* Modern search control */}
+          {showSearchControls && (
+            <SearchFilterControlHandler 
+              searchQuery={searchQuery}
+              onSearchChange={onSearchChange}
+              onFilterClick={() => setIsFilterSheetOpen(true)}
+            />
+          )}
+          
+          
+          {/* Custom attribution control */}
+          <AttributionControlHandler attribution={currentLayer.attribution} />
+          
+          {/* Layer toggle button */}
+          <LayerToggleHandler currentLayerId={currentLayerId} onLayerChange={handleLayerChange} />
+          
+          {/* Places count display */}
+          <PlacesCountHandler count={placesCount} />
+          
+          {/* Add court button */}
+          {showAddCourtButton && onAddCourtClick && (
+            <AddCourtButtonHandler onAddCourtClick={onAddCourtClick} />
+          )}
         </MapContainer>
       </div>
       
@@ -293,13 +777,51 @@ export default function LeafletCourtMap({
 
       {/* Bottom Sheet for Court Details */}
       <Sheet open={isBottomSheetOpen} onOpenChange={setIsBottomSheetOpen}>
-        <SheetContent side="bottom" className="h-auto max-h-[80vh] border-0" hideOverlay>
+        <SheetContent 
+          side="bottom" 
+          className="h-auto max-h-[80vh] border-0" 
+          hideOverlay
+          onInteractOutside={(e) => {
+            // Prevent closing when clicking on map pins or map elements
+            e.preventDefault()
+          }}
+        >
           {selectedCourt && (
             <div className="space-y-4">
               <SheetHeader>
-                <SheetTitle>{selectedCourt.name}</SheetTitle>
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <SheetTitle className="text-lg">{selectedCourt.name}</SheetTitle>
+                    {userLocation && (
+                      <p className="text-sm text-muted-foreground mt-1">
+                        <MapPin className="h-3 w-3 inline mr-1" />
+                        {getDistanceText(userLocation, { lat: selectedCourt.latitude, lng: selectedCourt.longitude })}
+                      </p>
+                    )}
+                  </div>
+                  {/* Testing button in top-right corner */}
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    className="text-xs"
+                    onClick={() => window.location.href = `/places/${selectedCourt.id}`}
+                  >
+                    View Details
+                  </Button>
+                </div>
+                {/* Quick Address */}
+                {(() => {
+                  const quickAddress = [selectedCourt.street, selectedCourt.district || selectedCourt.city]
+                    .filter(Boolean)
+                    .join(', ')
+                  return quickAddress && (
+                    <SheetDescription className="text-sm text-muted-foreground">
+                      {quickAddress}
+                    </SheetDescription>
+                  )
+                })()}
                 {selectedCourt.description && (
-                  <SheetDescription>
+                  <SheetDescription className="mt-2">
                     {selectedCourt.description}
                   </SheetDescription>
                 )}
@@ -332,13 +854,51 @@ export default function LeafletCourtMap({
                   )
                 })()}
                 
-                {/* Action button */}
-                <div className="pt-2">
+                {/* Action buttons row */}
+                <div className="flex gap-2 pt-2">
                   <Button 
-                    className="w-full"
-                    onClick={() => window.location.href = `/places/${selectedCourt.id}`}
+                    variant="outline" 
+                    size="sm" 
+                    className="flex-1"
+                    onClick={() => {
+                      // TODO: Implement save functionality
+                      console.log('Save place:', selectedCourt.id)
+                    }}
                   >
-                    View Details
+                    <Heart className="h-4 w-4 mr-1" />
+                    Save
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="flex-1"
+                    onClick={() => {
+                      const url = `https://maps.google.com/?q=${selectedCourt.latitude},${selectedCourt.longitude}`
+                      window.open(url, '_blank', 'noopener,noreferrer')
+                    }}
+                  >
+                    <Navigation className="h-4 w-4 mr-1" />
+                    Directions
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="flex-1"
+                    onClick={() => {
+                      // TODO: Implement share functionality
+                      if (navigator.share) {
+                        navigator.share({
+                          title: selectedCourt.name,
+                          text: `Check out ${selectedCourt.name}`,
+                          url: `${window.location.origin}/places/${selectedCourt.id}`
+                        }).catch(err => console.log('Share failed:', err))
+                      } else {
+                        console.log('Share not supported')
+                      }
+                    }}
+                  >
+                    <Share2 className="h-4 w-4 mr-1" />
+                    Share
                   </Button>
                 </div>
               </div>
@@ -346,6 +906,14 @@ export default function LeafletCourtMap({
           )}
         </SheetContent>
       </Sheet>
+      
+      {/* Filter Bottom Sheet */}
+      <FilterBottomSheet 
+        isOpen={isFilterSheetOpen}
+        onClose={() => setIsFilterSheetOpen(false)}
+        selectedSport={selectedSport}
+        onSportChange={onSportChange}
+      />
     </div>
   )
 }
