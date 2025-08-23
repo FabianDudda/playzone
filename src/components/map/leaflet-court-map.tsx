@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet'
-import { Court, SportType } from '@/lib/supabase/types'
+import { Court, SportType, PlaceWithCourts } from '@/lib/supabase/types'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
@@ -18,8 +18,8 @@ import 'leaflet/dist/leaflet.css'
 import './cluster-styles.css'
 
 interface LeafletCourtMapProps {
-  courts: Court[]
-  onCourtSelect?: (court: Court) => void
+  courts: PlaceWithCourts[]
+  onCourtSelect?: (court: PlaceWithCourts) => void
   onMapClick?: (lng: number, lat: number) => void
   height?: string
   allowAddCourt?: boolean
@@ -172,12 +172,12 @@ export default function LeafletCourtMap({
   enableClustering = true,
   selectedSport = 'all'
 }: LeafletCourtMapProps) {
-  const [selectedCourt, setSelectedCourt] = useState<Court | null>(null)
+  const [selectedCourt, setSelectedCourt] = useState<PlaceWithCourts | null>(null)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [currentLayerId, setCurrentLayerId] = useState<string>(() => getSavedLayerPreference())
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
 
-  const handleCourtSelect = (court: Court) => {
+  const handleCourtSelect = (court: PlaceWithCourts) => {
     setSelectedCourt(court)
     setIsBottomSheetOpen(true)
     onCourtSelect?.(court)

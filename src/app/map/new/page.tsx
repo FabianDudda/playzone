@@ -72,7 +72,7 @@ export default function NewCourtPage() {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [selectedSports, setSelectedSports] = useState<SportType[]>([])
-  const [courtDetails, setCourtDetails] = useState<Record<SportType, CourtDetails>>({})
+  const [courtDetails, setCourtDetails] = useState<Partial<Record<SportType, CourtDetails>>>({})
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [address, setAddress] = useState<AddressComponents>({})
   const [isDetectingAddress, setIsDetectingAddress] = useState(false)
@@ -101,10 +101,14 @@ export default function NewCourtPage() {
         latitude: placeData.latitude,
         longitude: placeData.longitude,
         sports: placeData.sports,
-        description: placeData.description,
-        image_url: placeData.image_url,
+        description: placeData.description || null,
+        image_url: placeData.image_url || null,
         added_by_user: placeData.added_by_user,
         source: 'user_submitted',
+        source_id: null,
+        neighborhood: null,
+        area: null,
+        features: null,
         import_date: new Date().toISOString(),
         // Include address information if available
         street: placeData.address?.street || null,
@@ -596,7 +600,7 @@ export default function NewCourtPage() {
               <div className="space-y-3">
                 <Label>Court Location *</Label>
                 <p className="text-sm text-muted-foreground">
-                  Click on the map to set the exact location of the court. Use "My Location" button to center on your current position if needed.
+                  Click on the map to set the exact location of the court. Use &quot;My Location&quot; button to center on your current position if needed.
                 </p>
                 <div className="border rounded-lg overflow-hidden">
                   <LeafletCourtMap 

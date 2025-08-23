@@ -316,7 +316,7 @@ export default function NewMatchPage() {
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">
-                Leave empty if the match wasn't played at a registered court
+                Leave empty if the match wasn&apos;t played at a registered court
               </p>
             </div>
 

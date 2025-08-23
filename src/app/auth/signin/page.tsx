@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -11,7 +11,7 @@ import { useToast } from '@/hooks/use-toast'
 import { auth } from '@/lib/supabase/auth'
 import { Mail, Lock, LogIn } from 'lucide-react'
 
-export default function SignInPage() {
+function SignInForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -65,7 +65,7 @@ export default function SignInPage() {
         })
         router.push('/')
       }
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'An error occurred',
         description: 'Please try again later.',
@@ -89,7 +89,7 @@ export default function SignInPage() {
           variant: 'destructive',
         })
       }
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'An error occurred',
         description: 'Please try again later.',
@@ -190,7 +190,7 @@ export default function SignInPage() {
           </form>
 
           <div className="text-center text-sm">
-            <span className="text-muted-foreground">Don't have an account? </span>
+            <span className="text-muted-foreground">Don&apos;t have an account? </span>
             <Link href="/auth/signup" className="text-primary hover:underline">
               Sign up
             </Link>
@@ -198,5 +198,13 @@ export default function SignInPage() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignInForm />
+    </Suspense>
   )
 }

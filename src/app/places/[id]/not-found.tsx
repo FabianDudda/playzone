@@ -27,7 +27,7 @@ export default function PlaceNotFound() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-muted-foreground">
-            The place you're looking for doesn't exist or may have been removed.
+            The place you&apos;re looking for doesn&apos;t exist or may have been removed.
           </p>
           <p className="text-sm text-muted-foreground">
             This could happen if:
@@ -35,7 +35,7 @@ export default function PlaceNotFound() {
           <ul className="text-sm text-muted-foreground text-left max-w-md mx-auto space-y-1">
             <li>• The place ID in the URL is incorrect</li>
             <li>• The place has been deleted</li>
-            <li>• You don't have permission to view this place</li>
+            <li>• You don&apos;t have permission to view this place</li>
           </ul>
           
           <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">

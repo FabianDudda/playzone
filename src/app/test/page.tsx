@@ -332,7 +332,7 @@ export default function TestPage() {
               console.error(`❌ [${operationId}] Attempt ${retryCount} failed for place ${place.id}:`, error)
               console.error(`🔍 [${operationId}] Error type:`, typeof error)
               console.error(`🔍 [${operationId}] Error name:`, error?.constructor?.name)
-              console.error(`🔍 [${operationId}] Error stack:`, error?.stack)
+              console.error(`🔍 [${operationId}] Error stack:`, (error as Error)?.stack)
               
               if (retryCount >= maxRetries) {
                 errorCount++
@@ -816,7 +816,7 @@ export default function TestPage() {
                   {uniqueCities.map(city => {
                     const count = allPlaces.filter(place => place.city === city).length
                     return (
-                      <SelectItem key={city} value={city}>
+                      <SelectItem key={city || 'unknown'} value={city || 'unknown'}>
                         {city} ({count})
                       </SelectItem>
                     )
@@ -1015,7 +1015,7 @@ export default function TestPage() {
                         </Button>
                         <Button
                           onClick={() => handleSingleGeocode(place)}
-                          disabled={geocodingPlace === place.id || (place.street && place.city)}
+                          disabled={geocodingPlace === place.id || Boolean(place.street && place.city)}
                           variant="outline"
                           size="sm"
                           className="h-7 px-2 text-xs"

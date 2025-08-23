@@ -10,7 +10,7 @@ import { getSportBadgeClasses, sportNames, sportIcons } from '@/lib/utils/sport-
 import { Metadata } from 'next'
 
 interface PlacePageProps {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 async function getPlace(id: string): Promise<PlaceWithCourts | null> {
@@ -23,7 +23,8 @@ async function getPlace(id: string): Promise<PlaceWithCourts | null> {
 }
 
 export async function generateMetadata({ params }: PlacePageProps): Promise<Metadata> {
-  const place = await getPlace(params.id)
+  const { id } = await params
+  const place = await getPlace(id)
   
   if (!place) {
     return {
@@ -66,7 +67,8 @@ export async function generateMetadata({ params }: PlacePageProps): Promise<Meta
 }
 
 export default async function PlacePage({ params }: PlacePageProps) {
-  const place = await getPlace(params.id)
+  const { id } = await params
+  const place = await getPlace(id)
 
   if (!place) {
     notFound()

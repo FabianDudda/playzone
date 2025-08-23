@@ -92,10 +92,12 @@ export const database = {
           *,
           courts (
             id,
+            place_id,
             sport,
             quantity,
             surface,
-            notes
+            notes,
+            created_at
           ),
           profiles:added_by_user (
             name,
@@ -145,10 +147,12 @@ export const database = {
           *,
           courts (
             id,
+            place_id,
             sport,
             quantity,
             surface,
-            notes
+            notes,
+            created_at
           ),
           profiles:added_by_user (
             name,

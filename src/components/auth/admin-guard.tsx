@@ -61,7 +61,7 @@ export default function AdminGuard({ children, fallback }: AdminGuardProps) {
             </div>
             <CardTitle>Admin Access Required</CardTitle>
             <CardDescription>
-              You don't have permission to access this page. This area is restricted to administrators only.
+              You don&apos;t have permission to access this page. This area is restricted to administrators only.
             </CardDescription>
           </CardHeader>
           <CardContent className="text-center space-y-4">

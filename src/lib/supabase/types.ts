@@ -323,6 +323,10 @@ export type LegacyCourt = Place
 // Combined type for places with their courts
 export interface PlaceWithCourts extends Place {
   courts: Court[]
+  profiles: {
+    name: string
+    avatar: string | null
+  }
 }
 
 export interface EloRatings {

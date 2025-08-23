@@ -91,8 +91,10 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
 
       const marker = L.marker([court.latitude, court.longitude], {
         icon: createSportIcon(sportsForIcon, false), // Use filtered sports for icon
-        placeData: court, // Store court data for cluster processing
-      })
+      } as any)
+      
+      // Store court data for cluster processing
+      ;(marker as any).options.placeData = court
 
       // Remove popup binding - will use bottom sheet instead
 
