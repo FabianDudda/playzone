@@ -153,11 +153,12 @@ function createSimpleSportIcon(sports: string[], baseSize: number, isSelected: b
   // Determine how many icons to show and if we need +X indicator
   const maxDisplayIcons = 3
   const sportsToShow = sports.slice(0, Math.min(maxDisplayIcons, sports.length))
-  const remainingCount = Math.max(0, sports.length - maxDisplayIcons)
-  const showOverflow = remainingCount > 0
+  const showOverflow = sports.length > maxDisplayIcons
   
   // If we have overflow, show first 2 icons + "+X" indicator (replaces 3rd position)
   const iconsToShow = showOverflow ? sportsToShow.slice(0, 2) : sportsToShow
+  // Calculate remaining count based on actual icons shown (2 when overflow, otherwise all)
+  const remainingCount = showOverflow ? Math.max(0, sports.length - 2) : 0
   
   // All pins use consistent size - unified width
   const pinSize = 44

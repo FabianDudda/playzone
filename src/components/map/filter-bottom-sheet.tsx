@@ -36,7 +36,15 @@ export default function FilterBottomSheet({
 }: FilterBottomSheetProps) {
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent side="bottom" className="max-h-[80vh] overflow-y-auto" hideOverlay>
+      <SheetContent 
+        side="bottom" 
+        className="max-h-[80vh] overflow-y-auto" 
+        hideOverlay
+        onInteractOutside={() => {
+          // Allow all outside interactions for filter sheet
+          // This enables map pan/zoom while filter is open
+        }}
+      >
         <SheetHeader>
           <SheetTitle>
             Filter

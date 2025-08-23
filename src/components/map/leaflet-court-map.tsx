@@ -39,9 +39,23 @@ interface LeafletCourtMapProps {
 }
 
 // Component to handle map clicks
-function MapClickHandler({ onMapClick, allowAddCourt }: { onMapClick?: (lng: number, lat: number) => void, allowAddCourt: boolean }) {
+function MapClickHandler({ 
+  onMapClick, 
+  allowAddCourt, 
+  onCloseFilterSheet 
+}: { 
+  onMapClick?: (lng: number, lat: number) => void, 
+  allowAddCourt: boolean,
+  onCloseFilterSheet?: () => void
+}) {
   useMapEvents({
     click: (e) => {
+      // Close filter sheet on any map click (but not map pin sheet)
+      if (onCloseFilterSheet) {
+        onCloseFilterSheet()
+      }
+      
+      // Handle add court clicks
       if (allowAddCourt && onMapClick) {
         onMapClick(e.latlng.lng, e.latlng.lat)
       }
@@ -660,7 +674,13 @@ export default function LeafletCourtMap({
 
   return (
     <div className="relative" style={{ height }}>
-      <div style={{ height: '100%' }} className="rounded-lg overflow-hidden">
+      <div 
+        style={{ height: '100%' }} 
+        className="rounded-lg overflow-hidden"
+        // Ensure map remains interactive even when sheets are open
+        onPointerDown={(e) => e.stopPropagation()}
+        onTouchStart={(e) => e.stopPropagation()}
+      >
         <MapContainer
           center={defaultCenter}
           zoom={7}
@@ -734,7 +754,11 @@ export default function LeafletCourtMap({
           )}
           
           {/* Handle map clicks */}
-          <MapClickHandler onMapClick={onMapClick} allowAddCourt={allowAddCourt} />
+          <MapClickHandler 
+            onMapClick={onMapClick} 
+            allowAddCourt={allowAddCourt} 
+            onCloseFilterSheet={() => setIsFilterSheetOpen(false)}
+          />
           
           {/* User location control */}
           <UserLocationHandler onLocationFound={handleLocationFound} />
@@ -782,7 +806,8 @@ export default function LeafletCourtMap({
           className="h-auto max-h-[80vh] border-0" 
           hideOverlay
           onInteractOutside={(e) => {
-            // Prevent closing when clicking on map pins or map elements
+            // Always prevent the map pin sheet from closing via outside clicks
+            // This sheet should only close via the X button
             e.preventDefault()
           }}
         >

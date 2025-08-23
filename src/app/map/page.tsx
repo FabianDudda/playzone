@@ -83,7 +83,7 @@ export default function CourtsPage() {
   }
 
   return (
-    <div className="h-screen pt-16">
+    <div className="h-[calc(100vh-4rem)]">
       <LeafletCourtMap 
         courts={filteredPlaces}
         onCourtSelect={handlePlaceSelect}
