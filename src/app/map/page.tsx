@@ -83,23 +83,21 @@ export default function CourtsPage() {
   }
 
   return (
-    <div className="h-[calc(100vh-4rem)]">
-      <LeafletCourtMap 
-        courts={filteredPlaces}
-        onCourtSelect={handlePlaceSelect}
-        height="100%"
-        selectedSport={selectedSport}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        onSportChange={(sport) => {
-          setSelectedSport(sport)
-          setSelectedSurface('all') // Reset surface filter when sport changes
-        }}
-        showSearchControls={true}
-        placesCount={filteredPlaces.length}
-        showAddCourtButton={!!user}
-        onAddCourtClick={() => window.location.href = '/map/new'}
-      />
-    </div>
+    <LeafletCourtMap 
+      courts={filteredPlaces}
+      onCourtSelect={handlePlaceSelect}
+      height="calc(100vh - 4rem)"
+      selectedSport={selectedSport}
+      searchQuery={searchQuery}
+      onSearchChange={setSearchQuery}
+      onSportChange={(sport) => {
+        setSelectedSport(sport)
+        setSelectedSurface('all') // Reset surface filter when sport changes
+      }}
+      showSearchControls={true}
+      placesCount={filteredPlaces.length}
+      showAddCourtButton={!!user}
+      onAddCourtClick={() => window.location.href = '/map/new'}
+    />
   )
 }

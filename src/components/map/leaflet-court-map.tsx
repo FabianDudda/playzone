@@ -42,17 +42,23 @@ interface LeafletCourtMapProps {
 function MapClickHandler({ 
   onMapClick, 
   allowAddCourt, 
-  onCloseFilterSheet 
+  onCloseFilterSheet,
+  onCloseMapPinSheet 
 }: { 
   onMapClick?: (lng: number, lat: number) => void, 
   allowAddCourt: boolean,
-  onCloseFilterSheet?: () => void
+  onCloseFilterSheet?: () => void,
+  onCloseMapPinSheet?: () => void
 }) {
   useMapEvents({
     click: (e) => {
-      // Close filter sheet on any map click (but not map pin sheet)
+      console.log('🗺️ Map click detected - closing sheets')
+      // Close both sheets on any map click (but not marker clicks)
       if (onCloseFilterSheet) {
         onCloseFilterSheet()
+      }
+      if (onCloseMapPinSheet) {
+        onCloseMapPinSheet()
       }
       
       // Handle add court clicks
@@ -649,10 +655,29 @@ export default function LeafletCourtMap({
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false)
 
+  // Debug: Track state changes
+  useEffect(() => {
+    console.log('📊 State changed:', {
+      isBottomSheetOpen,
+      selectedCourtId: selectedCourt?.id,
+      selectedCourtName: selectedCourt?.name
+    })
+  }, [isBottomSheetOpen, selectedCourt])
+
   const handleCourtSelect = (court: PlaceWithCourts) => {
+    console.log('🎯 handleCourtSelect called:', {
+      courtId: court.id,
+      courtName: court.name,
+      isBottomSheetOpen,
+      previousCourtId: selectedCourt?.id
+    })
+    
     setSelectedCourt(court)
     if (!isBottomSheetOpen) {
+      console.log('📂 Opening bottom sheet')
       setIsBottomSheetOpen(true)
+    } else {
+      console.log('📂 Bottom sheet already open, just updating content')
     }
     onCourtSelect?.(court)
   }
@@ -674,21 +699,14 @@ export default function LeafletCourtMap({
 
   return (
     <div className="relative" style={{ height }}>
-      <div 
-        style={{ height: '100%' }} 
-        className="rounded-lg overflow-hidden"
-        // Ensure map remains interactive even when sheets are open
-        onPointerDown={(e) => e.stopPropagation()}
-        onTouchStart={(e) => e.stopPropagation()}
+      <MapContainer
+        center={defaultCenter}
+        zoom={7}
+        style={{ height: '100%', width: '100%' }}
+        scrollWheelZoom={true}
+        zoomControl={false}
+        attributionControl={false}
       >
-        <MapContainer
-          center={defaultCenter}
-          zoom={7}
-          style={{ height: '100%', width: '100%' }}
-          scrollWheelZoom={true}
-          zoomControl={false}
-          attributionControl={false}
-        >
           {/* Dynamic tile layer based on user selection */}
           <TileLayer
             attribution={currentLayer.attribution}
@@ -728,7 +746,12 @@ export default function LeafletCourtMap({
                 position={[court.latitude, court.longitude]}
                 icon={createSportIcon(sportsForIcon, false)}
                 eventHandlers={{
-                  click: () => {
+                  click: (e) => {
+                    console.log('📍 Regular marker clicked:', {
+                      courtId: court.id,
+                      eventPropagationStopped: true
+                    })
+                    e.originalEvent.stopPropagation()
                     handleCourtSelect(court)
                   }
                 }}
@@ -758,6 +781,11 @@ export default function LeafletCourtMap({
             onMapClick={onMapClick} 
             allowAddCourt={allowAddCourt} 
             onCloseFilterSheet={() => setIsFilterSheetOpen(false)}
+            onCloseMapPinSheet={() => {
+              console.log('🗺️ Explicitly closing map pin sheet via map click')
+              setSelectedCourt(null) // Clear selected court first
+              setIsBottomSheetOpen(false)
+            }}
           />
           
           {/* User location control */}
@@ -787,7 +815,6 @@ export default function LeafletCourtMap({
             <AddCourtButtonHandler onAddCourtClick={onAddCourtClick} />
           )}
         </MapContainer>
-      </div>
       
       {/* Add court instruction */}
       {allowAddCourt && (
@@ -800,16 +827,28 @@ export default function LeafletCourtMap({
       )}
 
       {/* Bottom Sheet for Court Details */}
-      <Sheet open={isBottomSheetOpen} onOpenChange={setIsBottomSheetOpen}>
+      <Sheet 
+        open={isBottomSheetOpen} 
+        onOpenChange={(open) => {
+          console.log('📋 Sheet onOpenChange triggered:', {
+            open,
+            previousState: isBottomSheetOpen,
+            selectedCourtId: selectedCourt?.id
+          })
+          // Only allow closing if explicitly requested (open = false)
+          // Ignore unexpected close events when sheet should be open
+          if (open === false && selectedCourt) {
+            console.log('🚫 Ignoring unexpected sheet close - court is selected')
+            return
+          }
+          setIsBottomSheetOpen(open)
+        }} 
+        modal={false}
+      >
         <SheetContent 
           side="bottom" 
-          className="h-auto max-h-[80vh] border-0" 
+          className="h-auto max-h-[80vh] border-0"
           hideOverlay
-          onInteractOutside={(e) => {
-            // Always prevent the map pin sheet from closing via outside clicks
-            // This sheet should only close via the X button
-            e.preventDefault()
-          }}
         >
           {selectedCourt && (
             <div className="space-y-4">

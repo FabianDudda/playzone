@@ -99,7 +99,12 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
       // Remove popup binding - will use bottom sheet instead
 
       // Handle marker clicks - trigger bottom sheet
-      marker.on('click', () => {
+      marker.on('click', (e) => {
+        console.log('📍 Clustered marker clicked:', {
+          courtId: court.id,
+          eventPropagationStopped: true
+        })
+        e.originalEvent.stopPropagation()
         onCourtSelect?.(court)
       })
 
