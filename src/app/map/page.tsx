@@ -86,7 +86,7 @@ export default function CourtsPage() {
     <LeafletCourtMap 
       courts={filteredPlaces}
       onCourtSelect={handlePlaceSelect}
-      height="calc(100vh - 4rem)"
+      height="calc(100dvh - 4rem)"
       selectedSport={selectedSport}
       searchQuery={searchQuery}
       onSearchChange={setSearchQuery}

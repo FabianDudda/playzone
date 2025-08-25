@@ -129,11 +129,36 @@
   padding: 8px !important;
 }
 
+/* Dynamic viewport height support for mobile browsers */
+:root {
+  /* Fallback for browsers that don't support dvh */
+  --vh: 1vh;
+  /* Custom property that can be updated via JS if needed */
+  --mobile-vh: 100vh;
+}
+
+/* Ensure 100dvh has fallback support */
+@supports not (height: 100dvh) {
+  /* For older browsers, provide JavaScript-based viewport height */
+  .mobile-responsive-height {
+    height: var(--mobile-vh);
+  }
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .layer-select {
     min-width: 80px !important;
     font-size: 13px !important;
     padding: 6px 10px !important;
+  }
+  
+  /* Ensure mobile browsers with dynamic UI bars work correctly */
+  html, body {
+    /* Prevent overscroll on mobile */
+    overscroll-behavior: none;
+    /* Use full viewport height including dynamic areas */
+    height: 100dvh;
+    height: var(--mobile-vh); /* Fallback */
   }
 }
