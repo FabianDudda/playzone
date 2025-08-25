@@ -654,6 +654,7 @@ export default function LeafletCourtMap({
   const [currentLayerId, setCurrentLayerId] = useState<string>(() => getSavedLayerPreference())
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false)
+  const isClosingExplicitly = useRef(false)
 
   // Debug: Track state changes
   useEffect(() => {
@@ -680,6 +681,12 @@ export default function LeafletCourtMap({
       console.log('📂 Bottom sheet already open, just updating content')
     }
     onCourtSelect?.(court)
+  }
+
+  const handleExplicitClose = () => {
+    console.log('🗂️ Explicit close requested - clearing selection and closing sheet')
+    setSelectedCourt(null)
+    setIsBottomSheetOpen(false)
   }
 
   const handleLocationFound = (lat: number, lng: number) => {
@@ -783,8 +790,7 @@ export default function LeafletCourtMap({
             onCloseFilterSheet={() => setIsFilterSheetOpen(false)}
             onCloseMapPinSheet={() => {
               console.log('🗺️ Explicitly closing map pin sheet via map click')
-              setSelectedCourt(null) // Clear selected court first
-              setIsBottomSheetOpen(false)
+              handleExplicitClose()
             }}
           />
           
@@ -833,14 +839,25 @@ export default function LeafletCourtMap({
           console.log('📋 Sheet onOpenChange triggered:', {
             open,
             previousState: isBottomSheetOpen,
-            selectedCourtId: selectedCourt?.id
+            selectedCourtId: selectedCourt?.id,
+            isClosingExplicitly: isClosingExplicitly.current
           })
-          // Only allow closing if explicitly requested (open = false)
-          // Ignore unexpected close events when sheet should be open
-          if (open === false && selectedCourt) {
-            console.log('🚫 Ignoring unexpected sheet close - court is selected')
-            return
+          
+          if (open === false) {
+            // If this is an explicit close (map click), it's already handled
+            if (isClosingExplicitly.current) {
+              console.log('🗂️ Explicit close - already handled by trigger')
+              isClosingExplicitly.current = false
+              return
+            }
+            
+            // Prevent unwanted closes when a court is selected
+            if (selectedCourt) {
+              console.log('🚫 Ignoring close - court is selected, use explicit close instead')
+              return
+            }
           }
+          
           setIsBottomSheetOpen(open)
         }} 
         modal={false}
@@ -849,6 +866,7 @@ export default function LeafletCourtMap({
           side="bottom" 
           className="h-auto max-h-[80vh] border-0"
           hideOverlay
+          onClose={handleExplicitClose}
         >
           {selectedCourt && (
             <div className="space-y-4">
@@ -863,7 +881,7 @@ export default function LeafletCourtMap({
                       </p>
                     )}
                   </div>
-                  {/* Testing button in top-right corner */}
+                  {/* View Details button */}
                   <Button 
                     variant="ghost" 
                     size="sm"
