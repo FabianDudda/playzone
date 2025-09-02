@@ -65,20 +65,20 @@ function ModerationStats() {
       </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Community Edits</CardTitle>
+          <Edit className="h-4 w-4 text-blue-600" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{stats?.community_edits || 0}</div>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Approved</CardTitle>
           <CheckCircle className="h-4 w-4 text-green-600" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{stats?.approved || 0}</div>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Rejected</CardTitle>
-          <XCircle className="h-4 w-4 text-red-600" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{stats?.rejected || 0}</div>
         </CardContent>
       </Card>
       <Card>
@@ -683,7 +683,6 @@ function AdminPlacesPage() {
           <TabsTrigger value="pending">Pending Places</TabsTrigger>
           <TabsTrigger value="community-edits">Community Edits</TabsTrigger>
           <TabsTrigger value="approved">Approved</TabsTrigger>
-          <TabsTrigger value="rejected">Rejected</TabsTrigger>
         </TabsList>
 
         <TabsContent value="pending">
@@ -724,22 +723,6 @@ function AdminPlacesPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="rejected">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <XCircle className="h-5 w-5 text-red-600" />
-                Rejected Places
-              </CardTitle>
-              <CardDescription>
-                Places that have been rejected with reasons.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <PlacesList status="rejected" />
-            </CardContent>
-          </Card>
-        </TabsContent>
       </Tabs>
     </div>
   )

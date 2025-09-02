@@ -4,17 +4,18 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/components/providers/auth-provider'
 import { Button } from '@/components/ui/button'
-import { MapPin, Trophy, Plus, User, LogOut, Menu, TestTube } from 'lucide-react'
+import { MapPin, Trophy, Plus, User, LogOut, Menu, TestTube, Shield } from 'lucide-react'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '@/components/ui/sheet'
 
 export default function Header() {
-  const { user, profile, signOut, loading } = useAuth()
+  const { user, profile, signOut, loading, isAdmin } = useAuth()
 
   const navigation = [
     { name: 'Map', href: '/map', icon: MapPin },
     { name: 'Rankings', href: '/rankings', icon: Trophy },
     { name: 'Add Match', href: '/matches/new', icon: Plus },
     { name: 'Test', href: '/test', icon: TestTube },
+    { name: 'Admin', href: '/admin/places', icon: Shield, adminOnly: true },
     { name: 'Profile', href: '/profile', icon: User },
     { name: 'Sign Out', href: '#', icon: LogOut, action: 'signOut' },
   ]
@@ -43,6 +44,7 @@ export default function Header() {
             <div className="flex flex-col space-y-3">
               {navigation.map((item) => {
                 if ((item.name === 'Profile' || item.name === 'Sign Out') && !user) return null
+                if (item.adminOnly && !isAdmin) return null
                 
                 if (item.action === 'signOut') {
                   return (
@@ -106,6 +108,7 @@ export default function Header() {
           <nav className="hidden gap-6 md:flex">
             {navigation.map((item) => {
               if ((item.name === 'Profile' || item.name === 'Sign Out') && !user) return null
+              if (item.adminOnly && !isAdmin) return null
               
               if (item.action === 'signOut') {
                 return (

@@ -842,7 +842,7 @@ export default function LeafletCourtMap({
           side="bottom" 
           className={`border-0 transition-all duration-300 ${
             isBottomSheetExpanded 
-              ? 'h-[85vh] max-h-[90vh]' 
+              ? 'h-[100vh] pt-safe' 
               : 'h-auto max-h-[45vh]'
           }`}
           hideOverlay

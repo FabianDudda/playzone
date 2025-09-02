@@ -667,16 +667,18 @@ export const database = {
       return { data: data[0], error }
     },
 
-    // Reject a place
+    // Reject a place (delete it from database)
     rejectPlace: async (placeId: string, moderatorId: string, reason: string) => {
+      // First delete any related courts
+      await supabase
+        .from('courts')
+        .delete()
+        .eq('place_id', placeId)
+      
+      // Then delete the place itself
       const { data, error } = await supabase
         .from('places')
-        .update({
-          moderation_status: 'rejected',
-          moderated_by: moderatorId,
-          moderated_at: new Date().toISOString(),
-          rejection_reason: reason
-        })
+        .delete()
         .eq('id', placeId)
         .select()
         .single()
@@ -716,17 +718,17 @@ export const database = {
 
     // Get moderation stats
     getModerationStats: async () => {
-      const [pendingResult, approvedResult, rejectedResult] = await Promise.all([
+      const [pendingResult, approvedResult, communityEditsResult] = await Promise.all([
         supabase.from('places').select('id', { count: 'exact' }).eq('moderation_status', 'pending'),
         supabase.from('places').select('id', { count: 'exact' }).eq('moderation_status', 'approved'),
-        supabase.from('places').select('id', { count: 'exact' }).eq('moderation_status', 'rejected')
+        supabase.from('pending_place_changes').select('id', { count: 'exact' }).eq('status', 'pending')
       ])
       
       return {
         pending: pendingResult.count || 0,
         approved: approvedResult.count || 0,
-        rejected: rejectedResult.count || 0,
-        total: (pendingResult.count || 0) + (approvedResult.count || 0) + (rejectedResult.count || 0)
+        community_edits: communityEditsResult.count || 0,
+        total: (pendingResult.count || 0) + (approvedResult.count || 0)
       }
     }
   },
