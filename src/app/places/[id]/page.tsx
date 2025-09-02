@@ -5,9 +5,10 @@ import { PlaceWithCourts } from '@/lib/supabase/types'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { MapPin, ArrowLeft, Share2, Calendar, Users, Navigation } from 'lucide-react'
+import { MapPin, ArrowLeft, Share2, Calendar, Users, Navigation, Edit } from 'lucide-react'
 import { getSportBadgeClasses, sportNames, sportIcons } from '@/lib/utils/sport-utils'
 import { Metadata } from 'next'
+import PlaceActions from '@/components/places/place-actions'
 
 interface PlacePageProps {
   params: Promise<{ id: string }>
@@ -161,22 +162,7 @@ export default async function PlacePage({ params }: PlacePageProps) {
             )}
 
             {/* Actions */}
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm">
-                <Share2 className="h-4 w-4 mr-2" />
-                Share
-              </Button>
-              <Button variant="outline" size="sm" asChild>
-                <a 
-                  href={`https://maps.google.com/?q=${place.latitude},${place.longitude}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Navigation className="h-4 w-4 mr-2" />
-                  Directions
-                </a>
-              </Button>
-            </div>
+            <PlaceActions place={place} />
           </div>
 
           {/* Place Image */}

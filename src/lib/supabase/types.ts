@@ -35,6 +35,11 @@ export type Database = {
           state: string | null
           country: string | null
           postcode: string | null
+          // Moderation fields
+          moderation_status: Database["public"]["Enums"]["moderation_status"]
+          moderated_by: string | null
+          moderated_at: string | null
+          rejection_reason: string | null
         }
         Insert: {
           added_by_user: string
@@ -61,6 +66,11 @@ export type Database = {
           state?: string | null
           country?: string | null
           postcode?: string | null
+          // Moderation fields
+          moderation_status?: Database["public"]["Enums"]["moderation_status"]
+          moderated_by?: string | null
+          moderated_at?: string | null
+          rejection_reason?: string | null
         }
         Update: {
           added_by_user?: string
@@ -87,11 +97,90 @@ export type Database = {
           state?: string | null
           country?: string | null
           postcode?: string | null
+          // Moderation fields
+          moderation_status?: Database["public"]["Enums"]["moderation_status"]
+          moderated_by?: string | null
+          moderated_at?: string | null
+          rejection_reason?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "places_added_by_user_fkey"
             columns: ["added_by_user"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "places_moderated_by_fkey"
+            columns: ["moderated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pending_place_changes: {
+        Row: {
+          id: string
+          place_id: string | null
+          submitted_by: string
+          change_type: Database["public"]["Enums"]["place_change_type"]
+          proposed_data: Json
+          current_data: Json | null
+          status: Database["public"]["Enums"]["moderation_status"]
+          reviewed_by: string | null
+          reviewed_at: string | null
+          rejection_reason: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          place_id?: string | null
+          submitted_by: string
+          change_type: Database["public"]["Enums"]["place_change_type"]
+          proposed_data: Json
+          current_data?: Json | null
+          status?: Database["public"]["Enums"]["moderation_status"]
+          reviewed_by?: string | null
+          reviewed_at?: string | null
+          rejection_reason?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          place_id?: string | null
+          submitted_by?: string
+          change_type?: Database["public"]["Enums"]["place_change_type"]
+          proposed_data?: Json
+          current_data?: Json | null
+          status?: Database["public"]["Enums"]["moderation_status"]
+          reviewed_by?: string | null
+          reviewed_at?: string | null
+          rejection_reason?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pending_place_changes_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pending_place_changes_submitted_by_fkey"
+            columns: ["submitted_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pending_place_changes_reviewed_by_fkey"
+            columns: ["reviewed_by"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -300,6 +389,8 @@ export type Database = {
     }
     Enums: {
       match_result: "team_a" | "team_b" | "draw"
+      moderation_status: "pending" | "approved" | "rejected"
+      place_change_type: "create" | "update" | "delete"
       sport_type: "tennis" | "basketball" | "volleyball" | "spikeball" | "badminton" | "squash" | "pickleball" | "fußball" | "tischtennis" | "boule" | "skatepark"
     }
     CompositeTypes: {
@@ -310,12 +401,15 @@ export type Database = {
 
 export type SportType = Database["public"]["Enums"]["sport_type"]
 export type MatchResult = Database["public"]["Enums"]["match_result"]
+export type ModerationStatus = Database["public"]["Enums"]["moderation_status"]
+export type PlaceChangeType = Database["public"]["Enums"]["place_change_type"]
 
 export type Profile = Database["public"]["Tables"]["profiles"]["Row"]
 export type Place = Database["public"]["Tables"]["places"]["Row"]
 export type Court = Database["public"]["Tables"]["courts"]["Row"]
 export type Match = Database["public"]["Tables"]["matches"]["Row"]
 export type MatchParticipant = Database["public"]["Tables"]["match_participants"]["Row"]
+export type PendingPlaceChange = Database["public"]["Tables"]["pending_place_changes"]["Row"]
 
 // Legacy type for backward compatibility (maps to Place)
 export type LegacyCourt = Place

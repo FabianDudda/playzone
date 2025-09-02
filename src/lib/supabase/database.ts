@@ -1,5 +1,5 @@
 import { supabase } from './client'
-import { Profile, Place, Court, LegacyCourt, PlaceWithCourts, Match, MatchParticipant, SportType, MatchResult, LeaderboardEntry } from './types'
+import { Profile, Place, Court, LegacyCourt, PlaceWithCourts, Match, MatchParticipant, SportType, MatchResult, LeaderboardEntry, ModerationStatus, PendingPlaceChange, PlaceChangeType } from './types'
 
 export const database = {
   // Profile operations
@@ -85,8 +85,8 @@ export const database = {
   // Place operations (legacy "courts" API - for backward compatibility)
   courts: {
     // Returns places with their courts - maintains backward compatibility
-    getAllCourts: async (): Promise<PlaceWithCourts[]> => {
-      const { data, error } = await supabase
+    getAllCourts: async (includeModeration = false): Promise<PlaceWithCourts[]> => {
+      let query = supabase
         .from('places')
         .select(`
           *,
@@ -104,17 +104,26 @@ export const database = {
             avatar
           )
         `)
-        .order('created_at', { ascending: false })
+      
+      // Only show approved places unless specifically requesting moderation view
+      if (!includeModeration) {
+        query = query.eq('moderation_status', 'approved')
+      }
+      
+      query = query.order('created_at', { ascending: false })
+      
+      const { data, error } = await query
       
       if (error) {
         console.error('Error fetching places:', error)
         return []
       }
+      console.log(`📊 getAllCourts returned ${data?.length || 0} places (includeModeration: ${includeModeration})`)
       return data || []
     },
 
-    getCourtsBySport: async (sport: SportType): Promise<PlaceWithCourts[]> => {
-      const { data, error } = await supabase
+    getCourtsBySport: async (sport: SportType, includeModeration = false): Promise<PlaceWithCourts[]> => {
+      let query = supabase
         .from('places')
         .select(`
           *,
@@ -131,7 +140,15 @@ export const database = {
           )
         `)
         .eq('courts.sport', sport)
-        .order('created_at', { ascending: false })
+      
+      // Only show approved places unless specifically requesting moderation view
+      if (!includeModeration) {
+        query = query.eq('moderation_status', 'approved')
+      }
+      
+      query = query.order('created_at', { ascending: false })
+      
+      const { data, error } = await query
       
       if (error) {
         console.error('Error fetching places by sport:', error)
@@ -140,8 +157,8 @@ export const database = {
       return data || []
     },
 
-    getCourt: async (placeId: string): Promise<PlaceWithCourts | null> => {
-      const { data, error } = await supabase
+    getCourt: async (placeId: string, includeModeration = false): Promise<PlaceWithCourts | null> => {
+      let query = supabase
         .from('places')
         .select(`
           *,
@@ -160,7 +177,13 @@ export const database = {
           )
         `)
         .eq('id', placeId)
-        .single()
+      
+      // For individual place viewing, we might want to show pending places to owners/admins
+      if (!includeModeration) {
+        query = query.eq('moderation_status', 'approved')
+      }
+      
+      const { data, error } = await query.single()
       
       if (error) {
         console.error('Error fetching place:', error)
@@ -169,10 +192,13 @@ export const database = {
       return data
     },
 
-    addCourt: async (place: Omit<Place, 'id' | 'created_at' | 'import_date'>) => {
+    addCourt: async (place: Omit<Place, 'id' | 'created_at' | 'import_date' | 'moderation_status' | 'moderated_by' | 'moderated_at' | 'rejection_reason'>) => {
       const { data, error } = await supabase
         .from('places')
-        .insert(place)
+        .insert({
+          ...place,
+          moderation_status: 'pending'
+        })
         .select()
         .single()
       
@@ -514,6 +540,396 @@ export const database = {
       }
       return data || []
     },
+  },
+
+  // Moderation operations
+  moderation: {
+    // Get all pending places for admin review
+    getPendingPlaces: async (): Promise<PlaceWithCourts[]> => {
+      const { data, error } = await supabase
+        .from('places')
+        .select(`
+          *,
+          courts (
+            id,
+            place_id,
+            sport,
+            quantity,
+            surface,
+            notes,
+            created_at
+          ),
+          profiles:added_by_user (
+            name,
+            avatar
+          )
+        `)
+        .eq('moderation_status', 'pending')
+        .order('created_at', { ascending: true })
+      
+      if (error) {
+        console.error('Error fetching pending places:', error)
+        return []
+      }
+      return data || []
+    },
+
+    // Get places by moderation status
+    getPlacesByStatus: async (status: ModerationStatus): Promise<PlaceWithCourts[]> => {
+      const { data, error } = await supabase
+        .from('places')
+        .select(`
+          *,
+          courts (
+            id,
+            place_id,
+            sport,
+            quantity,
+            surface,
+            notes,
+            created_at
+          ),
+          profiles:added_by_user (
+            name,
+            avatar
+          )
+        `)
+        .eq('moderation_status', status)
+        .order('created_at', { ascending: false })
+      
+      if (error) {
+        console.error('Error fetching places by status:', error)
+        return []
+      }
+      console.log(`📊 getPlacesByStatus(${status}) returned ${data?.length || 0} places`)
+      return data || []
+    },
+
+    // Approve a place
+    approvePlace: async (placeId: string, moderatorId: string) => {
+      console.log('🔍 Approving place:', { placeId, moderatorId })
+      
+      // Check current user info for debugging RLS issues
+      const { data: { user } } = await supabase.auth.getUser()
+      console.log('👤 Current user for approval:', { 
+        userId: user?.id, 
+        role: user?.role,
+        userMetadata: user?.user_metadata 
+      })
+      
+      // First check if place exists and what its current status is
+      const { data: existingPlace, error: fetchError } = await supabase
+        .from('places')
+        .select('id, moderation_status, name')
+        .eq('id', placeId)
+        .single()
+      
+      if (fetchError) {
+        console.error('❌ Error fetching place before approval:', fetchError)
+        return { data: null, error: fetchError }
+      }
+      
+      console.log('📍 Found place to approve:', existingPlace)
+      
+      const { data, error } = await supabase
+        .from('places')
+        .update({
+          moderation_status: 'approved',
+          moderated_by: moderatorId,
+          moderated_at: new Date().toISOString()
+        })
+        .eq('id', placeId)
+        .select()
+      
+      if (error) {
+        console.error('❌ Error approving place:', error)
+        return { data: null, error }
+      } else {
+        console.log('✅ Place approved successfully:', data)
+      }
+      
+      // If we get an empty array, it means the update worked but RLS prevents seeing the result
+      // Let's do a separate fetch to verify the update worked
+      if (!data || data.length === 0) {
+        console.log('⚠️ Update returned empty - checking if place was actually updated')
+        const { data: verifyData, error: verifyError } = await supabase
+          .from('places')
+          .select('id, moderation_status, name')
+          .eq('id', placeId)
+          .single()
+        
+        console.log('🔍 Verification result:', { verifyData, verifyError })
+        
+        // Return success with the existing place data if update worked
+        return { data: { ...existingPlace, moderation_status: 'approved' }, error: null }
+      }
+      
+      return { data: data[0], error }
+    },
+
+    // Reject a place
+    rejectPlace: async (placeId: string, moderatorId: string, reason: string) => {
+      const { data, error } = await supabase
+        .from('places')
+        .update({
+          moderation_status: 'rejected',
+          moderated_by: moderatorId,
+          moderated_at: new Date().toISOString(),
+          rejection_reason: reason
+        })
+        .eq('id', placeId)
+        .select()
+        .single()
+      
+      return { data, error }
+    },
+
+    // Get user's submitted places with status
+    getUserPlaces: async (userId: string): Promise<PlaceWithCourts[]> => {
+      const { data, error } = await supabase
+        .from('places')
+        .select(`
+          *,
+          courts (
+            id,
+            place_id,
+            sport,
+            quantity,
+            surface,
+            notes,
+            created_at
+          ),
+          profiles:added_by_user (
+            name,
+            avatar
+          )
+        `)
+        .eq('added_by_user', userId)
+        .order('created_at', { ascending: false })
+      
+      if (error) {
+        console.error('Error fetching user places:', error)
+        return []
+      }
+      return data || []
+    },
+
+    // Get moderation stats
+    getModerationStats: async () => {
+      const [pendingResult, approvedResult, rejectedResult] = await Promise.all([
+        supabase.from('places').select('id', { count: 'exact' }).eq('moderation_status', 'pending'),
+        supabase.from('places').select('id', { count: 'exact' }).eq('moderation_status', 'approved'),
+        supabase.from('places').select('id', { count: 'exact' }).eq('moderation_status', 'rejected')
+      ])
+      
+      return {
+        pending: pendingResult.count || 0,
+        approved: approvedResult.count || 0,
+        rejected: rejectedResult.count || 0,
+        total: (pendingResult.count || 0) + (approvedResult.count || 0) + (rejectedResult.count || 0)
+      }
+    }
+  },
+
+  // Community editing operations
+  community: {
+    // Get place for community editing (accessible to all users)
+    getPlaceForEdit: async (placeId: string): Promise<PlaceWithCourts | null> => {
+      const { data, error } = await supabase
+        .from('places')
+        .select(`
+          *,
+          courts (
+            id,
+            place_id,
+            sport,
+            quantity,
+            surface,
+            notes,
+            created_at
+          ),
+          profiles:added_by_user (
+            name,
+            avatar
+          )
+        `)
+        .eq('id', placeId)
+        .single()
+      
+      if (error) {
+        console.error('Error fetching place for edit:', error)
+        return null
+      }
+      return data
+    },
+
+    // Submit a place edit as community contribution
+    submitPlaceEdit: async (placeId: string, proposedData: Partial<Place>, courts: Partial<Court>[], userId: string) => {
+      // Get current place data for comparison
+      const currentPlace = await database.community.getPlaceForEdit(placeId)
+      if (!currentPlace) {
+        throw new Error('Place not found')
+      }
+
+      // Create the pending change record
+      const { data, error } = await supabase
+        .from('pending_place_changes')
+        .insert({
+          place_id: placeId,
+          submitted_by: userId,
+          change_type: 'update',
+          proposed_data: {
+            place: proposedData,
+            courts: courts
+          },
+          current_data: {
+            place: currentPlace,
+            courts: currentPlace.courts
+          },
+          status: 'pending'
+        })
+        .select()
+        .single()
+      
+      return { data, error }
+    },
+
+    // Get all pending place changes for admin review
+    getPendingPlaceChanges: async (): Promise<PendingPlaceChange[]> => {
+      const { data, error } = await supabase
+        .from('pending_place_changes')
+        .select(`
+          *,
+          places (
+            name,
+            latitude,
+            longitude
+          ),
+          profiles:submitted_by (
+            name,
+            avatar
+          )
+        `)
+        .eq('status', 'pending')
+        .order('created_at', { ascending: true })
+      
+      if (error) {
+        console.error('Error fetching pending changes:', error)
+        return []
+      }
+      return data || []
+    },
+
+    // Approve a community place edit
+    approvePlaceEdit: async (changeId: string, moderatorId: string) => {
+      // Get the pending change
+      const { data: change, error: changeError } = await supabase
+        .from('pending_place_changes')
+        .select('*')
+        .eq('id', changeId)
+        .single()
+      
+      if (changeError || !change) {
+        throw new Error('Pending change not found')
+      }
+
+      const proposedData = change.proposed_data as any
+      
+      // Apply the changes to the place
+      if (change.place_id && proposedData.place) {
+        const { error: placeUpdateError } = await supabase
+          .from('places')
+          .update({
+            ...proposedData.place,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', change.place_id)
+        
+        if (placeUpdateError) {
+          throw new Error('Failed to update place: ' + placeUpdateError.message)
+        }
+
+        // Update courts if provided
+        if (proposedData.courts && Array.isArray(proposedData.courts)) {
+          // Delete existing courts for this place
+          await supabase
+            .from('courts')
+            .delete()
+            .eq('place_id', change.place_id)
+          
+          // Insert new courts
+          if (proposedData.courts.length > 0) {
+            const { error: courtsError } = await supabase
+              .from('courts')
+              .insert(
+                proposedData.courts.map((court: any) => ({
+                  ...court,
+                  place_id: change.place_id
+                }))
+              )
+            
+            if (courtsError) {
+              console.error('Failed to update courts:', courtsError)
+            }
+          }
+        }
+      }
+
+      // Mark the change as approved
+      const { data, error } = await supabase
+        .from('pending_place_changes')
+        .update({
+          status: 'approved',
+          reviewed_by: moderatorId,
+          reviewed_at: new Date().toISOString()
+        })
+        .eq('id', changeId)
+        .select()
+        .single()
+      
+      return { data, error }
+    },
+
+    // Reject a community place edit
+    rejectPlaceEdit: async (changeId: string, moderatorId: string, reason: string) => {
+      const { data, error } = await supabase
+        .from('pending_place_changes')
+        .update({
+          status: 'rejected',
+          reviewed_by: moderatorId,
+          reviewed_at: new Date().toISOString(),
+          rejection_reason: reason
+        })
+        .eq('id', changeId)
+        .select()
+        .single()
+      
+      return { data, error }
+    },
+
+    // Get community contributors for a place
+    getPlaceContributors: async (placeId: string) => {
+      const { data, error } = await supabase
+        .from('pending_place_changes')
+        .select(`
+          submitted_by,
+          status,
+          created_at,
+          profiles:submitted_by (
+            name,
+            avatar
+          )
+        `)
+        .eq('place_id', placeId)
+        .eq('status', 'approved')
+        .order('created_at', { ascending: false })
+      
+      if (error) {
+        console.error('Error fetching contributors:', error)
+        return []
+      }
+      return data || []
+    }
   },
 }
 

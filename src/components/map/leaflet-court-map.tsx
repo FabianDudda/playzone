@@ -6,7 +6,8 @@ import { Court, SportType, PlaceWithCourts } from '@/lib/supabase/types'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
-import { Plus, MapPin, Navigation, Share2, Heart, Search, Filter } from 'lucide-react'
+import { Plus, MapPin, Navigation, Share2, Heart, Search, Filter, Edit } from 'lucide-react'
+import { useAuth } from '@/components/providers/auth-provider'
 import FilterBottomSheet from './filter-bottom-sheet'
 import { sportNames, getSportBadgeClasses, sportIcons } from '@/lib/utils/sport-utils'
 import { createSportIcon, createUserLocationIcon, createSelectedLocationIcon } from '@/lib/utils/sport-styles'
@@ -549,6 +550,7 @@ export default function LeafletCourtMap({
   showAddCourtButton = false,
   onAddCourtClick
 }: LeafletCourtMapProps) {
+  const { user, profile } = useAuth()
   const [selectedCourt, setSelectedCourt] = useState<PlaceWithCourts | null>(null)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [currentLayerId, setCurrentLayerId] = useState<string>(() => getSavedLayerPreference())
@@ -953,55 +955,76 @@ export default function LeafletCourtMap({
                   )
                 })()}
                 
-                {/* Action buttons row - only show when expanded */}
-                {isBottomSheetExpanded && (
-                  <div className="flex gap-2 pt-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="flex-1"
-                    onClick={() => {
-                      // TODO: Implement save functionality
-                      console.log('Save place:', selectedCourt.id)
-                    }}
-                  >
-                    <Heart className="h-4 w-4 mr-1" />
-                    Save
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="flex-1"
-                    onClick={() => {
-                      const url = `https://maps.google.com/?q=${selectedCourt.latitude},${selectedCourt.longitude}`
-                      window.open(url, '_blank', 'noopener,noreferrer')
-                    }}
-                  >
-                    <Navigation className="h-4 w-4 mr-1" />
-                    Directions
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="flex-1"
-                    onClick={() => {
-                      // TODO: Implement share functionality
-                      if (navigator.share) {
-                        navigator.share({
-                          title: selectedCourt.name,
-                          text: `Check out ${selectedCourt.name}`,
-                          url: `${window.location.origin}/places/${selectedCourt.id}`
-                        }).catch(err => console.log('Share failed:', err))
-                      } else {
-                        console.log('Share not supported')
-                      }
-                    }}
-                  >
-                    <Share2 className="h-4 w-4 mr-1" />
-                    Share
-                  </Button>
-                  </div>
-                )}
+                {/* Action buttons - only show when expanded */}
+                {isBottomSheetExpanded && (() => {
+                  const isAdmin = profile?.user_role === 'admin'
+                  const canEdit = !!user // Any authenticated user can edit (community-based)
+                  
+                  return (
+                    <div className="space-y-2 pt-2">
+                      {/* Edit button (if can edit) */}
+                      {canEdit && (
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="w-full"
+                          onClick={() => window.location.href = `/places/${selectedCourt.id}/edit`}
+                        >
+                          <Edit className="h-4 w-4 mr-2" />
+                          {isAdmin ? 'Edit Place' : 'Suggest Edit'}
+                        </Button>
+                      )}
+                      
+                      {/* Other action buttons */}
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="flex-1"
+                          onClick={() => {
+                            // TODO: Implement save functionality
+                            console.log('Save place:', selectedCourt.id)
+                          }}
+                        >
+                          <Heart className="h-4 w-4 mr-1" />
+                          Save
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="flex-1"
+                          onClick={() => {
+                            const url = `https://maps.google.com/?q=${selectedCourt.latitude},${selectedCourt.longitude}`
+                            window.open(url, '_blank', 'noopener,noreferrer')
+                          }}
+                        >
+                          <Navigation className="h-4 w-4 mr-1" />
+                          Directions
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="flex-1"
+                          onClick={() => {
+                            // TODO: Implement share functionality
+                            if (navigator.share) {
+                              navigator.share({
+                                title: selectedCourt.name,
+                                text: `Check out ${selectedCourt.name}`,
+                                url: `${window.location.origin}/places/${selectedCourt.id}`
+                              }).catch(err => console.log('Share failed:', err))
+                            } else {
+                              console.log('Share not supported')
+                            }
+                          }}
+                        >
+                          <Share2 className="h-4 w-4 mr-1" />
+                          Share
+                        </Button>
+                      </div>
+                    </div>
+                  )
+                })()}
                 
                 {/* Expand indicator when collapsed */}
                 {!isBottomSheetExpanded && (

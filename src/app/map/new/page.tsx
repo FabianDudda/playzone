@@ -148,8 +148,8 @@ export default function NewCourtPage() {
     },
     onSuccess: () => {
       toast({
-        title: 'Court added successfully!',
-        description: 'Your court has been added to the map.',
+        title: 'Court submitted successfully!',
+        description: 'Your court has been submitted for review and will appear on the map once approved by an administrator.',
       })
       queryClient.invalidateQueries({ queryKey: ['courts'] })
       router.push('/map')
