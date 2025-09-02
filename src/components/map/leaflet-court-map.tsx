@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useMemo, useCallback } from 'react'
 import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet'
 import { Court, SportType, PlaceWithCourts } from '@/lib/supabase/types'
 import { Button } from '@/components/ui/button'
@@ -18,6 +18,7 @@ import MarkerClusterGroup from './marker-cluster-group'
 // Import Leaflet CSS
 import 'leaflet/dist/leaflet.css'
 import './cluster-styles.css'
+import './map-controls.css'
 
 interface LeafletCourtMapProps {
   courts: PlaceWithCourts[]
@@ -82,6 +83,7 @@ function SearchFilterControlHandler({
   onFilterClick?: () => void
 }) {
   const map = useMap()
+  const inputRef = useRef<HTMLInputElement | null>(null)
   
   useEffect(() => {
     // Create modern search control with filter button
@@ -92,30 +94,9 @@ function SearchFilterControlHandler({
       onAdd: function(map: L.Map) {
         // Main container centered
         const mainContainer = L.DomUtil.create('div', 'leaflet-control-search-main')
-        mainContainer.style.cssText = `
-          position: absolute;
-          top: 10px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 100%;
-          max-width: 400px;
-          padding: 0 10px;
-          pointer-events: none;
-          z-index: 1000;
-        `
         
         // Search container
         const searchContainer = L.DomUtil.create('div', 'search-container', mainContainer)
-        searchContainer.style.cssText = `
-          position: relative;
-          background: white;
-          border-radius: 12px;
-          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-          border: 1px solid rgba(0,0,0,0.1);
-          pointer-events: auto;
-          display: flex;
-          align-items: center;
-        `
         
         // Search icon (left)
         const searchIcon = L.DomUtil.create('div', 'search-icon', searchContainer)
@@ -125,32 +106,15 @@ function SearchFilterControlHandler({
             <path d="M21 21l-4.35-4.35"/>
           </svg>
         `
-        searchIcon.style.cssText = `
-          position: absolute;
-          left: 12px;
-          color: #6b7280;
-          pointer-events: none;
-          z-index: 1;
-          display: flex;
-          align-items: center;
-        `
         
         // Search input
         const searchInput = L.DomUtil.create('input', 'search-input', searchContainer) as HTMLInputElement
         searchInput.type = 'text'
         searchInput.placeholder = 'Search courts...'
         searchInput.value = searchQuery
-        searchInput.style.cssText = `
-          flex: 1;
-          border: none;
-          border-radius: 12px;
-          padding: 14px 52px 14px 44px;
-          font-size: 16px;
-          outline: none;
-          background: transparent;
-          transition: all 0.2s ease;
-          color: #374151;
-        `
+        
+        // Store reference to input for direct updates
+        inputRef.current = searchInput
         
         // Filter button (right)
         const filterButton = L.DomUtil.create('button', 'filter-button', searchContainer)
@@ -159,55 +123,18 @@ function SearchFilterControlHandler({
             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
           </svg>
         `
-        filterButton.style.cssText = `
-          position: absolute;
-          right: 8px;
-          width: 36px;
-          height: 36px;
-          border: none;
-          border-radius: 8px;
-          background: #f8fafc;
-          color: #374151;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.2s ease;
-          outline: none;
-        `
         
-        // Add hover effects
-        L.DomEvent.on(searchContainer, 'mouseenter', () => {
-          searchContainer.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)'
-          searchContainer.style.transform = 'translateY(-1px)'
-        })
-        L.DomEvent.on(searchContainer, 'mouseleave', () => {
-          searchContainer.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)'
-          searchContainer.style.transform = 'translateY(0)'
-        })
+        // Note: Hover and focus effects are now handled by CSS classes
         
-        L.DomEvent.on(filterButton, 'mouseenter', () => {
-          filterButton.style.background = '#e2e8f0'
-          filterButton.style.color = '#1e293b'
-        })
-        L.DomEvent.on(filterButton, 'mouseleave', () => {
-          filterButton.style.background = '#f8fafc'
-          filterButton.style.color = '#374151'
-        })
-        
-        // Add focus styles
-        L.DomEvent.on(searchInput, 'focus', () => {
-          searchContainer.style.borderColor = '#3b82f6'
-          searchContainer.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)'
-        })
-        L.DomEvent.on(searchInput, 'blur', () => {
-          searchContainer.style.borderColor = 'rgba(0,0,0,0.1)'
-          searchContainer.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)'
-        })
+        // Debounce search input
+        let searchTimeout: NodeJS.Timeout
         
         // Handle events
         L.DomEvent.on(searchInput, 'input', (e: any) => {
-          onSearchChange?.(e.target.value)
+          clearTimeout(searchTimeout)
+          searchTimeout = setTimeout(() => {
+            onSearchChange?.(e.target.value)
+          }, 300) // 300ms debounce delay
         })
         
         L.DomEvent.on(filterButton, 'click', (e: any) => {
@@ -222,7 +149,13 @@ function SearchFilterControlHandler({
         // Add to map container
         map.getContainer().appendChild(mainContainer)
         
-        return { remove: () => mainContainer.remove() }
+        return { 
+          remove: () => {
+            clearTimeout(searchTimeout)
+            mainContainer.remove()
+            inputRef.current = null
+          }
+        }
       }
     })
     
@@ -234,7 +167,14 @@ function SearchFilterControlHandler({
         controlInstance.remove()
       }
     }
-  }, [map, searchQuery, onSearchChange, onFilterClick])
+  }, [map, onSearchChange, onFilterClick]) // Removed searchQuery from dependencies
+  
+  // Update input value directly when searchQuery changes (without recreating control)
+  useEffect(() => {
+    if (inputRef.current && inputRef.current.value !== searchQuery) {
+      inputRef.current.value = searchQuery
+    }
+  }, [searchQuery])
   
   return null
 }
@@ -269,12 +209,6 @@ function UserLocationHandler({ onLocationFound }: { onLocationFound: (lat: numbe
       onAdd: function(map: L.Map) {
         // Create location button container
         const locationContainer = L.DomUtil.create('div', 'leaflet-control-location-modern')
-        locationContainer.style.cssText = `
-          position: absolute;
-          bottom: 10px;
-          right: 10px;
-          z-index: 1000;
-        `
         
         // Create modern location button
         const locationButton = L.DomUtil.create('button', 'location-button', locationContainer)
@@ -285,42 +219,8 @@ function UserLocationHandler({ onLocationFound }: { onLocationFound: (lat: numbe
           </svg>
         `
         locationButton.title = 'Find my location'
-        locationButton.style.cssText = `
-          width: 48px;
-          height: 48px;
-          border-radius: 50%;
-          border: none;
-          background: white;
-          color: #374151;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-          transition: all 0.2s ease;
-          outline: none;
-        `
         
-        // Add hover and active effects
-        L.DomEvent.on(locationButton, 'mouseenter', () => {
-          locationButton.style.transform = 'scale(1.05)'
-          locationButton.style.boxShadow = '0 4px 20px rgba(0,0,0,0.2)'
-          locationButton.style.background = '#f8fafc'
-        })
-        
-        L.DomEvent.on(locationButton, 'mouseleave', () => {
-          locationButton.style.transform = 'scale(1)'
-          locationButton.style.boxShadow = '0 2px 10px rgba(0,0,0,0.15)'
-          locationButton.style.background = 'white'
-        })
-        
-        L.DomEvent.on(locationButton, 'mousedown', () => {
-          locationButton.style.transform = 'scale(0.95)'
-        })
-        
-        L.DomEvent.on(locationButton, 'mouseup', () => {
-          locationButton.style.transform = 'scale(1.05)'
-        })
+        // Note: Hover and active effects are now handled by CSS classes
         
         // Handle click events
         L.DomEvent.on(locationButton, 'click', L.DomEvent.preventDefault)
@@ -665,7 +565,7 @@ export default function LeafletCourtMap({
     })
   }, [isBottomSheetOpen, selectedCourt])
 
-  const handleCourtSelect = (court: PlaceWithCourts) => {
+  const handleCourtSelect = useCallback((court: PlaceWithCourts) => {
     console.log('🎯 handleCourtSelect called:', {
       courtId: court.id,
       courtName: court.name,
@@ -681,28 +581,32 @@ export default function LeafletCourtMap({
       console.log('📂 Bottom sheet already open, just updating content')
     }
     onCourtSelect?.(court)
-  }
+  }, [isBottomSheetOpen, selectedCourt?.id, onCourtSelect])
 
-  const handleExplicitClose = () => {
+  const handleExplicitClose = useCallback(() => {
     console.log('🗂️ Explicit close requested - clearing selection and closing sheet')
     setSelectedCourt(null)
     setIsBottomSheetOpen(false)
-  }
+  }, [])
 
-  const handleLocationFound = (lat: number, lng: number) => {
+  const handleLocationFound = useCallback((lat: number, lng: number) => {
     setUserLocation({ lat, lng })
-  }
+  }, [])
 
-  const handleLayerChange = (layerId: string) => {
+  const handleLayerChange = useCallback((layerId: string) => {
     setCurrentLayerId(layerId)
     saveLayerPreference(layerId)
-  }
+  }, [])
+
+  const handleFilterClick = useCallback(() => {
+    setIsFilterSheetOpen(true)
+  }, [])
 
   // Default center (Germany)
   const defaultCenter: [number, number] = [51.165691, 10.451526]
   
-  // Get current layer configuration
-  const currentLayer = MAP_LAYERS[currentLayerId] || MAP_LAYERS[DEFAULT_LAYER_ID]
+  // Get current layer configuration (memoized)
+  const currentLayer = useMemo(() => MAP_LAYERS[currentLayerId] || MAP_LAYERS[DEFAULT_LAYER_ID], [currentLayerId])
 
   return (
     <div className="relative" style={{ height }}>
@@ -723,23 +627,20 @@ export default function LeafletCourtMap({
           />
           
           {/* Court markers - with optional clustering */}
-          {enableClustering && courts.length > 10 ? (
-            <MarkerClusterGroup 
-              courts={courts}
-              onCourtSelect={handleCourtSelect}
-              selectedCourt={selectedCourt}
-              selectedSport={selectedSport}
-            />
-          ) : (
-            courts.map((court) => {
-              // Calculate sport quantities for this court
-              const sportsWithCounts = court.courts?.length > 0 
-                ? court.courts.reduce((acc, c) => {
-                    acc[c.sport] = (acc[c.sport] || 0) + (c.quantity || 1)
-                    return acc
-                  }, {} as Record<string, number>)
-                : (court.sports?.reduce((acc, sport) => ({ ...acc, [sport]: 1 }), {} as Record<string, number>) || {})
-              
+          {useMemo(() => {
+            if (enableClustering && courts.length > 10) {
+              return (
+                <MarkerClusterGroup 
+                  courts={courts}
+                  onCourtSelect={handleCourtSelect}
+                  selectedCourt={selectedCourt}
+                  selectedSport={selectedSport}
+                />
+              )
+            }
+            
+            // Individual markers when not clustering
+            return courts.map((court) => {
               // Filter sports for icon display based on selected sport filter
               const sportsForIcon = selectedSport === 'all' 
                 ? (court.sports || [])
@@ -765,7 +666,7 @@ export default function LeafletCourtMap({
               />
             )
             })
-          )}
+          }, [enableClustering, courts, selectedSport, handleCourtSelect])}
           
           {/* User location marker */}
           {userLocation && (
@@ -802,7 +703,7 @@ export default function LeafletCourtMap({
             <SearchFilterControlHandler 
               searchQuery={searchQuery}
               onSearchChange={onSearchChange}
-              onFilterClick={() => setIsFilterSheetOpen(true)}
+              onFilterClick={handleFilterClick}
             />
           )}
           
@@ -912,6 +813,8 @@ export default function LeafletCourtMap({
               <div className="space-y-3">
                 {/* Sports badges */}
                 {(() => {
+                  if (!selectedCourt) return null;
+                  
                   const sportsWithCounts = selectedCourt.courts?.length > 0 
                     ? selectedCourt.courts.reduce((acc, c) => {
                         acc[c.sport] = (acc[c.sport] || 0) + (c.quantity || 1)

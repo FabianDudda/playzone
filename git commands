@@ -1,5 +1,12 @@
 
+# Neu hinzugefügte Dateien löschen	
+git clean -fd
 
+# Reset auf letzten Commit	
+git reset --hard HEAD
+
+
+------------
 
 # Änderungen zur Staging-Area hinzufügen:
 git add .

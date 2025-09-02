@@ -158,6 +158,19 @@
 }
 
 
+/* Modern search control styles */
+.leaflet-control-search-main {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 400px;
+  padding: 0 10px;
+  pointer-events: none;
+  z-index: 1000;
+}
+
 /* Responsive design improvements */
 @media (max-width: 768px) {
   /* Adjust search controls for mobile */

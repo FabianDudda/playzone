@@ -1,7 +1,15 @@
 import { SportType } from '@/lib/supabase/types'
 import L from 'leaflet'
 
-// Sport color mapping
+// Icon cache for performance optimization
+const iconCache = new Map<string, L.DivIcon>()
+
+// Helper function to generate cache key for sports array
+function getSportsCacheKey(sports: string[], isSelected: boolean): string {
+  return `${sports.sort().join(',')}-${isSelected}`
+}
+
+// Export function to clear icon cache (useful for memory management)\nexport function clearIconCache(): void {\n  iconCache.clear()\n}\n\n// Export function to get cache size (for debugging)\nexport function getIconCacheSize(): number {\n  return iconCache.size\n}\n\n// Sport color mapping
 export const sportColors: Record<string, string> = {
   // Original sports
   tennis: '#10B981',      // Green
@@ -360,12 +368,24 @@ function createSimpleSportIcon(sports: string[], baseSize: number, isSelected: b
 
 // Create custom Leaflet icon for a sport
 export function createSportIcon(sports: string[], isSelected = false): L.DivIcon {
+  // Ensure we have a valid sports array
+  const validSports = Array.isArray(sports) ? sports.filter(Boolean) : []
+  
+  // Generate cache key
+  const cacheKey = getSportsCacheKey(validSports, isSelected)
+  
+  // Check if icon is already cached
+  const cachedIcon = iconCache.get(cacheKey)
+  if (cachedIcon) {
+    return cachedIcon
+  }
+  
   // All pins now use consistent teardrop size
   const pinSize = 40 // Updated to match current pin size
   const containerWidth = pinSize + 8
   const containerHeight = Math.round(pinSize * 1.3) + 8 // Account for teardrop height
   
-  return L.divIcon({
+  const newIcon = L.divIcon({
     className: 'custom-sport-marker',
     html: `
       <div style="
@@ -373,13 +393,18 @@ export function createSportIcon(sports: string[], isSelected = false): L.DivIcon
         width: ${containerWidth}px;
         height: ${containerHeight}px;
       ">
-        ${createSimpleSportIcon(sports, pinSize, isSelected)}
+        ${createSimpleSportIcon(validSports, pinSize, isSelected)}
       </div>
     `,
     iconSize: [containerWidth, containerHeight],
     iconAnchor: [containerWidth / 2, containerHeight - 4], // Anchor at bottom point
     popupAnchor: [0, -(containerHeight - 8)] // Popup above the pin
   })
+  
+  // Cache the created icon
+  iconCache.set(cacheKey, newIcon)
+  
+  return newIcon
 }
 
 // Create icon for user location
