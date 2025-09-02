@@ -553,6 +553,7 @@ export default function LeafletCourtMap({
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [currentLayerId, setCurrentLayerId] = useState<string>(() => getSavedLayerPreference())
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
+  const [isBottomSheetExpanded, setIsBottomSheetExpanded] = useState(false)
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false)
   const isClosingExplicitly = useRef(false)
 
@@ -560,10 +561,11 @@ export default function LeafletCourtMap({
   useEffect(() => {
     console.log('📊 State changed:', {
       isBottomSheetOpen,
+      isBottomSheetExpanded,
       selectedCourtId: selectedCourt?.id,
       selectedCourtName: selectedCourt?.name
     })
-  }, [isBottomSheetOpen, selectedCourt])
+  }, [isBottomSheetOpen, isBottomSheetExpanded, selectedCourt])
 
   const handleCourtSelect = useCallback((court: PlaceWithCourts) => {
     console.log('🎯 handleCourtSelect called:', {
@@ -587,6 +589,7 @@ export default function LeafletCourtMap({
     console.log('🗂️ Explicit close requested - clearing selection and closing sheet')
     setSelectedCourt(null)
     setIsBottomSheetOpen(false)
+    setIsBottomSheetExpanded(false)
   }, [])
 
   const handleLocationFound = useCallback((lat: number, lng: number) => {
@@ -601,6 +604,76 @@ export default function LeafletCourtMap({
   const handleFilterClick = useCallback(() => {
     setIsFilterSheetOpen(true)
   }, [])
+
+  const handleBottomSheetExpand = useCallback(() => {
+    console.log('🔼 Expanding bottom sheet')
+    setIsBottomSheetExpanded(true)
+  }, [])
+
+  const handleBottomSheetCollapse = useCallback(() => {
+    console.log('🔽 Collapsing bottom sheet')
+    setIsBottomSheetExpanded(false)
+  }, [])
+
+  const handleBottomSheetToggle = useCallback(() => {
+    console.log('🔄 Toggling bottom sheet expansion')
+    setIsBottomSheetExpanded(prev => !prev)
+  }, [])
+
+  // Touch/swipe gesture handlers
+  const touchStart = useRef<{ y: number; time: number } | null>(null)
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStart.current = {
+      y: e.touches[0].clientY,
+      time: Date.now()
+    }
+  }, [])
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (!touchStart.current) return
+
+    const touchEnd = e.changedTouches[0].clientY
+    const deltaY = touchStart.current.y - touchEnd
+    const deltaTime = Date.now() - touchStart.current.time
+
+    // Swipe up detection (minimum distance and not too slow)
+    if (deltaY > 50 && deltaTime < 300 && !isBottomSheetExpanded) {
+      handleBottomSheetExpand()
+    }
+    // Swipe down detection when expanded
+    else if (deltaY < -50 && deltaTime < 300 && isBottomSheetExpanded) {
+      handleBottomSheetCollapse()
+    }
+
+    touchStart.current = null
+  }, [isBottomSheetExpanded, handleBottomSheetExpand, handleBottomSheetCollapse])
+
+  const handleContentClick = useCallback((e: React.MouseEvent) => {
+    // Don't expand if clicking on buttons or interactive elements
+    const target = e.target as HTMLElement
+    if (target.closest('button, a, [role="button"]')) {
+      return
+    }
+
+    // Only expand on click if not already expanded
+    if (!isBottomSheetExpanded) {
+      handleBottomSheetExpand()
+    }
+  }, [isBottomSheetExpanded, handleBottomSheetExpand])
+
+  // Keyboard handlers
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isBottomSheetOpen && isBottomSheetExpanded) {
+        e.preventDefault()
+        handleBottomSheetCollapse()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [isBottomSheetOpen, isBottomSheetExpanded, handleBottomSheetCollapse])
 
   // Default center (Germany)
   const defaultCenter: [number, number] = [51.165691, 10.451526]
@@ -765,12 +838,31 @@ export default function LeafletCourtMap({
       >
         <SheetContent 
           side="bottom" 
-          className="h-auto max-h-[80vh] border-0"
+          className={`border-0 transition-all duration-300 ${
+            isBottomSheetExpanded 
+              ? 'h-[85vh] max-h-[90vh]' 
+              : 'h-auto max-h-[45vh]'
+          }`}
           hideOverlay
           onClose={handleExplicitClose}
         >
           {selectedCourt && (
-            <div className="space-y-4">
+            <div 
+              className="space-y-4"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+              onClick={handleContentClick}
+            >
+              {/* Drag Handle */}
+              <div className="flex justify-center py-2 -mt-2">
+                <div 
+                  className="w-12 h-1 bg-gray-300 rounded-full cursor-pointer hover:bg-gray-400 transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleBottomSheetToggle()
+                  }}
+                />
+              </div>
               <SheetHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -810,7 +902,24 @@ export default function LeafletCourtMap({
                 )}
               </SheetHeader>
               
-              <div className="space-y-3">
+              {/* Place Image */}
+              {selectedCourt.image_url && (
+                <div className={`w-full rounded-lg overflow-hidden transition-all duration-300 ${
+                  isBottomSheetExpanded ? 'h-48' : 'h-24'
+                }`}>
+                  <img 
+                    src={selectedCourt.image_url} 
+                    alt={selectedCourt.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement
+                      target.parentElement?.remove()
+                    }}
+                  />
+                </div>
+              )}
+              
+              <div className={`space-y-3 ${!isBottomSheetExpanded ? 'overflow-hidden' : ''}`}>
                 {/* Sports badges */}
                 {(() => {
                   if (!selectedCourt) return null;
@@ -824,14 +933,19 @@ export default function LeafletCourtMap({
                   
                   return Object.keys(sportsWithCounts).length > 0 && (
                     <div>
-                      <h4 className="text-sm font-medium mb-2">Available Sports</h4>
-                      <div className="flex flex-wrap gap-2">
+                      {isBottomSheetExpanded && (
+                        <h4 className="text-sm font-medium mb-2">Available Sports</h4>
+                      )}
+                      <div className={`flex flex-wrap gap-2 ${
+                        !isBottomSheetExpanded ? 'max-h-8 overflow-hidden' : ''
+                      }`}>
                         {Object.entries(sportsWithCounts).map(([sport, count]) => (
                           <Badge 
                             key={sport} 
-                            className={`text-sm ${getSportBadgeClasses(sport)}`}
+                            className={`${isBottomSheetExpanded ? 'text-sm' : 'text-xs'} ${getSportBadgeClasses(sport)}`}
                           >
-                            {sportIcons[sport] || '📍'} {sportNames[sport] || sport} ({count})
+                            {sportIcons[sport] || '📍'} {sportNames[sport] || sport} 
+                            {isBottomSheetExpanded && ` (${count})`}
                           </Badge>
                         ))}
                       </div>
@@ -839,8 +953,9 @@ export default function LeafletCourtMap({
                   )
                 })()}
                 
-                {/* Action buttons row */}
-                <div className="flex gap-2 pt-2">
+                {/* Action buttons row - only show when expanded */}
+                {isBottomSheetExpanded && (
+                  <div className="flex gap-2 pt-2">
                   <Button 
                     variant="outline" 
                     size="sm" 
@@ -885,7 +1000,20 @@ export default function LeafletCourtMap({
                     <Share2 className="h-4 w-4 mr-1" />
                     Share
                   </Button>
-                </div>
+                  </div>
+                )}
+                
+                {/* Expand indicator when collapsed */}
+                {!isBottomSheetExpanded && (
+                  <div className="flex items-center justify-center pt-2 text-muted-foreground">
+                    <div className="flex items-center gap-2 text-xs">
+                      <span>Swipe up or tap to see more</span>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <polyline points="18 15 12 9 6 15"></polyline>
+                      </svg>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}

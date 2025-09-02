@@ -50,7 +50,7 @@ const rateLimiter = new RateLimiter()
 
 /**
  * Reverse geocode latitude and longitude coordinates to address information
- * Uses Nominatim (OpenStreetMap) service - free but rate limited to 1 req/sec
+ * Uses internal API route to proxy Nominatim (OpenStreetMap) service
  */
 export async function reverseGeocode(
   latitude: number,
@@ -61,28 +61,18 @@ export async function reverseGeocode(
     language?: string
   } = {}
 ): Promise<AddressComponents | null> {
-  const { useRateLimit = true, timeout = 5000, language = 'de' } = options
+  const { timeout = 5000, language = 'de' } = options
 
   try {
-    // Apply rate limiting for Nominatim
-    if (useRateLimit) {
-      await rateLimiter.throttle()
-    }
-
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), timeout)
 
-    const url = new URL('https://nominatim.openstreetmap.org/reverse')
-    url.searchParams.set('format', 'json')
+    const url = new URL('/api/geocoding/reverse', window.location.origin)
     url.searchParams.set('lat', latitude.toString())
     url.searchParams.set('lon', longitude.toString())
-    url.searchParams.set('addressdetails', '1')
-    url.searchParams.set('accept-language', language) // Get results in specified language
+    url.searchParams.set('language', language)
     
     const response = await fetch(url.toString(), {
-      headers: {
-        'User-Agent': 'Court-Sports-App/1.0 (contact@example.com)', // Required by Nominatim
-      },
       signal: controller.signal,
     })
 

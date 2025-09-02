@@ -106,8 +106,6 @@ export default function NewCourtPage() {
         added_by_user: placeData.added_by_user,
         source: 'user_submitted',
         source_id: null,
-        neighborhood: null,
-        area: null,
         features: null,
         import_date: new Date().toISOString(),
         // Include address information if available

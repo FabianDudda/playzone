@@ -186,10 +186,6 @@ export default async function PlacePage({ params }: PlacePageProps) {
                 src={place.image_url} 
                 alt={place.name}
                 className="w-full h-full object-cover rounded-lg"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement
-                  target.style.display = 'none'
-                }}
               />
             </div>
           )}
