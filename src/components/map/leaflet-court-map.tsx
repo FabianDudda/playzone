@@ -6,7 +6,7 @@ import { Court, SportType, PlaceWithCourts } from '@/lib/supabase/types'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
-import { Plus, MapPin, Navigation, Share2, Heart, Search, Filter, Edit } from 'lucide-react'
+import { Plus, MapPin, Navigation, Share2, Heart, Search, Filter, Edit, Pencil, X } from 'lucide-react'
 import { useAuth } from '@/components/providers/auth-provider'
 import FilterBottomSheet from './filter-bottom-sheet'
 import { sportNames, getSportBadgeClasses, sportIcons } from '@/lib/utils/sport-utils'
@@ -555,7 +555,6 @@ export default function LeafletCourtMap({
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [currentLayerId, setCurrentLayerId] = useState<string>(() => getSavedLayerPreference())
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
-  const [isBottomSheetExpanded, setIsBottomSheetExpanded] = useState(false)
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false)
   const isClosingExplicitly = useRef(false)
 
@@ -563,11 +562,10 @@ export default function LeafletCourtMap({
   useEffect(() => {
     console.log('📊 State changed:', {
       isBottomSheetOpen,
-      isBottomSheetExpanded,
       selectedCourtId: selectedCourt?.id,
       selectedCourtName: selectedCourt?.name
     })
-  }, [isBottomSheetOpen, isBottomSheetExpanded, selectedCourt])
+  }, [isBottomSheetOpen, selectedCourt])
 
   const handleCourtSelect = useCallback((court: PlaceWithCourts) => {
     console.log('🎯 handleCourtSelect called:', {
@@ -591,7 +589,6 @@ export default function LeafletCourtMap({
     console.log('🗂️ Explicit close requested - clearing selection and closing sheet')
     setSelectedCourt(null)
     setIsBottomSheetOpen(false)
-    setIsBottomSheetExpanded(false)
   }, [])
 
   const handleLocationFound = useCallback((lat: number, lng: number) => {
@@ -607,75 +604,6 @@ export default function LeafletCourtMap({
     setIsFilterSheetOpen(true)
   }, [])
 
-  const handleBottomSheetExpand = useCallback(() => {
-    console.log('🔼 Expanding bottom sheet')
-    setIsBottomSheetExpanded(true)
-  }, [])
-
-  const handleBottomSheetCollapse = useCallback(() => {
-    console.log('🔽 Collapsing bottom sheet')
-    setIsBottomSheetExpanded(false)
-  }, [])
-
-  const handleBottomSheetToggle = useCallback(() => {
-    console.log('🔄 Toggling bottom sheet expansion')
-    setIsBottomSheetExpanded(prev => !prev)
-  }, [])
-
-  // Touch/swipe gesture handlers
-  const touchStart = useRef<{ y: number; time: number } | null>(null)
-
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    touchStart.current = {
-      y: e.touches[0].clientY,
-      time: Date.now()
-    }
-  }, [])
-
-  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
-    if (!touchStart.current) return
-
-    const touchEnd = e.changedTouches[0].clientY
-    const deltaY = touchStart.current.y - touchEnd
-    const deltaTime = Date.now() - touchStart.current.time
-
-    // Swipe up detection (minimum distance and not too slow)
-    if (deltaY > 50 && deltaTime < 300 && !isBottomSheetExpanded) {
-      handleBottomSheetExpand()
-    }
-    // Swipe down detection when expanded
-    else if (deltaY < -50 && deltaTime < 300 && isBottomSheetExpanded) {
-      handleBottomSheetCollapse()
-    }
-
-    touchStart.current = null
-  }, [isBottomSheetExpanded, handleBottomSheetExpand, handleBottomSheetCollapse])
-
-  const handleContentClick = useCallback((e: React.MouseEvent) => {
-    // Don't expand if clicking on buttons or interactive elements
-    const target = e.target as HTMLElement
-    if (target.closest('button, a, [role="button"]')) {
-      return
-    }
-
-    // Only expand on click if not already expanded
-    if (!isBottomSheetExpanded) {
-      handleBottomSheetExpand()
-    }
-  }, [isBottomSheetExpanded, handleBottomSheetExpand])
-
-  // Keyboard handlers
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isBottomSheetOpen && isBottomSheetExpanded) {
-        e.preventDefault()
-        handleBottomSheetCollapse()
-      }
-    }
-
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [isBottomSheetOpen, isBottomSheetExpanded, handleBottomSheetCollapse])
 
   // Default center (Germany)
   const defaultCenter: [number, number] = [51.165691, 10.451526]
@@ -840,51 +768,46 @@ export default function LeafletCourtMap({
       >
         <SheetContent 
           side="bottom" 
-          className={`border-0 transition-all duration-300 ${
-            isBottomSheetExpanded 
-              ? 'h-[100vh] pt-safe' 
-              : 'h-auto max-h-[45vh]'
-          }`}
+          className="border-0 h-auto"
           hideOverlay
           onClose={handleExplicitClose}
         >
           {selectedCourt && (
-            <div 
-              className="space-y-4"
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
-              onClick={handleContentClick}
-            >
-              {/* Drag Handle */}
-              <div className="flex justify-center py-2 -mt-2">
-                <div 
-                  className="w-12 h-1 bg-gray-300 rounded-full cursor-pointer hover:bg-gray-400 transition-colors"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleBottomSheetToggle()
-                  }}
-                />
-              </div>
-              <SheetHeader>
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <SheetTitle className="text-lg">{selectedCourt.name}</SheetTitle>
+            <div className="space-y-4">
+              <SheetHeader className="text-left">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1 text-left">
+                    <SheetTitle className="text-lg text-left">{selectedCourt.name}</SheetTitle>
                     {userLocation && (
-                      <p className="text-sm text-muted-foreground mt-1">
+                      <p className="text-sm text-muted-foreground mt-1 text-left">
                         <MapPin className="h-3 w-3 inline mr-1" />
                         {getDistanceText(userLocation, { lat: selectedCourt.latitude, lng: selectedCourt.longitude })}
                       </p>
                     )}
                   </div>
-                  {/* View Details button */}
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    className="text-xs"
-                    onClick={() => window.location.href = `/places/${selectedCourt.id}`}
-                  >
-                    View Details
-                  </Button>
+                  
+                  {/* Button group */}
+                  <div className="flex items-center gap-3">
+                    {/* Edit button - only show if user can edit */}
+                    {user && (
+                      <button
+                        onClick={() => window.location.href = `/places/${selectedCourt.id}/edit`}
+                        className="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center opacity-70 hover:opacity-100 transition-opacity"
+                        title={profile?.user_role === 'admin' ? 'Edit Place' : 'Suggest Edit'}
+                      >
+                        <Pencil className="h-[18px] w-[18px]" />
+                      </button>
+                    )}
+                    
+                    {/* Close button */}
+                    <button
+                      onClick={handleExplicitClose}
+                      className="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center opacity-70 hover:opacity-100 transition-opacity"
+                      title="Close"
+                    >
+                      <X className="h-5 w-5" />
+                    </button>
+                  </div>
                 </div>
                 {/* Quick Address */}
                 {(() => {
@@ -892,103 +815,71 @@ export default function LeafletCourtMap({
                     .filter(Boolean)
                     .join(', ')
                   return quickAddress && (
-                    <SheetDescription className="text-sm text-muted-foreground">
+                    <SheetDescription className="text-sm text-muted-foreground text-left">
                       {quickAddress}
                     </SheetDescription>
                   )
                 })()}
                 {selectedCourt.description && (
-                  <SheetDescription className="mt-2">
+                  <SheetDescription className="mt-2 text-left">
                     {selectedCourt.description}
                   </SheetDescription>
                 )}
               </SheetHeader>
               
-              {/* Place Image */}
-              {selectedCourt.image_url && (
-                <div className={`w-full rounded-lg overflow-hidden transition-all duration-300 ${
-                  isBottomSheetExpanded ? 'h-48' : 'h-24'
-                }`}>
-                  <img 
-                    src={selectedCourt.image_url} 
-                    alt={selectedCourt.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement
-                      target.parentElement?.remove()
-                    }}
-                  />
-                </div>
-              )}
-              
-              <div className={`space-y-3 ${!isBottomSheetExpanded ? 'overflow-hidden' : ''}`}>
-                {/* Sports badges */}
-                {(() => {
-                  if (!selectedCourt) return null;
-                  
-                  const sportsWithCounts = selectedCourt.courts?.length > 0 
-                    ? selectedCourt.courts.reduce((acc, c) => {
-                        acc[c.sport] = (acc[c.sport] || 0) + (c.quantity || 1)
-                        return acc
-                      }, {} as Record<string, number>)
-                    : (selectedCourt.sports?.reduce((acc, sport) => ({ ...acc, [sport]: 1 }), {} as Record<string, number>) || {})
-                  
-                  return Object.keys(sportsWithCounts).length > 0 && (
-                    <div>
-                      {isBottomSheetExpanded && (
-                        <h4 className="text-sm font-medium mb-2">Available Sports</h4>
-                      )}
-                      <div className={`flex flex-wrap gap-2 ${
-                        !isBottomSheetExpanded ? 'max-h-8 overflow-hidden' : ''
-                      }`}>
-                        {Object.entries(sportsWithCounts).map(([sport, count]) => (
-                          <Badge 
-                            key={sport} 
-                            className={`${isBottomSheetExpanded ? 'text-sm' : 'text-xs'} ${getSportBadgeClasses(sport)}`}
-                          >
-                            {sportIcons[sport] || '📍'} {sportNames[sport] || sport} 
-                            {isBottomSheetExpanded && ` (${count})`}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  )
-                })()}
+              {/* Sports squares */}
+              {(() => {
+                if (!selectedCourt) return null;
                 
-                {/* Action buttons - only show when expanded */}
-                {isBottomSheetExpanded && (() => {
+                const sportsWithCounts = selectedCourt.courts?.length > 0 
+                  ? selectedCourt.courts.reduce((acc, c) => {
+                      acc[c.sport] = (acc[c.sport] || 0) + (c.quantity || 1)
+                      return acc
+                    }, {} as Record<string, number>)
+                  : (selectedCourt.sports?.reduce((acc, sport) => ({ ...acc, [sport]: 1 }), {} as Record<string, number>) || {})
+                
+                return Object.keys(sportsWithCounts).length > 0 && (
+                  <div className="mb-3">
+                    <div className="flex gap-2 overflow-x-auto -mr-6 pr-3">
+                      {Object.entries(sportsWithCounts).map(([sport, count]) => (
+                        <div 
+                          key={sport} 
+                          className="flex-shrink-0 w-16 h-16 bg-gray-50 rounded-lg flex flex-col items-center justify-center"
+                        >
+                          <span className="text-xl">{sportIcons[sport] || '📍'}</span>
+                          <span className="text-base font-semibold text-gray-800">{count}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )
+              })()}
+
+              <div className="space-y-3">
+                {/* Place Image */}
+                {selectedCourt.image_url && (
+                  <div className="w-full rounded-lg overflow-hidden h-48">
+                    <img 
+                      src={selectedCourt.image_url} 
+                      alt={selectedCourt.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement
+                        target.parentElement?.remove()
+                      }}
+                    />
+                  </div>
+                )}
+                
+                {/* Action buttons */}
+                {(() => {
                   const isAdmin = profile?.user_role === 'admin'
                   const canEdit = !!user // Any authenticated user can edit (community-based)
                   
                   return (
                     <div className="space-y-2 pt-2">
-                      {/* Edit button (if can edit) */}
-                      {canEdit && (
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="w-full"
-                          onClick={() => window.location.href = `/places/${selectedCourt.id}/edit`}
-                        >
-                          <Edit className="h-4 w-4 mr-2" />
-                          {isAdmin ? 'Edit Place' : 'Suggest Edit'}
-                        </Button>
-                      )}
-                      
-                      {/* Other action buttons */}
+                      {/* Action buttons row */}
                       <div className="flex gap-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="flex-1"
-                          onClick={() => {
-                            // TODO: Implement save functionality
-                            console.log('Save place:', selectedCourt.id)
-                          }}
-                        >
-                          <Heart className="h-4 w-4 mr-1" />
-                          Save
-                        </Button>
                         <Button 
                           variant="outline" 
                           size="sm" 
@@ -1021,22 +912,22 @@ export default function LeafletCourtMap({
                           <Share2 className="h-4 w-4 mr-1" />
                           Share
                         </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="flex-1"
+                          onClick={() => {
+                            // TODO: Implement save functionality
+                            console.log('Save place:', selectedCourt.id)
+                          }}
+                        >
+                          <Heart className="h-4 w-4 mr-1" />
+                          Save
+                        </Button>
                       </div>
                     </div>
                   )
                 })()}
-                
-                {/* Expand indicator when collapsed */}
-                {!isBottomSheetExpanded && (
-                  <div className="flex items-center justify-center pt-2 text-muted-foreground">
-                    <div className="flex items-center gap-2 text-xs">
-                      <span>Swipe up or tap to see more</span>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <polyline points="18 15 12 9 6 15"></polyline>
-                      </svg>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           )}
