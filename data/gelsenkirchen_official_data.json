@@ -1,0 +1,261 @@
+[
+  {
+    "geometry": {
+      "x": 7.0875732227,
+      "y": 51.489764439
+    },
+    "name": "Karl-Meyer-Straße",
+    "fußballplätze": 1,
+    "tischtennisplatten": 1
+  },
+  {
+    "geometry": {
+      "x": 7.0640501194,
+      "y": 51.6117075791
+    },
+    "name": "Eppmannsweg",
+    "fußballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.0710191867,
+      "y": 51.505518554
+    },
+    "name": "Feldmarkstraße",
+    "fußballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.1158474208,
+      "y": 51.5173535001
+    },
+    "name": "Burgers Park",
+    "fußballplätze": 1,
+    "basketballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.1055215828,
+      "y": 51.5203436517
+    },
+    "name": "Emma-/Olgastraße",
+    "fußballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.1149508986,
+      "y": 51.51299052
+    },
+    "name": "Orangeplatz",
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "hockeyplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.1113727859,
+      "y": 51.5223111128
+    },
+    "name": "Plutostraße",
+    "fußballplätze": 1,
+    "volleyballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.1276250911,
+      "y": 51.5270486288
+    },
+    "name": "Erdbrüggenstraße",
+    "fußballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.1191390585,
+      "y": 51.5295466241
+    },
+    "name": "Evastraße/Adamshof",
+    "fußballplätze": 1,
+    "basketballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.1368669448,
+      "y": 51.4990865325
+    },
+    "name": "Thomas-Morus-Weg",
+    "fußballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.0830971453,
+      "y": 51.5337594446
+    },
+    "name": "Caubstraße",
+    "fußballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.0825268029,
+      "y": 51.5372382933
+    },
+    "name": "Josefinenstraße",
+    "fußballplätze": 1,
+    "basketballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.0218069044,
+      "y": 51.5527746477
+    },
+    "name": "Otto-Hue-Straße",
+    "fußballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.0352696878,
+      "y": 51.5466014766
+    },
+    "name": "Rosenstraße",
+    "fußballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.0234461139,
+      "y": 51.5299873645
+    },
+    "name": "Diesterwegstraße",
+    "fußballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.1035318523,
+      "y": 51.5782698613
+    },
+    "name": "Oemkenstraße",
+    "fußballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.087468438,
+      "y": 51.5551839229
+    },
+    "name": "Karlstraße/Zechenbahnweg",
+    "fußballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.0961585389,
+      "y": 51.56199049
+    },
+    "name": "Oststraße",
+    "fußballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.089296,
+      "y": 51.573911229
+    },
+    "name": "Wetterweg",
+    "fußballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.0865778603,
+      "y": 51.5685051993
+    },
+    "name": "Winkelmannshof",
+    "fußballplätze": 1,
+    "tischtennisplatten": 1
+  },
+  {
+    "geometry": {
+      "x": 7.0397587141,
+      "y": 51.5730760465
+    },
+    "name": "Brößweg",
+    "fußballplätze": 1,
+    "tischtennisplatten": 1
+  },
+  {
+    "geometry": {
+      "x": 7.0479289241,
+      "y": 51.5638622778
+    },
+    "name": "Lohmühlental",
+    "fußballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.0500538113,
+      "y": 51.5689040823
+    },
+    "name": "Schlenkhoffstraße",
+    "fußballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.0443492794,
+      "y": 51.5898522692
+    },
+    "name": "Velsenstraße",
+    "fußballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.0484389905,
+      "y": 51.5986094245
+    },
+    "name": "Hardenbergstraße",
+    "fußballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.0557574488,
+      "y": 51.6125758581
+    },
+    "name": "Wallheckenweg",
+    "fußballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 6.9947491701,
+      "y": 51.5943490704
+    },
+    "name": "Scheideweg",
+    "fußballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.0179801565,
+      "y": 51.5896886004
+    },
+    "name": "Werdener Straße",
+    "fußballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.1001494355,
+      "y": 51.4991056269
+    },
+    "name": "Junkerweg/Haus Leithe",
+    "fußballplätze": 1
+  },
+  {
+    "geometry": {
+      "x": 7.1070568638,
+      "y": 51.5027885995
+    },
+    "name": "Ottilienstraße",
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "tischtennisplatten": 1
+  },
+  {
+    "geometry": {
+      "x": 7.0894551863,
+      "y": 51.487474962
+    },
+    "name": "Mechtenbergstraße",
+    "fußballplätze": 1
+  }
+]

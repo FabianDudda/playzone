@@ -1,0 +1,746 @@
+[
+  {
+    "name": "Sp Hansaplatz",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.644796262701368,
+      "y": 51.95518043766086
+    }
+  },
+  {
+    "name": "Sp Soester Strasse",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.63772883984793,
+      "y": 51.95371797088697
+    }
+  },
+  {
+    "name": "Sp Oststrasse",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.6467038747142055,
+      "y": 51.962249992215376
+    }
+  },
+  {
+    "name": "Sp Zumsandeplatz",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.641618966259975,
+      "y": 51.95941322400803
+    }
+  },
+  {
+    "name": "Sp Diepenbrockstrasse",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.640548041767211,
+      "y": 51.958141120280416
+    }
+  },
+  {
+    "name": "Sp Rjasanstrasse",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.634454298844638,
+      "y": 51.97224011785281
+    }
+  },
+  {
+    "name": "Sp Tannenbergstrasse",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.628548818755587,
+      "y": 51.97374846813245
+    }
+  },
+  {
+    "name": "Sp Schulstrasse",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.614079399960718,
+      "y": 51.96954424611485
+    }
+  },
+  {
+    "name": "Sp Melchersstrasse",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.616247716857416,
+      "y": 51.97134021849594
+    }
+  },
+  {
+    "name": "Sp Wichernstrasse",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.624319933175306,
+      "y": 51.97327798930288
+    }
+  },
+  {
+    "name": "Sp Martin-Niemöller-Park",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.616350998028483,
+      "y": 51.972860868250045
+    }
+  },
+  {
+    "name": "Sp Alter Zoo",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.612204331225958,
+      "y": 51.961138804037944
+    }
+  },
+  {
+    "name": "Sp Wilhelmstrasse",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.610519291095772,
+      "y": 51.966983389809194
+    }
+  },
+  {
+    "name": "Sp Horstmarer Landweg",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.597931759588226,
+      "y": 51.97014802706031
+    }
+  },
+  {
+    "name": "Sp Auf Dem Draun",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.5930352945214326,
+      "y": 51.952768996576864
+    }
+  },
+  {
+    "name": "Vg Staufenplatz",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.641744,
+      "y": 51.963995
+    }
+  },
+  {
+    "name": "Sp Kappenberger Damm",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.610146403639356,
+      "y": 51.938637429011685
+    }
+  },
+  {
+    "name": "Sp Grüner Grund",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.613871494669641,
+      "y": 51.94102543887177
+    }
+  },
+  {
+    "name": "Sp Grüner Grund",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.613871494669641,
+      "y": 51.94102543887177
+    }
+  },
+  {
+    "name": "Sp Dahlweg",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.626158704564626,
+      "y": 51.94343515141237
+    }
+  },
+  {
+    "name": "Sp Herdingstrasse",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.627728234502779,
+      "y": 51.94588355487556
+    }
+  },
+  {
+    "name": "Sp Schützenhof",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.6242919487273015,
+      "y": 51.94539828208819
+    }
+  },
+  {
+    "name": "Sp Seppenradeweg",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.603654987532194,
+      "y": 51.93027403898673
+    }
+  },
+  {
+    "name": "Sp Spichernstrasse",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.623020888434983,
+      "y": 51.93563211629424
+    }
+  },
+  {
+    "name": "Sp Schwarzer Kamp",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.5681066702616375,
+      "y": 51.92638031469528
+    }
+  },
+  {
+    "name": "Sp Christoph-Bernhard-Graben (Sp Westenkamp)",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.5736380560827055,
+      "y": 51.930186760435596
+    }
+  },
+  {
+    "name": "Sp Heroldstrasse (Heidbusch)",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.573855797354559,
+      "y": 51.91991349319137
+    }
+  },
+  {
+    "name": "Sp Im Landschaftspark Mecklenbeck",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.57296293180037,
+      "y": 51.932729587424525
+    }
+  },
+  {
+    "name": "Sp Am Kämpken",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.526085502601129,
+      "y": 51.920512487815046
+    }
+  },
+  {
+    "name": "Sp Am Kämpken",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.526085502601129,
+      "y": 51.920512487815046
+    }
+  },
+  {
+    "name": "Sp Haus Wiek",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.523207489876134,
+      "y": 51.915994749535095
+    }
+  },
+  {
+    "name": "Sp Im Dahl",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.640315836030658,
+      "y": 51.913432418809535
+    }
+  },
+  {
+    "name": "Sp Hanses-Ketteler-Strasse",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.650500015671857,
+      "y": 51.90408273622195
+    }
+  },
+  {
+    "name": "Sp Hölderlinweg",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.62908272596569,
+      "y": 51.90013826738865
+    }
+  },
+  {
+    "name": "Sp Malteserstrasse",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.635301830945582,
+      "y": 51.8971905219838
+    }
+  },
+  {
+    "name": "Sp An Der Alten Kirche",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.6323211815871534,
+      "y": 51.905054495975946
+    }
+  },
+  {
+    "name": "Sp Lange Kuhle",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.6117456618259975,
+      "y": 51.88433269604511
+    }
+  },
+  {
+    "name": "Sp Alte Furt",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.606926944998162,
+      "y": 51.88439857915087
+    }
+  },
+  {
+    "name": "Sp Alte Furt",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.606926944998162,
+      "y": 51.88439857915087
+    }
+  },
+  {
+    "name": "Sp Arnikaweg",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.60371937882194,
+      "y": 51.88213500703422
+    }
+  },
+  {
+    "name": "Betreuter Spielplatz Südpark 'Abi'",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.626656477579451,
+      "y": 51.94911807317884
+    }
+  },
+  {
+    "name": "Sp Stettiner Strasse",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.6461656909960585,
+      "y": 51.97181148563841
+    }
+  },
+  {
+    "name": "Sp Vivaldistrasse",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.642616313434438,
+      "y": 51.98029865513253
+    }
+  },
+  {
+    "name": "Sp Stadtpark Wienburg",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.627008669710859,
+      "y": 51.9790537456476
+    }
+  },
+  {
+    "name": "Sp Dreizehner-Strasse",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.610213493519696,
+      "y": 51.98425109468388
+    }
+  },
+  {
+    "name": "Sp Potstiege",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.579445699276074,
+      "y": 51.965092077108075
+    }
+  },
+  {
+    "name": "Sp Möllmannsweg",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.585502115852763,
+      "y": 51.96277993935313
+    }
+  },
+  {
+    "name": "Sp Bruchfeldweg",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.561118728871046,
+      "y": 51.97463736019435
+    }
+  },
+  {
+    "name": "Sp Mergelberg-Nord",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.560495383933216,
+      "y": 51.96942930521263
+    }
+  },
+  {
+    "name": "Sp Mergelberg-Nord",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.560495383933216,
+      "y": 51.96942930521263
+    }
+  },
+  {
+    "name": "Sp Korbmacherweg",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.527377915838521,
+      "y": 51.952527818101224
+    }
+  },
+  {
+    "name": "Sp Schulcampus Roxel",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.528408434192344,
+      "y": 51.9547179012786
+    }
+  },
+  {
+    "name": "Sp Schulcampus Roxel",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.528408434192344,
+      "y": 51.9547179012786
+    }
+  },
+  {
+    "name": "Sp Schulcampus Roxel",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.528408434192344,
+      "y": 51.9547179012786
+    }
+  },
+  {
+    "name": "Sp Schulcampus Roxel",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.528408434192344,
+      "y": 51.9547179012786
+    }
+  },
+  {
+    "name": "Sp Schulcampus Roxel",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.528408434192344,
+      "y": 51.9547179012786
+    }
+  },
+  {
+    "name": "Sp Schulcampus Roxel",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.528408434192344,
+      "y": 51.9547179012786
+    }
+  },
+  {
+    "name": "Sp Am Haus Nienberge",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.55662213402744,
+      "y": 51.99882881198519
+    }
+  },
+  {
+    "name": "Sp Häger, Hägerstraße",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.562267307471802,
+      "y": 52.020265118464145
+    }
+  },
+  {
+    "name": "Sp Nerzweg",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.641068186064878,
+      "y": 51.99979158076226
+    }
+  },
+  {
+    "name": "Sp Nerzweg",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.641068186064878,
+      "y": 51.99979158076226
+    }
+  },
+  {
+    "name": "Sp An Der Meerwiese-Mitte",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.650425628321932,
+      "y": 51.98874409006625
+    }
+  },
+  {
+    "name": "Sp Killingstrasse",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.594063050631306,
+      "y": 51.999687397653204
+    }
+  },
+  {
+    "name": "Sp Alte Schanze",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.589874420758313,
+      "y": 51.99989201985218
+    }
+  },
+  {
+    "name": "Sp Nordmark",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.6012380442678635,
+      "y": 52.0027865979658
+    }
+  },
+  {
+    "name": "Vg Hamannplatz",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.648398271798084,
+      "y": 51.99358054566289
+    }
+  },
+  {
+    "name": "Vg Schmaloers Busch",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.5917743141237874,
+      "y": 51.998678707768505
+    }
+  },
+  {
+    "name": "Sp Hubertistrasse",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.650327468874284,
+      "y": 51.95359070312566
+    }
+  },
+  {
+    "name": "Sp Mauritz-Lindenweg",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.658321554179112,
+      "y": 51.960799797887454
+    }
+  },
+  {
+    "name": "Sp Wiener Strasse",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.652583940586829,
+      "y": 51.96964215992893
+    }
+  },
+  {
+    "name": "Sp Pötterhoek",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.655706056919073,
+      "y": 51.972250236754974
+    }
+  },
+  {
+    "name": "Sp Admiral-Spee-Strasse",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.662138005517565,
+      "y": 51.967614988790764
+    }
+  },
+  {
+    "name": "Sp Admiral-Spee-Strasse",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.662138005517565,
+      "y": 51.967614988790764
+    }
+  },
+  {
+    "name": "Sp Parkallee",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.680721627617647,
+      "y": 51.961184306236
+    }
+  },
+  {
+    "name": "Sp Hegerskamp",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.672421274422977,
+      "y": 51.94808753801053
+    }
+  },
+  {
+    "name": "Sp Hans-Bredow-Weg",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.670935191508772,
+      "y": 51.957523668875844
+    }
+  },
+  {
+    "name": "Sp Am Hornbach",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.717043986634241,
+      "y": 52.00269229622538
+    }
+  },
+  {
+    "name": "Sp Tomkotten",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.7069968122266275,
+      "y": 51.983178049481566
+    }
+  },
+  {
+    "name": "Sp Tomkotten",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.7069968122266275,
+      "y": 51.983178049481566
+    }
+  },
+  {
+    "name": "Sp Am Lütkebach",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.656250403220775,
+      "y": 51.94064534907499
+    }
+  },
+  {
+    "name": "Sp Krögerweg",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.655721116590505,
+      "y": 51.92487838137793
+    }
+  },
+  {
+    "name": "Sp Krögerweg",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.655721116590505,
+      "y": 51.92487838137793
+    }
+  },
+  {
+    "name": "Sp Angelmodder Weg",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.6904411830467785,
+      "y": 51.92802491758967
+    }
+  },
+  {
+    "name": "Sp Birkenheide Ii",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.6811913590811915,
+      "y": 51.921526165750336
+    }
+  },
+  {
+    "name": "Sp Vogelrohrsheide",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.681999073923934,
+      "y": 51.91725000746279
+    }
+  },
+  {
+    "name": "Sp Haus Angelmodde",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.70135254240687,
+      "y": 51.92041606431939
+    }
+  },
+  {
+    "name": "Sp Ostpreussenstrasse",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.67646360256968,
+      "y": 51.91799343544099
+    }
+  },
+  {
+    "name": "Sp Am Berler Kamp",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.718942324458779,
+      "y": 51.91779412694339
+    }
+  },
+  {
+    "name": "Sp Goldbrink",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.72258341182386,
+      "y": 51.92322426545522
+    }
+  },
+  {
+    "name": "Sp Dahlienweg",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.667944437334888,
+      "y": 51.90213021970665
+    }
+  },
+  {
+    "name": "Sp Am Roggenkamp",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.671087684827654,
+      "y": 51.90198392038654
+    }
+  },
+  {
+    "name": "Unterkunft Warendorfer Str. 265",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.667721,
+      "y": 51.971664
+    }
+  },
+  {
+    "name": "Jugeneinrichtung Drei Eichen",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.71283665258779,
+      "y": 51.995272982349675
+    }
+  }
+]

@@ -38,6 +38,8 @@ interface JsonPlace {
   bouleplätze?: number | null
   skatepark?: number | null
   tischtennisplatten?: number | null
+  hockeyplätze?: number | null
+  volleyballplätze?: number | null
   geometry: {
     x: number // longitude
     y: number // latitude
@@ -100,6 +102,20 @@ function transformJsonPlace(jsonPlace: JsonPlace, sourceFilename: string) {
     courts.push({
       sport: 'tischtennis',
       quantity: jsonPlace.tischtennisplatten
+    })
+  }
+  
+  if (jsonPlace.volleyballplätze && jsonPlace.volleyballplätze > 0) {
+    courts.push({
+      sport: 'volleyball',
+      quantity: jsonPlace.volleyballplätze
+    })
+  }
+  
+  if (jsonPlace.hockeyplätze && jsonPlace.hockeyplätze > 0) {
+    courts.push({
+      sport: 'hockey',
+      quantity: jsonPlace.hockeyplätze
     })
   }
   

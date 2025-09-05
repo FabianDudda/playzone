@@ -94,11 +94,22 @@ function ModerationStats() {
   )
 }
 
-function PlaceCard({ place, onApprove, onReject, showStatus = true }: {
+function PlaceCard({ 
+  place, 
+  onApprove, 
+  onReject, 
+  showStatus = true,
+  isSelectable = false,
+  isSelected = false,
+  onToggleSelection
+}: {
   place: PlaceWithCourts
   onApprove: (id: string) => void
   onReject: (id: string, reason: string) => void
   showStatus?: boolean
+  isSelectable?: boolean
+  isSelected?: boolean
+  onToggleSelection?: () => void
 }) {
   const [rejectionReason, setRejectionReason] = useState('')
   const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false)
@@ -151,9 +162,20 @@ function PlaceCard({ place, onApprove, onReject, showStatus = true }: {
     <Card className="mb-4">
       <CardHeader>
         <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <CardTitle className="text-lg">{place.name}</CardTitle>
+          <div className="flex items-start gap-3 flex-1">
+            {isSelectable && (
+              <div className="pt-1">
+                <input
+                  type="checkbox"
+                  checked={isSelected}
+                  onChange={onToggleSelection}
+                  className="rounded"
+                />
+              </div>
+            )}
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <CardTitle className="text-lg">{place.name}</CardTitle>
               {showStatus && (
                 <Badge className={`text-xs ${getStatusColor(place.moderation_status)}`}>
                   {getStatusIcon(place.moderation_status)}
@@ -169,14 +191,15 @@ function PlaceCard({ place, onApprove, onReject, showStatus = true }: {
               </div>
             )}
             
-            <div className="flex items-center gap-4 text-sm text-muted-foreground mt-2">
-              <div className="flex items-center gap-1">
-                <User className="h-3 w-3" />
-                {place.profiles.name}
-              </div>
-              <div className="flex items-center gap-1">
-                <Calendar className="h-3 w-3" />
-                {new Date(place.created_at).toLocaleDateString()}
+              <div className="flex items-center gap-4 text-sm text-muted-foreground mt-2">
+                <div className="flex items-center gap-1">
+                  <User className="h-3 w-3" />
+                  {place.profiles.name}
+                </div>
+                <div className="flex items-center gap-1">
+                  <Calendar className="h-3 w-3" />
+                  {new Date(place.created_at).toLocaleDateString()}
+                </div>
               </div>
             </div>
           </div>
@@ -328,6 +351,10 @@ function PlacesList({ status }: { status: ModerationStatus }) {
   const { toast } = useToast()
   const queryClient = useQueryClient()
   
+  // Bulk selection state
+  const [selectedPlaces, setSelectedPlaces] = useState<Set<string>>(new Set())
+  const [isBulkMode, setIsBulkMode] = useState(false)
+  
   const { data: places, isLoading } = useQuery({
     queryKey: ['places', status],
     queryFn: () => database.moderation.getPlacesByStatus(status),
@@ -377,6 +404,67 @@ function PlacesList({ status }: { status: ModerationStatus }) {
     },
   })
 
+  const bulkApproveMutation = useMutation({
+    mutationFn: (placeIds: string[]) => database.moderation.bulkApprovePlace(placeIds, user!.id),
+    onSuccess: (result) => {
+      const { successCount, failureCount, failed } = result
+      
+      if (failureCount === 0) {
+        toast({
+          title: 'Bulk approval successful',
+          description: `Successfully approved ${successCount} places.`,
+        })
+      } else {
+        toast({
+          title: 'Partial success',
+          description: `Approved ${successCount} places, ${failureCount} failed. Check console for details.`,
+          variant: failureCount > successCount ? 'destructive' : 'default',
+        })
+        failed.forEach(failure => {
+          console.error('Failed to approve place:', failure)
+        })
+      }
+      
+      // Clear selection and invalidate queries
+      setSelectedPlaces(new Set())
+      queryClient.invalidateQueries({ queryKey: ['places'], exact: false })
+      queryClient.invalidateQueries({ queryKey: ['courts'] })
+      queryClient.invalidateQueries({ queryKey: ['moderation-stats'] })
+    },
+    onError: (error) => {
+      toast({
+        title: 'Bulk approval failed',
+        description: error instanceof Error ? error.message : 'Failed to approve places',
+        variant: 'destructive',
+      })
+    },
+  })
+
+  // Bulk selection helpers
+  const togglePlaceSelection = (placeId: string) => {
+    const newSelection = new Set(selectedPlaces)
+    if (newSelection.has(placeId)) {
+      newSelection.delete(placeId)
+    } else {
+      newSelection.add(placeId)
+    }
+    setSelectedPlaces(newSelection)
+  }
+
+  const selectAllPlaces = () => {
+    if (!places) return
+    setSelectedPlaces(new Set(places.map(place => place.id)))
+  }
+
+  const clearSelection = () => {
+    setSelectedPlaces(new Set())
+  }
+
+  const handleBulkApprove = () => {
+    if (selectedPlaces.size === 0) return
+    bulkApproveMutation.mutate(Array.from(selectedPlaces))
+  }
+
   if (isLoading) {
     return <div className="text-center py-8">Loading places...</div>
   }
@@ -391,6 +479,69 @@ function PlacesList({ status }: { status: ModerationStatus }) {
 
   return (
     <div>
+      {/* Bulk operations controls - only show for pending places */}
+      {status === 'pending' && places.length > 0 && (
+        <div className="mb-4 p-4 bg-muted/50 rounded-lg border">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-4">
+              <Button
+                variant={isBulkMode ? "default" : "outline"}
+                size="sm"
+                onClick={() => {
+                  setIsBulkMode(!isBulkMode)
+                  setSelectedPlaces(new Set())
+                }}
+              >
+                {isBulkMode ? 'Exit Bulk Mode' : 'Bulk Select'}
+              </Button>
+              
+              {isBulkMode && (
+                <>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={selectedPlaces.size === places.length}
+                      onChange={selectedPlaces.size === places.length ? clearSelection : selectAllPlaces}
+                      className="rounded"
+                    />
+                    <span className="text-sm font-medium">
+                      Select All ({selectedPlaces.size}/{places.length})
+                    </span>
+                  </div>
+                </>
+              )}
+            </div>
+            
+            {isBulkMode && selectedPlaces.size > 0 && (
+              <div className="flex items-center gap-2">
+                <Button
+                  size="sm"
+                  onClick={handleBulkApprove}
+                  disabled={bulkApproveMutation.isPending}
+                  className="bg-green-600 hover:bg-green-700"
+                >
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  Approve Selected ({selectedPlaces.size})
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={clearSelection}
+                >
+                  Clear
+                </Button>
+              </div>
+            )}
+          </div>
+          
+          {bulkApproveMutation.isPending && (
+            <div className="text-sm text-muted-foreground">
+              Approving {selectedPlaces.size} places...
+            </div>
+          )}
+        </div>
+      )}
+      
       {places.map((place) => (
         <PlaceCard
           key={place.id}
@@ -401,6 +552,9 @@ function PlacesList({ status }: { status: ModerationStatus }) {
           }}
           onReject={(id, reason) => rejectMutation.mutate({ placeId: id, reason })}
           showStatus={false} // Don't show status badge in filtered views
+          isSelectable={isBulkMode}
+          isSelected={selectedPlaces.has(place.id)}
+          onToggleSelection={() => togglePlaceSelection(place.id)}
         />
       ))}
     </div>

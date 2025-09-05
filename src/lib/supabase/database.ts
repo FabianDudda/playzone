@@ -667,6 +667,57 @@ export const database = {
       return { data: data[0], error }
     },
 
+    // Bulk approve multiple places
+    bulkApprovePlace: async (placeIds: string[], moderatorId: string) => {
+      console.log('🔍 Bulk approving places:', { placeIds, moderatorId })
+      
+      const results = await Promise.allSettled(
+        placeIds.map(async (placeId) => {
+          const { data, error } = await supabase
+            .from('places')
+            .update({
+              moderation_status: 'approved',
+              moderated_by: moderatorId,
+              moderated_at: new Date().toISOString()
+            })
+            .eq('id', placeId)
+            .select('id, name')
+            .single()
+          
+          if (error) {
+            console.error(`❌ Error approving place ${placeId}:`, error)
+            return { placeId, success: false, error: error.message }
+          }
+          
+          console.log(`✅ Place approved successfully:`, data)
+          return { placeId, success: true, data }
+        })
+      )
+      
+      const successful = results.filter(result => 
+        result.status === 'fulfilled' && result.value.success
+      ).map(result => (result as any).value)
+      
+      const failed = results.filter(result => 
+        result.status === 'rejected' || 
+        (result.status === 'fulfilled' && !result.value.success)
+      ).map(result => 
+        result.status === 'rejected' 
+          ? { placeId: 'unknown', success: false, error: result.reason }
+          : (result as any).value
+      )
+      
+      console.log(`📊 Bulk approval results: ${successful.length} successful, ${failed.length} failed`)
+      
+      return {
+        successful,
+        failed,
+        totalCount: placeIds.length,
+        successCount: successful.length,
+        failureCount: failed.length
+      }
+    },
+
     // Reject a place (delete it from database)
     rejectPlace: async (placeId: string, moderatorId: string, reason: string) => {
       // First delete any related courts
