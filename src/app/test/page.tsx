@@ -26,6 +26,7 @@ export default function TestPage() {
   const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(null)
   const [selectedCity, setSelectedCity] = useState<string>('all')
   const [selectedAddressStatus, setSelectedAddressStatus] = useState<string>('all')
+  const [selectedSport, setSelectedSport] = useState<string>('all')
   const queryClient = useQueryClient()
 
   const { data: places = [], isLoading, error } = useQuery({
@@ -46,7 +47,34 @@ export default function TestPage() {
     return cities
   }, [allPlaces])
   
-  // Apply city and address status filters
+  // Get unique sports for filter dropdown
+  const uniqueSports = React.useMemo(() => {
+    const sportsSet = new Set<string>()
+    
+    allPlaces.forEach(place => {
+      // Get sports from courts array (newer format)
+      if (place.courts && place.courts.length > 0) {
+        place.courts.forEach(court => {
+          if (court.sport) {
+            sportsSet.add(court.sport)
+          }
+        })
+      }
+      
+      // Get sports from legacy sports array (fallback)
+      if (place.sports && place.sports.length > 0) {
+        place.sports.forEach(sport => {
+          if (sport) {
+            sportsSet.add(sport)
+          }
+        })
+      }
+    })
+    
+    return Array.from(sportsSet).sort()
+  }, [allPlaces])
+  
+  // Apply city, address status, and sport filters
   const displayPlaces = React.useMemo(() => {
     let filtered = allPlaces
     
@@ -62,8 +90,26 @@ export default function TestPage() {
       filtered = filtered.filter(place => !(place.street && place.city))
     }
     
+    // Apply sport filter
+    if (selectedSport !== 'all') {
+      filtered = filtered.filter(place => {
+        // Check courts array (newer format)
+        if (place.courts && place.courts.length > 0) {
+          const hasCourtSport = place.courts.some(court => court.sport === selectedSport)
+          if (hasCourtSport) return true
+        }
+        
+        // Check legacy sports array (fallback)
+        if (place.sports && place.sports.length > 0) {
+          return place.sports.includes(selectedSport)
+        }
+        
+        return false
+      })
+    }
+    
     return filtered
-  }, [allPlaces, selectedCity, selectedAddressStatus])
+  }, [allPlaces, selectedCity, selectedAddressStatus, selectedSport])
 
   // Helper function to check if place has any address data
   const hasAddressData = (place: PlaceWithCourts) => {
@@ -845,9 +891,46 @@ export default function TestPage() {
               </Select>
             </div>
             
+            {/* Sport Filter */}
+            <div className="flex items-center gap-2">
+              <Select value={selectedSport} onValueChange={setSelectedSport}>
+                <SelectTrigger className="w-48">
+                  <SelectValue placeholder="Filter by sport" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">
+                    All Sports ({allPlaces.length})
+                  </SelectItem>
+                  {uniqueSports.map(sport => {
+                    const count = allPlaces.filter(place => {
+                      // Check courts array (newer format)
+                      if (place.courts && place.courts.length > 0) {
+                        const hasCourtSport = place.courts.some(court => court.sport === sport)
+                        if (hasCourtSport) return true
+                      }
+                      
+                      // Check legacy sports array (fallback)
+                      if (place.sports && place.sports.length > 0) {
+                        return place.sports.includes(sport)
+                      }
+                      
+                      return false
+                    }).length
+                    
+                    return (
+                      <SelectItem key={sport} value={sport}>
+                        {sport} ({count})
+                      </SelectItem>
+                    )
+                  })}
+                </SelectContent>
+              </Select>
+            </div>
+            
             <p className="text-muted-foreground">
               {selectedCity === 'all' ? 'All cities' : `City: ${selectedCity}`}
               {selectedAddressStatus !== 'all' && ` • ${selectedAddressStatus === 'enriched' ? 'Enriched addresses' : 'Coordinates only'}`}
+              {selectedSport !== 'all' && ` • Sport: ${selectedSport}`}
               {enrichedPlaces.length > 0 && ` • ${enrichedPlaces.length} places enriched`}
             </p>
           </div>

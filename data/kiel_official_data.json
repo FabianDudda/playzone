@@ -1,0 +1,418 @@
+[
+  {
+    "fußballplätze": 1,
+    "name": "Charles-Roß-Ring",
+    "geometry": {
+      "x": 10.10751237,
+      "y": 54.35906589
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Groß Ebbenkamp",
+    "geometry": {
+      "x": 10.1843145,
+      "y": 54.33041774
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Egerstraße",
+    "geometry": {
+      "x": 10.18110034,
+      "y": 54.29424191
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Krooger Kamp III / Innweg",
+    "geometry": {
+      "x": 10.19422294,
+      "y": 54.28540782
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Sonthofener Straße",
+    "geometry": {
+      "x": 10.20072748,
+      "y": 54.28714942
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Tauernweg",
+    "geometry": {
+      "x": 10.17458491,
+      "y": 54.29946809
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Bregenzer Weg / Weinberg",
+    "geometry": {
+      "x": 10.1818527,
+      "y": 54.30040573
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Grüner Berg",
+    "geometry": {
+      "x": 10.171771,
+      "y": 54.41152717
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Krausstraße",
+    "geometry": {
+      "x": 10.1216044,
+      "y": 54.33400241
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Ottomar-Enking-Straße",
+    "geometry": {
+      "x": 10.1611147,
+      "y": 54.39557891
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Achterwurth",
+    "geometry": {
+      "x": 10.16720025,
+      "y": 54.40005875
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Wischhofstraße",
+    "geometry": {
+      "x": 10.18343302,
+      "y": 54.32396517
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Masurenring",
+    "geometry": {
+      "x": 10.19724958,
+      "y": 54.33595057
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Wippen",
+    "geometry": {
+      "x": 10.08478546,
+      "y": 54.36248267
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Hänelstraße",
+    "geometry": {
+      "x": 10.09957961,
+      "y": 54.35292164
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Drammenweg",
+    "geometry": {
+      "x": 10.05410723,
+      "y": 54.31772954
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Steglitzer Weg",
+    "geometry": {
+      "x": 10.07255166,
+      "y": 54.30423039
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Rendsburger Landstraße 387",
+    "geometry": {
+      "x": 10.06672894,
+      "y": 54.29977785
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Heischplatz",
+    "geometry": {
+      "x": 10.13730639,
+      "y": 54.30419214
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Geibelplatz",
+    "geometry": {
+      "x": 10.1160915,
+      "y": 54.32712249
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Wassilystraße",
+    "geometry": {
+      "x": 10.10683703,
+      "y": 54.30899675
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Streitkamp",
+    "geometry": {
+      "x": 10.10163562,
+      "y": 54.30496183
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Rendsburger Landstraße 151",
+    "geometry": {
+      "x": 10.09756992,
+      "y": 54.30104962
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Wulfsbrook",
+    "geometry": {
+      "x": 10.10657476,
+      "y": 54.30364284
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Stormarnstraße",
+    "geometry": {
+      "x": 10.12382063,
+      "y": 54.30571087
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Schulredder",
+    "geometry": {
+      "x": 10.13124906,
+      "y": 54.35199522
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Feldstraße / Katholikenwiese",
+    "geometry": {
+      "x": 10.14040584,
+      "y": 54.34612714
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Ravensberg II (am Wasserturm)",
+    "geometry": {
+      "x": 10.12832474,
+      "y": 54.34331172
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Eekbrook",
+    "geometry": {
+      "x": 10.14611417,
+      "y": 54.37507457
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Kieler Weg",
+    "geometry": {
+      "x": 10.11837077,
+      "y": 54.28259716
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Schönwohlder Weg / Kolonnenweg",
+    "geometry": {
+      "x": 10.08951376,
+      "y": 54.3118377
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Am Wohld",
+    "geometry": {
+      "x": 10.07220871,
+      "y": 54.31909201
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Roskilder Weg",
+    "geometry": {
+      "x": 10.05380066,
+      "y": 54.31059402
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "null",
+    "geometry": {
+      "x": 10.07810196,
+      "y": 54.35754881
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "null",
+    "geometry": {
+      "x": 10.12654412,
+      "y": 54.35389471
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "null",
+    "geometry": {
+      "x": 10.12625303,
+      "y": 54.36029378
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Tannenberg (am Schützenheim)",
+    "geometry": {
+      "x": 10.10741042,
+      "y": 54.36282197
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Freizeittrasse Mettenhof",
+    "geometry": {
+      "x": 10.05842234,
+      "y": 54.32385677
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Zehlendorfer Straße",
+    "geometry": {
+      "x": 10.08279912,
+      "y": 54.30439877
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Quartierspark (An der Au)",
+    "geometry": {
+      "x": 10.0683718,
+      "y": 54.35473033
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Fliederweg",
+    "geometry": {
+      "x": 10.19396404,
+      "y": 54.2801639
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "null",
+    "geometry": {
+      "x": 10.19396097,
+      "y": 54.33865756
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "null",
+    "geometry": {
+      "x": 10.17633887,
+      "y": 54.31413533
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Grundschule Russee",
+    "geometry": {
+      "x": 10.06688304,
+      "y": 54.30394463
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Gebrüder-Grimm-Platz",
+    "geometry": {
+      "x": 10.15490665,
+      "y": 54.31509997
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Rohdehoffplatz",
+    "geometry": {
+      "x": 10.17194372,
+      "y": 54.31862835
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Sport- und Begegnungspark Gaarden",
+    "geometry": {
+      "x": 10.15515909,
+      "y": 54.30861
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Hebbelschule",
+    "geometry": {
+      "x": 10.13715039,
+      "y": 54.3509508
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Jugendtreff de Twiel",
+    "geometry": {
+      "x": 10.16521865,
+      "y": 54.31033334
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Gutenbergstraße",
+    "geometry": {
+      "x": 10.12374906,
+      "y": 54.33146579
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Wörthstraße",
+    "geometry": {
+      "x": 10.11694559,
+      "y": 54.32433975
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "name": "Heidenberger Teich (Freizeit u. Bewegungspark)",
+    "geometry": {
+      "x": 10.04511548,
+      "y": 54.32098973
+    }
+  }
+]

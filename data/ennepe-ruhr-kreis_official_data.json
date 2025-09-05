@@ -1,0 +1,552 @@
+[
+  {
+    "name": "Skater Park",
+    "skatepark": 1,
+    "geometry": {
+      "x": 7.374079,
+      "y": 51.293335
+    }
+  },
+  {
+    "name": "Spielplatz Karl-Marx-Platz mit Bolzplatz",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.353454,
+      "y": 51.296544
+    }
+  },
+  {
+    "name": "Bolzplatz Rüggeberg",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.384733,
+      "y": 51.263599
+    }
+  },
+  {
+    "name": "Bolzplatz Heide",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.313391,
+      "y": 51.24761
+    }
+  },
+  {
+    "name": "Bolzplatz Ennepepark",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.342376,
+      "y": 51.321352
+    }
+  },
+  {
+    "name": "Bolzplatz Breddepark",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.37879,
+      "y": 51.333067
+    }
+  },
+  {
+    "name": "Bolzplatz An der Maus",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.329955,
+      "y": 51.330223
+    }
+  },
+  {
+    "name": "Bolzplatz Röllingheider Straße",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.329269,
+      "y": 51.321445
+    }
+  },
+  {
+    "name": "Bolzplatz Rosendahler Straße",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.329132,
+      "y": 51.316937
+    }
+  },
+  {
+    "name": "Bolzplatz Langenrode",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.375583,
+      "y": 51.342546
+    }
+  },
+  {
+    "name": "Bolzplatz Hindenburghöhe",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.33085,
+      "y": 51.311099
+    }
+  },
+  {
+    "name": "Bolzplatz Halle West",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.318201,
+      "y": 51.324281
+    }
+  },
+  {
+    "name": "Spielplatz Bahnhofstraße",
+    "geometry": {
+      "x": 7.177107,
+      "y": 51.400163
+    }
+  },
+  {
+    "name": "Bolzplatz Im langen Siepen",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.159388,
+      "y": 51.411233
+    }
+  },
+  {
+    "name": "Bolzplatz Am Homberg",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.169105,
+      "y": 51.384958
+    }
+  },
+  {
+    "name": "Bolzplatz Klosterholzstraße",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.328359,
+      "y": 51.324759
+    }
+  },
+  {
+    "name": "Bolzplatz Dammstraße",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.384939,
+      "y": 51.335769
+    }
+  },
+  {
+    "name": "Bolzplatz Jugendzentrum",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.344658,
+      "y": 51.318965
+    }
+  },
+  {
+    "name": "Basketball Streetball Ennepepark",
+    "basketballplätze": 1,
+    "geometry": {
+      "x": 7.342701,
+      "y": 51.321492
+    }
+  },
+  {
+    "name": "Basketball Streetball Dammstraße",
+    "basketballplätze": 1,
+    "geometry": {
+      "x": 7.38474,
+      "y": 51.335721
+    }
+  },
+  {
+    "name": "Bolzplatz Lothringer Straße",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.282153,
+      "y": 51.287606
+    }
+  },
+  {
+    "name": "Bolzfläche GGS Holthausen, Am Hagen 8",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.21877,
+      "y": 51.391254
+    }
+  },
+  {
+    "name": "Bolzplatz Diepenbeck",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.200594,
+      "y": 51.409679
+    }
+  },
+  {
+    "name": "Bolzplatz Im Westenfeld",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.173046,
+      "y": 51.408839
+    }
+  },
+  {
+    "name": "Spielplatz ehem. Bahnhof Bredenscheid",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.199126,
+      "y": 51.375024
+    }
+  },
+  {
+    "name": "Bolzplatz & Skateanlage Henrichspark",
+      "fußballplätze": 1,
+      "skatepark": 1,
+    "geometry": {
+      "x": 7.182185,
+      "y": 51.409962
+    }
+  },
+  {
+    "name": "Dirtbikeanlage Am Walzwerk / Am Stahlwerk",
+    "geometry": {
+      "x": 7.195368,
+      "y": 51.416527
+    }
+  },
+  {
+    "name": "Bouleanlage Talstraße",
+    "bouleplätze": 1,
+    "geometry": {
+      "x": 7.188627,
+      "y": 51.399043
+    }
+  },
+  {
+    "name": "Bolzplatz Kiefernstraße",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.198108,
+      "y": 51.393167
+    }
+  },
+  {
+    "name": "Spielplatz Helenenweg",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.174828,
+      "y": 51.4128
+    }
+  },
+  {
+    "name": "Skaterpark Ennepepark",
+    "skatepark": 1,
+    "geometry": {
+      "x": 7.34279,
+      "y": 51.322203
+    }
+  },
+  {
+    "name": "Bolzfläche Reschop",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.176465,
+      "y": 51.397813
+    }
+  },
+  {
+    "name": "Bolzplatz Munscheidstraße",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.18199,
+      "y": 51.414452
+    }
+  },
+  {
+    "name": "Spielplatz Auf dem Haidchen",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.197321,
+      "y": 51.410311
+    }
+  },
+  {
+    "name": "Bolzplatz Gemeindewald Welper",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.208848,
+      "y": 51.413047
+    }
+  },
+  {
+    "name": "Bolzplatz Goethestraße / Nierenhofer Straße",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.177184,
+      "y": 51.392934
+    }
+  },
+  {
+    "name": "Spielplatz Lempe / Bolzplatz Stippelstraße",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.282776,
+      "y": 51.326794
+    }
+  },
+  {
+    "name": "Spielplatz Tippelstraße",
+    "geometry": {
+      "x": 7.134135,
+      "y": 51.39014
+    }
+  },
+  {
+    "name": "Skateboard-Anlage Schöntal mit Ballspielfläche im Gewerbegebiet Schöntal",
+    "skatepark": 1,
+    "geometry": {
+      "x": 7.38652,
+      "y": 51.379949
+    }
+  },
+  {
+    "name": "Spielplatz Boesebecke mit Bolzplatz",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.37844,
+      "y": 51.304726
+    }
+  },
+  {
+    "name": "Spielplatz Altenhöfinghoff mit Bolzplatz",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.395498,
+      "y": 51.307614
+    }
+  },
+  {
+    "name": "Bolzplatz Oberbauer",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.414049,
+      "y": 51.290978
+    }
+  },
+  {
+    "name": "Bolzplatz Voerde-Nord",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.383688,
+      "y": 51.315815
+    }
+  },
+  {
+    "name": "Bolzplatz Heimstraße",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.340033,
+      "y": 51.300375
+    }
+  },
+  {
+    "name": "Basketballfläche Jugendtreff Holthausen",
+    "basketballplätze": 1,
+    "geometry": {
+      "x": 7.225079,
+      "y": 51.395623
+    }
+  },
+  {
+    "name": "Spielpunkt auf den Brennen mit Bolzplatz",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.444177,
+      "y": 51.402202
+    }
+  },
+  {
+    "name": "Spiel- & Bolzplatz Nordstraße / Holthauser Straße",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.195566,
+      "y": 51.399951
+    }
+  },
+  {
+    "name": "Spielplatz Ringstraße mit Bolzplatz",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.427642,
+      "y": 51.407781
+    }
+  },
+  {
+    "name": "Bolzplatz Asternweg",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.422381,
+      "y": 51.408535
+    }
+  },
+  {
+    "name": "Spielplatz Schraberg/ am Nierkamp mit Bolzplatz",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.427956,
+      "y": 51.42363
+    }
+  },
+  {
+    "name": "Spielplatz Sperlingsweg mit Bolzplatz",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.437048,
+      "y": 51.424815
+    }
+  },
+  {
+    "name": "Bolzplatz Kesselstraße",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.331953,
+      "y": 51.444415
+    }
+  },
+  {
+    "name": "Bolzplatz Am Herbeder Sportplatz",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.271715,
+      "y": 51.418548
+    }
+  },
+  {
+    "name": "Bolzplatz Hausackerstraße",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.367159,
+      "y": 51.473755
+    }
+  },
+  {
+    "name": "Bolzplatz Im Homberge",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.368516,
+      "y": 51.455874
+    }
+  },
+  {
+    "name": "Bolzplatz Fröbelstraße",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.386098,
+      "y": 51.442753
+    }
+  },
+  {
+    "name": "Bolzplatz Kapellenstraße",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.341961,
+      "y": 51.419884
+    }
+  },
+  {
+    "name": "Bolzplatz Billerbeck",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.317536,
+      "y": 51.438818
+    }
+  },
+  {
+    "name": "Bolzplatz Hevener Straße",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.297194,
+      "y": 51.436743
+    }
+  },
+  {
+    "name": "Bolzplatz Am Kleff",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.310771,
+      "y": 51.435649
+    }
+  },
+  {
+    "name": "Bolzplatz Vormholzer Ring",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.292219,
+      "y": 51.419385
+    }
+  },
+  {
+    "name": "Bolzplatz Rauendahlstraße",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.298579,
+      "y": 51.407982
+    }
+  },
+  {
+    "name": "Bolzplatz Am Masling",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.318847,
+      "y": 51.405972
+    }
+  },
+  {
+    "name": "Bolzplatz Im Röhrken",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.251654,
+      "y": 51.400403
+    }
+  },
+  {
+    "name": "Bolzplatz Lutherpark 2",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.339614,
+      "y": 51.44147
+    }
+  },
+  {
+    "name": "Bolzplatz Dirschauer Straße",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.355841,
+      "y": 51.450967
+    }
+  },
+  {
+    "name": "Bolzplatz Pestalozziplatz",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.357847,
+      "y": 51.438188
+    }
+  },
+  {
+    "name": "Jugendtreffpunkt Außenanlage Skatepark Herbede",
+    "skatepark": 1,
+    "geometry": {
+      "x": 7.270307,
+      "y": 51.418627
+    }
+  },
+  {
+    "name": "Spielplatz und Bolzplatz Rosenstraße",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 7.329903,
+      "y": 51.404105
+    }
+  }
+]

@@ -67,7 +67,8 @@ export async function reverseGeocode(
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), timeout)
 
-    const url = new URL('/api/geocoding/reverse', window.location.origin)
+    const url = new URL('/api/geocoding/reverse', 
+      typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000')
     url.searchParams.set('lat', latitude.toString())
     url.searchParams.set('lon', longitude.toString())
     url.searchParams.set('language', language)

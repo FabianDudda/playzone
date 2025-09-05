@@ -557,6 +557,7 @@ export default function LeafletCourtMap({
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false)
   const isClosingExplicitly = useRef(false)
+  const isClosingFilterExplicitly = useRef(false)
 
   // Debug: Track state changes
   useEffect(() => {
@@ -575,6 +576,12 @@ export default function LeafletCourtMap({
       previousCourtId: selectedCourt?.id
     })
     
+    // Close filter sheet if open (mutual exclusion)
+    if (isFilterSheetOpen) {
+      console.log('📂 Closing filter sheet to open marker sheet')
+      setIsFilterSheetOpen(false)
+    }
+    
     setSelectedCourt(court)
     if (!isBottomSheetOpen) {
       console.log('📂 Opening bottom sheet')
@@ -583,12 +590,18 @@ export default function LeafletCourtMap({
       console.log('📂 Bottom sheet already open, just updating content')
     }
     onCourtSelect?.(court)
-  }, [isBottomSheetOpen, selectedCourt?.id, onCourtSelect])
+  }, [isBottomSheetOpen, isFilterSheetOpen, selectedCourt?.id, onCourtSelect])
 
   const handleExplicitClose = useCallback(() => {
     console.log('🗂️ Explicit close requested - clearing selection and closing sheet')
     setSelectedCourt(null)
     setIsBottomSheetOpen(false)
+  }, [])
+
+  const handleExplicitFilterClose = useCallback(() => {
+    console.log('🗂️ Explicit filter close requested')
+    isClosingFilterExplicitly.current = true
+    setIsFilterSheetOpen(false)
   }, [])
 
   const handleLocationFound = useCallback((lat: number, lng: number) => {
@@ -601,8 +614,16 @@ export default function LeafletCourtMap({
   }, [])
 
   const handleFilterClick = useCallback(() => {
+    // Close marker sheet if open (mutual exclusion)
+    if (isBottomSheetOpen) {
+      console.log('📂 Closing marker sheet to open filter sheet')
+      setIsBottomSheetOpen(false)
+      setSelectedCourt(null) // Clear selection when closing marker sheet
+    }
+    
+    console.log('📂 Opening filter sheet')
     setIsFilterSheetOpen(true)
-  }, [])
+  }, [isBottomSheetOpen])
 
 
   // Default center (Germany)
@@ -691,7 +712,7 @@ export default function LeafletCourtMap({
           <MapClickHandler 
             onMapClick={onMapClick} 
             allowAddCourt={allowAddCourt} 
-            onCloseFilterSheet={() => setIsFilterSheetOpen(false)}
+            onCloseFilterSheet={handleExplicitFilterClose}
             onCloseMapPinSheet={() => {
               console.log('🗺️ Explicitly closing map pin sheet via map click')
               handleExplicitClose()
@@ -768,7 +789,7 @@ export default function LeafletCourtMap({
       >
         <SheetContent 
           side="bottom" 
-          className="border-0 h-auto"
+          className="border-0 h-auto max-w-2xl mx-auto rounded-t-xl"
           hideOverlay
           onClose={handleExplicitClose}
         >
@@ -856,8 +877,8 @@ export default function LeafletCourtMap({
               })()}
 
               <div className="space-y-3">
-                {/* Place Image */}
-                {selectedCourt.image_url && (
+                {/* Place Image - Commented out for future release */}
+                {/* {selectedCourt.image_url && (
                   <div className="w-full rounded-lg overflow-hidden h-48">
                     <img 
                       src={selectedCourt.image_url} 
@@ -869,7 +890,7 @@ export default function LeafletCourtMap({
                       }}
                     />
                   </div>
-                )}
+                )} */}
                 
                 {/* Action buttons */}
                 {(() => {
@@ -937,7 +958,31 @@ export default function LeafletCourtMap({
       {/* Filter Bottom Sheet */}
       <FilterBottomSheet 
         isOpen={isFilterSheetOpen}
-        onClose={() => setIsFilterSheetOpen(false)}
+        onClose={(open) => {
+          console.log('📋 Filter sheet onClose triggered:', {
+            open,
+            previousState: isFilterSheetOpen,
+            isClosingExplicitly: isClosingFilterExplicitly.current
+          })
+          
+          if (open === false) {
+            // If this is an explicit close (map click), it's already handled
+            if (isClosingFilterExplicitly.current) {
+              console.log('🗂️ Explicit filter close - already handled by trigger')
+              isClosingFilterExplicitly.current = false
+              return
+            }
+            
+            // Prevent unwanted closes when filter is open
+            if (isFilterSheetOpen) {
+              console.log('🚫 Ignoring filter close - use explicit close instead')
+              return
+            }
+          }
+          
+          setIsFilterSheetOpen(open)
+        }}
+        onExplicitClose={handleExplicitFilterClose}
         selectedSport={selectedSport}
         onSportChange={onSportChange}
       />

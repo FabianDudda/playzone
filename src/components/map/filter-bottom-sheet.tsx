@@ -4,14 +4,15 @@ import { useState } from 'react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Check, Filter } from 'lucide-react'
+import { Check, Filter, X } from 'lucide-react'
 import { SportType } from '@/lib/supabase/types'
 import { sportNames, sportBadgeStyles, sportColors, sportIcons } from '@/lib/utils/sport-utils'
 import { cn } from '@/lib/utils'
 
 interface FilterBottomSheetProps {
   isOpen: boolean
-  onClose: () => void
+  onClose: (open: boolean) => void
+  onExplicitClose: () => void
   selectedSport: SportType | 'all'
   onSportChange: (sport: SportType | 'all') => void
 }
@@ -31,6 +32,7 @@ const SPORTS: (SportType | 'all')[] = [
 export default function FilterBottomSheet({
   isOpen,
   onClose,
+  onExplicitClose,
   selectedSport,
   onSportChange
 }: FilterBottomSheetProps) {
@@ -38,13 +40,22 @@ export default function FilterBottomSheet({
     <Sheet open={isOpen} onOpenChange={onClose} modal={false}>
       <SheetContent 
         side="bottom" 
-        className="max-h-[80vh] overflow-y-auto"
+        className="max-h-[80vh] overflow-y-auto max-w-2xl mx-auto rounded-t-xl"
         hideOverlay
       >
         <SheetHeader>
-          <SheetTitle>
-            Filter
-          </SheetTitle>
+          <div className="flex items-center justify-between">
+            <SheetTitle>
+              Filter
+            </SheetTitle>
+            <button
+              onClick={onExplicitClose}
+              className="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center opacity-70 hover:opacity-100 transition-opacity"
+              title="Close"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
         </SheetHeader>
         
         <div className="space-y-6 py-6">
