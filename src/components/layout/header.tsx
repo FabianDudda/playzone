@@ -138,16 +138,6 @@ export default function Header() {
         </div>
         <div className="flex flex-1 items-center justify-end space-x-4">
           <MobileNav />
-          {!user && (
-            <div className="flex gap-2">
-              <Button variant="ghost" size="sm" asChild>
-                <Link href="/auth/signin">Sign in</Link>
-              </Button>
-              <Button size="sm" asChild>
-                <Link href="/auth/signup">Sign up</Link>
-              </Button>
-            </div>
-          )}
         </div>
       </div>
     </header>

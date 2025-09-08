@@ -30,11 +30,8 @@ interface LeafletCourtMapProps {
   selectedLocation?: { lat: number; lng: number } | null
   enableClustering?: boolean
   selectedSport?: SportType | 'all'
-  // Search and filter props
-  searchQuery?: string
-  onSearchChange?: (query: string) => void
+  // Filter props
   onSportChange?: (sport: SportType | 'all') => void
-  showSearchControls?: boolean
   placesCount?: number
   showAddCourtButton?: boolean
   onAddCourtClick?: () => void
@@ -73,109 +70,97 @@ function MapClickHandler({
 }
 
 
-// Component to handle modern search control with filter button
-function SearchFilterControlHandler({ 
-  searchQuery = '', 
-  onSearchChange,
-  onFilterClick
-}: { 
-  searchQuery?: string
-  onSearchChange?: (query: string) => void
-  onFilterClick?: () => void
-}) {
+// Component to handle filter button in top right corner
+function FilterButtonHandler({ onFilterClick }: { onFilterClick: () => void }) {
   const map = useMap()
-  const inputRef = useRef<HTMLInputElement | null>(null)
   
   useEffect(() => {
-    // Create modern search control with filter button
-    const SearchControl = L.Control.extend({
+    // Create filter button
+    const FilterControl = L.Control.extend({
       options: {
-        position: 'topleft'
+        position: 'topright'
       },
       onAdd: function(map: L.Map) {
-        // Main container centered
-        const mainContainer = L.DomUtil.create('div', 'leaflet-control-search-main')
-        
-        // Search container
-        const searchContainer = L.DomUtil.create('div', 'search-container', mainContainer)
-        
-        // Search icon (left)
-        const searchIcon = L.DomUtil.create('div', 'search-icon', searchContainer)
-        searchIcon.innerHTML = `
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"/>
-            <path d="M21 21l-4.35-4.35"/>
-          </svg>
+        // Create filter button container
+        const filterContainer = L.DomUtil.create('div', 'leaflet-control-filter')
+        filterContainer.style.cssText = `
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          z-index: 1000;
         `
         
-        // Search input
-        const searchInput = L.DomUtil.create('input', 'search-input', searchContainer) as HTMLInputElement
-        searchInput.type = 'text'
-        searchInput.placeholder = 'Search courts...'
-        searchInput.value = searchQuery
-        
-        // Store reference to input for direct updates
-        inputRef.current = searchInput
-        
-        // Filter button (right)
-        const filterButton = L.DomUtil.create('button', 'filter-button', searchContainer)
+        // Create modern filter button
+        const filterButton = L.DomUtil.create('button', 'filter-button', filterContainer)
         filterButton.innerHTML = `
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
           </svg>
         `
+        filterButton.title = 'Filter'
+        filterButton.style.cssText = `
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          border: none;
+          background: white;
+          color: #374151;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+          transition: all 0.2s ease;
+          outline: none;
+        `
         
-        // Note: Hover and focus effects are now handled by CSS classes
-        
-        // Debounce search input
-        let searchTimeout: NodeJS.Timeout
-        
-        // Handle events
-        L.DomEvent.on(searchInput, 'input', (e: any) => {
-          clearTimeout(searchTimeout)
-          searchTimeout = setTimeout(() => {
-            onSearchChange?.(e.target.value)
-          }, 300) // 300ms debounce delay
+        // Add hover and active effects
+        L.DomEvent.on(filterButton, 'mouseenter', () => {
+          filterButton.style.transform = 'scale(1.05)'
+          filterButton.style.boxShadow = '0 4px 20px rgba(0,0,0,0.2)'
+          filterButton.style.background = '#f8fafc'
         })
         
-        L.DomEvent.on(filterButton, 'click', (e: any) => {
+        L.DomEvent.on(filterButton, 'mouseleave', () => {
+          filterButton.style.transform = 'scale(1)'
+          filterButton.style.boxShadow = '0 2px 10px rgba(0,0,0,0.15)'
+          filterButton.style.background = 'white'
+        })
+        
+        L.DomEvent.on(filterButton, 'mousedown', () => {
+          filterButton.style.transform = 'scale(0.95)'
+        })
+        
+        L.DomEvent.on(filterButton, 'mouseup', () => {
+          filterButton.style.transform = 'scale(1.05)'
+        })
+        
+        // Handle click events
+        L.DomEvent.on(filterButton, 'click', (e) => {
           L.DomEvent.preventDefault(e)
-          onFilterClick?.()
+          onFilterClick()
         })
         
         // Prevent map interactions
-        L.DomEvent.disableClickPropagation(mainContainer)
-        L.DomEvent.disableScrollPropagation(mainContainer)
+        L.DomEvent.disableClickPropagation(filterContainer)
+        L.DomEvent.disableScrollPropagation(filterContainer)
         
         // Add to map container
-        map.getContainer().appendChild(mainContainer)
+        map.getContainer().appendChild(filterContainer)
         
-        return { 
-          remove: () => {
-            clearTimeout(searchTimeout)
-            mainContainer.remove()
-            inputRef.current = null
-          }
-        }
+        return { remove: () => filterContainer.remove() }
       }
     })
     
-    const searchControl = new SearchControl()
-    const controlInstance = searchControl.onAdd(map)
+    const filterControl = new FilterControl()
+    const controlInstance = filterControl.onAdd(map)
     
     return () => {
       if (controlInstance && controlInstance.remove) {
         controlInstance.remove()
       }
     }
-  }, [map, onSearchChange, onFilterClick]) // Removed searchQuery from dependencies
-  
-  // Update input value directly when searchQuery changes (without recreating control)
-  useEffect(() => {
-    if (inputRef.current && inputRef.current.value !== searchQuery) {
-      inputRef.current.value = searchQuery
-    }
-  }, [searchQuery])
+  }, [map, onFilterClick])
   
   return null
 }
@@ -315,9 +300,12 @@ function LayerToggleHandler({ currentLayerId, onLayerChange }: { currentLayerId:
         layerContainer.style.cssText = `
           position: absolute;
           bottom: 60px;
-          left: 8px;
+          right: 10px;
           z-index: 1000;
         `
+        
+        // Adjust for bottom navigation
+        layerContainer.style.bottom = '150px'
         
         // Create modern layer toggle button
         const layerButton = L.DomUtil.create('button', 'layer-toggle-button', layerContainer)
@@ -438,7 +426,7 @@ function PlacesCountHandler({ count }: { count: number }) {
 }
 
 // Component to handle add court button positioned above locate button
-function AddCourtButtonHandler({ onAddCourtClick }: { onAddCourtClick: () => void }) {
+function AddCourtButtonHandler({ onAddCourtClick, user }: { onAddCourtClick: () => void, user: any }) {
   const map = useMap()
   
   useEffect(() => {
@@ -452,7 +440,7 @@ function AddCourtButtonHandler({ onAddCourtClick }: { onAddCourtClick: () => voi
         const addCourtContainer = L.DomUtil.create('div', 'leaflet-control-add-court')
         addCourtContainer.style.cssText = `
           position: absolute;
-          bottom: 70px;
+          top: 70px;
           right: 10px;
           z-index: 1000;
         `
@@ -460,12 +448,12 @@ function AddCourtButtonHandler({ onAddCourtClick }: { onAddCourtClick: () => voi
         // Create modern add court button
         const addCourtButton = L.DomUtil.create('button', 'add-court-button', addCourtContainer)
         addCourtButton.innerHTML = `
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="12" y1="5" x2="12" y2="19"/>
             <line x1="5" y1="12" x2="19" y2="12"/>
           </svg>
         `
-        addCourtButton.title = 'Add court'
+        addCourtButton.title = user ? 'Add court' : 'Sign in to add court'
         addCourtButton.style.cssText = `
           width: 48px;
           height: 48px;
@@ -506,7 +494,11 @@ function AddCourtButtonHandler({ onAddCourtClick }: { onAddCourtClick: () => voi
         // Handle click events
         L.DomEvent.on(addCourtButton, 'click', (e) => {
           L.DomEvent.preventDefault(e)
-          onAddCourtClick()
+          if (!user) {
+            window.location.href = '/auth/signin'
+          } else {
+            onAddCourtClick()
+          }
         })
         
         // Prevent map interactions
@@ -542,10 +534,7 @@ export default function LeafletCourtMap({
   selectedLocation = null,
   enableClustering = true,
   selectedSport = 'all',
-  searchQuery = '',
-  onSearchChange,
   onSportChange,
-  showSearchControls = false,
   placesCount = 0,
   showAddCourtButton = false,
   onAddCourtClick
@@ -722,14 +711,8 @@ export default function LeafletCourtMap({
           {/* User location control */}
           <UserLocationHandler onLocationFound={handleLocationFound} />
           
-          {/* Modern search control */}
-          {showSearchControls && (
-            <SearchFilterControlHandler 
-              searchQuery={searchQuery}
-              onSearchChange={onSearchChange}
-              onFilterClick={handleFilterClick}
-            />
-          )}
+          {/* Filter button */}
+          <FilterButtonHandler onFilterClick={handleFilterClick} />
           
           
           {/* Custom attribution control */}
@@ -743,7 +726,7 @@ export default function LeafletCourtMap({
           
           {/* Add court button */}
           {showAddCourtButton && onAddCourtClick && (
-            <AddCourtButtonHandler onAddCourtClick={onAddCourtClick} />
+            <AddCourtButtonHandler onAddCourtClick={onAddCourtClick} user={user} />
           )}
         </MapContainer>
       
@@ -809,16 +792,20 @@ export default function LeafletCourtMap({
                   
                   {/* Button group */}
                   <div className="flex items-center gap-3">
-                    {/* Edit button - only show if user can edit */}
-                    {user && (
-                      <button
-                        onClick={() => window.location.href = `/places/${selectedCourt.id}/edit`}
-                        className="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center opacity-70 hover:opacity-100 transition-opacity"
-                        title={profile?.user_role === 'admin' ? 'Edit Place' : 'Suggest Edit'}
-                      >
-                        <Pencil className="h-[18px] w-[18px]" />
-                      </button>
-                    )}
+                    {/* Edit button - always visible */}
+                    <button
+                      onClick={() => {
+                        if (!user) {
+                          window.location.href = '/auth/signin'
+                        } else {
+                          window.location.href = `/places/${selectedCourt.id}/edit`
+                        }
+                      }}
+                      className="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center opacity-70 hover:opacity-100 transition-opacity"
+                      title={user && profile?.user_role === 'admin' ? 'Edit Place' : user ? 'Suggest Edit' : 'Sign in to edit'}
+                    >
+                      <Pencil className="h-[18px] w-[18px]" />
+                    </button>
                     
                     {/* Close button */}
                     <button

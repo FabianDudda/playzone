@@ -42,7 +42,6 @@ export default function CourtsPage() {
   const { user } = useAuth()
   const [selectedSport, setSelectedSport] = useState<SportType | 'all'>('all')
   const [selectedSurface, setSelectedSurface] = useState<string | 'all'>('all')
-  const [searchQuery, setSearchQuery] = useState('')
   const [selectedPlace, setSelectedPlace] = useState<PlaceWithCourts | null>(null)
 
   // Fetch all places (formerly courts)
@@ -51,7 +50,7 @@ export default function CourtsPage() {
     queryFn: () => database.courts.getAllCourts(),
   })
 
-  // Filter places based on sport, surface and search
+  // Filter places based on sport and surface
   const filteredPlaces = places.filter((place) => {
     // Check if place matches the sport+surface combination
     const matchesCombination = 
@@ -70,12 +69,8 @@ export default function CourtsPage() {
       (selectedSport !== 'all' && selectedSurface !== 'all' &&
         place.courts?.some(court => court.sport === selectedSport && court.surface === selectedSurface)
       )
-      
-    const matchesSearch = !searchQuery || 
-      place.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      place.description?.toLowerCase().includes(searchQuery.toLowerCase())
     
-    return matchesCombination && matchesSearch
+    return matchesCombination
   })
 
   const handlePlaceSelect = (place: PlaceWithCourts) => {
@@ -88,15 +83,12 @@ export default function CourtsPage() {
       onCourtSelect={handlePlaceSelect}
       height="calc(100dvh - 4rem)"
       selectedSport={selectedSport}
-      searchQuery={searchQuery}
-      onSearchChange={setSearchQuery}
       onSportChange={(sport) => {
         setSelectedSport(sport)
         setSelectedSurface('all') // Reset surface filter when sport changes
       }}
-      showSearchControls={true}
       placesCount={filteredPlaces.length}
-      showAddCourtButton={!!user}
+      showAddCourtButton={true}
       onAddCourtClick={() => window.location.href = '/map/new'}
     />
   )

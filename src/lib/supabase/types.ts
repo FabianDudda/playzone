@@ -7,213 +7,40 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "13.0.4"
+  }
   public: {
     Tables: {
-      places: {
-        Row: {
-          added_by_user: string
-          created_at: string
-          description: string | null
-          id: string
-          image_url: string | null
-          latitude: number
-          longitude: number
-          name: string
-          sports: Database["public"]["Enums"]["sport_type"][] | null
-          source: string
-          source_id: string | null
-          district: string | null
-          neighborhood: string | null
-          area: string | null
-          features: string[] | null
-          import_date: string
-          // Address fields from reverse geocoding
-          street: string | null
-          house_number: string | null
-          city: string | null
-          county: string | null
-          state: string | null
-          country: string | null
-          postcode: string | null
-          // Moderation fields
-          moderation_status: Database["public"]["Enums"]["moderation_status"]
-          moderated_by: string | null
-          moderated_at: string | null
-          rejection_reason: string | null
-        }
-        Insert: {
-          added_by_user: string
-          created_at?: string
-          description?: string | null
-          id?: string
-          image_url?: string | null
-          latitude: number
-          longitude: number
-          name: string
-          sports?: Database["public"]["Enums"]["sport_type"][] | null
-          source?: string
-          source_id?: string | null
-          district?: string | null
-          neighborhood?: string | null
-          area?: string | null
-          features?: string[] | null
-          import_date?: string
-          // Address fields from reverse geocoding
-          street?: string | null
-          house_number?: string | null
-          city?: string | null
-          county?: string | null
-          state?: string | null
-          country?: string | null
-          postcode?: string | null
-          // Moderation fields
-          moderation_status?: Database["public"]["Enums"]["moderation_status"]
-          moderated_by?: string | null
-          moderated_at?: string | null
-          rejection_reason?: string | null
-        }
-        Update: {
-          added_by_user?: string
-          created_at?: string
-          description?: string | null
-          id?: string
-          image_url?: string | null
-          latitude?: number
-          longitude?: number
-          name?: string
-          sports?: Database["public"]["Enums"]["sport_type"][] | null
-          source?: string
-          source_id?: string | null
-          district?: string | null
-          neighborhood?: string | null
-          area?: string | null
-          features?: string[] | null
-          import_date?: string
-          // Address fields from reverse geocoding
-          street?: string | null
-          house_number?: string | null
-          city?: string | null
-          county?: string | null
-          state?: string | null
-          country?: string | null
-          postcode?: string | null
-          // Moderation fields
-          moderation_status?: Database["public"]["Enums"]["moderation_status"]
-          moderated_by?: string | null
-          moderated_at?: string | null
-          rejection_reason?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "places_added_by_user_fkey"
-            columns: ["added_by_user"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "places_moderated_by_fkey"
-            columns: ["moderated_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      pending_place_changes: {
-        Row: {
-          id: string
-          place_id: string | null
-          submitted_by: string
-          change_type: Database["public"]["Enums"]["place_change_type"]
-          proposed_data: Json
-          current_data: Json | null
-          status: Database["public"]["Enums"]["moderation_status"]
-          reviewed_by: string | null
-          reviewed_at: string | null
-          rejection_reason: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          place_id?: string | null
-          submitted_by: string
-          change_type: Database["public"]["Enums"]["place_change_type"]
-          proposed_data: Json
-          current_data?: Json | null
-          status?: Database["public"]["Enums"]["moderation_status"]
-          reviewed_by?: string | null
-          reviewed_at?: string | null
-          rejection_reason?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          place_id?: string | null
-          submitted_by?: string
-          change_type?: Database["public"]["Enums"]["place_change_type"]
-          proposed_data?: Json
-          current_data?: Json | null
-          status?: Database["public"]["Enums"]["moderation_status"]
-          reviewed_by?: string | null
-          reviewed_at?: string | null
-          rejection_reason?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "pending_place_changes_place_id_fkey"
-            columns: ["place_id"]
-            isOneToOne: false
-            referencedRelation: "places"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "pending_place_changes_submitted_by_fkey"
-            columns: ["submitted_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "pending_place_changes_reviewed_by_fkey"
-            columns: ["reviewed_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       courts: {
         Row: {
+          created_at: string | null
           id: string
-          place_id: string
-          sport: Database["public"]["Enums"]["sport_type"]
-          quantity: number
-          surface: string | null
           notes: string | null
-          created_at: string
+          place_id: string
+          quantity: number | null
+          sport: Database["public"]["Enums"]["sport_type"]
+          surface: string | null
         }
         Insert: {
+          created_at?: string | null
           id?: string
-          place_id: string
-          sport: Database["public"]["Enums"]["sport_type"]
-          quantity?: number
-          surface?: string | null
           notes?: string | null
-          created_at?: string
+          place_id: string
+          quantity?: number | null
+          sport: Database["public"]["Enums"]["sport_type"]
+          surface?: string | null
         }
         Update: {
+          created_at?: string | null
           id?: string
-          place_id?: string
-          sport?: Database["public"]["Enums"]["sport_type"]
-          quantity?: number
-          surface?: string | null
           notes?: string | null
-          created_at?: string
+          place_id?: string
+          quantity?: number | null
+          sport?: Database["public"]["Enums"]["sport_type"]
+          surface?: string | null
         }
         Relationships: [
           {
@@ -278,6 +105,7 @@ export type Database = {
           court_id: string | null
           created_at: string
           id: string
+          place_id: string | null
           score: Json | null
           sport: Database["public"]["Enums"]["sport_type"]
           team_a_players: string[]
@@ -288,6 +116,7 @@ export type Database = {
           court_id?: string | null
           created_at?: string
           id?: string
+          place_id?: string | null
           score?: Json | null
           sport: Database["public"]["Enums"]["sport_type"]
           team_a_players: string[]
@@ -298,6 +127,7 @@ export type Database = {
           court_id?: string | null
           created_at?: string
           id?: string
+          place_id?: string | null
           score?: Json | null
           sport?: Database["public"]["Enums"]["sport_type"]
           team_a_players?: string[]
@@ -312,6 +142,182 @@ export type Database = {
             referencedRelation: "courts"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "matches_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pending_place_changes: {
+        Row: {
+          change_type: Database["public"]["Enums"]["place_change_type"]
+          created_at: string
+          current_data: Json | null
+          id: string
+          place_id: string | null
+          proposed_data: Json
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["moderation_status"]
+          submitted_by: string
+          updated_at: string
+        }
+        Insert: {
+          change_type: Database["public"]["Enums"]["place_change_type"]
+          created_at?: string
+          current_data?: Json | null
+          id?: string
+          place_id?: string | null
+          proposed_data: Json
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["moderation_status"]
+          submitted_by: string
+          updated_at?: string
+        }
+        Update: {
+          change_type?: Database["public"]["Enums"]["place_change_type"]
+          created_at?: string
+          current_data?: Json | null
+          id?: string
+          place_id?: string | null
+          proposed_data?: Json
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["moderation_status"]
+          submitted_by?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pending_place_changes_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pending_place_changes_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pending_place_changes_submitted_by_fkey"
+            columns: ["submitted_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      places: {
+        Row: {
+          added_by_user: string
+          city: string | null
+          country: string | null
+          county: string | null
+          created_at: string
+          description: string | null
+          district: string | null
+          features: string[] | null
+          house_number: string | null
+          id: string
+          image_url: string | null
+          import_date: string | null
+          latitude: number
+          longitude: number
+          moderated_at: string | null
+          moderated_by: string | null
+          moderation_status: Database["public"]["Enums"]["moderation_status"]
+          name: string
+          postcode: string | null
+          rejection_reason: string | null
+          source: string
+          source_id: string | null
+          sports: Database["public"]["Enums"]["sport_type"][] | null
+          state: string | null
+          street: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          added_by_user: string
+          city?: string | null
+          country?: string | null
+          county?: string | null
+          created_at?: string
+          description?: string | null
+          district?: string | null
+          features?: string[] | null
+          house_number?: string | null
+          id?: string
+          image_url?: string | null
+          import_date?: string | null
+          latitude: number
+          longitude: number
+          moderated_at?: string | null
+          moderated_by?: string | null
+          moderation_status?: Database["public"]["Enums"]["moderation_status"]
+          name: string
+          postcode?: string | null
+          rejection_reason?: string | null
+          source?: string
+          source_id?: string | null
+          sports?: Database["public"]["Enums"]["sport_type"][] | null
+          state?: string | null
+          street?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          added_by_user?: string
+          city?: string | null
+          country?: string | null
+          county?: string | null
+          created_at?: string
+          description?: string | null
+          district?: string | null
+          features?: string[] | null
+          house_number?: string | null
+          id?: string
+          image_url?: string | null
+          import_date?: string | null
+          latitude?: number
+          longitude?: number
+          moderated_at?: string | null
+          moderated_by?: string | null
+          moderation_status?: Database["public"]["Enums"]["moderation_status"]
+          name?: string
+          postcode?: string | null
+          rejection_reason?: string | null
+          source?: string
+          source_id?: string | null
+          sports?: Database["public"]["Enums"]["sport_type"][] | null
+          state?: string | null
+          street?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "courts_added_by_user_fkey"
+            columns: ["added_by_user"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "places_moderated_by_fkey"
+            columns: ["moderated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       profiles: {
@@ -321,8 +327,8 @@ export type Database = {
           elo: Json
           id: string
           name: string
-          user_role: string
           updated_at: string
+          user_role: string
         }
         Insert: {
           avatar?: string | null
@@ -330,8 +336,8 @@ export type Database = {
           elo?: Json
           id: string
           name: string
-          user_role?: string
           updated_at?: string
+          user_role?: string
         }
         Update: {
           avatar?: string | null
@@ -339,18 +345,10 @@ export type Database = {
           elo?: Json
           id?: string
           name?: string
-          user_role?: string
           updated_at?: string
+          user_role?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "profiles_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
     }
     Views: {
@@ -360,38 +358,97 @@ export type Database = {
       calculate_elo_change: {
         Args: {
           current_elo: number
+          k_factor?: number
           opponent_elo: number
           won: boolean
-          k_factor?: number
         }
+        Returns: number
+      }
+      cube: {
+        Args: { "": number[] } | { "": number }
+        Returns: unknown
+      }
+      cube_dim: {
+        Args: { "": unknown }
+        Returns: number
+      }
+      cube_in: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      cube_is_point: {
+        Args: { "": unknown }
+        Returns: boolean
+      }
+      cube_out: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      cube_recv: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
+      cube_send: {
+        Args: { "": unknown }
+        Returns: string
+      }
+      cube_size: {
+        Args: { "": unknown }
+        Returns: number
+      }
+      earth: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      gc_to_sec: {
+        Args: { "": number }
         Returns: number
       }
       get_k_factor: {
-        Args: {
-          team_size: number
-        }
+        Args: { team_size: number }
         Returns: number
       }
       get_leaderboard: {
-        Args: {
-          sport_name?: string
-          limit_count?: number
-        }
+        Args: { limit_count?: number; sport_name?: string }
         Returns: {
-          user_id: string
-          name: string
           avatar: string
           elo: number
           matches_played: number
+          name: string
           rank: number
+          user_id: string
         }[]
+      }
+      latitude: {
+        Args: { "": unknown }
+        Returns: number
+      }
+      longitude: {
+        Args: { "": unknown }
+        Returns: number
+      }
+      sec_to_gc: {
+        Args: { "": number }
+        Returns: number
       }
     }
     Enums: {
       match_result: "team_a" | "team_b" | "draw"
       moderation_status: "pending" | "approved" | "rejected"
       place_change_type: "create" | "update" | "delete"
-      sport_type: "tennis" | "basketball" | "volleyball" | "spikeball" | "badminton" | "squash" | "pickleball" | "fußball" | "tischtennis" | "boule" | "skatepark"
+      sport_type:
+        | "tennis"
+        | "basketball"
+        | "volleyball"
+        | "spikeball"
+        | "badminton"
+        | "squash"
+        | "hockey"
+        | "fußball"
+        | "tischtennis"
+        | "beachvolleyball"
+        | "boule"
+        | "skatepark"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -399,49 +456,143 @@ export type Database = {
   }
 }
 
-export type SportType = Database["public"]["Enums"]["sport_type"]
-export type MatchResult = Database["public"]["Enums"]["match_result"]
-export type ModerationStatus = Database["public"]["Enums"]["moderation_status"]
-export type PlaceChangeType = Database["public"]["Enums"]["place_change_type"]
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 
-export type Profile = Database["public"]["Tables"]["profiles"]["Row"]
-export type Place = Database["public"]["Tables"]["places"]["Row"]
-export type Court = Database["public"]["Tables"]["courts"]["Row"]
-export type Match = Database["public"]["Tables"]["matches"]["Row"]
-export type MatchParticipant = Database["public"]["Tables"]["match_participants"]["Row"]
-export type PendingPlaceChange = Database["public"]["Tables"]["pending_place_changes"]["Row"]
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
-// Legacy type for backward compatibility (maps to Place)
-export type LegacyCourt = Place
-
-// Combined type for places with their courts
-export interface PlaceWithCourts extends Place {
-  courts: Court[]
-  profiles: {
-    name: string
-    avatar: string | null
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
   }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
 }
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
 
-export interface EloRatings {
-  tennis: number
-  basketball: number
-  volleyball: number
-  spikeball: number
-  badminton: number
-  squash: number
-  pickleball: number
-  fußball: number
-  tischtennis: number
-  boule: number
-  skatepark: number
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
 }
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
 
-export interface LeaderboardEntry {
-  user_id: string
-  name: string
-  avatar: string | null
-  elo: number
-  matches_played: number
-  rank: number
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
 }
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      match_result: ["team_a", "team_b", "draw"],
+      moderation_status: ["pending", "approved", "rejected"],
+      place_change_type: ["create", "update", "delete"],
+      sport_type: [
+        "tennis",
+        "basketball",
+        "volleyball",
+        "spikeball",
+        "badminton",
+        "squash",
+        "hockey",
+        "fußball",
+        "tischtennis",
+        "beachvolleyball",
+        "boule",
+        "skatepark",
+      ],
+    },
+  },
+} as const
