@@ -152,6 +152,11 @@ export function getSportBadgeStyles(sport: string): { backgroundColor: string, c
   return { backgroundColor, color: textColor }
 }
 
+// Helper function to render emoji icon HTML for map pins
+function renderIconHtml(icon: string, fontSize: number): string {
+  return `<span style="font-size: ${fontSize}px; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">${icon}</span>`
+}
+
 // Create horizontal sport icons layout within pin
 function createSimpleSportIcon(sports: string[], baseSize: number, isSelected: boolean = false): string {
   const borderWidth = isSelected ? 3 : 2
@@ -234,12 +239,9 @@ function createSimpleSportIcon(sports: string[], baseSize: number, isSelected: b
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: ${fontSize}px;
-        color: white;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
         z-index: 11;
       ">
-        ${icon}
+        ${renderIconHtml(icon, fontSize)}
       </div>
     `
   } else if (iconsToShow.length === 2 && !showOverflow) {
@@ -262,12 +264,9 @@ function createSimpleSportIcon(sports: string[], baseSize: number, isSelected: b
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: ${fontSize}px;
-          color: white;
-          text-shadow: 0 1px 2px rgba(0,0,0,0.5);
           z-index: 11;
         ">
-          ${icon}
+          ${renderIconHtml(icon, fontSize)}
         </div>
       `
     }).join('')
@@ -292,12 +291,9 @@ function createSimpleSportIcon(sports: string[], baseSize: number, isSelected: b
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: ${fontSize}px;
-          color: white;
-          text-shadow: 0 1px 2px rgba(0,0,0,0.5);
           z-index: 11;
         ">
-          ${icon}
+          ${renderIconHtml(icon, fontSize)}
         </div>
       `
     }).join('')
@@ -333,12 +329,9 @@ function createSimpleSportIcon(sports: string[], baseSize: number, isSelected: b
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: ${fontSize}px;
-        color: white;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
         z-index: 11;
       ">
-        ${sportIcons[iconsToShow[2]] || '📍'}
+        ${renderIconHtml(sportIcons[iconsToShow[2]] || '📍', fontSize)}
       </div>
     `
     

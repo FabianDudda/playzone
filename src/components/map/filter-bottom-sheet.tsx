@@ -61,7 +61,6 @@ export default function FilterBottomSheet({
         <div className="space-y-6 py-6">
           {/* Sports Filter Section */}
           <div className="space-y-4">
-            <h3 className="text-lg font-medium">Sportarten</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {SPORTS.map((sport) => {
                 const isSelected = selectedSport === sport
