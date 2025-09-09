@@ -52,6 +52,108 @@ export type Database = {
           },
         ]
       }
+      events: {
+        Row: {
+          created_at: string
+          updated_at: string
+          id: string
+          title: string
+          description: string | null
+          place_id: string
+          sport: Database["public"]["Enums"]["sport_type"]
+          event_date: string
+          event_time: string
+          min_players: number
+          max_players: number
+          skill_level: Database["public"]["Enums"]["skill_level"]
+          creator_id: string
+          status: Database["public"]["Enums"]["event_status"]
+        }
+        Insert: {
+          created_at?: string
+          updated_at?: string
+          id?: string
+          title: string
+          description?: string | null
+          place_id: string
+          sport: Database["public"]["Enums"]["sport_type"]
+          event_date: string
+          event_time: string
+          min_players?: number
+          max_players?: number
+          skill_level?: Database["public"]["Enums"]["skill_level"]
+          creator_id: string
+          status?: Database["public"]["Enums"]["event_status"]
+        }
+        Update: {
+          created_at?: string
+          updated_at?: string
+          id?: string
+          title?: string
+          description?: string | null
+          place_id?: string
+          sport?: Database["public"]["Enums"]["sport_type"]
+          event_date?: string
+          event_time?: string
+          min_players?: number
+          max_players?: number
+          skill_level?: Database["public"]["Enums"]["skill_level"]
+          creator_id?: string
+          status?: Database["public"]["Enums"]["event_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "events_creator_id_fkey"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_participants: {
+        Row: {
+          created_at: string
+          id: string
+          event_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          event_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          event_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_participants_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_participants_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       match_participants: {
         Row: {
           created_at: string
@@ -433,9 +535,11 @@ export type Database = {
       }
     }
     Enums: {
+      event_status: "active" | "cancelled" | "full" | "completed"
       match_result: "team_a" | "team_b" | "draw"
       moderation_status: "pending" | "approved" | "rejected"
       place_change_type: "create" | "update" | "delete"
+      skill_level: "beginner" | "intermediate" | "advanced" | "any"
       sport_type:
         | "tennis"
         | "basketball"
@@ -576,9 +680,11 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      event_status: ["active", "cancelled", "full", "completed"],
       match_result: ["team_a", "team_b", "draw"],
       moderation_status: ["pending", "approved", "rejected"],
       place_change_type: ["create", "update", "delete"],
+      skill_level: ["beginner", "intermediate", "advanced", "any"],
       sport_type: [
         "tennis",
         "basketball",
@@ -596,3 +702,56 @@ export const Constants = {
     },
   },
 } as const
+
+// Convenience type aliases for database tables
+export type Profile = Tables<'profiles'>
+export type Place = Tables<'places'>
+export type Court = Tables<'courts'>
+export type Match = Tables<'matches'>
+export type MatchParticipant = Tables<'match_participants'>
+export type PendingPlaceChange = Tables<'pending_place_changes'>
+export type Event = Tables<'events'>
+export type EventParticipant = Tables<'event_participants'>
+
+// Enum types
+export type SportType = Enums<'sport_type'>
+export type MatchResult = Enums<'match_result'>
+export type ModerationStatus = Enums<'moderation_status'>
+export type PlaceChangeType = Enums<'place_change_type'>
+export type EventStatus = Enums<'event_status'>
+export type SkillLevel = Enums<'skill_level'>
+
+// Composite types
+export interface PlaceWithCourts extends Place {
+  courts?: Court[]
+  profiles?: Pick<Profile, 'name' | 'avatar'>
+}
+
+export interface LegacyCourt extends Place {
+  sport: SportType
+  quantity: number
+  surface?: string
+  notes?: string
+}
+
+export interface LeaderboardEntry {
+  user_id: string
+  name: string
+  avatar: string | null
+  elo: number
+  matches_played: number
+  rank: number
+}
+
+export interface EventWithDetails extends Event {
+  participant_count: number
+  user_joined: boolean
+  creator_name: string
+  creator_avatar: string | null
+  place_name: string
+  place_latitude: number
+  place_longitude: number
+  participants?: EventParticipant[]
+  place?: PlaceWithCourts
+  creator?: Pick<Profile, 'name' | 'avatar'>
+}

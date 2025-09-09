@@ -1,181 +1,166 @@
-/* Filter button styles */
-.leaflet-control-filter {
+/* Map Control System Variables */
+:root {
+  --map-control-margin: 16px;
+  --map-control-size: 48px;
+  --map-control-gap: 16px;
+  --map-control-z-index: 1000;
+  --map-control-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  --map-control-shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.2);
+  --map-control-bg: white;
+  --map-control-bg-hover: #f8fafc;
+  --map-control-color: #374151;
+  --map-control-border-radius: 50%;
+  --map-control-transition: all 0.2s ease;
+}
+
+/* Base Control Button Styles */
+.map-control-button {
+  width: var(--map-control-size);
+  height: var(--map-control-size);
+  border-radius: var(--map-control-border-radius);
+  border: none;
+  background: var(--map-control-bg);
+  color: var(--map-control-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--map-control-shadow);
+  transition: var(--map-control-transition);
+  outline: none;
+}
+
+.map-control-button:hover {
+  transform: scale(1.05);
+  box-shadow: var(--map-control-shadow-hover);
+  background: var(--map-control-bg-hover);
+}
+
+.map-control-button:active {
+  transform: scale(0.95);
+}
+
+/* Position Stacks */
+.map-control-top-right-stack {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 1000;
+  top: var(--map-control-margin);
+  right: var(--map-control-margin);
+  z-index: var(--map-control-z-index);
+  display: flex;
+  flex-direction: column;
+  gap: var(--map-control-gap);
+}
+
+.map-control-bottom-right-stack {
+  position: absolute;
+  bottom: var(--map-control-margin);
+  right: var(--map-control-margin);
+  z-index: var(--map-control-z-index);
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--map-control-gap);
+}
+
+.map-control-bottom-left-stack {
+  position: absolute;
+  bottom: var(--map-control-margin);
+  left: var(--map-control-margin);
+  z-index: var(--map-control-z-index);
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--map-control-gap);
+  align-items: flex-start;
+}
+
+/* Ensure proper stacking order in bottom-left */
+.map-control-bottom-left-stack .leaflet-control-attribution {
+  order: 1; /* Bottom */
+}
+
+.map-control-bottom-left-stack .leaflet-control-places-count {
+  order: 2; /* Top */
+}
+
+/* Specific Control Styles */
+
+/* Filter Button */
+.leaflet-control-filter {
+  /* Positioning handled by parent stack */
 }
 
 .filter-button {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: none;
-  background: white;
-  color: #374151;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-  transition: all 0.2s ease;
-  outline: none;
+  /* Uses base .map-control-button styles */
 }
 
-.filter-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-  background: #f8fafc;
-}
-
-.filter-button:active {
-  transform: scale(0.95);
-}
-
-/* Location control styles */
-.leaflet-control-location-modern {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  z-index: 1000;
-}
-
-.location-button {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: none;
-  background: white;
-  color: #374151;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-  transition: all 0.2s ease;
-  outline: none;
-}
-
-.location-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-  background: #f8fafc;
-}
-
-.location-button:active {
-  transform: scale(0.95);
-}
-
-/* Layer toggle styles */
-.leaflet-control-layer-toggle {
-  position: absolute;
-  bottom: 60px;
-  right: 10px;
-  z-index: 1000;
-}
-
-.layer-toggle-button {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: none;
-  background: white;
-  color: #374151;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-  transition: all 0.2s ease;
-  outline: none;
-}
-
-.layer-toggle-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-  background: #f8fafc;
-}
-
-.layer-toggle-button:active {
-  transform: scale(0.95);
-}
-
-/* Add court button styles */
+/* Add Court Button */
 .leaflet-control-add-court {
-  position: absolute;
-  top: 70px;
-  right: 10px;
-  z-index: 1000;
+  /* Positioning handled by parent stack */
 }
 
 .add-court-button {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: none;
-  background: white;
-  color: #374151;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-  transition: all 0.2s ease;
-  outline: none;
+  /* Uses base .map-control-button styles */
 }
 
-.add-court-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-  background: #f8fafc;
+/* Location Button */
+.leaflet-control-location-modern {
+  /* Positioning handled by parent stack */
 }
 
-.add-court-button:active {
-  transform: scale(0.95);
+.location-button {
+  /* Uses base .map-control-button styles */
 }
 
-/* Places count styles */
+/* Layer Toggle Button */
+.leaflet-control-layer-toggle {
+  /* Positioning handled by parent stack */
+}
+
+.layer-toggle-button {
+  /* Uses base .map-control-button styles */
+}
+
+/* Places Count Display */
 .leaflet-control-places-count {
   background: rgba(255, 255, 255, 0.9);
   border-radius: 4px;
   padding: 6px 10px;
   font-size: 14px;
   font-weight: 600;
-  color: #374151;
+  color: var(--map-control-color);
   border: none;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(4px);
-  margin: 8px;
-  margin-bottom: 2px;
   user-select: none;
+  white-space: nowrap;
 }
 
-/* Adjustments for bottom navigation bar (all screen sizes) */
-.leaflet-control-location-modern {
-  bottom: 90px !important;
-}
-
-.leaflet-control-layer-toggle {
-  bottom: 150px !important;
-  right: 10px !important;
-}
-
-.leaflet-control-add-court {
-  top: 70px !important;
-  right: 10px !important;
-}
-
-.leaflet-control-places-count {
-  margin-bottom: 80px !important;
-}
-
-/* Attribution control positioning above bottom navigation */
+/* Attribution Control */
 .leaflet-control-attribution {
-  bottom: 80px !important;
   background: rgba(255, 255, 255, 0.8) !important;
   border-radius: 3px !important;
   padding: 0 5px !important;
   font-size: 11px !important;
   line-height: 1.4 !important;
   color: #333 !important;
+  margin: 0 !important;
+}
+
+/* Responsive adjustments - only margins and gaps, keep buttons 48px */
+@media (max-width: 768px) {
+  :root {
+    --map-control-margin: 12px;
+    --map-control-gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --map-control-margin: 8px;
+    --map-control-gap: 8px;
+  }
+  
+  .leaflet-control-places-count {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
 }

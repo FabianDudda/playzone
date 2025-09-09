@@ -5,10 +5,11 @@ import { PlaceWithCourts } from '@/lib/supabase/types'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { MapPin, ArrowLeft, Share2, Calendar, Users, Navigation, Edit } from 'lucide-react'
+import { MapPin, ArrowLeft, Share2, Calendar, Users, Navigation, Edit, Plus } from 'lucide-react'
 import { getSportBadgeClasses, sportNames, sportIcons } from '@/lib/utils/sport-utils'
 import { Metadata } from 'next'
 import PlaceActions from '@/components/places/place-actions'
+import PlaceEventsSection from '@/components/places/place-events-section'
 
 interface PlacePageProps {
   params: Promise<{ id: string }>
@@ -247,6 +248,9 @@ export default async function PlacePage({ params }: PlacePageProps) {
               </CardContent>
             </Card>
           )}
+
+          {/* Events Section */}
+          <PlaceEventsSection placeId={place.id} placeName={place.name} />
         </div>
 
         {/* Sidebar */}

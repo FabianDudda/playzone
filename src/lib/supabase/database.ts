@@ -1,5 +1,5 @@
 import { supabase } from './client'
-import { Profile, Place, Court, LegacyCourt, PlaceWithCourts, Match, MatchParticipant, SportType, MatchResult, LeaderboardEntry, ModerationStatus, PendingPlaceChange, PlaceChangeType } from './types'
+import { Profile, Place, Court, LegacyCourt, PlaceWithCourts, Match, MatchParticipant, SportType, MatchResult, LeaderboardEntry, ModerationStatus, PendingPlaceChange, PlaceChangeType, Event, EventParticipant, EventStatus, SkillLevel, EventWithDetails } from './types'
 
 // Helper function to fetch all records with automatic pagination
 async function fetchAllRecords<T>(queryBuilder: any): Promise<T[]> {
@@ -559,6 +559,249 @@ export const database = {
         }
         return data || []
       }
+    },
+  },
+
+  // Event operations
+  events: {
+    getAllEvents: async (userId?: string): Promise<EventWithDetails[]> => {
+      try {
+        const { data, error } = await supabase
+          .rpc('get_events_with_details', {
+            user_id_param: userId || null
+          })
+        
+        if (error) {
+          console.error('Error fetching events:', error)
+          return []
+        }
+        return data || []
+      } catch (error) {
+        console.error('Error fetching events:', error)
+        return []
+      }
+    },
+
+    getEventsBySport: async (sport: SportType, userId?: string): Promise<EventWithDetails[]> => {
+      try {
+        const { data, error } = await supabase
+          .rpc('get_events_with_details', {
+            user_id_param: userId || null
+          })
+          .eq('sport', sport)
+        
+        if (error) {
+          console.error('Error fetching events by sport:', error)
+          return []
+        }
+        return data || []
+      } catch (error) {
+        console.error('Error fetching events by sport:', error)
+        return []
+      }
+    },
+
+    getEventsByPlace: async (placeId: string, userId?: string): Promise<EventWithDetails[]> => {
+      try {
+        const { data, error } = await supabase
+          .rpc('get_events_with_details', {
+            user_id_param: userId || null
+          })
+          .eq('place_id', placeId)
+          .eq('status', 'active')
+          .order('event_date', { ascending: true })
+          .order('event_time', { ascending: true })
+        
+        if (error) {
+          console.error('Error fetching events by place:', error)
+          return []
+        }
+        return data || []
+      } catch (error) {
+        console.error('Error fetching events by place:', error)
+        return []
+      }
+    },
+
+    getEvent: async (eventId: string, userId?: string): Promise<EventWithDetails | null> => {
+      try {
+        const { data, error } = await supabase
+          .from('events')
+          .select(`
+            *,
+            profiles:creator_id (
+              name,
+              avatar
+            ),
+            places (
+              id,
+              name,
+              latitude,
+              longitude,
+              courts (*)
+            ),
+            event_participants (
+              *,
+              profiles (
+                name,
+                avatar
+              )
+            )
+          `)
+          .eq('id', eventId)
+          .single()
+        
+        if (error) {
+          console.error('Error fetching event:', error)
+          return null
+        }
+
+        // Check if user joined this event
+        let userJoined = false
+        if (userId) {
+          const { data: participation } = await supabase
+            .from('event_participants')
+            .select('id')
+            .eq('event_id', eventId)
+            .eq('user_id', userId)
+            .single()
+          userJoined = !!participation
+        }
+
+        return {
+          ...data,
+          participant_count: data.event_participants?.length || 0,
+          user_joined: userJoined,
+          creator_name: data.profiles?.name || '',
+          creator_avatar: data.profiles?.avatar || null,
+          place_name: data.places?.name || '',
+          place_latitude: data.places?.latitude || 0,
+          place_longitude: data.places?.longitude || 0,
+          participants: data.event_participants,
+          place: data.places,
+          creator: data.profiles
+        } as EventWithDetails
+      } catch (error) {
+        console.error('Error fetching event:', error)
+        return null
+      }
+    },
+
+    getUserEvents: async (userId: string): Promise<EventWithDetails[]> => {
+      try {
+        const { data, error } = await supabase
+          .rpc('get_events_with_details', {
+            user_id_param: userId
+          })
+          .or(`creator_id.eq.${userId},user_joined.eq.true`)
+          .order('event_date', { ascending: true })
+          .order('event_time', { ascending: true })
+        
+        if (error) {
+          console.error('Error fetching user events:', error)
+          return []
+        }
+        return data || []
+      } catch (error) {
+        console.error('Error fetching user events:', error)
+        return []
+      }
+    },
+
+    createEvent: async (event: Omit<Event, 'id' | 'created_at' | 'updated_at'>) => {
+      const { data, error } = await supabase
+        .from('events')
+        .insert(event)
+        .select()
+        .single()
+      
+      return { data, error }
+    },
+
+    updateEvent: async (eventId: string, updates: Partial<Event>) => {
+      const { data, error } = await supabase
+        .from('events')
+        .update({
+          ...updates,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', eventId)
+        .select()
+        .single()
+      
+      return { data, error }
+    },
+
+    deleteEvent: async (eventId: string) => {
+      const { data, error } = await supabase
+        .from('events')
+        .delete()
+        .eq('id', eventId)
+      
+      return { data, error }
+    },
+
+    joinEvent: async (eventId: string, userId: string) => {
+      const { data, error } = await supabase
+        .from('event_participants')
+        .insert({
+          event_id: eventId,
+          user_id: userId
+        })
+        .select()
+        .single()
+      
+      return { data, error }
+    },
+
+    leaveEvent: async (eventId: string, userId: string) => {
+      const { data, error } = await supabase
+        .from('event_participants')
+        .delete()
+        .eq('event_id', eventId)
+        .eq('user_id', userId)
+      
+      return { data, error }
+    },
+
+    getEventParticipants: async (eventId: string): Promise<EventParticipant[]> => {
+      const { data, error } = await supabase
+        .from('event_participants')
+        .select(`
+          *,
+          profiles (
+            name,
+            avatar
+          )
+        `)
+        .eq('event_id', eventId)
+      
+      if (error) {
+        console.error('Error fetching event participants:', error)
+        return []
+      }
+      return data || []
+    },
+
+    removeParticipant: async (eventId: string, userId: string, removedBy: string) => {
+      // Check if the person removing is the event creator
+      const { data: event } = await supabase
+        .from('events')
+        .select('creator_id')
+        .eq('id', eventId)
+        .single()
+      
+      if (event?.creator_id !== removedBy && removedBy !== userId) {
+        return { data: null, error: { message: 'Not authorized to remove participant' } }
+      }
+
+      const { data, error } = await supabase
+        .from('event_participants')
+        .delete()
+        .eq('event_id', eventId)
+        .eq('user_id', userId)
+      
+      return { data, error }
     },
   },
 

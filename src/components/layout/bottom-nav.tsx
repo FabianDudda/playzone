@@ -8,9 +8,9 @@ import { useAuth } from '@/components/providers/auth-provider'
 const navigation = [
   {
     name: 'Events',
-    href: '#',
+    href: '/events',
     icon: Calendar,
-    disabled: true
+    disabled: false
   },
   {
     name: 'Map',
@@ -38,8 +38,8 @@ export default function BottomNav() {
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200">
-      <div className="max-w-md md:max-w-2xl mx-auto grid grid-cols-3 py-2 px-1">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 h-16">
+      <div className="max-w-md md:max-w-2xl mx-auto grid grid-cols-3 h-full px-1">
         {navigation.map((item) => {
           const isActive = pathname === item.href
           const Icon = item.icon
