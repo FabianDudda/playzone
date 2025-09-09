@@ -1,6 +1,38 @@
 import { supabase } from './client'
 import { Profile, Place, Court, LegacyCourt, PlaceWithCourts, Match, MatchParticipant, SportType, MatchResult, LeaderboardEntry, ModerationStatus, PendingPlaceChange, PlaceChangeType } from './types'
 
+// Helper function to fetch all records with automatic pagination
+async function fetchAllRecords<T>(queryBuilder: any): Promise<T[]> {
+  const allRecords: T[] = []
+  let start = 0
+  const limit = 1000 // Use 1000 as the safe batch size
+  
+  while (true) {
+    const { data, error } = await queryBuilder.range(start, start + limit - 1)
+    
+    if (error) {
+      console.error('Error in paginated query:', error)
+      throw error
+    }
+    
+    if (!data || data.length === 0) {
+      break
+    }
+    
+    allRecords.push(...data)
+    
+    // If we got fewer records than the limit, we've reached the end
+    if (data.length < limit) {
+      break
+    }
+    
+    start += limit
+  }
+  
+  console.log(`📊 fetchAllRecords completed: fetched ${allRecords.length} total records`)
+  return allRecords
+}
+
 export const database = {
   // Profile operations
   profiles: {
@@ -86,75 +118,80 @@ export const database = {
   courts: {
     // Returns places with their courts - maintains backward compatibility
     getAllCourts: async (includeModeration = false): Promise<PlaceWithCourts[]> => {
-      let query = supabase
-        .from('places')
-        .select(`
-          *,
-          courts (
-            id,
-            place_id,
-            sport,
-            quantity,
-            surface,
-            notes,
-            created_at
-          ),
-          profiles:added_by_user (
-            name,
-            avatar
-          )
-        `)
-      
-      // Only show approved places unless specifically requesting moderation view
-      if (!includeModeration) {
-        query = query.eq('moderation_status', 'approved')
-      }
-      
-      query = query.order('created_at', { ascending: false }).limit(10000)
-      
-      const { data, error } = await query
-      
-      if (error) {
+      try {
+        let query = supabase
+          .from('places')
+          .select(`
+            *,
+            courts (
+              id,
+              place_id,
+              sport,
+              quantity,
+              surface,
+              notes,
+              created_at
+            ),
+            profiles:added_by_user (
+              name,
+              avatar
+            )
+          `)
+        
+        // Only show approved places unless specifically requesting moderation view
+        if (!includeModeration) {
+          query = query.eq('moderation_status', 'approved')
+        }
+        
+        query = query.order('created_at', { ascending: false })
+        
+        // Use automatic pagination to get ALL records
+        const data = await fetchAllRecords<PlaceWithCourts>(query)
+        
+        console.log(`📊 getAllCourts returned ${data.length} places (includeModeration: ${includeModeration})`)
+        return data
+      } catch (error) {
         console.error('Error fetching places:', error)
         return []
       }
-      console.log(`📊 getAllCourts returned ${data?.length || 0} places (includeModeration: ${includeModeration})`)
-      return data || []
     },
 
     getCourtsBySport: async (sport: SportType, includeModeration = false): Promise<PlaceWithCourts[]> => {
-      let query = supabase
-        .from('places')
-        .select(`
-          *,
-          courts!inner (
-            id,
-            sport,
-            quantity,
-            surface,
-            notes
-          ),
-          profiles:added_by_user (
-            name,
-            avatar
-          )
-        `)
-        .eq('courts.sport', sport)
-      
-      // Only show approved places unless specifically requesting moderation view
-      if (!includeModeration) {
-        query = query.eq('moderation_status', 'approved')
-      }
-      
-      query = query.order('created_at', { ascending: false }).limit(10000)
-      
-      const { data, error } = await query
-      
-      if (error) {
+      try {
+        let query = supabase
+          .from('places')
+          .select(`
+            *,
+            courts!inner (
+              id,
+              sport,
+              quantity,
+              surface,
+              notes
+            ),
+            profiles:added_by_user (
+              name,
+              avatar
+            )
+          `)
+          .eq('courts.sport', sport)
+        
+        // Only show approved places unless specifically requesting moderation view
+        if (!includeModeration) {
+          query = query.eq('moderation_status', 'approved')
+        }
+        
+        query = query.order('created_at', { ascending: false })
+        
+        // Use automatic pagination to get ALL records
+        const data = await fetchAllRecords<PlaceWithCourts>(query)
+        
+        console.log(`📊 getCourtsBySport returned ${data.length} places for sport: ${sport}`)
+        return data
+      } catch (error) {
         console.error('Error fetching places by sport:', error)
         return []
       }
-      return data || []
     },
 
     getCourt: async (placeId: string, includeModeration = false): Promise<PlaceWithCourts | null> => {
@@ -546,65 +583,72 @@ export const database = {
   moderation: {
     // Get all pending places for admin review
     getPendingPlaces: async (): Promise<PlaceWithCourts[]> => {
-      const { data, error } = await supabase
-        .from('places')
-        .select(`
-          *,
-          courts (
-            id,
-            place_id,
-            sport,
-            quantity,
-            surface,
-            notes,
-            created_at
-          ),
-          profiles:added_by_user (
-            name,
-            avatar
-          )
-        `)
-        .eq('moderation_status', 'pending')
-        .order('created_at', { ascending: true })
-        .limit(10000)
-      
-      if (error) {
+      try {
+        const query = supabase
+          .from('places')
+          .select(`
+            *,
+            courts (
+              id,
+              place_id,
+              sport,
+              quantity,
+              surface,
+              notes,
+              created_at
+            ),
+            profiles:added_by_user (
+              name,
+              avatar
+            )
+          `)
+          .eq('moderation_status', 'pending')
+          .order('created_at', { ascending: true })
+        
+        // Use automatic pagination to get ALL pending places
+        const data = await fetchAllRecords<PlaceWithCourts>(query)
+        
+        console.log(`📊 getPendingPlaces returned ${data.length} pending places`)
+        return data
+      } catch (error) {
         console.error('Error fetching pending places:', error)
         return []
       }
-      return data || []
     },
 
     // Get places by moderation status
     getPlacesByStatus: async (status: ModerationStatus): Promise<PlaceWithCourts[]> => {
-      const { data, error } = await supabase
-        .from('places')
-        .select(`
-          *,
-          courts (
-            id,
-            place_id,
-            sport,
-            quantity,
-            surface,
-            notes,
-            created_at
-          ),
-          profiles:added_by_user (
-            name,
-            avatar
-          )
-        `)
-        .eq('moderation_status', status)
-        .order('created_at', { ascending: false })
-        .limit(10000)
-      
-      if (error) {
+      try {
+        const query = supabase
+          .from('places')
+          .select(`
+            *,
+            courts (
+              id,
+              place_id,
+              sport,
+              quantity,
+              surface,
+              notes,
+              created_at
+            ),
+            profiles:added_by_user (
+              name,
+              avatar
+            )
+          `)
+          .eq('moderation_status', status)
+          .order('created_at', { ascending: false })
+        
+        // Use automatic pagination to get ALL places with this status
+        const data = await fetchAllRecords<PlaceWithCourts>(query)
+        
+        console.log(`📊 getPlacesByStatus(${status}) returned ${data.length} places`)
+        return data
+      } catch (error) {
         console.error('Error fetching places by status:', error)
         return []
       }
-      console.log(`📊 getPlacesByStatus(${status}) returned ${data?.length || 0} places`)
-      return data || []
     },
 
     // Approve a place
@@ -741,33 +785,37 @@ export const database = {
 
     // Get user's submitted places with status
     getUserPlaces: async (userId: string): Promise<PlaceWithCourts[]> => {
-      const { data, error } = await supabase
-        .from('places')
-        .select(`
-          *,
-          courts (
-            id,
-            place_id,
-            sport,
-            quantity,
-            surface,
-            notes,
-            created_at
-          ),
-          profiles:added_by_user (
-            name,
-            avatar
-          )
-        `)
-        .eq('added_by_user', userId)
-        .order('created_at', { ascending: false })
-        .limit(10000)
-      
-      if (error) {
+      try {
+        const query = supabase
+          .from('places')
+          .select(`
+            *,
+            courts (
+              id,
+              place_id,
+              sport,
+              quantity,
+              surface,
+              notes,
+              created_at
+            ),
+            profiles:added_by_user (
+              name,
+              avatar
+            )
+          `)
+          .eq('added_by_user', userId)
+          .order('created_at', { ascending: false })
+        
+        // Use automatic pagination to get ALL user places
+        const data = await fetchAllRecords<PlaceWithCourts>(query)
+        
+        console.log(`📊 getUserPlaces returned ${data.length} places for user: ${userId}`)
+        return data
+      } catch (error) {
         console.error('Error fetching user places:', error)
         return []
       }
-      return data || []
     },
 
     // Get moderation stats
@@ -852,29 +900,33 @@ export const database = {
 
     // Get all pending place changes for admin review
     getPendingPlaceChanges: async (): Promise<PendingPlaceChange[]> => {
-      const { data, error } = await supabase
-        .from('pending_place_changes')
-        .select(`
-          *,
-          places (
-            name,
-            latitude,
-            longitude
-          ),
-          profiles:submitted_by (
-            name,
-            avatar
-          )
-        `)
-        .eq('status', 'pending')
-        .order('created_at', { ascending: true })
-        .limit(10000)
-      
-      if (error) {
+      try {
+        const query = supabase
+          .from('pending_place_changes')
+          .select(`
+            *,
+            places (
+              name,
+              latitude,
+              longitude
+            ),
+            profiles:submitted_by (
+              name,
+              avatar
+            )
+          `)
+          .eq('status', 'pending')
+          .order('created_at', { ascending: true })
+        
+        // Use automatic pagination to get ALL pending changes
+        const data = await fetchAllRecords<PendingPlaceChange>(query)
+        
+        console.log(`📊 getPendingPlaceChanges returned ${data.length} pending changes`)
+        return data
+      } catch (error) {
         console.error('Error fetching pending changes:', error)
         return []
       }
-      return data || []
     },
 
     // Approve a community place edit
