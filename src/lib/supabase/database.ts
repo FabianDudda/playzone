@@ -110,7 +110,7 @@ export const database = {
         query = query.eq('moderation_status', 'approved')
       }
       
-      query = query.order('created_at', { ascending: false })
+      query = query.order('created_at', { ascending: false }).limit(10000)
       
       const { data, error } = await query
       
@@ -146,7 +146,7 @@ export const database = {
         query = query.eq('moderation_status', 'approved')
       }
       
-      query = query.order('created_at', { ascending: false })
+      query = query.order('created_at', { ascending: false }).limit(10000)
       
       const { data, error } = await query
       
@@ -566,6 +566,7 @@ export const database = {
         `)
         .eq('moderation_status', 'pending')
         .order('created_at', { ascending: true })
+        .limit(10000)
       
       if (error) {
         console.error('Error fetching pending places:', error)
@@ -596,6 +597,7 @@ export const database = {
         `)
         .eq('moderation_status', status)
         .order('created_at', { ascending: false })
+        .limit(10000)
       
       if (error) {
         console.error('Error fetching places by status:', error)
@@ -759,6 +761,7 @@ export const database = {
         `)
         .eq('added_by_user', userId)
         .order('created_at', { ascending: false })
+        .limit(10000)
       
       if (error) {
         console.error('Error fetching user places:', error)
@@ -865,6 +868,7 @@ export const database = {
         `)
         .eq('status', 'pending')
         .order('created_at', { ascending: true })
+        .limit(10000)
       
       if (error) {
         console.error('Error fetching pending changes:', error)

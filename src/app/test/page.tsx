@@ -27,6 +27,7 @@ export default function TestPage() {
   const [selectedCity, setSelectedCity] = useState<string>('all')
   const [selectedAddressStatus, setSelectedAddressStatus] = useState<string>('all')
   const [selectedSport, setSelectedSport] = useState<string>('all')
+  const [selectedSource, setSelectedSource] = useState<string>('all')
   const queryClient = useQueryClient()
 
   const { data: places = [], isLoading, error } = useQuery({
@@ -74,7 +75,17 @@ export default function TestPage() {
     return Array.from(sportsSet).sort()
   }, [allPlaces])
   
-  // Apply city, address status, and sport filters
+  // Get unique sources for filter dropdown
+  const uniqueSources = React.useMemo(() => {
+    const sources = allPlaces
+      .map(place => place.source)
+      .filter(Boolean) // Remove null/undefined sources
+      .filter((source, index, array) => array.indexOf(source) === index) // Remove duplicates
+      .sort() // Sort alphabetically
+    return sources
+  }, [allPlaces])
+  
+  // Apply city, address status, sport, and source filters
   const displayPlaces = React.useMemo(() => {
     let filtered = allPlaces
     
@@ -108,8 +119,13 @@ export default function TestPage() {
       })
     }
     
+    // Apply source filter
+    if (selectedSource !== 'all') {
+      filtered = filtered.filter(place => place.source === selectedSource)
+    }
+    
     return filtered
-  }, [allPlaces, selectedCity, selectedAddressStatus, selectedSport])
+  }, [allPlaces, selectedCity, selectedAddressStatus, selectedSport, selectedSource])
 
   // Helper function to check if place has any address data
   const hasAddressData = (place: PlaceWithCourts) => {
@@ -835,8 +851,9 @@ export default function TestPage() {
           </Card>
         </div>
         
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="space-y-4">
+          {/* Row 1: Selection and Filters */}
+          <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="select-all"
@@ -848,93 +865,112 @@ export default function TestPage() {
               </label>
             </div>
             
+            <Filter className="h-4 w-4 text-muted-foreground" />
+            
             {/* City Filter */}
-            <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-muted-foreground" />
-              <Select value={selectedCity} onValueChange={setSelectedCity}>
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder="Filter by city" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">
-                    All Cities ({allPlaces.length})
-                  </SelectItem>
-                  {uniqueCities.map(city => {
-                    const count = allPlaces.filter(place => place.city === city).length
-                    return (
-                      <SelectItem key={city || 'unknown'} value={city || 'unknown'}>
-                        {city} ({count})
-                      </SelectItem>
-                    )
-                  })}
-                </SelectContent>
-              </Select>
-            </div>
+            <Select value={selectedCity} onValueChange={setSelectedCity}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Filter by city" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">
+                  All Cities ({allPlaces.length})
+                </SelectItem>
+                {uniqueCities.map(city => {
+                  const count = allPlaces.filter(place => place.city === city).length
+                  return (
+                    <SelectItem key={city || 'unknown'} value={city || 'unknown'}>
+                      {city} ({count})
+                    </SelectItem>
+                  )
+                })}
+              </SelectContent>
+            </Select>
             
             {/* Address Status Filter */}
-            <div className="flex items-center gap-2">
-              <Select value={selectedAddressStatus} onValueChange={setSelectedAddressStatus}>
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder="Filter by address status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">
-                    All Places ({allPlaces.length})
-                  </SelectItem>
-                  <SelectItem value="enriched">
-                    ✅ Enriched ({allPlaces.filter(place => place.street && place.city).length})
-                  </SelectItem>
-                  <SelectItem value="coordinates-only">
-                    📍 Coordinates Only ({allPlaces.filter(place => !(place.street && place.city)).length})
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <Select value={selectedAddressStatus} onValueChange={setSelectedAddressStatus}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Filter by address status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">
+                  All Places ({allPlaces.length})
+                </SelectItem>
+                <SelectItem value="enriched">
+                  ✅ Enriched ({allPlaces.filter(place => place.street && place.city).length})
+                </SelectItem>
+                <SelectItem value="coordinates-only">
+                  📍 Coordinates Only ({allPlaces.filter(place => !(place.street && place.city)).length})
+                </SelectItem>
+              </SelectContent>
+            </Select>
             
             {/* Sport Filter */}
-            <div className="flex items-center gap-2">
-              <Select value={selectedSport} onValueChange={setSelectedSport}>
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder="Filter by sport" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">
-                    All Sports ({allPlaces.length})
-                  </SelectItem>
-                  {uniqueSports.map(sport => {
-                    const count = allPlaces.filter(place => {
-                      // Check courts array (newer format)
-                      if (place.courts && place.courts.length > 0) {
-                        const hasCourtSport = place.courts.some(court => court.sport === sport)
-                        if (hasCourtSport) return true
-                      }
-                      
-                      // Check legacy sports array (fallback)
-                      if (place.sports && place.sports.length > 0) {
-                        return place.sports.includes(sport)
-                      }
-                      
-                      return false
-                    }).length
+            <Select value={selectedSport} onValueChange={setSelectedSport}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Filter by sport" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">
+                  All Sports ({allPlaces.length})
+                </SelectItem>
+                {uniqueSports.map(sport => {
+                  const count = allPlaces.filter(place => {
+                    // Check courts array (newer format)
+                    if (place.courts && place.courts.length > 0) {
+                      const hasCourtSport = place.courts.some(court => court.sport === sport)
+                      if (hasCourtSport) return true
+                    }
                     
-                    return (
-                      <SelectItem key={sport} value={sport}>
-                        {sport} ({count})
-                      </SelectItem>
-                    )
-                  })}
-                </SelectContent>
-              </Select>
-            </div>
+                    // Check legacy sports array (fallback)
+                    if (place.sports && place.sports.length > 0) {
+                      return place.sports.includes(sport)
+                    }
+                    
+                    return false
+                  }).length
+                  
+                  return (
+                    <SelectItem key={sport} value={sport}>
+                      {sport} ({count})
+                    </SelectItem>
+                  )
+                })}
+              </SelectContent>
+            </Select>
             
-            <p className="text-muted-foreground">
-              {selectedCity === 'all' ? 'All cities' : `City: ${selectedCity}`}
-              {selectedAddressStatus !== 'all' && ` • ${selectedAddressStatus === 'enriched' ? 'Enriched addresses' : 'Coordinates only'}`}
-              {selectedSport !== 'all' && ` • Sport: ${selectedSport}`}
-              {enrichedPlaces.length > 0 && ` • ${enrichedPlaces.length} places enriched`}
-            </p>
+            {/* Source Filter */}
+            <Select value={selectedSource} onValueChange={setSelectedSource}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Filter by source" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">
+                  All Sources ({allPlaces.length})
+                </SelectItem>
+                {uniqueSources.map(source => {
+                  const count = allPlaces.filter(place => place.source === source).length
+                  return (
+                    <SelectItem key={source || 'unknown'} value={source || 'unknown'}>
+                      {source} ({count})
+                    </SelectItem>
+                  )
+                })}
+              </SelectContent>
+            </Select>
           </div>
-          <div className="flex gap-2">
+          
+          {/* Row 2: Filter Description */}
+          <div className="text-sm text-muted-foreground">
+            {selectedCity === 'all' ? 'All cities' : `City: ${selectedCity}`}
+            {selectedAddressStatus !== 'all' && ` • ${selectedAddressStatus === 'enriched' ? 'Enriched addresses' : 'Coordinates only'}`}
+            {selectedSport !== 'all' && ` • Sport: ${selectedSport}`}
+            {selectedSource !== 'all' && ` • Source: ${selectedSource}`}
+            {enrichedPlaces.length > 0 && ` • ${enrichedPlaces.length} places enriched`}
+          </div>
+          
+          {/* Row 3: Action Buttons */}
+          <div className="flex justify-end gap-2">
             <Button 
               onClick={handleDebugData}
               variant="outline"

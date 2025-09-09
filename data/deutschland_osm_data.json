@@ -1,0 +1,7447 @@
+[
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 8.81420864,
+      "y": 52.19223174
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "geometry": {
+      "x": 8.584042610000001,
+      "y": 49.927893319999995
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "tennisplätze": 1,
+    "platzbelag_tennis": "Asphalt",
+    "geometry": {
+      "x": 7.6258101555555555,
+      "y": 51.94827207777777
+    },
+    "name": "Tennisplatz"
+  },
+  {
+    "name": "Streetballplatz",
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 9.8657586,
+      "y": 49.8307135
+    }
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 8.2690999,
+      "y": 50.00928966666667
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 11.36001364,
+      "y": 48.19041012
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "name": "Bolzplatz Birgel",
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Asche",
+    "geometry": {
+      "x": 6.4427846375,
+      "y": 50.7727915875
+    }
+  },
+  {
+    "name": "Skateplatz Neue Wiesen",
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 13.494187879999998,
+      "y": 52.60197071
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Asphalt",
+    "geometry": {
+      "x": 13.362689057142857,
+      "y": 52.549167714285716
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "name": "Skatepark an der B 26",
+    "skatepark": 1,
+    "platzbelag_skateboard": "Rasen",
+    "geometry": {
+      "x": 9.131586525,
+      "y": 49.971911874999996
+    }
+  },
+  {
+    "name": "Skatepark Alter",
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 6.872837841666667,
+      "y": 51.49586150833333
+    }
+  },
+  {
+    "name": "Bolzplatz",
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 10.508067059999998,
+      "y": 52.150064199999996
+    }
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 8.442998766666667,
+      "y": 48.06261393333333
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "bouleplätze": 1,
+    "platzbelag_boule": "Asche",
+    "geometry": {
+      "x": 9.93680812,
+      "y": 49.7872613
+    },
+    "name": "Bouleplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 9.21598818,
+      "y": 49.72744974
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "name": "Bolzplatz Weilburger Straße",
+    "fußballplätze": 1,
+
+    "geometry": {
+      "x": 8.5954432,
+      "y": 50.23777362
+    }
+  },
+  {
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 8.44610237894737,
+      "y": 48.05808746842106
+    },
+    "name": "Skatepark"
+  },
+  {
+    "name": "Eschbacher Klippen (Buchstein)",
+    "klettern": 1,
+    "geometry": {
+      "x": 8.537957989473684,
+      "y": 50.36376305789474
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Asphalt",
+    "geometry": {
+      "x": 13.360931679999998,
+      "y": 52.5413173
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "name": "Skatepark",
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 8.984977114285714,
+      "y": 48.716571342857144
+    }
+  },
+  {
+    "name": "Bolzplatz Alter Weg Hain",
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 9.3177389,
+      "y": 50.01146632
+    }
+  },
+  {
+    "name": "Hahnengrundweg",
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 11.56947104,
+      "y": 50.89955146
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 11.59393778,
+      "y": 50.992343340000005
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Hartplatz",
+    "geometry": {
+      "x": 13.403533091666667,
+      "y": 52.533012479166665
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 11.59893576,
+      "y": 50.945345520000004
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 11.60762676,
+      "y": 48.11486556
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "name": "Alter Sportplatz",
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 10.13641482,
+      "y": 52.008343360000005
+    }
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 8.318124766666665,
+      "y": 54.923947266666666
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "name": "Tempelhofer Feld Court",
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Hartplatz",
+    "geometry": {
+      "x": 13.406510520000001,
+      "y": 52.480349239999995
+    }
+  },
+  {
+    "layer": "1",
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Hartplatz",
+    "geometry": {
+      "x": 7.0010852,
+      "y": 49.234125660000004
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 8.28666295,
+      "y": 51.605527091666666
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 9.215355,
+      "y": 48.75003998333333
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 13.32077308,
+      "y": 52.46389834
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "name": "Rasenplatz Geißlitz (Klein- und Großplatz)",
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 13.546879960000002,
+      "y": 51.23219451999999
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 6.95323578,
+      "y": 51.16168892
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 8.54346146,
+      "y": 48.064682319999996
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "geometry": {
+      "x": 7.661146840000001,
+      "y": 47.595641060000005
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "geometry": {
+      "x": 13.4175403,
+      "y": 52.53386858571429
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 7.58265344,
+      "y": 51.972052940000005
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 7.58318056,
+      "y": 51.97191946
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "geometry": {
+      "x": 13.403908359999999,
+      "y": 52.52693753999999
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 12.31546305,
+      "y": 51.34788628333333
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 12.970465475000001,
+      "y": 49.056930975
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 13.373421647368422,
+      "y": 52.495573847368426
+    },
+    "name": "Skatepark"
+  },
+  {
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 13.39459426,
+      "y": 52.532604400000004
+    },
+    "name": "Skatepark"
+  },
+  {
+    "name": "Hängende Gärten",
+    "klettern": 1,
+    "geometry": {
+      "x": 8.686589614285714,
+      "y": 48.869165571428574
+    }
+  },
+  {
+    "name": "Amphitheater",
+    "klettern": 1,
+    "geometry": {
+      "x": 8.685324699999999,
+      "y": 48.855587279999995
+    }
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 10.332914980000002,
+      "y": 50.75921252
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 9.121763766666666,
+      "y": 49.95551955
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Asphalt",
+    "geometry": {
+      "x": 11.95970198,
+      "y": 51.49034764
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 10.01428534,
+      "y": 48.40565468
+    },
+    "name": "Beachvolleyballplatz"
+  },
+
+  {
+    "goals": "2",
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 8.68269344,
+      "y": 49.3838084
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Kunstrasen",
+    "geometry": {
+      "x": 9.31544858,
+      "y": 50.97203598
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 13.570299791666669,
+      "y": 51.149560691666665
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "geometry": {
+      "x": 11.634914014285714,
+      "y": 48.18643697142857
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "name": "Skatespot",
+    "ownership": "Stadt Neubrandenburg",
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 13.253333377142857,
+      "y": 53.57059278857143
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 9.142373899999999,
+      "y": 49.96504872
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "park_ride": "no",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 10.253773,
+      "y": 50.3252453
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 8.329498171428572,
+      "y": 49.65601514285714
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "max_age": "18",
+    "name": "Ballspiel-Anlage Pfarrer-Blink-Straße",
+    "smoking": "no",
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "beachvolleyballplätze": 1,
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.45927666923077,
+      "y": 49.00595977692308
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 10.92161014,
+      "y": 48.35785032
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 10.9211394,
+      "y": 48.35737208
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 10.55788694,
+      "y": 51.59256114
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 10.5573941,
+      "y": 51.59271034
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 14.39385348,
+      "y": 51.33071334
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "name": "Bolzplatz Berliner Ring",
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 10.713743299999999,
+      "y": 52.50365528
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "geometry": {
+      "x": 14.140059740000002,
+      "y": 53.97482024
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "name": "Fussballplatz",
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 14.811941466666667,
+      "y": 51.25015736666666
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Hartplatz",
+    "geometry": {
+      "x": 13.042864080000001,
+      "y": 52.395198560000004
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 14.06329562,
+      "y": 51.01189718
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 9.01940998,
+      "y": 48.9259254
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 9.21439218,
+      "y": 49.72577902
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "bouleplätze": 1,
+    "platzbelag_boule": "Asche",
+    "geometry": {
+      "x": 13.409285,
+      "y": 52.47877708
+    },
+    "name": "Bouleplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 11.599852799999999,
+      "y": 50.94495754
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.729463619999999,
+      "y": 51.033768359999996
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 13.34521208,
+      "y": 51.19050054
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Kunstrasen",
+    "geometry": {
+      "x": 11.59985252,
+      "y": 50.944501200000005
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 10.043604859999999,
+      "y": 48.42877336
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Asche",
+    "geometry": {
+      "x": 6.759446560000001,
+      "y": 51.2133948
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "bouleplätze": 1,
+    "platzbelag_boule": "Asche",
+    "geometry": {
+      "x": 9.08760234,
+      "y": 49.85052676
+    },
+    "name": "Bouleplatz"
+  },
+  {
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 8.269462525,
+      "y": 50.00906405
+    },
+    "name": "Skatepark"
+  },
+  {
+    "name": "Beachvolleyball",
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 13.5465774,
+      "y": 52.50237236
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 7.936271720000001,
+      "y": 49.98915422
+    },
+    "name": "Fußballplatz"
+  },
+
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.542399880000001,
+      "y": 51.595319440000004
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 14.775818319999999,
+      "y": 50.89299064
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Kunstrasen",
+    "geometry": {
+      "x": 14.018886499999999,
+      "y": 51.18055584
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 8.48140332,
+      "y": 49.492116239999994
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "name": "Skaterpark",
+    "platzbelag_skatepark": "Asphalt",
+    "geometry": {
+      "x": 9.784206009090909,
+      "y": 49.49167098181818
+    }
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Hartplatz",
+    "geometry": {
+      "x": 11.103884677777778,
+      "y": 49.45618078888889
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asche",
+    "geometry": {
+      "x": 13.4212842875,
+      "y": 52.5035478125
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "name": "Sportplatz Marth",
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 10.00093816,
+      "y": 51.37637983
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Kunstrasen",
+    "geometry": {
+      "x": 11.38426456,
+      "y": 48.19182515999999
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "name": "Beachvolleyballplatz am Augustabad",
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 13.247100900000001,
+      "y": 53.532279100000004
+    }
+  },
+  {
+    "name": "Skatepark",
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 8.682777566666667,
+      "y": 50.59161534444444
+    }
+  },
+  {
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 9.13992398,
+      "y": 49.906131519999995
+    },
+    "name": "Skatepark"
+  },
+  {
+    "level": "0",
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Sand",
+    "geometry": {
+      "x": 8.53641004,
+      "y": 48.059237280000005
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 8.53520046,
+      "y": 48.05908418
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 11.61595808,
+      "y": 50.89191008
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 14.77621006,
+      "y": 50.893128159999996
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 14.77635286,
+      "y": 50.8931783
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 14.775995739999999,
+      "y": 50.89305292
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 13.767524304761904,
+      "y": 51.05071735714286
+    },
+    "name": "Beachvolleyballplatz"
+  },
+
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 9.3787496,
+      "y": 47.86400738
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.934796180000001,
+      "y": 49.77442822
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "geometry": {
+      "x": 8.7190666,
+      "y": 50.58810044
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Asphalt",
+    "geometry": {
+      "x": 13.413040283333332,
+      "y": 52.50386605
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "name": "Kletterfelsen im Konrad-Wolf-Park",
+
+    "klettern": 1,
+    "geometry": {
+      "x": 13.13623752,
+      "y": 52.36711484
+    }
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 12.14170116,
+      "y": 49.13318674
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "name": "Tennisplatz",
+    "tennisplätze": 1,
+    "platzbelag_tennis": "Asphalt",
+    "geometry": {
+      "x": 8.04531874,
+      "y": 51.80648036
+    }
+  },
+  {
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 9.161237266666667,
+      "y": 49.84179498333333
+    },
+    "name": "Skatepark"
+  },
+  {
+    "basketballplätze": 1,
+    "geometry": {
+      "x": 9.160511514285714,
+      "y": 49.84248912857144
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 8.2324866,
+      "y": 50.09007138
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 8.04523068,
+      "y": 51.80661288
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "name": "Skateboard-Anlage",
+    "skatepark": 1,
+    "geometry": {
+      "x": 10.1853349,
+      "y": 48.62806545
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 9.16202282,
+      "y": 49.79480848000001
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "name": "2er Skateboarding e.V.",
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 9.696199875,
+      "y": 52.3675521125
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 9.2637117,
+      "y": 49.71527544
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 8.818424779999999,
+      "y": 49.8762979
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 9.12298294,
+      "y": 49.97493254
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 14.96355634,
+      "y": 51.06562642
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 13.606608099999999,
+      "y": 51.10463092
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 9.242635680000001,
+      "y": 49.88385554
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 9.19346424,
+      "y": 49.9628359
+    },
+    "name": "Skatepark"
+  },
+  {
+    "name": "Turnhallenplatz Grünhainichen",
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 13.158498766666668,
+      "y": 50.77203338333334
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "geometry": {
+      "x": 8.53879618,
+      "y": 52.031004499999995
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 13.23276074,
+      "y": 53.55549346
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "cash_withdrawal:fee": "no",
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Asche",
+    "geometry": {
+      "x": 7.457076860000001,
+      "y": 49.18617264
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 12.13682838,
+      "y": 47.81001542
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "name": "Allwetterplatz Isarstraße",
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Hartplatz",
+    "geometry": {
+      "x": 11.76432172,
+      "y": 48.400448559999994
+    }
+  },
+  {
+    "max_age": "14",
+    "name": "Niederseilgarten",
+    "operator:wikidata": "Q2341049",
+    "geometry": {
+      "x": 10.032720883333335,
+      "y": 48.705803366666665
+    }
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 13.58235308,
+      "y": 51.12478324
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "name": "Skaterpark",
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 9.06440613478261,
+      "y": 49.91786516521739
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 9.06557426,
+      "y": 49.91795398
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "max_age": "18",
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Kunstrasen",
+    "geometry": {
+      "x": 8.459233755555555,
+      "y": 49.00616705555555
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "max_age": "18",
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 8.45897166,
+      "y": 49.005911180000005
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 9.160457019999999,
+      "y": 49.876023280000005
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "geometry": {
+      "x": 13.391134560000001,
+      "y": 51.30256644
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "geometry": {
+      "x": 9.14309472,
+      "y": 49.98755206
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 8.7610481,
+      "y": 52.03079546
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 7.58306918,
+      "y": 51.97210718
+    },
+    "name": "Fußballplatz"
+  },
+
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asche",
+    "geometry": {
+      "x": 13.391354340000001,
+      "y": 51.3024398
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 13.26843144,
+      "y": 53.48800616
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 12.66284096,
+      "y": 53.51879198
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "volleyballplätze": 1,
+    "platzbelag_volleyball": "Rasen",
+    "geometry": {
+      "x": 14.03716594,
+      "y": 51.237817699999994
+    },
+    "name": "Volleyballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 14.03728482,
+      "y": 51.237659459999996
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 12.14822272,
+      "y": 47.82715246
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 14.20998218,
+      "y": 51.46195568
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 11.576792383333334,
+      "y": 49.26006888333333
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 13.772338719999999,
+      "y": 51.25622508
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 13.40852114,
+      "y": 52.52727444
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "geometry": {
+      "x": 14.40321994,
+      "y": 51.38637674
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 14.391574075,
+      "y": 51.37257985
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 12.26287132,
+      "y": 54.26044906
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "volleyballplätze": 1,
+    "platzbelag_volleyball": "Rasen",
+    "geometry": {
+      "x": 12.26260496,
+      "y": 54.26036818
+    },
+    "name": "Volleyballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 12.2581442,
+      "y": 54.256599019999996
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Asphalt",
+    "geometry": {
+      "x": 12.25838025,
+      "y": 54.25673365
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "skatepark": 1,
+    "geometry": {
+      "x": 14.0634394375,
+      "y": 51.0119684625
+    },
+    "name": "Skatepark"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 14.06349926,
+      "y": 51.01178488
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 14.273862220000002,
+      "y": 51.35903518
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "name": "Wacker Skatepark Sendling",
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 11.54248127142857,
+      "y": 48.11292785714286
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 8.82635426,
+      "y": 47.764937259999996
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "max_age": "18",
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 8.459037285714286,
+      "y": 49.006037885714285
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 13.1793227,
+      "y": 51.2402455
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 13.16845385,
+      "y": 51.237117850000004
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Sand",
+    "geometry": {
+      "x": 13.443276933333333,
+      "y": 52.474999555555556
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Sand",
+    "geometry": {
+      "x": 13.4430386,
+      "y": 52.47493119000001
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 9.11949368,
+      "y": 49.96624488
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.16056574,
+      "y": 49.84283628
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 8.93407472,
+      "y": 49.872405779999994
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 9.16336244,
+      "y": 49.840711320000004
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 9.072517860000001,
+      "y": 49.92327876
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 9.13942588,
+      "y": 49.906253500000005
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.17247342,
+      "y": 49.87287202
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 9.16745476,
+      "y": 49.7807624
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.167191220000001,
+      "y": 49.78073546
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.18733536,
+      "y": 49.765970599999996
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.88920466,
+      "y": 49.872925120000005
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.83759984,
+      "y": 49.894802719999994
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "panoramax": "44632432-d14d-4c9a-bbc6-da40a30096da",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.845027739999999,
+      "y": 49.90085786
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.8218566,
+      "y": 49.89824944
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.11693068,
+      "y": 49.97566002
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 9.14371012,
+      "y": 49.987474940000006
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 9.21262622,
+      "y": 49.8072769
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Asche",
+    "geometry": {
+      "x": 8.671695320000001,
+      "y": 50.09119484
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.87245602,
+      "y": 49.774595039999994
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.904315411111112,
+      "y": 49.80121444444445
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 9.9070046,
+      "y": 49.802311960000004
+    },
+    "name": "Fußballplatz"
+  },
+
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.372752199999999,
+      "y": 51.319621919999996
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 10.242587480000001,
+      "y": 50.046456160000005
+    },
+    "name": "Skatepark"
+  },
+  {
+    "name": "Bouleplatz",
+    "bouleplätze": 1,
+    "geometry": {
+      "x": 8.93588784,
+      "y": 49.87248434
+    }
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.75787806,
+      "y": 47.70668818
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "name": "Kletterfelsen",
+    "klettern": 1,
+    "geometry": {
+      "x": 9.075654903846154,
+      "y": 49.859567423076925
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 8.720116028571429,
+      "y": 50.58930434285714
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "name": "Tischtennisplatte",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7187531,
+      "y": 50.58767588
+    }
+  },
+  {
+    "name": "Schachfeld mit Figuren",
+    "geometry": {
+      "x": 8.718891600000001,
+      "y": 50.587741879999996
+    }
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 14.096249,
+      "y": 51.2759407
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "skatepark": 1,
+    "geometry": {
+      "x": 14.09557906,
+      "y": 51.2763801
+    },
+    "name": "Skatepark"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 14.095317259999998,
+      "y": 51.276311220000004
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 14.09516266,
+      "y": 51.27626531999999
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "fußballplätze": 1,
+
+    "geometry": {
+      "x": 14.114179757142859,
+      "y": 51.29168604285714
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 14.23238696,
+      "y": 51.438731059999995
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 14.255180480000002,
+      "y": 51.43493902
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 14.255484623076923,
+      "y": 51.43592108461538
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 14.25424222,
+      "y": 51.436915060000004
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 14.254189460000001,
+      "y": 51.43696454
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 14.25413576,
+      "y": 51.437012759999995
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 14.25946618,
+      "y": 51.12216218
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.106368739999999,
+      "y": 49.83487616
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 12.2147655,
+      "y": 47.86298626
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 13.093094279999999,
+      "y": 53.651747
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 12.991179452380953,
+      "y": 53.55066507619048
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Hartplatz",
+    "geometry": {
+      "x": 13.408946660000002,
+      "y": 52.531701840000004
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 11.605312860000002,
+      "y": 50.84736642
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 8.329144065384614,
+      "y": 49.65619140384615
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "name": "Skatepark",
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 10.2343106,
+      "y": 48.625114275
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 8.45018142,
+      "y": 48.05813212
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "platzbelag_tischtennis": "Asphalt",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.403417200000002,
+      "y": 52.53308892
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "platzbelag_tischtennis": "Asphalt",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.403359140000001,
+      "y": 52.53302618
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 13.581898852173913,
+      "y": 52.520511676811594
+    },
+    "name": "Skatepark"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 12.76774616,
+      "y": 53.37267372
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "bouleplätze": 1,
+    "platzbelag_boule": "Rasen",
+    "geometry": {
+      "x": 12.76728034,
+      "y": 53.37297906
+    },
+    "name": "Bouleplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.56937978,
+      "y": 50.89967086
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 6.941271159999999,
+      "y": 51.467224
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "basketballplätze": 1,
+
+    "geometry": {
+      "x": 13.24702786,
+      "y": 53.532412199999996
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "fußballplätze": 1,
+
+    "geometry": {
+      "x": 13.246533379999999,
+      "y": 53.532184619999995
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.359265400000002,
+      "y": 52.522383979999994
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 8.2692172,
+      "y": 50.00932752
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "name": "Griesfeldstraße",
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 11.7159762,
+      "y": 48.39855095714285
+    }
+  },
+  {
+    "skatepark": 1,
+    "geometry": {
+      "x": 10.29732894,
+      "y": 48.64519294
+    },
+    "name": "Skatepark"
+  },
+  {
+    "basketballplätze": 1,
+    "geometry": {
+      "x": 10.157133179999999,
+      "y": 48.67848986
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 6.16080862,
+      "y": 51.76072627999999
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "name": "Skateboardbahn am Sportplatz",
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 10.12059646,
+      "y": 48.432784860000005
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 11.438526683333334,
+      "y": 48.361252799999995
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 8.3206718,
+      "y": 49.14580654
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 8.070316625,
+      "y": 50.3026333375
+    },
+    "name": "Fußballplatz"
+  },
+
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 13.56312008,
+      "y": 51.2425169
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 10.88660944,
+      "y": 49.48246018
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 6.60754214,
+      "y": 51.2739775
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "name": "Skateanlage",
+    "skatepark": 1,
+    "geometry": {
+      "x": 10.16163102,
+      "y": 48.628407
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 6.666071233333334,
+      "y": 51.45680195
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "name": "Basketballplatz Am Kuhlenkamp",
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Hartplatz",
+    "geometry": {
+      "x": 7.200185,
+      "y": 51.44461706
+    }
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 13.75290216,
+      "y": 52.2685291
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 13.752951759999998,
+      "y": 52.2684224
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "name": "Skateanlage Bürgerpark Hafeninsel",
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 6.984047308333333,
+      "y": 49.23815483333333
+    }
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.26963258,
+      "y": 49.79042514
+    },
+    "name": "Tischtennisplatz"
+  },
+
+  {
+    "bouleplätze": 1,
+    "geometry": {
+      "x": 8.78248404,
+      "y": 50.55585752
+    },
+    "name": "Bouleplatz"
+  },
+  {
+    "name": "Mountainbike-Anlage",
+    "operator": "Stadt Herbrechtingen",
+    "geometry": {
+      "x": 10.184981366666667,
+      "y": 48.628308233333335
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 7.50536286,
+      "y": 51.4511
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "name": "Skateanlage",
+    "skatepark": 1,
+    "geometry": {
+      "x": 10.11598026,
+      "y": 48.737657379999995
+    }
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 10.01404986,
+      "y": 48.4054898
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 9.96033942,
+      "y": 49.745003839999995
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "bouleplätze": 1,
+
+    "geometry": {
+      "x": 7.093974794999999,
+      "y": 50.726119195
+    },
+    "name": "Bouleplatz"
+  },
+  {
+    "name": "Pushtrack Rohrbachtal",
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 9.709279480000001,
+      "y": 50.91070146
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 13.364422439999998,
+      "y": 51.19454604
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 10.20590532,
+      "y": 48.5520293
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "name": "Fußballfeld",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 10.1101251,
+      "y": 48.49096212
+    }
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.37202554,
+      "y": 51.31963008
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "name": "Skaterparadies unter der Brücke",
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 7.19365636,
+      "y": 53.36728772
+    }
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Hartplatz",
+    "geometry": {
+      "x": 13.3981593,
+      "y": 52.52785172
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "name": "Tischtennisplatte",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.99590702,
+      "y": 49.72995212
+    }
+  },
+  {
+    "name": "runde Tischtennisplatte",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.000650799999999,
+      "y": 49.72555401
+    }
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 9.968423900000001,
+      "y": 48.38388244
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 9.96882282,
+      "y": 48.38553494
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 10.6417287,
+      "y": 50.74714724
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 10.34732264,
+      "y": 48.6359593
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 12.10971216,
+      "y": 50.4314954
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "geometry": {
+      "x": 12.11051702,
+      "y": 50.431463980000004
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "volleyballplätze": 1,
+    "platzbelag_volleyball": "Rasen",
+    "geometry": {
+      "x": 7.4568263,
+      "y": 49.18649396
+    },
+    "name": "Volleyballplatz"
+  },
+  {
+    "name": "Geschicklichkeitspfad",
+    "ref": "22",
+    "geometry": {
+      "x": 9.779160379999999,
+      "y": 48.80751608
+    }
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.462553719999999,
+      "y": 48.058393360000004
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "min_age": "3",
+    "name": "Niedrigseilgarten",
+    "supervised": "no",
+    "geometry": {
+      "x": 7.05179605,
+      "y": 51.8375638
+    }
+  },
+
+  {
+    "max_age": "16",
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 7.978312300000001,
+      "y": 50.36523156
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.03433212,
+      "y": 49.8155665
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "name": "Skaterpark",
+    "skatepark": 1,
+    "geometry": {
+      "x": 9.040667414285714,
+      "y": 49.815632685714284
+    }
+  },
+  {
+    "basketballplätze": 1,
+    "geometry": {
+      "x": 9.04128394,
+      "y": 49.8159902
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "bouleplätze": 1,
+    "geometry": {
+      "x": 11.73809342,
+      "y": 48.323322940000004
+    },
+    "name": "Bouleplatz"
+  },
+  {
+    "name": "Bewegungsparcours",
+    "operator": "Dorfgemeinschaft Dornumersiel e.V.",
+    "geometry": {
+      "x": 7.4774658,
+      "y": 53.67434970000001
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 8.91100002,
+      "y": 48.71946916
+    },
+    "name": "Fußballplatz"
+  },
+
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 8.975580814285715,
+      "y": 52.4334642
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "fußballplätze": 1,
+
+    "geometry": {
+      "x": 13.12085898,
+      "y": 50.9602491
+    },
+    "name": "Fußballplatz"
+  },
+
+  {
+    "volleyballplätze": 1,
+    "platzbelag_volleyball": "Rasen",
+    "geometry": {
+      "x": 11.59397312,
+      "y": 50.99221626
+    },
+    "name": "Volleyballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Hartplatz",
+    "geometry": {
+      "x": 8.24703034,
+      "y": 53.111590539999995
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 13.36254442,
+      "y": 52.549351539999996
+    },
+    "name": "Skatepark"
+  },
+  {
+    "name": "Halfpipe",
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 8.682681333333333,
+      "y": 50.59188421666667
+    }
+  },
+  {
+    "name": "Kleinspielfelder Spielstraße",
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 8.418174,
+      "y": 49.13715093333334
+    }
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.38064186,
+      "y": 51.31310549999999
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 8.80510286,
+      "y": 48.8753375
+    },
+    "name": "Skatepark"
+  },
+  {
+    "fußballplätze": 1,
+
+    "geometry": {
+      "x": 10.896929233333333,
+      "y": 48.3461288
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 11.58310695,
+      "y": 50.93304085
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "name": "Boule-Platz am Maiglöckchenpfad",
+    "bouleplätze": 1,
+    "platzbelag_boule": "Asche",
+    "geometry": {
+      "x": 8.83599754,
+      "y": 49.96477074
+    }
+  },
+  {
+    "bouleplätze": 1,
+    "platzbelag_boule": "Sand",
+    "geometry": {
+      "x": 8.8124458,
+      "y": 49.43632788
+    },
+    "name": "Bouleplatz"
+  },
+  {
+    "bouleplätze": 1,
+    "platzbelag_boule": "Sand",
+    "geometry": {
+      "x": 8.812483,
+      "y": 49.43629738
+    },
+    "name": "Bouleplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 8.338018071428571,
+      "y": 48.997537085714285
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.33699702,
+      "y": 48.99717078
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.3369437,
+      "y": 48.99747724
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.33332242,
+      "y": 49.00030506
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.390732400000001,
+      "y": 49.00278128
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.39048288,
+      "y": 49.00289678
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.395786820000001,
+      "y": 49.00316434
+    },
+    "name": "Tischtennisplatz"
+  },
+
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 9.00178842,
+      "y": 47.85042006
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "boules": "boules",
+    "bouleplätze": 1,
+    "platzbelag_boule": "Asche",
+    "geometry": {
+      "x": 10.978009985714285,
+      "y": 48.300252871428576
+    },
+    "name": "Bouleplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 7.860240899999999,
+      "y": 49.65462688
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 12.66315086,
+      "y": 53.518759
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 12.663113300000001,
+      "y": 53.518642580000005
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 12.66307776,
+      "y": 53.51853416
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 12.6630449,
+      "y": 53.5184265
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 12.66273716,
+      "y": 53.518457579999996
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 12.66277336,
+      "y": 53.518569639999996
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 12.662803499999999,
+      "y": 53.518675280000004
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 7.860009499999999,
+      "y": 49.65430612
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 8.026932066666667,
+      "y": 52.23875128333333
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.408475,
+      "y": 52.54000298
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.40844212,
+      "y": 52.53996787999999
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 9.15764158,
+      "y": 49.97666134
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 9.157488359999999,
+      "y": 49.97697808
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Rasen",
+    "geometry": {
+      "x": 13.232923320000001,
+      "y": 53.55565732
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 12.32158954,
+      "y": 48.60667966
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.27284454,
+      "y": 49.97786656
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 11.7353237,
+      "y": 48.39395411666666
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Asphalt",
+    "geometry": {
+      "x": 9.20679494,
+      "y": 48.488969780000005
+    },
+    "name": "Fußballplatz"
+  },
+
+  {
+    "basketballplätze": 1,
+
+    "geometry": {
+      "x": 9.803220020000001,
+      "y": 52.42083066
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Hartplatz",
+    "geometry": {
+      "x": 10.23439126,
+      "y": 48.62545594
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.584843620000001,
+      "y": 48.10697092
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.58481872,
+      "y": 48.10699631999999
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.7358314,
+      "y": 51.5217727
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "name": "Boulderanlage Steißlinger Straße/Freiburger Straße",
+
+    "klettern": 1,
+    "geometry": {
+      "x": 8.8562720625,
+      "y": 47.7499202625
+    }
+  },
+  {
+    "basketballplätze": 1,
+    "geometry": {
+      "x": 10.403573439999999,
+      "y": 48.4809938
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 10.4036574,
+      "y": 48.480682359999996
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "bouleplätze": 1,
+    "platzbelag_boule": "Sand",
+    "geometry": {
+      "x": 9.020006283333332,
+      "y": 48.925877566666664
+    },
+    "name": "Bouleplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 13.042441216666667,
+      "y": 52.41593393333333
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 6.4432050400000005,
+      "y": 50.77216346
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.359331399999999,
+      "y": 52.52237716
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "fußballplätze": 1,
+
+    "geometry": {
+      "x": 11.31413676,
+      "y": 48.20464624
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.091642799999999,
+      "y": 53.48832116
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "name": "Mehrgenerationen-Fitnessparcour",
+    "opening_hours": "24/7",
+    "geometry": {
+      "x": 6.234817416666666,
+      "y": 51.57800953333333
+    }
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 12.13442272,
+      "y": 47.76107426
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 9.058577060000001,
+      "y": 48.79540592
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 12.9912743,
+      "y": 53.550649799999995
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Asphalt",
+    "geometry": {
+      "x": 13.41143842,
+      "y": 52.40221192
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 10.88523334,
+      "y": 49.213022339999995
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "bouleplätze": 1,
+    "platzbelag_boule": "Asche",
+    "geometry": {
+      "x": 7.398942180000001,
+      "y": 51.764823420000006
+    },
+    "name": "Bouleplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "basketballplätze": 1,
+    "geometry": {
+      "x": 10.2526828,
+      "y": 48.59696494
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 10.701166480000001,
+      "y": 49.29228014
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 10.661385580000001,
+      "y": 49.29742532
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 10.57779136,
+      "y": 53.65494457999999
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 11.58904276,
+      "y": 50.06266288
+    },
+    "name": "Skatepark"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 9.95890946,
+      "y": 51.38478224000001
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Hartplatz",
+    "geometry": {
+      "x": 9.959217355555555,
+      "y": 51.384778922222225
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "name": "Sportplatz Kirchgandern",
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 9.9587915625,
+      "y": 51.3844550625
+    }
+  },
+  {
+    "skatepark": 1,
+    "platzbelag_skateboard": "Hartplatz",
+    "geometry": {
+      "x": 9.958502888888889,
+      "y": 51.383550022222224
+    },
+    "name": "Skatepark"
+  },
+
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 12.33662092,
+      "y": 51.28457288
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 7.65400734,
+      "y": 50.819726939999995
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 10.6642742,
+      "y": 49.288445960000004
+    },
+    "name": "Skatepark"
+  },
+  {
+    "name": "Bolzplatz für Kinder und Jugendliche",
+    "smoking": "no",
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 10.6641099,
+      "y": 49.288231159999995
+    }
+  },
+  {
+    "cycling": "pump_track",
+    "name": "wildride",
+    "start_date": "2024-09-27",
+    "geometry": {
+      "x": 13.252321375000001,
+      "y": 53.5503185875
+    }
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 6.514638120000001,
+      "y": 49.950957300000006
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "klettern": 1,
+    "geometry": {
+      "x": 6.707357475,
+      "y": 51.06888113125
+    },
+    "name": "Kletterwand"
+  },
+  {
+    "bouleplätze": 1,
+    "platzbelag_boule": "Asche",
+    "geometry": {
+      "x": 8.294859859999999,
+      "y": 50.656383160000004
+    },
+    "name": "Bouleplatz"
+  },
+
+  {
+    "fußballplätze": 1,
+
+    "geometry": {
+      "x": 11.04514522,
+      "y": 49.315538319999995
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "name": "Pumptrack",
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 7.508399673333333,
+      "y": 49.60452806
+    }
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.355091519999998,
+      "y": 52.52162222
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Hartplatz",
+    "geometry": {
+      "x": 11.608648227272727,
+      "y": 52.156701827272734
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 10.21890252,
+      "y": 52.641125880000004
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "bouleplätze": 1,
+    "geometry": {
+      "x": 10.21984072,
+      "y": 52.641249040000005
+    },
+    "name": "Bouleplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.78610588,
+      "y": 48.37478926
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 12.14192204,
+      "y": 49.13328646
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 13.813615440000001,
+      "y": 52.830668319999994
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 13.814797959999998,
+      "y": 52.83105020000001
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 6.94306194117647,
+      "y": 49.25378428235294
+    },
+    "name": "Skatepark"
+  },
+  {
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 9.400008333333334,
+      "y": 54.66927711666667
+    },
+    "name": "Skatepark"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 13.042556916666667,
+      "y": 52.4158268
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 13.04283328,
+      "y": 52.416073919999995
+    },
+    "name": "Beachvolleyballplatz"
+  },
+
+  {
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 8.248488357142858,
+      "y": 50.06536862857143
+    },
+    "name": "Skatepark"
+  },
+  {
+    "bouleplätze": 1,
+    "platzbelag_boule": "Asche",
+    "geometry": {
+      "x": 7.138388879999999,
+      "y": 49.957068320000005
+    },
+    "name": "Bouleplatz"
+  },
+  {
+    "name": "Heidenstein",
+    "klettern": 1,
+    "geometry": {
+      "x": 8.260715155555555,
+      "y": 48.109655555555555
+    }
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Hartplatz",
+    "geometry": {
+      "x": 7.55997412,
+      "y": 49.79308436
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "mud",
+    "geometry": {
+      "x": 11.13421946,
+      "y": 49.46174292
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "geometry": {
+      "x": 9.66248502,
+      "y": 53.67370602
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 8.72533624,
+      "y": 50.332555400000004
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 11.16109744,
+      "y": 47.85782334
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Asche",
+    "geometry": {
+      "x": 8.00880252,
+      "y": 49.665338659999996
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 8.52096886,
+      "y": 50.174272439999996
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 8.809089779999999,
+      "y": 50.12808882
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "name": "Skatepark Friedensbrücke",
+    "toilets:wheelchair": "no",
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 8.665943915384615,
+      "y": 50.10182585384616
+    }
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 13.042910800000001,
+      "y": 52.41622126
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "volleyballplätze": 1,
+    "platzbelag_volleyball": "Sand",
+    "geometry": {
+      "x": 8.70000626,
+      "y": 50.08836298
+    },
+    "name": "Volleyballplatz"
+  },
+  {
+    "bouleplätze": 1,
+    "platzbelag_boule": "Sand",
+    "geometry": {
+      "x": 8.36569418,
+      "y": 49.04230736
+    },
+    "name": "Bouleplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "rubber",
+    "geometry": {
+      "x": 13.603149640000002,
+      "y": 52.4386796
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "name": "Skatepark Bad Pyrmont",
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 9.25697944,
+      "y": 51.98054146
+    }
+  },
+  {
+    "name": "Skatepark Bad Pyrmont",
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 9.257205,
+      "y": 51.980477099999995
+    }
+  },
+  {
+    "tennisplätze": 1,
+    "platzbelag_tennis": "Asphalt",
+    "geometry": {
+      "x": 7.625968240000001,
+      "y": 51.94812892
+    },
+    "name": "Tennisplatz"
+  },
+  {
+    "tennisplätze": 1,
+    "platzbelag_tennis": "Asphalt",
+    "geometry": {
+      "x": 7.6257933399999995,
+      "y": 51.948106259999996
+    },
+    "name": "Tennisplatz"
+  },
+  {
+    "tennisplätze": 1,
+    "platzbelag_tennis": "Asphalt",
+    "geometry": {
+      "x": 7.625830240000001,
+      "y": 51.94841286
+    },
+    "name": "Tennisplatz"
+  },
+  {
+    "tennisplätze": 1,
+    "platzbelag_tennis": "Asphalt",
+    "geometry": {
+      "x": 7.62565876,
+      "y": 51.94839136
+    },
+    "name": "Tennisplatz"
+  },
+  {
+    "name": "Skateanlage",
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 9.2994795625,
+      "y": 50.0117304
+    }
+  },
+  {
+    "name": "Buchenstein",
+    "klettern": 1,
+    "geometry": {
+      "x": 11.614615200000001,
+      "y": 49.513840450000004
+    }
+  },
+  {
+    "height": "20",
+    "name": "Zigeunerfelsen",
+    "klettern": 1,
+    "geometry": {
+      "x": 8.731188,
+      "y": 48.69630865
+    }
+  },
+  {
+    "name": "Norisbrettl",
+    "klettern": 1,
+    "geometry": {
+      "x": 11.53080942,
+      "y": 49.5442835
+    }
+  },
+  {
+    "name": "Falkenwand",
+    "klettern": 1,
+    "geometry": {
+      "x": 9.080400926086957,
+      "y": 48.084497526086956
+    }
+  },
+  {
+    "name": "Blauer Stein",
+    "klettern": 1,
+    "geometry": {
+      "x": 10.787863825,
+      "y": 50.6381748
+    }
+  },
+  {
+    "name": "Parkplatzfels",
+    "klettern": 1,
+    "geometry": {
+      "x": 9.038281569230769,
+      "y": 48.07168722307692
+    }
+  },
+  {
+    "volleyballplätze": 1,
+    "platzbelag_volleyball": "Rasen;dirt",
+    "geometry": {
+      "x": 13.7304676,
+      "y": 51.03581008
+    },
+    "name": "Volleyballplatz"
+  },
+  {
+    "name": "Orgelfelsen",
+    "klettern": 1,
+    "geometry": {
+      "x": 8.407098528571428,
+      "y": 48.73820837142858
+    }
+  },
+  {
+    "height": "30",
+    "klettern": 1,
+    "geometry": {
+      "x": 8.0972548875,
+      "y": 48.1215073625
+    },
+    "name": "Kletterwand"
+  },
+  {
+    "name": "Woid-Wand'l",
+    "klettern": 1,
+    "geometry": {
+      "x": 11.0488339,
+      "y": 47.48249345
+    }
+  },
+  {
+    "name": "Herrgottschrofen",
+    "klettern": 1,
+    "geometry": {
+      "x": 11.0457875,
+      "y": 47.48267104
+    }
+  },
+  {
+    "alt_name": "Felswand am Esel",
+    "name": "Gelbe Wände",
+    "klettern": 1,
+    "geometry": {
+      "x": 11.055120411111112,
+      "y": 47.48570423333334
+    }
+  },
+  {
+    "name": "Katzenstein",
+    "klettern": 1,
+    "geometry": {
+      "x": 11.073922852380953,
+      "y": 47.47688209047619
+    }
+  },
+  {
+    "name": "Hagfels",
+    "klettern": 1,
+    "geometry": {
+      "x": 11.6257156,
+      "y": 49.42285575
+    }
+  },
+  {
+    "name": "Reichelsmühler Wand",
+    "klettern": 1,
+    "geometry": {
+      "x": 11.32745315,
+      "y": 49.693577475
+    }
+  },
+  {
+    "name": "Grafensprung, unterer Wandteil",
+    "klettern": 1,
+    "geometry": {
+      "x": 8.347124749999999,
+      "y": 48.74868065
+    }
+  },
+  {
+    "name": "Grafensprung, oberer Wandteil",
+    "klettern": 1,
+    "geometry": {
+      "x": 8.34696418,
+      "y": 48.748734160000005
+    }
+  },
+  {
+    "name": "Rappenschrofen",
+    "klettern": 1,
+    "geometry": {
+      "x": 11.164719080000001,
+      "y": 47.483403880000004
+    }
+  },
+  {
+    "name": "Rappenschrofen",
+    "klettern": 1,
+    "geometry": {
+      "x": 11.165885025,
+      "y": 47.483743775
+    }
+  },
+  {
+    "loc_name": "Steinbruch",
+    "name": "Hainstadt",
+    "tourism": "attraction",
+    "klettern": 1,
+    "geometry": {
+      "x": 9.039555033333334,
+      "y": 49.839387525
+    }
+  },
+  {
+    "loc_name": "Steinbruch",
+    "name": "Hainstadt",
+    "tourism": "attraction",
+    "klettern": 1,
+    "geometry": {
+      "x": 9.040684383333334,
+      "y": 49.839632658333336
+    }
+  },
+  {
+    "fixme": "Verlauf exakter machen",
+    "name": "Kostgfäll Flechtenwand",
+    "klettern": 1,
+    "geometry": {
+      "x": 8.0963319,
+      "y": 48.121343550000006
+    }
+  },
+  {
+    "name": "Piccolo",
+    "klettern": 1,
+    "geometry": {
+      "x": 9.037370928571429,
+      "y": 48.072182528571425
+    }
+  },
+  {
+    "name": "Golzermühle",
+    "klettern": 1,
+    "geometry": {
+      "x": 12.77303565,
+      "y": 51.2508237
+    }
+  },
+
+  {
+    "name": "Jubiläumswand",
+    "klettern": 1,
+    "geometry": {
+      "x": 11.3017954,
+      "y": 49.8031294
+    }
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.1424836,
+      "y": 49.9653503
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.1424086,
+      "y": 49.9653793
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.0175514,
+      "y": 51.4224996
+    },
+    "name": "Tischtennisplatz"
+  },
+
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 13.361301,
+      "y": 52.5410257
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "denotation": "natural_monument",
+    "height": "304 m",
+    "name": "Scharfenstein",
+    "klettern": 1,
+    "geometry": {
+      "x": 9.3926534,
+      "y": 51.1921657
+    }
+  },
+  {
+    "name": "Unterer Harzlochfelsen",
+    "klettern": 1,
+    "geometry": {
+      "x": 7.8694858,
+      "y": 47.8919972
+    }
+  },
+  {
+    "name": "Obere Harzlochfelsen",
+    "klettern": 1,
+    "geometry": {
+      "x": 7.8713416,
+      "y": 47.8933983
+    }
+  },
+  {
+    "alt_name": "Altvogelbachfels",
+    "name": "Altvogelbach-Fels",
+    "tourism": "viewpoint",
+    "klettern": 1,
+    "geometry": {
+      "x": 7.6977496,
+      "y": 47.7862041
+    }
+  },
+  {
+    "direction": "195",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4493815,
+      "y": 52.4738797
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.9095753,
+      "y": 48.3690783
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.361145,
+      "y": 52.5414157
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3612425,
+      "y": 52.5413044
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.360724,
+      "y": 52.5415903
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3597792,
+      "y": 52.5427664
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3595966,
+      "y": 52.5428016
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "platzbelag_tischtennis": "Asphalt",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.408698,
+      "y": 52.5274021
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "platzbelag_tischtennis": "Asphalt",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4088313,
+      "y": 52.5273603
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3622124,
+      "y": 52.5492274
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.475257,
+      "y": 52.5003142
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4752059,
+      "y": 52.5002479
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.9551516,
+      "y": 49.7502557
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "name": "Boulderblock Schelm 48",
+
+    "klettern": 1,
+    "geometry": {
+      "x": 9.1556579,
+      "y": 48.8157513
+    }
+  },
+  {
+    "platzbelag_tischtennis": "Asphalt",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.403686,
+      "y": 52.52695
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7045879,
+      "y": 50.0968887
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7000103,
+      "y": 50.0884311
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "name": "Binger Wand",
+    "klettern": 1,
+    "geometry": {
+      "x": 7.8411141,
+      "y": 50.0015742
+    }
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.3349756,
+      "y": 51.3172155
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.4739157,
+      "y": 48.9204608
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "noname": "yes",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6491372,
+      "y": 49.861414
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6656209,
+      "y": 50.2044299
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4666016,
+      "y": 52.5044754
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "name": "Nikolausfels",
+    "klettern": 1,
+    "geometry": {
+      "x": 7.8740242,
+      "y": 49.9701301
+    }
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6338328,
+      "y": 50.1243706
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4216929,
+      "y": 52.5041797
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.6761401,
+      "y": 51.1775742
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4101757,
+      "y": 52.4963123
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4082924,
+      "y": 52.4966437
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "direction": "103",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4081908,
+      "y": 52.4965468
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4188252,
+      "y": 52.5428863
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4189828,
+      "y": 52.5430304
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.417022,
+      "y": 52.5334971
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4346087,
+      "y": 52.5277908
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "klettern": 1,
+    "geometry": {
+      "x": 7.3354137,
+      "y": 51.1483858
+    },
+    "name": "Kletterwand"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.1347843,
+      "y": 49.4617294
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "alt_name": "Zastler",
+    "height": "35",
+    "name": "Scheibenfelsen",
+    "klettern": 1,
+    "geometry": {
+      "x": 7.9912978,
+      "y": 47.9204907
+    }
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.0408951,
+      "y": 52.3899601
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.1521996,
+      "y": 49.9743818
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.1521901,
+      "y": 49.9744063
+    },
+    "name": "Tischtennisplatz"
+  },
+
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 6.9552311,
+      "y": 50.9861581
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6424806,
+      "y": 50.1210797
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "direction": "100",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4433356,
+      "y": 52.4748385
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "direction": "195",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4494335,
+      "y": 52.4738737
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3738133,
+      "y": 52.5416112
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3602006,
+      "y": 52.5424276
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 6.4454435,
+      "y": 50.7729363
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4649372,
+      "y": 52.5046679
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4722372,
+      "y": 52.5152679
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4181833,
+      "y": 52.5434446
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.4569034,
+      "y": 48.1481553
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4699658,
+      "y": 52.5107956
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.4581955,
+      "y": 48.1502229
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.4582424,
+      "y": 48.1502777
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3980143,
+      "y": 52.527878
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.446189,
+      "y": 52.4722303
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.5244214,
+      "y": 51.4539434
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.5244931,
+      "y": 51.4539894
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.9542292,
+      "y": 50.9530067
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.3613969,
+      "y": 51.3696423
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.3613909,
+      "y": 51.3696032
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 14.4035295,
+      "y": 51.3863722
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 14.4034497,
+      "y": 51.386409
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.2643596,
+      "y": 54.259634
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.2579986,
+      "y": 54.256727
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 14.0631436,
+      "y": 51.0119361
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.5464976,
+      "y": 51.2316309
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4089635,
+      "y": 52.5512524
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4091031,
+      "y": 52.5513494
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.1431996,
+      "y": 49.9877512
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "klettern": 1,
+    "geometry": {
+      "x": 11.5708782,
+      "y": 49.9314512
+    },
+    "name": "Kletterwand"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4216006,
+      "y": 52.5040463
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4216441,
+      "y": 52.5041089
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.3349537,
+      "y": 51.3171762
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.2083123,
+      "y": 49.7211926
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3555948,
+      "y": 52.546565
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3555192,
+      "y": 52.546506
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "name": "Klettergarten Mägdeberg",
+    "klettern": 1,
+    "geometry": {
+      "x": 8.796566,
+      "y": 47.8053429
+    }
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6992521,
+      "y": 50.1144003
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 14.8826766,
+      "y": 51.0350614
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6833152,
+      "y": 50.1184938
+    },
+    "name": "Tischtennisplatz"
+  },
+
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.699128,
+      "y": 50.1315317
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.7675712,
+      "y": 53.3725447
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.7676275,
+      "y": 53.3725029
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.7675976,
+      "y": 53.3725204
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.1184399,
+      "y": 47.7321555
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.7434728,
+      "y": 51.0254277
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "name": "Lägerfels",
+    "klettern": 1,
+    "geometry": {
+      "x": 8.2651938,
+      "y": 48.1063713
+    }
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4143524,
+      "y": 52.5438865
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4144543,
+      "y": 52.5438716
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4143845,
+      "y": 52.5438119
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6775336,
+      "y": 50.1078476
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7322228,
+      "y": 48.8230166
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7322214,
+      "y": 48.8230432
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3979877,
+      "y": 52.5226885
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3978939,
+      "y": 52.5227083
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.1572046,
+      "y": 48.6782917
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.9817703,
+      "y": 52.5772026
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.9970785,
+      "y": 52.5885109
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.9768076,
+      "y": 52.5894784
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4365769,
+      "y": 52.5354468
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.9607024,
+      "y": 52.5725233
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 11.1611277,
+      "y": 47.8574124
+    },
+    "name": "Beachvolleyballplatz"
+  },
+
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7114538,
+      "y": 50.1197711
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.4153737,
+      "y": 51.3393075
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3885093,
+      "y": 52.5311379
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3884745,
+      "y": 52.5311926
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "klettern": 1,
+    "geometry": {
+      "x": 11.342158,
+      "y": 49.6919637
+    },
+    "name": "Kletterwand"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6153733,
+      "y": 50.1454193
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.4569235,
+      "y": 48.148047
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.2398239,
+      "y": 48.6236143
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.6925011,
+      "y": 51.4917547
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4125899,
+      "y": 52.4980681
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4125953,
+      "y": 52.4980224
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "name": "Graffitifelsen",
+    "klettern": 1,
+    "geometry": {
+      "x": 8.3597944,
+      "y": 48.6687643
+    }
+  },
+  {
+    "name": "Eulenfelsen (Eulenturm, Hüttenmassiv)",
+    "klettern": 1,
+    "geometry": {
+      "x": 8.3589166,
+      "y": 48.685382
+    }
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6778387,
+      "y": 49.4122334
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6834283,
+      "y": 49.3838708
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3623318,
+      "y": 52.5491612
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.4669607,
+      "y": 48.9722073
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.4650225,
+      "y": 48.9743803
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.4674529,
+      "y": 48.9713694
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.4673442,
+      "y": 48.9713947
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 13.0354223,
+      "y": 52.3958325
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.2104716,
+      "y": 47.8229613
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "bouleplätze": 1,
+    "platzbelag_boule": "Asche",
+    "geometry": {
+      "x": 9.2102802,
+      "y": 47.8227532
+    },
+    "name": "Bouleplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.768286,
+      "y": 50.1370484
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6849098,
+      "y": 50.0879686
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "name": "Eulenfelsen (Blankenturm, Murgmassiv, Hexenwand)",
+    "klettern": 1,
+    "geometry": {
+      "x": 8.3593619,
+      "y": 48.6851366
+    }
+  },
+  {
+    "alt_name": "Gausbacher Straßenwandl",
+    "name": "Gausbacher Straßenfelsen",
+    "klettern": 1,
+    "geometry": {
+      "x": 8.3623472,
+      "y": 48.6908967
+    }
+  },
+  {
+    "name": "Pumprisse",
+    "klettern": 1,
+    "geometry": {
+      "x": 8.3614352,
+      "y": 48.667229
+    }
+  },
+  {
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 8.070724,
+      "y": 50.3851221
+    },
+    "name": "Skatepark"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 6.9944071,
+      "y": 49.2313597
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 6.9943649,
+      "y": 49.2313771
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.1301324,
+      "y": 48.6914041
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.1301238,
+      "y": 48.6913584
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "fixme": "Position stimmt nicht genau",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3233554,
+      "y": 52.6396859
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 13.4554663,
+      "y": 52.503047
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.6931512,
+      "y": 51.491784
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.3246084,
+      "y": 48.6759863
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3922946,
+      "y": 52.5007834
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3923873,
+      "y": 52.5007874
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.1352158,
+      "y": 52.363101
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.2060385,
+      "y": 48.5523764
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6778749,
+      "y": 49.4122148
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6335565,
+      "y": 50.1040332
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6590099,
+      "y": 50.130156
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 10.5777858,
+      "y": 53.6550688
+    },
+    "name": "Skatepark"
+  },
+  {
+    "name": "Schmarlne Quacke",
+
+    "klettern": 1,
+    "geometry": {
+      "x": 12.0690818,
+      "y": 54.1326577
+    }
+  },
+  {
+    "name": "Todtnauer Klettergarten: Klingelefelsen",
+    "klettern": 1,
+    "geometry": {
+      "x": 7.9522792,
+      "y": 47.8346484
+    }
+  },
+  {
+    "name": "Pfrontener Rollbahn",
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 10.5554087,
+      "y": 47.5886555
+    }
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.6036198,
+      "y": 50.9490116
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.6035889,
+      "y": 50.9489892
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.6035507,
+      "y": 50.9489621
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.5965612,
+      "y": 50.8948649
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.9155615,
+      "y": 53.6081342
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.9155648,
+      "y": 53.608165
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.9155607,
+      "y": 53.6081053
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.1124221,
+      "y": 50.4297776
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.1050842,
+      "y": 50.4316456
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.1050493,
+      "y": 50.4316289
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.1051037,
+      "y": 50.4315815
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.1100356,
+      "y": 50.4313705
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 14.4776289,
+      "y": 51.9348717
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "skatepark": 1,
+    "geometry": {
+      "x": 8.4911601,
+      "y": 50.0683177
+    },
+    "name": "Skatepark"
+  },
+  {
+    "tischtennisplatten": 2,
+    "geometry": {
+      "x": 9.4919319,
+      "y": 51.3062845
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "min_age": "6",
+    "name": "Tischtennis Ortspark",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.6064744,
+      "y": 48.0649042
+    }
+  },
+  {
+    "bouleplätze": 1,
+    "platzbelag_boule": "Asche",
+    "geometry": {
+      "x": 7.9161524,
+      "y": 51.7483573
+    },
+    "name": "Bouleplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.4226307,
+      "y": 51.3399644
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.5676754,
+      "y": 51.1595331
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "bouleplätze": 1,
+    "platzbelag_boule": "Asche",
+    "geometry": {
+      "x": 7.4556046,
+      "y": 49.1883318
+    },
+    "name": "Bouleplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.379488,
+      "y": 52.5340846
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.615443,
+      "y": 50.8917176
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.240349,
+      "y": 51.4932136
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.248885,
+      "y": 48.1482725
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "colour": "silver",
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Rasen",
+    "geometry": {
+      "x": 8.4492791,
+      "y": 48.0499706
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.5768525,
+      "y": 47.6162941
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.4461775,
+      "y": 48.0548528
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.4462209,
+      "y": 48.054847
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7056065,
+      "y": 50.1197309
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.4613586,
+      "y": 48.0526702
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.2598206,
+      "y": 52.5126528
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.2600003,
+      "y": 52.5126552
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.5735021,
+      "y": 52.5574988
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.5697056,
+      "y": 52.5589959
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.5708811,
+      "y": 52.5585931
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.5696332,
+      "y": 52.5596308
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.5732656,
+      "y": 52.5575238
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.5697334,
+      "y": 52.5589385
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.5814764,
+      "y": 52.553443
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.0198405,
+      "y": 49.5283257
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.5937637,
+      "y": 48.104972
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.5844257,
+      "y": 48.1080528
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.5951179,
+      "y": 48.1026691
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "name": "Basketballkorb",
+    "basketballplätze": 1,
+    "platzbelag_basketball": "paved",
+    "geometry": {
+      "x": 6.5913702,
+      "y": 51.2231721
+    }
+  },
+  {
+    "name": "Basketballkorb",
+    "basketballplätze": 1,
+    "platzbelag_basketball": "paved",
+    "geometry": {
+      "x": 6.5913017,
+      "y": 51.2230567
+    }
+  },
+  {
+    "name": "Dromedar",
+    "klettern": 1,
+    "geometry": {
+      "x": 8.2543532,
+      "y": 48.1170443
+    }
+  },
+  {
+    "basketballplätze": 1,
+    "geometry": {
+      "x": 7.8167522,
+      "y": 47.976857
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.43464,
+      "y": 52.5278573
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4346232,
+      "y": 52.5278213
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "height": "3",
+    "klettern": 1,
+    "geometry": {
+      "x": 11.5996192,
+      "y": 50.9450857
+    },
+    "name": "Kletterwand"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.6053431,
+      "y": 50.8475844
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6774665,
+      "y": 50.1172967
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 11.957709,
+      "y": 48.0408989
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.0225227,
+      "y": 50.6929178
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.3856003,
+      "y": 48.9944684
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.3855051,
+      "y": 48.9944732
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.4153364,
+      "y": 51.3393292
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.5996739,
+      "y": 52.4394301
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 14.6482472,
+      "y": 52.0875221
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 14.9966909,
+      "y": 51.1550317
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.2645259,
+      "y": 52.511296
+    },
+    "name": "Tischtennisplatz"
+  },
+
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4744107,
+      "y": 52.5508182
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.434071,
+      "y": 52.5347023
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.9442641,
+      "y": 47.8301473
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6294411,
+      "y": 50.1051175
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.683417,
+      "y": 49.3838296
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 9.2284963,
+      "y": 48.5401245
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 7.0245242,
+      "y": 50.9417719
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.4836601,
+      "y": 49.4880585
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.4835574,
+      "y": 49.488019
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "name": "Dicker Hans",
+    "klettern": 1,
+    "geometry": {
+      "x": 11.5718772,
+      "y": 48.1117984
+    }
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.5832967,
+      "y": 53.9924934
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.990857,
+      "y": 48.8980459
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3084275,
+      "y": 52.4733294
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3084571,
+      "y": 52.4733794
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.0702437,
+      "y": 50.8759296
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.7098109,
+      "y": 48.3219655
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "quantity": "2",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.3965468,
+      "y": 48.9480564
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4169878,
+      "y": 52.5334688
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.0176843,
+      "y": 51.4224137
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.1267802,
+      "y": 50.5700009
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "name": "Basketballplatz",
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 8.4721025,
+      "y": 49.9547894
+    }
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4012071,
+      "y": 52.5372117
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.2394725,
+      "y": 48.6245736
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.2395611,
+      "y": 48.6245601
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 10.2391157,
+      "y": 48.6246172
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.4218763,
+      "y": 49.3171641
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.4228398,
+      "y": 49.3174621
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6886723,
+      "y": 50.1471651
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 8.4311782,
+      "y": 49.3118494
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.4313225,
+      "y": 49.3117518
+    },
+    "name": "Tischtennisplatz"
+  },
+
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4192089,
+      "y": 52.5162064
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4191258,
+      "y": 52.5162331
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.4305642,
+      "y": 49.3571335
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.6601196,
+      "y": 52.5102689
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.4186264,
+      "y": 49.3114529
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 6.9326979,
+      "y": 51.4635443
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.8795506,
+      "y": 48.1159115
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.0197365,
+      "y": 48.9259005
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.1347765,
+      "y": 49.4616925
+    },
+    "name": "Tischtennisplatz"
+  },
+
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4087166,
+      "y": 52.5315411
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "paved",
+    "geometry": {
+      "x": 12.4362751,
+      "y": 53.4875294
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6919222,
+      "y": 50.11667
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.6350963,
+      "y": 52.4487198
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 11.3139609,
+      "y": 48.2045789
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.0588059,
+      "y": 47.7017214
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3737485,
+      "y": 52.5415742
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "skatepark": 1,
+    "platzbelag_skateboard": "Asphalt",
+    "geometry": {
+      "x": 7.0176157,
+      "y": 51.4781684
+    },
+    "name": "Skatepark"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.4273082,
+      "y": 49.3103103
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.2444987,
+      "y": 52.9761841
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.5936794,
+      "y": 52.5426058
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "paved",
+    "geometry": {
+      "x": 10.1289,
+      "y": 54.3420308
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.410252,
+      "y": 52.5343036
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "volleyballplätze": 1,
+    "platzbelag_volleyball": "Rasen",
+    "geometry": {
+      "x": 8.4504823,
+      "y": 48.0582317
+    },
+    "name": "Volleyballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.4504959,
+      "y": 48.0580342
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 6.4454021,
+      "y": 50.7729302
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.5465012,
+      "y": 52.5022202
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.5466209,
+      "y": 52.5021417
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.3022793,
+      "y": 51.3243729
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.8850314,
+      "y": 49.2130665
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Hartplatz",
+    "geometry": {
+      "x": 7.0654581,
+      "y": 49.9247627
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.0656668,
+      "y": 49.9245228
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.262691,
+      "y": 50.8397458
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.4731574,
+      "y": 51.3096652
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.5429259,
+      "y": 52.4073534
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.659068,
+      "y": 49.2956333
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "level": "-1",
+    "name": "Boulderwand Riesige Rosi",
+    "klettern": 1,
+    "geometry": {
+      "x": 11.6134303,
+      "y": 48.1152366
+    }
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asche",
+    "geometry": {
+      "x": 7.5755069,
+      "y": 51.5926806
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.9591082,
+      "y": 51.3847426
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.8062639,
+      "y": 48.1026837
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "name": "Einzelner Korb",
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Rasen",
+    "geometry": {
+      "x": 10.0698621,
+      "y": 54.2798155
+    }
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4722432,
+      "y": 52.5541262
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4722361,
+      "y": 52.5540606
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.2220529,
+      "y": 50.0113411
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.5155069,
+      "y": 51.4107985
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "name": "Falkendach",
+    "klettern": 1,
+    "geometry": {
+      "x": 9.0803625,
+      "y": 48.0845218
+    }
+  },
+  {
+    "name": "Sperberverschneidung",
+    "klettern": 1,
+    "geometry": {
+      "x": 9.0803028,
+      "y": 48.084593
+    }
+  },
+  {
+    "name": "Falkenriss",
+    "klettern": 1,
+    "geometry": {
+      "x": 9.0801519,
+      "y": 48.0847673
+    }
+  },
+  {
+    "name": "Little Big Horn",
+    "klettern": 1,
+    "geometry": {
+      "x": 9.0802843,
+      "y": 48.0845996
+    }
+  },
+  {
+    "name": "Hut ab",
+    "klettern": 1,
+    "geometry": {
+      "x": 9.0801352,
+      "y": 48.0847383
+    }
+  },
+  {
+    "name": "Seewolf",
+    "klettern": 1,
+    "geometry": {
+      "x": 9.0801469,
+      "y": 48.0847586
+    }
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.8798701,
+      "y": 48.3772893
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.661329,
+      "y": 50.1016105
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.1275292,
+      "y": 49.1868621
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.1286886,
+      "y": 49.1867683
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.8039594,
+      "y": 48.0183754
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.4962155,
+      "y": 49.3909767
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7489798,
+      "y": 50.1332186
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6273783,
+      "y": 50.1826502
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6945619,
+      "y": 50.1125398
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "volleyballplätze": 1,
+    "platzbelag_volleyball": "Rasen",
+    "geometry": {
+      "x": 8.3286538,
+      "y": 49.0074943
+    },
+    "name": "Volleyballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.1029772,
+      "y": 53.5827325
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6921077,
+      "y": 50.1305194
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.0938445,
+      "y": 48.2119207
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.0938993,
+      "y": 48.2119745
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.406833,
+      "y": 52.5116529
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.6441982,
+      "y": 50.424231
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 14.3060655,
+      "y": 52.5317467
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6893638,
+      "y": 51.1490858
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.362272,
+      "y": 52.5491945
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7000363,
+      "y": 50.0885208
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 7.8293135,
+      "y": 50.6623778
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3600256,
+      "y": 52.5034232
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.5646168,
+      "y": 50.1006906
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "name": "Bolzplatz",
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 13.4201438,
+      "y": 52.51659
+    }
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.1216744,
+      "y": 52.3784616
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.6897962,
+      "y": 50.5993881
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 13.4133681,
+      "y": 52.5039257
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4131474,
+      "y": 52.5040229
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "max_age": "18",
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 7.0038801,
+      "y": 49.2632647
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.0119328,
+      "y": 50.9426638
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.0100684,
+      "y": 50.9451192
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4010674,
+      "y": 52.5371765
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3980268,
+      "y": 52.5406001
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "beachvolleyballplätze": 1,
+    "platzbelag_beachvolleyball": "Sand",
+    "geometry": {
+      "x": 9.4888561,
+      "y": 54.8225399
+    },
+    "name": "Beachvolleyballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 6.9551861,
+      "y": 50.9861241
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.2694467,
+      "y": 52.5073131
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "name": "Bolzplatz",
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Asphalt",
+    "geometry": {
+      "x": 13.3700216,
+      "y": 52.5047432
+    }
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 8.0515211,
+      "y": 52.2542481
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asche",
+    "geometry": {
+      "x": 7.6178163,
+      "y": 51.3114592
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Asphalt",
+    "geometry": {
+      "x": 7.6724111,
+      "y": 51.2948884
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7117287,
+      "y": 50.2035769
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6462218,
+      "y": 50.074779
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6461118,
+      "y": 50.0748452
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "klettern": 1,
+    "geometry": {
+      "x": 7.8129434,
+      "y": 51.6857615
+    },
+    "name": "Kletterwand"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7645122,
+      "y": 50.1240175
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7645444,
+      "y": 50.124137
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.518277,
+      "y": 53.9220641
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4722884,
+      "y": 52.5153275
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4722749,
+      "y": 52.5153009
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.5428445,
+      "y": 50.1037739
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7357837,
+      "y": 50.1246558
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6947969,
+      "y": 50.1040592
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6946839,
+      "y": 50.1039867
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6956262,
+      "y": 50.1034526
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.5425461,
+      "y": 50.0975499
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7177108,
+      "y": 50.0990508
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6862631,
+      "y": 50.125599
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6582776,
+      "y": 50.0906811
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6676365,
+      "y": 50.0908703
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.2221078,
+      "y": 50.0113646
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4549798,
+      "y": 52.442247
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6693184,
+      "y": 50.1189071
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6630022,
+      "y": 50.1202062
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6696759,
+      "y": 50.1189409
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.386185,
+      "y": 49.4173717
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6417447,
+      "y": 50.0770442
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.643891,
+      "y": 50.0793015
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6401486,
+      "y": 50.0824685
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6400838,
+      "y": 50.0824511
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6360344,
+      "y": 50.0869461
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.5721965,
+      "y": 52.2684923
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6373698,
+      "y": 50.1213282
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.637846,
+      "y": 50.1233428
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7174908,
+      "y": 50.1417425
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7168423,
+      "y": 50.1435695
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7228321,
+      "y": 50.14235
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7247803,
+      "y": 50.1432652
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7134781,
+      "y": 50.1345509
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7192495,
+      "y": 50.1297799
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.719207,
+      "y": 50.1297806
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6577303,
+      "y": 50.1021546
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6482765,
+      "y": 50.1059779
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.642522,
+      "y": 50.1207761
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.5714203,
+      "y": 50.101891
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.5714093,
+      "y": 50.1019428
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.5819054,
+      "y": 50.1008259
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.5820038,
+      "y": 50.1008009
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.5783197,
+      "y": 50.1011093
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.5781472,
+      "y": 50.1004173
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.988433,
+      "y": 52.5916104
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.9820052,
+      "y": 52.5968899
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "name": "Platte",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.1237711,
+      "y": 51.0035017
+    }
+  },
+  {
+    "name": "Platte",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.1276447,
+      "y": 51.0014495
+    }
+  },
+  {
+    "name": "Platte",
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.1329691,
+      "y": 50.989313
+    }
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6831174,
+      "y": 50.0994124
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6830855,
+      "y": 50.0994356
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6830596,
+      "y": 50.0994638
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6827378,
+      "y": 50.1017009
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6828429,
+      "y": 50.1017141
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6828881,
+      "y": 50.1036858
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6829191,
+      "y": 50.1036368
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4382786,
+      "y": 52.5227831
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.4382104,
+      "y": 52.5227443
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6114488,
+      "y": 50.0901852
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6050166,
+      "y": 50.0901739
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.6921984,
+      "y": 47.7106581
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "basketballplätze": 1,
+    "platzbelag_basketball": "Asphalt",
+    "geometry": {
+      "x": 8.0078353,
+      "y": 52.2782519
+    },
+    "name": "Basketballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7679575,
+      "y": 50.1369253
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7680211,
+      "y": 50.1369725
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7682506,
+      "y": 50.1369969
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7682005,
+      "y": 50.1369431
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7681463,
+      "y": 50.1368863
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.768083,
+      "y": 50.1368496
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7490369,
+      "y": 50.1331906
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7680213,
+      "y": 50.1368113
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7679502,
+      "y": 50.1367733
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7678758,
+      "y": 50.1367332
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.712243,
+      "y": 50.2029381
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7122603,
+      "y": 50.202782
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6778301,
+      "y": 50.2020671
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6740116,
+      "y": 50.205151
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "fußballplätze": 1,
+    "platzbelag_fußball": "Rasen",
+    "geometry": {
+      "x": 8.183177,
+      "y": 51.4920933
+    },
+    "name": "Fußballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 7.793371,
+      "y": 50.3153168
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6339027,
+      "y": 50.124363
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.625797,
+      "y": 50.1508844
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6258577,
+      "y": 50.1508922
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6256944,
+      "y": 50.144874
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6257727,
+      "y": 50.1447821
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6252343,
+      "y": 50.1259632
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6247509,
+      "y": 50.1302694
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6059626,
+      "y": 50.1426067
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6059816,
+      "y": 50.1425805
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6397831,
+      "y": 50.1015226
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.778201,
+      "y": 48.2331052
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 10.2654273,
+      "y": 49.2753637
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6274799,
+      "y": 50.1826886
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6259242,
+      "y": 50.1733977
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6950321,
+      "y": 50.1285602
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "boules": "petanque",
+    "bouleplätze": 1,
+    "geometry": {
+      "x": 9.4025417,
+      "y": 51.54351
+    },
+    "name": "Bouleplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.666217,
+      "y": 50.1019299
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6662574,
+      "y": 50.10195
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6662974,
+      "y": 50.1019695
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 12.2983289,
+      "y": 51.3224527
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6952124,
+      "y": 50.1205735
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.4737339,
+      "y": 51.2993034
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.4735407,
+      "y": 51.2992777
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6589933,
+      "y": 50.1301847
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "volleyballplätze": 1,
+    "geometry": {
+      "x": 9.6079946,
+      "y": 52.2811153
+    },
+    "name": "Volleyballplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 9.4745663,
+      "y": 51.319444
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.534411,
+      "y": 50.1065827
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.544443,
+      "y": 50.1128018
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.544497,
+      "y": 50.1128087
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7215376,
+      "y": 50.08817
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7215669,
+      "y": 50.088178
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.7215957,
+      "y": 50.0881849
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6877082,
+      "y": 50.1476785
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.686445,
+      "y": 50.149305
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 8.6856695,
+      "y": 50.1478858
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 1,
+    "geometry": {
+      "x": 13.3829927,
+      "y": 52.5233305
+    },
+    "name": "Tischtennisplatz"
+  },
+  {
+    "tischtennisplatten": 2,
+    "geometry": {
+      "x": 9.4919166,
+      "y": 51.3063099
+    },
+    "name": "Tischtennisplatz"
+  }
+]

@@ -38,8 +38,11 @@ interface JsonPlace {
   bouleplätze?: number | null
   skatepark?: number | null
   tischtennisplatten?: number | null
+  tennisplätze?: number | null
+  platzbelag_tennis?: string | null
   hockeyplätze?: number | null
   volleyballplätze?: number | null
+  klettern?: number | null
   geometry: {
     x: number // longitude
     y: number // latitude
@@ -105,6 +108,14 @@ function transformJsonPlace(jsonPlace: JsonPlace, sourceFilename: string) {
     })
   }
   
+  if (jsonPlace.tennisplätze && jsonPlace.tennisplätze > 0) {
+    courts.push({
+      sport: 'tennis',
+      quantity: jsonPlace.tennisplätze,
+      surface: jsonPlace.platzbelag_tennis || undefined
+    })
+  }
+  
   if (jsonPlace.volleyballplätze && jsonPlace.volleyballplätze > 0) {
     courts.push({
       sport: 'volleyball',
@@ -116,6 +127,13 @@ function transformJsonPlace(jsonPlace: JsonPlace, sourceFilename: string) {
     courts.push({
       sport: 'hockey',
       quantity: jsonPlace.hockeyplätze
+    })
+  }
+  
+  if (jsonPlace.klettern && jsonPlace.klettern > 0) {
+    courts.push({
+      sport: 'klettern',
+      quantity: jsonPlace.klettern
     })
   }
   
