@@ -1,4 +1,4 @@
-- "change sport icons
+
 
 
 
@@ -19,11 +19,13 @@
 -- Erstellen (Button)
 
 
-I want to add a new feature to the webapp: User can create "game/events" to find other players to play with.
-- User who create the game/event should be able to set some details (which place, sport, number of player etc)
-- the game/event is tied to a place and should be shown in the bottom sheet of the place 
-- new page "game/events" where all available game/events are listed and with a button to create a new "game/event"
-- other users can join the "game/event", there should be a list of how many users joined this game
+I want to add a new feature to the webapp: User can create "events" to find other players to play with.
+- User who create the event should be able to set some details (which place, sport, number of player etc)
+- the event is tied to a place and should be shown in the bottom sheet of the place 
+- new page "events" where all available events are listed and with a button to create a new "event"
+- other users can join the "event", there should be a list of how many users joined this game
+
+which more information/details do you need?
 
 
 ----------------------------------------------------------------------------------------------------------------------

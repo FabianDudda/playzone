@@ -1,5 +1,6 @@
 'use client'
 
+import { Suspense } from 'react'
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
@@ -26,9 +27,10 @@ interface EventFormData {
   min_players: number
   max_players: number
   skill_level: SkillLevel
+  extra_players: number
 }
 
-export default function NewEventPage() {
+function NewEventForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user } = useAuth()
@@ -44,7 +46,8 @@ export default function NewEventPage() {
     event_time: '',
     min_players: 2,
     max_players: 8,
-    skill_level: 'any'
+    skill_level: 'any',
+    extra_players: 0
   })
 
   // Store pre-selected place ID from URL parameters
@@ -116,6 +119,12 @@ export default function NewEventPage() {
       newErrors.max_players = 'Maximum players must be greater than or equal to minimum players'
     }
 
+    // Validate that creator + extra players doesn't exceed max players
+    const totalCreatorParticipants = 1 + formData.extra_players
+    if (totalCreatorParticipants > formData.max_players) {
+      newErrors.extra_players = `You + ${formData.extra_players} extra players (${totalCreatorParticipants} total) exceeds maximum players (${formData.max_players})`
+    }
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -134,7 +143,8 @@ export default function NewEventPage() {
         ...formData,
         sport: formData.sport as SportType,
         creator_id: user.id,
-        status: 'active' as const
+        status: 'active' as const,
+        extra_players: formData.extra_players
       }
 
       const { data, error } = await database.events.createEvent(eventData)
@@ -383,6 +393,40 @@ export default function NewEventPage() {
               </div>
             </div>
 
+            {/* Extra Players */}
+            <div className="space-y-2">
+              <Label htmlFor="extra_players">Extra Players You're Bringing</Label>
+              <Select 
+                value={formData.extra_players.toString()} 
+                onValueChange={(value: string) => {
+                  const numValue = parseInt(value) || 0
+                  setFormData(prev => ({ ...prev, extra_players: numValue }))
+                  setErrors(prev => ({ ...prev, extra_players: '' }))
+                }}
+              >
+                <SelectTrigger className={errors.extra_players ? 'border-red-500' : ''}>
+                  <SelectValue placeholder="Select extra players" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0">+0 (Just me)</SelectItem>
+                  {Array.from({ length: 20 }, (_, i) => i + 1).map(num => (
+                    <SelectItem key={num} value={num.toString()}>
+                      +{num} extra player{num > 1 ? 's' : ''}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-sm text-muted-foreground">
+                You will automatically be added as a participant. Select how many additional players you're bringing (friends, family, etc.)
+              </p>
+              {errors.extra_players && (
+                <p className="text-sm text-red-600 flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" />
+                  {errors.extra_players}
+                </p>
+              )}
+            </div>
+
             {/* Skill Level */}
             <div className="space-y-2">
               <Label htmlFor="skill_level">Skill Level</Label>
@@ -429,5 +473,25 @@ export default function NewEventPage() {
         </Card>
       </form>
     </div>
+  )
+}
+
+export default function NewEventPage() {
+  return (
+    <Suspense fallback={
+      <div className="container px-4 py-6 max-w-2xl mx-auto pb-20">
+        <div className="flex items-center gap-2 mb-6">
+          <div className="h-4 w-4 bg-gray-200 rounded animate-pulse"></div>
+          <div className="h-4 w-20 bg-gray-200 rounded animate-pulse"></div>
+        </div>
+        <div className="mb-6">
+          <div className="h-8 w-48 bg-gray-200 rounded animate-pulse mb-2"></div>
+          <div className="h-4 w-72 bg-gray-200 rounded animate-pulse"></div>
+        </div>
+        <div className="h-96 bg-gray-100 rounded-lg animate-pulse"></div>
+      </div>
+    }>
+      <NewEventForm />
+    </Suspense>
   )
 }

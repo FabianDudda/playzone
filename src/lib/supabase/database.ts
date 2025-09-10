@@ -527,7 +527,8 @@ export const database = {
           .order('created_at', { ascending: false })
         
         if (error) {
-          console.error('Error fetching user match history for sport:', error)
+          console.error('Error fetching user match history for sport:', sport, error)
+          console.error('Full error details:', JSON.stringify(error, null, 2))
           return []
         }
         return data || []
@@ -668,9 +669,14 @@ export const database = {
           userJoined = !!participation
         }
 
+        // Calculate total extra participants from all joiners
+        const joinerExtras = data.event_participants?.reduce((sum, participant) => {
+          return sum + (participant.extra_participants_count || 0)
+        }, 0) || 0
+
         return {
           ...data,
-          participant_count: data.event_participants?.length || 0,
+          participant_count: (data.event_participants?.length || 0) + (data.extra_participants_count || 0) + joinerExtras,
           user_joined: userJoined,
           creator_name: data.profiles?.name || '',
           creator_avatar: data.profiles?.avatar || null,
@@ -708,14 +714,34 @@ export const database = {
       }
     },
 
-    createEvent: async (event: Omit<Event, 'id' | 'created_at' | 'updated_at'>) => {
-      const { data, error } = await supabase
-        .from('events')
-        .insert(event)
-        .select()
-        .single()
+    createEvent: async (event: Omit<Event, 'id' | 'created_at' | 'updated_at'> & { extra_players?: number }) => {
+      const { data, error } = await supabase.rpc('create_event_with_creator_participation', {
+        event_title: event.title,
+        event_description: event.description || '',
+        event_place_id: event.place_id,
+        event_sport: event.sport,
+        event_date: event.event_date,
+        event_time: event.event_time,
+        event_min_players: event.min_players,
+        event_max_players: event.max_players,
+        event_skill_level: event.skill_level,
+        event_creator_id: event.creator_id,
+        extra_players: event.extra_players || 0
+      })
       
-      return { data, error }
+      if (error) {
+        return { data: null, error }
+      }
+      
+      // Return the created event data
+      const eventData = {
+        id: data[0].event_id,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        ...event
+      }
+      
+      return { data: eventData, error: null }
     },
 
     updateEvent: async (eventId: string, updates: Partial<Event>) => {
@@ -741,12 +767,13 @@ export const database = {
       return { data, error }
     },
 
-    joinEvent: async (eventId: string, userId: string) => {
+    joinEvent: async (eventId: string, userId: string, extraParticipants: number = 0) => {
       const { data, error } = await supabase
         .from('event_participants')
         .insert({
           event_id: eventId,
-          user_id: userId
+          user_id: userId,
+          extra_participants_count: extraParticipants
         })
         .select()
         .single()

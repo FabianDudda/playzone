@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, MapPin, Calendar, Clock, Users, User, Edit, Trash2, Share2 } from 'lucide-react'
+import { ArrowLeft, MapPin, Calendar, Clock, Users, User, Edit, Trash2, Share2, Award } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -12,6 +12,7 @@ import { useAuth } from '@/components/providers/auth-provider'
 import { database } from '@/lib/supabase/database'
 import { EventWithDetails } from '@/lib/supabase/types'
 import { getSportBadgeClasses, sportNames, sportIcons } from '@/lib/utils/sport-utils'
+import JoinEventBottomSheet from '@/components/events/join-event-bottom-sheet'
 
 interface EventPageProps {
   params: Promise<{ id: string }>
@@ -24,6 +25,7 @@ export default function EventPage({ params }: EventPageProps) {
   const [loading, setLoading] = useState(true)
   const [actionLoading, setActionLoading] = useState(false)
   const [eventId, setEventId] = useState<string>('')
+  const [joinBottomSheetOpen, setJoinBottomSheetOpen] = useState(false)
 
   useEffect(() => {
     params.then(({ id }) => {
@@ -52,21 +54,29 @@ export default function EventPage({ params }: EventPageProps) {
   const handleJoinEvent = async () => {
     if (!user || !event) return
 
+    setJoinBottomSheetOpen(true)
+  }
+
+  const handleConfirmJoin = async (eventId: string, extraParticipants: number) => {
+    if (!user) return
+
     setActionLoading(true)
     try {
-      const { error } = await database.events.joinEvent(event.id, user.id)
+      const { error } = await database.events.joinEvent(eventId, user.id, extraParticipants)
       if (error) {
         console.error('Error joining event:', error)
-        return
+        throw new Error('Failed to join event')
       }
       
       // Refresh event data to show updated participant count
       await fetchEvent(eventId)
-    } catch (error) {
-      console.error('Error joining event:', error)
     } finally {
       setActionLoading(false)
     }
+  }
+
+  const handleCloseJoinBottomSheet = () => {
+    setJoinBottomSheetOpen(false)
   }
 
   const handleLeaveEvent = async () => {
@@ -188,9 +198,7 @@ export default function EventPage({ params }: EventPageProps) {
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main Content */}
-        <div className="lg:col-span-2 space-y-6">
+      <div className="max-w-4xl mx-auto space-y-6">
           {/* Event Header */}
           <Card>
             <CardHeader>
@@ -291,6 +299,17 @@ export default function EventPage({ params }: EventPageProps) {
                 </div>
               </div>
 
+              {/* Skill Level */}
+              <div className="flex items-center gap-3">
+                <Award className="h-5 w-5 text-muted-foreground" />
+                <div>
+                  <div className="font-medium">Skill Level</div>
+                  <div className="text-sm text-muted-foreground capitalize">
+                    {event.skill_level === 'any' ? 'Every skill level' : event.skill_level}
+                  </div>
+                </div>
+              </div>
+
               {/* Creator */}
               <div className="flex items-center gap-3">
                 <User className="h-5 w-5 text-muted-foreground" />
@@ -318,7 +337,10 @@ export default function EventPage({ params }: EventPageProps) {
               <CardHeader>
                 <CardTitle>Participants ({event.participants.length})</CardTitle>
                 <CardDescription>
-                  Players who have joined this event
+                  {event.participant_count > event.participants.length 
+                    ? `${event.participants.length} individual participants + ${event.participant_count - event.participants.length} additional players`
+                    : 'Players who have joined this event'
+                  }
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -343,133 +365,110 @@ export default function EventPage({ params }: EventPageProps) {
               </CardContent>
             </Card>
           )}
-        </div>
 
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Actions */}
-          {!isPastEvent && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Actions</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {!user && (
-                  <Link href="/auth/signin" className="block">
-                    <Button className="w-full">
-                      Sign In to Join
-                    </Button>
-                  </Link>
-                )}
-
-                {canJoin && (
-                  <Button 
-                    onClick={handleJoinEvent}
-                    disabled={actionLoading}
-                    className="w-full"
-                  >
-                    {actionLoading ? 'Joining...' : 'Join Event'}
-                  </Button>
-                )}
-
-                {hasJoined && !isCreator && (
-                  <Button 
-                    variant="outline"
-                    onClick={handleLeaveEvent}
-                    disabled={actionLoading}
-                    className="w-full"
-                  >
-                    {actionLoading ? 'Leaving...' : 'Leave Event'}
-                  </Button>
-                )}
-
-                {isCreator && (
-                  <>
-                    <Button variant="secondary" asChild className="w-full">
-                      <Link href={`/events/${event.id}/edit`}>
-                        <Edit className="h-4 w-4 mr-2" />
-                        Edit Event
-                      </Link>
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      onClick={handleDeleteEvent}
-                      disabled={actionLoading}
-                      className="w-full"
-                    >
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      {actionLoading ? 'Deleting...' : 'Delete Event'}
-                    </Button>
-                  </>
-                )}
-
-                <Button variant="outline" className="w-full">
-                  <Share2 className="h-4 w-4 mr-2" />
-                  Share Event
-                </Button>
-              </CardContent>
-            </Card>
-          )}
-
-          {isPastEvent && (
-            <Card>
-              <CardContent className="p-4">
-                <div className="text-center text-muted-foreground">
-                  <Calendar className="h-8 w-8 mx-auto mb-2" />
-                  <p className="text-sm">This event has ended</p>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Map Preview */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Location</CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              <div className="h-48 bg-gray-100 rounded-b-lg flex items-center justify-center">
-                <div className="text-center text-muted-foreground">
-                  <MapPin className="h-8 w-8 mx-auto mb-2" />
-                  <p className="text-sm">Map view coming soon</p>
-                  <p className="text-xs mt-1">
-                    {event.place_latitude.toFixed(4)}, {event.place_longitude.toFixed(4)}
-                  </p>
-                </div>
+        {/* Location */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Location</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="h-48 bg-gray-100 rounded-b-lg flex items-center justify-center">
+              <div className="text-center text-muted-foreground">
+                <MapPin className="h-8 w-8 mx-auto mb-2" />
+                <p className="text-sm">Map view coming soon</p>
+                <p className="text-xs mt-1">
+                  {event.place_latitude.toFixed(4)}, {event.place_longitude.toFixed(4)}
+                </p>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </CardContent>
+        </Card>
 
-          {/* Quick Stats */}
+        {/* Actions */}
+        {!isPastEvent && (
           <Card>
             <CardHeader>
-              <CardTitle>Quick Stats</CardTitle>
+              <CardTitle>Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Sport:</span>
-                <span>{sportNames[event.sport]}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Skill Level:</span>
-                <span className="capitalize">{event.skill_level}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Players:</span>
-                <span>{event.participant_count} / {event.max_players}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Status:</span>
-                <span className="capitalize">{event.status}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Created:</span>
-                <span>{new Date(event.created_at).toLocaleDateString()}</span>
+              {!user && (
+                <Link href="/auth/signin" className="block">
+                  <Button className="w-full">
+                    Sign In to Join
+                  </Button>
+                </Link>
+              )}
+
+              {canJoin && (
+                <Button 
+                  onClick={handleJoinEvent}
+                  disabled={actionLoading}
+                  className="w-full"
+                >
+                  {actionLoading ? 'Joining...' : 'Join Event'}
+                </Button>
+              )}
+
+              {hasJoined && !isCreator && (
+                <Button 
+                  variant="outline"
+                  onClick={handleLeaveEvent}
+                  disabled={actionLoading}
+                  className="w-full"
+                >
+                  {actionLoading ? 'Leaving...' : 'Leave Event'}
+                </Button>
+              )}
+
+              {isCreator && (
+                <>
+                  <Button variant="secondary" asChild className="w-full">
+                    <Link href={`/events/${event.id}/edit`}>
+                      <Edit className="h-4 w-4 mr-2" />
+                      Edit Event
+                    </Link>
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={handleDeleteEvent}
+                    disabled={actionLoading}
+                    className="w-full"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    {actionLoading ? 'Deleting...' : 'Delete Event'}
+                  </Button>
+                </>
+              )}
+
+              <Button variant="outline" className="w-full">
+                <Share2 className="h-4 w-4 mr-2" />
+                Share Event
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
+        {isPastEvent && (
+          <Card>
+            <CardContent className="p-4">
+              <div className="text-center text-muted-foreground">
+                <Calendar className="h-8 w-8 mx-auto mb-2" />
+                <p className="text-sm">This event has ended</p>
               </div>
             </CardContent>
           </Card>
-        </div>
+        )}
       </div>
+
+      {/* Join Event Bottom Sheet */}
+      <JoinEventBottomSheet
+        isOpen={joinBottomSheetOpen}
+        onClose={setJoinBottomSheetOpen}
+        onExplicitClose={handleCloseJoinBottomSheet}
+        event={event}
+        onJoin={handleConfirmJoin}
+        isLoading={actionLoading}
+      />
     </div>
   )
 }
