@@ -68,6 +68,7 @@ export type Database = {
           skill_level: Database["public"]["Enums"]["skill_level"]
           creator_id: string
           status: Database["public"]["Enums"]["event_status"]
+          extra_participants_count: number
         }
         Insert: {
           created_at?: string
@@ -84,6 +85,7 @@ export type Database = {
           skill_level?: Database["public"]["Enums"]["skill_level"]
           creator_id: string
           status?: Database["public"]["Enums"]["event_status"]
+          extra_participants_count?: number
         }
         Update: {
           created_at?: string
@@ -100,6 +102,7 @@ export type Database = {
           skill_level?: Database["public"]["Enums"]["skill_level"]
           creator_id?: string
           status?: Database["public"]["Enums"]["event_status"]
+          extra_participants_count?: number
         }
         Relationships: [
           {
@@ -124,18 +127,21 @@ export type Database = {
           id: string
           event_id: string
           user_id: string
+          extra_participants_count: number
         }
         Insert: {
           created_at?: string
           id?: string
           event_id: string
           user_id: string
+          extra_participants_count?: number
         }
         Update: {
           created_at?: string
           id?: string
           event_id?: string
           user_id?: string
+          extra_participants_count?: number
         }
         Relationships: [
           {

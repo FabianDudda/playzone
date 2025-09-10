@@ -304,20 +304,82 @@ export default function EventPage({ params }: EventPageProps) {
           </Card>
 
           {/* Participants */}
-          {event.participants && event.participants.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Participants ({event.participants.length})</CardTitle>
-                <CardDescription>
-                  {event.participant_count > event.participants.length 
-                    ? `${event.participants.length} individual participants + ${event.participant_count - event.participants.length} additional players`
-                    : 'Players who have joined this event'
+          <Card>
+            <CardHeader>
+              <CardTitle>Participants ({(() => {
+                // Count actual participants (creator + non-creator joiners)
+                const nonCreatorParticipants = event.participants?.filter((p: any) => p.user_id !== event.creator_id) || []
+                return nonCreatorParticipants.length + 1 // +1 for creator
+              })()})</CardTitle>
+              <CardDescription>
+                {(() => {
+                  const creatorExtraCount = event.extra_participants_count || 0
+                  // Only count extra players from non-creator participants to avoid double-counting
+                  const nonCreatorParticipants = event.participants?.filter((p: any) => p.user_id !== event.creator_id) || []
+                  const joinersExtraCount = nonCreatorParticipants.reduce((sum: number, p: any) => sum + (p.extra_participants_count || 0), 0)
+                  const totalExtraPlayers = creatorExtraCount + joinersExtraCount
+                  const individualCount = nonCreatorParticipants.length + 1 // +1 for creator
+                  const totalCount = individualCount + totalExtraPlayers
+                  
+                  if (totalExtraPlayers > 0) {
+                    return `${individualCount} individual participants bringing ${totalExtraPlayers} extra player${totalExtraPlayers !== 1 ? 's' : ''} (${totalCount} total)`
+                  } else {
+                    return 'Players participating in this event'
                   }
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {event.participants.map((participant: any) => (
+                })()}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {/* Event Creator */}
+                {(() => {
+                  const creatorExtraCount = event.extra_participants_count || 0
+                  const hasExtras = creatorExtraCount > 0
+                  const isCurrentUser = event.creator_id === user?.id
+                  const displayName = isCurrentUser ? 'You' : event.creator_name || 'Event Creator'
+                  
+                  return (
+                    <div className="flex items-center gap-3 p-2 rounded-lg border bg-blue-50/50">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={event.creator_avatar || ''} />
+                        <AvatarFallback className="text-sm">
+                          {event.creator_name?.charAt(0).toUpperCase() || 'C'}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{displayName}</span>
+                          <Badge variant="outline" className="text-xs">
+                            Creator
+                          </Badge>
+                          {hasExtras && (
+                            <Badge variant="secondary" className="text-xs">
+                              <Users className="h-3 w-3 mr-1" />
+                              +{creatorExtraCount} extra player{creatorExtraCount !== 1 ? 's' : ''}
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <span>Created {new Date(event.created_at).toLocaleDateString()}</span>
+                          {hasExtras && (
+                            <span>• {creatorExtraCount + 1} total player{creatorExtraCount + 1 !== 1 ? 's' : ''}</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })()}
+
+                {/* Other Participants */}
+                {event.participants && event.participants
+                  .filter((participant: any) => participant.user_id !== event.creator_id) // Filter out creator to avoid duplicate
+                  .map((participant: any) => {
+                  const extraCount = participant.extra_participants_count || 0
+                  const hasExtras = extraCount > 0
+                  const isCurrentUser = participant.user_id === user?.id
+                  const displayName = isCurrentUser ? 'You' : participant.profiles?.name || 'Anonymous'
+                  
+                  return (
                     <div key={participant.id} className="flex items-center gap-3 p-2 rounded-lg border">
                       <Avatar className="h-8 w-8">
                         <AvatarImage src={participant.profiles?.avatar || ''} />
@@ -325,18 +387,29 @@ export default function EventPage({ params }: EventPageProps) {
                           {participant.profiles?.name?.charAt(0).toUpperCase() || 'U'}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="font-medium">
-                        {participant.user_id === user?.id ? 'You' : participant.profiles?.name || 'Anonymous'}
-                      </span>
-                      <span className="text-sm text-muted-foreground ml-auto">
-                        Joined {new Date(participant.created_at).toLocaleDateString()}
-                      </span>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{displayName}</span>
+                          {hasExtras && (
+                            <Badge variant="secondary" className="text-xs">
+                              <Users className="h-3 w-3 mr-1" />
+                              +{extraCount} extra player{extraCount !== 1 ? 's' : ''}
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <span>Joined {new Date(participant.created_at).toLocaleDateString()}</span>
+                          {hasExtras && (
+                            <span>• {extraCount + 1} total player{extraCount + 1 !== 1 ? 's' : ''}</span>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
+                  )
+                })}
+              </div>
+            </CardContent>
+          </Card>
 
         {/* Location */}
         <Card>
