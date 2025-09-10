@@ -17,10 +17,7 @@ export default function EventsPage() {
   const [events, setEvents] = useState<EventWithDetails[]>([])
   const [loading, setLoading] = useState(true)
   const [filters, setFilters] = useState<EventFilters>({
-    search: '',
-    sport: 'all',
-    date: 'all',
-    status: 'all'
+    sport: 'all'
   })
   const [joinBottomSheetOpen, setJoinBottomSheetOpen] = useState(false)
   const [selectedEvent, setSelectedEvent] = useState<EventWithDetails | null>(null)
@@ -138,7 +135,7 @@ export default function EventsPage() {
             <Calendar className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
             <h3 className="text-lg font-semibold mb-2">No events found</h3>
             <p className="text-muted-foreground mb-4">
-              {filters.search || filters.sport !== 'all' || filters.date !== 'all' || filters.status !== 'all'
+              {filters.sport !== 'all'
                 ? 'Try adjusting your filters to see more events.'
                 : 'Be the first to create an event for other players to join!'
               }

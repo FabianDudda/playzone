@@ -299,7 +299,12 @@ RETURNS TABLE (
     creator_avatar TEXT,
     place_name TEXT,
     place_latitude FLOAT8,
-    place_longitude FLOAT8
+    place_longitude FLOAT8,
+    place_street TEXT,
+    place_house_number TEXT,
+    place_city TEXT,
+    place_postcode TEXT,
+    place_district TEXT
 ) AS $$
 BEGIN
     RETURN QUERY
@@ -324,7 +329,12 @@ BEGIN
         creator.avatar as creator_avatar,
         p.name as place_name,
         p.latitude as place_latitude,
-        p.longitude as place_longitude
+        p.longitude as place_longitude,
+        p.street as place_street,
+        p.house_number as place_house_number,
+        p.city as place_city,
+        p.postcode as place_postcode,
+        p.district as place_district
     FROM events e
     LEFT JOIN (
         SELECT event_id, COUNT(*) as count

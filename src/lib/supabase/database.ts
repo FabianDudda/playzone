@@ -627,28 +627,9 @@ export const database = {
     getEvent: async (eventId: string, userId?: string): Promise<EventWithDetails | null> => {
       try {
         const { data, error } = await supabase
-          .from('events')
-          .select(`
-            *,
-            profiles:creator_id (
-              name,
-              avatar
-            ),
-            places (
-              id,
-              name,
-              latitude,
-              longitude,
-              courts (*)
-            ),
-            event_participants (
-              *,
-              profiles (
-                name,
-                avatar
-              )
-            )
-          `)
+          .rpc('get_events_with_details', {
+            user_id_param: userId || null
+          })
           .eq('id', eventId)
           .single()
         
@@ -657,35 +638,32 @@ export const database = {
           return null
         }
 
-        // Check if user joined this event
-        let userJoined = false
-        if (userId) {
-          const { data: participation } = await supabase
-            .from('event_participants')
-            .select('id')
-            .eq('event_id', eventId)
-            .eq('user_id', userId)
-            .single()
-          userJoined = !!participation
-        }
+        // Fetch participants separately to get detailed info
+        const { data: participants } = await supabase
+          .from('event_participants')
+          .select(`
+            *,
+            profiles (
+              name,
+              avatar
+            )
+          `)
+          .eq('event_id', eventId)
 
-        // Calculate total extra participants from all joiners
-        const joinerExtras = data.event_participants?.reduce((sum, participant) => {
-          return sum + (participant.extra_participants_count || 0)
-        }, 0) || 0
+        // Fetch place details separately for the place object
+        const { data: place } = await supabase
+          .from('places')
+          .select(`
+            *,
+            courts (*)
+          `)
+          .eq('id', data.place_id)
+          .single()
 
         return {
           ...data,
-          participant_count: (data.event_participants?.length || 0) + (data.extra_participants_count || 0) + joinerExtras,
-          user_joined: userJoined,
-          creator_name: data.profiles?.name || '',
-          creator_avatar: data.profiles?.avatar || null,
-          place_name: data.places?.name || '',
-          place_latitude: data.places?.latitude || 0,
-          place_longitude: data.places?.longitude || 0,
-          participants: data.event_participants,
-          place: data.places,
-          creator: data.profiles
+          participants: participants || [],
+          place: place || null
         } as EventWithDetails
       } catch (error) {
         console.error('Error fetching event:', error)

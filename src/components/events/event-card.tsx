@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { MapPin, Calendar, Clock, Users, User } from 'lucide-react'
+import { MapPin, Calendar, Clock, Users, Award, LandPlot } from 'lucide-react'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -28,6 +28,20 @@ export default function EventCard({
   onLeave,
   actionLoading = false
 }: EventCardProps) {
+  const formatAddress = (event: EventWithDetails) => {
+    const parts = []
+    
+    if (event.place_city) {
+      parts.push(event.place_city)
+    }
+    
+    if (event.place_district) {
+      parts.push(event.place_district)
+    }
+    
+    return parts.join(', ')
+  }
+
   const formatEventDateTime = (date: string, time: string) => {
     const eventDate = new Date(date)
     const [hours, minutes] = time.split(':')
@@ -73,41 +87,38 @@ export default function EventCard({
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardHeader className={compact ? 'pb-3' : 'pb-4'}>
-        <div className="flex justify-between items-start mb-2">
+        <div className="flex justify-between items-center mb-2">
+          <h3 className={`font-semibold line-clamp-1 ${compact ? 'text-base' : 'text-lg'}`}>
+            {event.title}
+          </h3>
           <div className="flex items-center gap-2">
             <Badge className={`text-xs ${getSportBadgeClasses(event.sport)}`}>
               {sportIcons[event.sport]} {sportNames[event.sport]}
             </Badge>
-            <Badge variant={event.status === 'active' ? 'default' : 
-                          event.status === 'full' ? 'secondary' : 'outline'}>
-              {event.status === 'active' ? 'Open' : 
-               event.status === 'full' ? 'Full' : 
-               event.status}
-            </Badge>
+            {event.status === 'full' && (
+              <Badge variant="secondary">
+                Full
+              </Badge>
+            )}
           </div>
-          {event.skill_level !== 'any' && (
-            <Badge variant="outline" className="text-xs">
-              {event.skill_level}
-            </Badge>
-          )}
         </div>
-        <h3 className={`font-semibold line-clamp-1 ${compact ? 'text-base' : 'text-lg'}`}>
-          {event.title}
-        </h3>
-        {!compact && event.description && (
-          <p className="text-sm text-muted-foreground line-clamp-2">
-            {event.description}
-          </p>
-        )}
       </CardHeader>
       
       <CardContent className="space-y-3">
         {/* Location - only show if showLocation is true */}
         {showLocation && (
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <MapPin className="h-4 w-4 flex-shrink-0" />
-            <span className="truncate">{event.place_name}</span>
-          </div>
+          <>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <LandPlot className="h-4 w-4 flex-shrink-0" />
+              <span className="truncate">{event.place_name}</span>
+            </div>
+            {formatAddress(event) && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <MapPin className="h-4 w-4 flex-shrink-0" />
+                <span className="truncate">{formatAddress(event)}</span>
+              </div>
+            )}
+          </>
         )}
 
         {/* Date & Time */}
@@ -122,27 +133,19 @@ export default function EventCard({
           </div>
         </div>
 
+        {/* Skill Level */}
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Award className="h-4 w-4 flex-shrink-0" />
+          <span className="capitalize">
+            {event.skill_level === 'any' ? 'Every Skill Level' : event.skill_level}
+          </span>
+        </div>
+
         {/* Participants */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Users className="h-4 w-4 flex-shrink-0" />
           <span>{event.participant_count} / {event.max_players} players</span>
         </div>
-
-        {/* Creator - only show in non-compact mode */}
-        {!compact && (
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <User className="h-4 w-4 flex-shrink-0" />
-            <Avatar className="h-5 w-5">
-              <AvatarImage src={event.creator_avatar || ''} />
-              <AvatarFallback className="text-xs">
-                {event.creator_name.charAt(0).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            <span className="truncate">
-              {isCreator ? 'You' : event.creator_name}
-            </span>
-          </div>
-        )}
 
         {/* Actions */}
         <div className="flex gap-2 pt-2">

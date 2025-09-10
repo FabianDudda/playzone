@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, MapPin, Calendar, Clock, Users, User, Edit, Trash2, Share2, Award } from 'lucide-react'
+import { ArrowLeft, MapPin, Calendar, Clock, Users, User, Edit, Trash2, Share2, Award, LandPlot } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -121,6 +121,20 @@ export default function EventPage({ params }: EventPageProps) {
     }
   }
 
+  const formatAddress = (event: EventWithDetails) => {
+    const parts = []
+    
+    if (event.place_city) {
+      parts.push(event.place_city)
+    }
+    
+    if (event.place_district) {
+      parts.push(event.place_district)
+    }
+    
+    return parts.join(', ')
+  }
+
   const formatEventDateTime = (date: string, time: string) => {
     const eventDate = new Date(date)
     const [hours, minutes] = time.split(':')
@@ -199,134 +213,89 @@ export default function EventPage({ params }: EventPageProps) {
       </div>
 
       <div className="max-w-4xl mx-auto space-y-6">
-          {/* Event Header */}
-          <Card>
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Badge className={`text-xs ${getSportBadgeClasses(event.sport)}`}>
-                      {sportIcons[event.sport]} {sportNames[event.sport]}
-                    </Badge>
-                    <Badge variant={event.status === 'active' ? 'default' : 
-                                  event.status === 'full' ? 'secondary' : 
-                                  event.status === 'completed' ? 'outline' : 'destructive'}>
-                      {event.status === 'active' ? 'Open' : 
-                       event.status === 'full' ? 'Full' : 
-                       event.status === 'completed' ? 'Completed' :
-                       'Cancelled'}
-                    </Badge>
-                    {event.skill_level !== 'any' && (
-                      <Badge variant="outline" className="text-xs">
-                        {event.skill_level}
-                      </Badge>
-                    )}
-                  </div>
-                  <h1 className="text-2xl font-bold">{event.title}</h1>
-                </div>
-                
-                {isCreator && (
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" asChild>
-                      <Link href={`/events/${event.id}/edit`}>
-                        <Edit className="h-4 w-4" />
-                      </Link>
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={handleDeleteEvent}
-                      disabled={actionLoading}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
-              </div>
-            </CardHeader>
-            
-            {event.description && (
-              <CardContent>
-                <p className="text-muted-foreground">{event.description}</p>
-              </CardContent>
-            )}
-          </Card>
-
           {/* Event Details */}
           <Card>
-            <CardHeader>
-              <CardTitle>Event Details</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Date & Time */}
-              <div className="flex items-center gap-3">
-                <Calendar className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <div className="font-medium">{dateStr}</div>
-                  <div className="text-sm text-muted-foreground flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    {timeStr}
-                  </div>
+            <CardHeader className="pb-3">
+              <div className="flex justify-between items-center mb-2">
+                <h1 className="font-semibold line-clamp-1 text-lg">
+                  {event.title}
+                </h1>
+                <div className="flex items-center gap-2">
+                  <Badge className={`text-xs ${getSportBadgeClasses(event.sport)}`}>
+                    {sportIcons[event.sport]} {sportNames[event.sport]}
+                  </Badge>
+                  {event.status === 'full' && (
+                    <Badge variant="secondary">
+                      Full
+                    </Badge>
+                  )}
                 </div>
               </div>
-
-              {/* Location */}
-              <div className="flex items-center gap-3">
-                <MapPin className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <Link 
-                    href={`/places/${event.place_id}`}
-                    className="font-medium hover:underline"
+              {isCreator && (
+                <div className="flex gap-2 mb-2">
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href={`/events/${event.id}/edit`}>
+                      <Edit className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={handleDeleteEvent}
+                    disabled={actionLoading}
                   >
-                    {event.place_name}
-                  </Link>
-                  <div className="text-sm text-muted-foreground">
-                    {event.place_latitude.toFixed(4)}, {event.place_longitude.toFixed(4)}
-                  </div>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </div>
+              )}
+              {event.description && (
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  {event.description}
+                </p>
+              )}
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {/* Location */}
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <LandPlot className="h-4 w-4 flex-shrink-0" />
+                <Link 
+                  href={`/places/${event.place_id}`}
+                  className="truncate hover:underline"
+                >
+                  {event.place_name}
+                </Link>
               </div>
+              {formatAddress(event) && (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <MapPin className="h-4 w-4 flex-shrink-0" />
+                  <span className="truncate">{formatAddress(event)}</span>
+                </div>
+              )}
 
-              {/* Players */}
-              <div className="flex items-center gap-3">
-                <Users className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <div className="font-medium">
-                    {event.participant_count} / {event.max_players} players
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {event.min_players > 1 && `Minimum ${event.min_players} players`}
-                  </div>
+              {/* Date & Time */}
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 flex-shrink-0" />
+                  <span>{dateStr}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 flex-shrink-0" />
+                  <span>{timeStr}</span>
                 </div>
               </div>
 
               {/* Skill Level */}
-              <div className="flex items-center gap-3">
-                <Award className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <div className="font-medium">Skill Level</div>
-                  <div className="text-sm text-muted-foreground capitalize">
-                    {event.skill_level === 'any' ? 'Every skill level' : event.skill_level}
-                  </div>
-                </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Award className="h-4 w-4 flex-shrink-0" />
+                <span className="capitalize">
+                  {event.skill_level === 'any' ? 'Every Skill Level' : event.skill_level}
+                </span>
               </div>
 
-              {/* Creator */}
-              <div className="flex items-center gap-3">
-                <User className="h-5 w-5 text-muted-foreground" />
-                <div className="flex items-center gap-2">
-                  <Avatar className="h-6 w-6">
-                    <AvatarImage src={event.creator_avatar || ''} />
-                    <AvatarFallback className="text-xs">
-                      {event.creator_name.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="font-medium">
-                    {isCreator ? 'You' : event.creator_name}
-                  </span>
-                  <span className="text-sm text-muted-foreground">
-                    (Organizer)
-                  </span>
-                </div>
+              {/* Participants */}
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Users className="h-4 w-4 flex-shrink-0" />
+                <span>{event.participant_count} / {event.max_players} players</span>
               </div>
             </CardContent>
           </Card>

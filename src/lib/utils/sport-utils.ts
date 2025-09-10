@@ -8,6 +8,7 @@ export const sportColors: Record<string, string> = {
   badminton: '#8B5CF6',   // Purple/Violet
   squash: '#06B6D4',      // Cyan
   pickleball: '#F97316',  // Orange
+  hockey: '#1F2937',      // Dark Gray
   fußball: '#22C55E',     // Bright Green
   tischtennis: '#EC4899', // Pink
   beachvolleyball: '#FCD34D', // Yellow
@@ -25,6 +26,7 @@ export const sportNames: Record<string, string> = {
   badminton: 'Badminton',
   squash: 'Squash',
   pickleball: 'Pickleball',
+  hockey: 'Hockey',
   // German sports
   fußball: 'Fußball',
   tischtennis: 'Tischtennis',
@@ -43,6 +45,7 @@ export const sportBadgeStyles: Record<string, { bg: string, text: string }> = {
   badminton: { bg: 'bg-violet-50', text: 'text-foreground' },
   squash: { bg: 'bg-cyan-50', text: 'text-foreground' },
   pickleball: { bg: 'bg-orange-50', text: 'text-foreground' },
+  hockey: { bg: 'bg-gray-50', text: 'text-foreground' },
   // German sports
   fußball: { bg: 'bg-green-50', text: 'text-foreground' },
   tischtennis: { bg: 'bg-pink-50', text: 'text-foreground' },
@@ -61,6 +64,7 @@ export const sportIcons: Record<string, string> = {
   badminton: '🏸',     // Shuttlecock
   squash: '🎯',        // Target (for enclosed court)
   pickleball: '🏓',    // Ping pong paddle (similar sport)
+  hockey: '🏑',        // Hockey stick and ball
   // German sports  
   fußball: '⚽',       // Soccer ball
   tischtennis: '🏓',   // Ping pong

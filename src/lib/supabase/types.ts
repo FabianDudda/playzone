@@ -751,6 +751,11 @@ export interface EventWithDetails extends Event {
   place_name: string
   place_latitude: number
   place_longitude: number
+  place_street: string | null
+  place_house_number: string | null
+  place_city: string | null
+  place_postcode: string | null
+  place_district: string | null
   participants?: EventParticipant[]
   place?: PlaceWithCourts
   creator?: Pick<Profile, 'name' | 'avatar'>
