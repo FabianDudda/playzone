@@ -19,7 +19,7 @@ export default function EventFiltersComponent({
   onFiltersChange,
   className = ""
 }: EventFiltersProps) {
-  const allowedSports: SportType[] = ['tennis', 'basketball', 'volleyball', 'hockey', 'fußball', 'tischtennis', 'beachvolleyball', 'boule', 'skatepark']
+  const allowedSports: SportType[] = ['fußball', 'basketball', 'tischtennis', 'tennis', 'beachvolleyball', 'volleyball', 'skatepark', 'boule', 'hockey']
 
   const updateFilter = (value: SportType | 'all') => {
     onFiltersChange({ sport: value })

@@ -10,6 +10,7 @@ import { getSportBadgeClasses, sportNames, sportIcons } from '@/lib/utils/sport-
 import { Metadata } from 'next'
 import PlaceActions from '@/components/places/place-actions'
 import PlaceEventsSection from '@/components/places/place-events-section'
+import PlaceLocationMap from '@/components/places/place-location-map'
 
 interface PlacePageProps {
   params: Promise<{ id: string }>
@@ -261,13 +262,14 @@ export default async function PlacePage({ params }: PlacePageProps) {
               <CardTitle>Location</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="h-64 bg-gray-100 rounded-b-lg flex items-center justify-center">
-                <div className="text-center text-muted-foreground">
-                  <MapPin className="h-8 w-8 mx-auto mb-2" />
-                  <p className="text-sm">Interactive map coming soon</p>
-                  <p className="text-xs mt-1">Coordinates: {place.latitude.toFixed(6)}, {place.longitude.toFixed(6)}</p>
-                </div>
-              </div>
+              <PlaceLocationMap
+                latitude={place.latitude}
+                longitude={place.longitude}
+                placeName={place.name}
+                sports={availableSports}
+                height="256px"
+                className="rounded-b-lg overflow-hidden"
+              />
             </CardContent>
           </Card>
 

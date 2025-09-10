@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, MapPin, Calendar, Clock, Users, User, Edit, Trash2, Share2, Award, LandPlot } from 'lucide-react'
+import { ArrowLeft, MapPin, Calendar, Clock, Users, User, Edit, Trash2, Share2, Award, LandPlot, FileText } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -13,6 +13,7 @@ import { database } from '@/lib/supabase/database'
 import { EventWithDetails } from '@/lib/supabase/types'
 import { getSportBadgeClasses, sportNames, sportIcons } from '@/lib/utils/sport-utils'
 import JoinEventBottomSheet from '@/components/events/join-event-bottom-sheet'
+import EventLocationMap from '@/components/events/event-location-map'
 
 interface EventPageProps {
   params: Promise<{ id: string }>
@@ -123,6 +124,22 @@ export default function EventPage({ params }: EventPageProps) {
 
   const formatAddress = (event: EventWithDetails) => {
     const parts = []
+    
+    // Build street address from street name and house number
+    const streetParts = []
+    if (event.place_street) {
+      streetParts.push(event.place_street)
+    }
+    if (event.place_house_number) {
+      streetParts.push(event.place_house_number)
+    }
+    if (streetParts.length > 0) {
+      parts.push(streetParts.join(' '))
+    }
+    
+    if (event.place_postcode) {
+      parts.push(event.place_postcode)
+    }
     
     if (event.place_city) {
       parts.push(event.place_city)
@@ -248,30 +265,8 @@ export default function EventPage({ params }: EventPageProps) {
                   </Button>
                 </div>
               )}
-              {event.description && (
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  {event.description}
-                </p>
-              )}
             </CardHeader>
             <CardContent className="space-y-3">
-              {/* Location */}
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <LandPlot className="h-4 w-4 flex-shrink-0" />
-                <Link 
-                  href={`/places/${event.place_id}`}
-                  className="truncate hover:underline"
-                >
-                  {event.place_name}
-                </Link>
-              </div>
-              {formatAddress(event) && (
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <MapPin className="h-4 w-4 flex-shrink-0" />
-                  <span className="truncate">{formatAddress(event)}</span>
-                </div>
-              )}
-
               {/* Date & Time */}
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
@@ -297,6 +292,14 @@ export default function EventPage({ params }: EventPageProps) {
                 <Users className="h-4 w-4 flex-shrink-0" />
                 <span>{event.participant_count} / {event.max_players} players</span>
               </div>
+
+              {/* Description */}
+              {event.description && (
+                <div className="flex items-start gap-2 text-sm text-muted-foreground">
+                  <FileText className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                  <p>{event.description}</p>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -340,16 +343,34 @@ export default function EventPage({ params }: EventPageProps) {
           <CardHeader>
             <CardTitle>Location</CardTitle>
           </CardHeader>
-          <CardContent className="p-0">
-            <div className="h-48 bg-gray-100 rounded-b-lg flex items-center justify-center">
-              <div className="text-center text-muted-foreground">
-                <MapPin className="h-8 w-8 mx-auto mb-2" />
-                <p className="text-sm">Map view coming soon</p>
-                <p className="text-xs mt-1">
-                  {event.place_latitude.toFixed(4)}, {event.place_longitude.toFixed(4)}
-                </p>
-              </div>
+          <CardContent className="space-y-3 pb-0">
+            {/* Place Name */}
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <LandPlot className="h-4 w-4 flex-shrink-0" />
+              <Link 
+                href={`/places/${event.place_id}`}
+                className="truncate hover:underline"
+              >
+                {event.place_name}
+              </Link>
             </div>
+            {/* Place Address */}
+            {formatAddress(event) && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <MapPin className="h-4 w-4 flex-shrink-0" />
+                <span className="truncate">{formatAddress(event)}</span>
+              </div>
+            )}
+          </CardContent>
+          <CardContent className="p-0 pt-3">
+            <EventLocationMap
+              latitude={event.place_latitude}
+              longitude={event.place_longitude}
+              placeName={event.place_name}
+              sport={event.sport}
+              height="200px"
+              className="rounded-b-lg overflow-hidden"
+            />
           </CardContent>
         </Card>
 
