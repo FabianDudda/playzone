@@ -24,9 +24,12 @@ export const sportColors: Record<string, string> = {
   beachvolleyball: '#FCD34D', // Yellow
   boule: '#92400E',       // Brown
   skatepark: '#374151',   // Dark Gray
-  calisthenics: '#F59E0B', // Amber
-  laufen: '#EF4444',     // Red
-  schwimmen: '#0EA5E9'     // Sky Blue
+  calisthenics: '#6366F1', // Indigo
+  laufen: '#EF4444',      // Red
+  schwimmen: '#0EA5E9',   // Sky Blue
+  hockey: '#1F2937',      // Dark Gray
+  klettern: '#78716C',    // Stone
+  padel: '#A3E635',       // Lime
 }
 
 // Sport display names (for consistency)
@@ -46,7 +49,11 @@ export const sportNames: Record<string, string> = {
   boule: 'Boule',
   skatepark: 'Skatepark',
   laufen: 'Laufen',
-  schwimmen: 'Schwimmen'
+  schwimmen: 'Schwimmen',
+  hockey: 'Hockey',
+  klettern: 'Klettern',
+  padel: 'Padel',
+  calisthenics: 'Calisthenics',
 }
 
 // Modern badge styling with subtle backgrounds and default text color using Tailwind
@@ -65,9 +72,12 @@ export const sportBadgeStyles: Record<string, { bg: string, text: string }> = {
   beachvolleyball: { bg: 'bg-yellow-50', text: 'text-foreground' },
   boule: { bg: 'bg-amber-50', text: 'text-foreground' },
   skatepark: { bg: 'bg-gray-50', text: 'text-foreground' },
-  calisthenics: { bg: 'bg-amber-50', text: 'text-foreground' },
+  calisthenics: { bg: 'bg-indigo-50', text: 'text-foreground' },
   laufen: { bg: 'bg-red-50', text: 'text-foreground' },
-  schwimmen: { bg: 'bg-sky-50', text: 'text-foreground' }
+  schwimmen: { bg: 'bg-sky-50', text: 'text-foreground' },
+  hockey: { bg: 'bg-gray-50', text: 'text-foreground' },
+  klettern: { bg: 'bg-stone-50', text: 'text-foreground' },
+  padel: { bg: 'bg-lime-50', text: 'text-foreground' },
 }
 
 // Sport icon mapping - using Unicode symbols for visual representation
@@ -87,8 +97,11 @@ export const sportIcons: Record<string, string> = {
   boule: '🔵',         // Blue circle (boule ball)
   skatepark: '🛹',     // Skateboard
   calisthenics: '💪',  // Calisthenics
-  laufen: '🏃',       // Laufen
-  schwimmen: '🏊'       // Schwimmen
+  laufen: '🏃',        // Laufen
+  schwimmen: '🏊',     // Schwimmen
+  hockey: '🏑',        // Hockey
+  klettern: '🧗',      // Klettern
+  padel: '🎾',         // Padel
 }
 
 // Get color for a court based on its sports

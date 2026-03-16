@@ -36,17 +36,21 @@ const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map
 })
 
 const SPORTS = [
+  { id: 'calisthenics', label: 'Calisthenics' },
   { id: 'fußball', label: 'Fußball' },
   { id: 'basketball', label: 'Basketball' },
+  { id: 'skatepark', label: 'Skatepark' },
   { id: 'tischtennis', label: 'Tischtennis' },
   { id: 'tennis', label: 'Tennis' },
-  { id: 'volleyball', label: 'Volleyball' },
-  { id: 'beachvolleyball', label: 'Beachvolleyball' },
-  { id: 'skatepark', label: 'Skatepark' },
-  { id: 'calisthenics', label: 'Calisthenics' },
-  { id: 'boule', label: 'Boule' },
   { id: 'laufen', label: 'Laufen' },
   { id: 'schwimmen', label: 'Schwimmen' },
+  { id: 'klettern', label: 'Klettern' },
+  { id: 'volleyball', label: 'Volleyball' },
+  { id: 'beachvolleyball', label: 'Beachvolleyball' },
+  { id: 'boule', label: 'Boule' },
+  { id: 'padel', label: 'Padel' },
+  { id: 'badminton', label: 'Badminton' },
+  { id: 'hockey', label: 'Hockey' },
 ] as const
 
 const SURFACE_TYPES = [

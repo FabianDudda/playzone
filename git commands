@@ -36,3 +36,5 @@ for that im thinking of a minimized bottom sheet on the / above the map with onl
 when user swipe it up or tap it, the sheet should expand to 50% of height showing a list of places available in the current map section. for list design use for now the same ui design as in favorite-sheet.
 think about how to handle performance for getting the number of places in map section in title and the list items in sheet. maybe only load the first 10 or so and when user browse through the list and 
 is on the end of list, load more places?
+
+---

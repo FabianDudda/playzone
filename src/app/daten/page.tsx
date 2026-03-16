@@ -70,6 +70,11 @@ const DATA_SOURCES = [
     url: 'https://opendata.dresden.de/informationsportal/?open=1&result=289C064F-9263-4E07-9E1E-F9FDC0C643F0#app/mainpage////',
     license: 'Datenlizenz Deutschland Namensnennung 2.0',
   },
+  {
+    source: 'Stadt Dresden',
+    url: 'https://www.data.gv.at/datasets/71084c02-973d-4544-b804-7ed82bd53027?locale=de',
+    license: 'Namensnennung 4.0 International',
+  },
 
 ]
 

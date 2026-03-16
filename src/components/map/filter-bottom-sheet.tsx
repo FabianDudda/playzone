@@ -19,17 +19,21 @@ interface FilterBottomSheetProps {
 
 const SPORTS: (SportType | 'all')[] = [
   'all',
-  'fußball', 
-  'basketball', 
-  'tischtennis', 
-  'tennis', 
-  'beachvolleyball', 
-  'volleyball', 
+  'calisthenics',
+  'fußball',
+  'basketball',
   'skatepark',
-  'boule',
-  'hockey',
+  'tischtennis',
+  'tennis',
   'laufen',
   'schwimmen',
+  'klettern',
+  'volleyball',
+  'beachvolleyball',
+  'boule',
+  'padel',
+  'badminton',
+  'hockey',
 ]
 
 export default function FilterBottomSheet({

@@ -20,17 +20,21 @@ interface FilterBottomSheetVaulProps {
 }
 
 const SPORTS: SportType[] = [
+  'calisthenics',
   'fußball',
   'basketball',
+  'skatepark',
   'tischtennis',
   'tennis',
-  'volleyball',
-  'beachvolleyball',
-  'skatepark',
-  'calisthenics',
-  'boule',
   'laufen',
   'schwimmen',
+  'klettern',
+  'volleyball',
+  'beachvolleyball',
+  'boule',
+  'padel',
+  'badminton',
+  'hockey',
 ]
 
 export default function FilterBottomSheetVaul({
