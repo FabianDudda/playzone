@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 // import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
 // import FilterBottomSheet from './filter-bottom-sheet'
-import { Plus, MapPin, Navigation, Share2, Search, Filter, Edit, Pencil, X } from 'lucide-react'
+import { Plus, MapPin, Navigation, Share2, Search, Filter, Edit, Pencil, X, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { useAuth } from '@/components/providers/auth-provider'
 import FilterBottomSheetVaul from './filter-bottom-sheet-vaul'
@@ -52,6 +52,7 @@ interface LeafletCourtMapProps {
   initialPlaceId?: string | null
   trackPosition?: boolean
   embedded?: boolean
+  isLoading?: boolean
 }
 
 // Component to handle map clicks
@@ -418,6 +419,7 @@ export default function LeafletCourtMap({
   initialPlaceId = null,
   trackPosition = false,
   embedded = false,
+  isLoading = false,
 }: LeafletCourtMapProps) {
   const { user, profile } = useAuth()
   const [selectedCourt, setSelectedCourt] = useState<PlaceMarker | null>(null)
@@ -638,6 +640,14 @@ export default function LeafletCourtMap({
           )}
         </MapContainer>
       
+      {/* Loading overlay */}
+      {isLoading && (
+        <div className="absolute inset-0 z-[1000] flex flex-col items-center justify-center gap-3 bg-background/60 backdrop-blur-sm">
+          <Loader2 className="h-8 w-8 animate-spin text-foreground" />
+          <span className="text-sm font-medium text-foreground">Orte werden geladen…</span>
+        </div>
+      )}
+
       {/* Add court instruction */}
       {allowAddCourt && (
         <div className="absolute top-4 right-4 bg-white/90 rounded-lg p-2 text-sm shadow-lg">

@@ -12,13 +12,11 @@ import { PlaceType } from '@/lib/utils/sport-utils'
 const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map'), {
   ssr: false,
   loading: () => (
-    <div className="flex items-center justify-center h-full bg-gray-100 rounded-lg">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-        <p className="text-sm text-muted-foreground">Loading map...</p>
-      </div>
+    <div className="flex flex-col items-center justify-center gap-3 bg-background/60 backdrop-blur-sm" style={{ height: '100dvh' }}>
+      <div className="h-8 w-8 animate-spin rounded-full border-2 border-foreground border-t-transparent" />
+      <span className="text-sm font-medium text-foreground">Orte werden geladen…</span>
     </div>
-  )
+  ),
 })
 
 function MapPage() {
@@ -90,6 +88,7 @@ function MapPage() {
         initialZoom={savedPosition?.zoom}
         initialPlaceId={initialPlaceId}
         trackPosition={true}
+        isLoading={isLoading}
       />
     </>
   )

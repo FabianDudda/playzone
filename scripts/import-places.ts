@@ -47,6 +47,10 @@ interface JsonPlace {
   klettern?: number | null
   calisthenics?: number | null
   laufbahnen?: number | null
+  padelplätze?: number | null
+  badmintonplätze?: number | null
+  schwimmplätze?: number | null
+  schachfelder?: number | null
   geometry: {
     x: number // longitude
     y: number // latitude
@@ -152,6 +156,34 @@ function transformJsonPlace(jsonPlace: JsonPlace, sourceFilename: string) {
     courts.push({
       sport: 'laufen',
       quantity: jsonPlace.laufbahnen
+    })
+  }
+
+  if (jsonPlace.padelplätze && jsonPlace.padelplätze > 0) {
+    courts.push({
+      sport: 'padel',
+      quantity: jsonPlace.padelplätze
+    })
+  }
+
+  if (jsonPlace.badmintonplätze && jsonPlace.badmintonplätze > 0) {
+    courts.push({
+      sport: 'badminton',
+      quantity: jsonPlace.badmintonplätze
+    })
+  }
+
+  if (jsonPlace.schwimmplätze && jsonPlace.schwimmplätze > 0) {
+    courts.push({
+      sport: 'schwimmen',
+      quantity: jsonPlace.schwimmplätze
+    })
+  }
+
+  if (jsonPlace.schachfelder && jsonPlace.schachfelder > 0) {
+    courts.push({
+      sport: 'schach',
+      quantity: jsonPlace.schachfelder
     })
   }
 
