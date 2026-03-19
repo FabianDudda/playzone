@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import OpeningHoursEditor from '@/components/places/opening-hours-editor'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { cn } from '@/lib/utils'
+import { cn, validateWebsite } from '@/lib/utils'
 import { sportIcons } from '@/lib/utils/sport-utils'
 import { useToast } from '@/hooks/use-toast'
 import { SportType, PlaceWithCourts, OpeningHours } from '@/lib/supabase/types'
@@ -257,8 +257,9 @@ function AddPlacePage() {
       } else if (contactPhone.trim() && contactPhone.trim().length < 7) {
         setPhoneError('Telefonnummer zu kurz'); hasContactError = true
       }
-      if (contactWebsite.trim() && !/\.[a-zA-Z]{2,6}$/.test(contactWebsite.trim())) {
-        setWebsiteError('Ungültige Website-Adresse'); hasContactError = true
+      const websiteValidation = validateWebsite(contactWebsite)
+      if (websiteValidation) {
+        setWebsiteError(websiteValidation); hasContactError = true
       }
       if (hasContactError) return
     }

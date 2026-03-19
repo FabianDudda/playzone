@@ -6,9 +6,19 @@ import Link from 'next/link'
 
 const CHANGELOG = [
   {
+    version: '0.2.4-alpha',
+    date: '19.03.2026',
+    current: true,
+    items: [
+      'Fix website-url input',
+      'Rework loading spinner',
+      'Rework loading map'
+    ],
+  },
+  {
     version: '0.2.3-alpha',
     date: '16.03.2026',
-    current: true,
+    current: false,
     items: [
       'Added new sport types: badminton, hockey, klettern and padel',
     ],

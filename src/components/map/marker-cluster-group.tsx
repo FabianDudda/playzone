@@ -61,7 +61,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
   useEffect(() => { selectedSportsRef.current = selectedSports }, [selectedSports])
   useEffect(() => { selectedPlaceTypeRef.current = selectedPlaceType }, [selectedPlaceType])
 
-  // Full rebuild only when the underlying places data changes (e.g. initial load / cache refresh)
+  // Incrementally add new markers when courts array grows — avoids full cluster rebuild on each batch
   useEffect(() => {
     if (!clusterGroupRef.current) {
       clusterGroupRef.current = L.markerClusterGroup({
@@ -77,11 +77,12 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
     }
 
     const clusterGroup = clusterGroupRef.current
-    clusterGroup.clearLayers()
-    markerMapRef.current.clear()
-    courtMapRef.current.clear()
+    const toAdd: L.Marker[] = []
 
     courts.forEach((court) => {
+      // Skip courts that are already tracked
+      if (markerMapRef.current.has(court.id)) return
+
       const availableSports = court.sports || []
       const marker = L.marker([court.latitude, court.longitude], {
         icon: createSportIcon(availableSports, false),
@@ -95,16 +96,13 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
       markerMapRef.current.set(court.id, marker)
       courtMapRef.current.set(court.id, court)
 
-      // Respect current filter state when adding
       if (isMarkerVisible(court, selectedSportsRef.current, selectedPlaceTypeRef.current)) {
-        clusterGroup.addLayer(marker)
+        toAdd.push(marker)
       }
     })
 
-    return () => {
-      clusterGroup.clearLayers()
-      markerMapRef.current.clear()
-      courtMapRef.current.clear()
+    if (toAdd.length > 0) {
+      clusterGroup.addLayers(toAdd)
     }
   }, [courts, map])
 
@@ -173,6 +171,8 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
       if (clusterGroupRef.current && map) {
         map.removeLayer(clusterGroupRef.current)
         clusterGroupRef.current = null
+        markerMapRef.current.clear()
+        courtMapRef.current.clear()
       }
     }
   }, [map])

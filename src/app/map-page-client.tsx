@@ -1,11 +1,10 @@
 'use client'
 
-import { useState, useEffect, useMemo, Suspense } from 'react'
+import { useState, useMemo, Suspense } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/components/providers/auth-provider'
-import { useQuery } from '@tanstack/react-query'
-import { database } from '@/lib/supabase/database'
+import { useProgressivePlaces } from '@/hooks/use-progressive-places'
 import { SportType, PlaceMarker } from '@/lib/supabase/types'
 import { PlaceType } from '@/lib/utils/sport-utils'
 
@@ -42,16 +41,7 @@ function MapPage() {
     ? (() => { try { return JSON.parse(sessionStorage.getItem('map-position') || '') } catch { return null } })()
     : null
 
-  const { data: places = [], isLoading, isError, error } = useQuery({
-    queryKey: ['places-lightweight'],
-    queryFn: () => database.courts.getAllPlacesLightweight(),
-    enabled: !loading,
-    staleTime: 5 * 60 * 1000,
-  })
-
-  useEffect(() => {
-    if (isError) console.error('[Map] Failed to load map pins:', error)
-  }, [isError, error])
+  const { places, isInitialLoading, isLoadingMore } = useProgressivePlaces(!loading)
 
   // Only used for the pin count display — filtering is handled inside MarkerClusterGroup
   const visibleCount = useMemo(() => {
@@ -62,14 +52,8 @@ function MapPage() {
     }).length
   }, [places, selectedSports, selectedPlaceType])
 
-  useEffect(() => {
-    if (!isLoading) {
-      // console.log('[Map] Pins displayed on map:', visibleCount, `(sports: ${selectedSports.join(', ') || 'all'})`)
-    }
-  }, [visibleCount, selectedSports, isLoading])
-
   return (
-    <>
+    <div className="relative">
       <h1 className="sr-only">Kostenlose Sportplätze in deiner Nähe finden</h1>
       <h2 className="sr-only">Interaktive Karte mit über 13.000 Sportplätzen in Deutschland</h2>
       <LeafletCourtMap
@@ -88,9 +72,17 @@ function MapPage() {
         initialZoom={savedPosition?.zoom}
         initialPlaceId={initialPlaceId}
         trackPosition={true}
-        isLoading={isLoading}
+        isLoading={isInitialLoading}
       />
-    </>
+      {isLoadingMore && (
+        <div className="pointer-events-none absolute bottom-16 left-1/2 z-[1000] -translate-x-1/2">
+          <div className="flex items-center gap-2 rounded-full bg-background/80 px-3 py-1.5 text-xs font-medium text-foreground shadow backdrop-blur-sm">
+            <div className="h-3 w-3 animate-spin rounded-full border border-foreground border-t-transparent" />
+            Weitere Orte werden geladen…
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
 

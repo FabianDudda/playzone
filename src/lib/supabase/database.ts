@@ -134,6 +134,18 @@ export const database = {
       }
     },
 
+    // Single-batch fetch for progressive loading. from/to are inclusive row indices.
+    getAllPlacesLightweightBatch: async (from: number, to: number): Promise<PlaceMarker[]> => {
+      const { data, error } = await supabase
+        .from('places')
+        .select('id, name, latitude, longitude, sports, place_type')
+        .eq('moderation_status', 'approved')
+        .order('created_at', { ascending: false })
+        .range(from, to)
+      if (error) throw error
+      return data || []
+    },
+
     // Returns places with their courts - maintains backward compatibility
     getAllCourts: async (includeModeration = false): Promise<PlaceWithCourts[]> => {
       try {

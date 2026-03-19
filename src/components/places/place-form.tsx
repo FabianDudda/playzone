@@ -14,7 +14,7 @@ import { PlaceType, placeTypeLabels, placeTypeIcons } from '@/lib/utils/sport-ut
 import { reverseGeocode, AddressComponents } from '@/lib/geocoding'
 import { uploadCourtImage, UploadProgress } from '@/lib/supabase/storage'
 import { sportIcons } from '@/lib/utils/sport-utils'
-import { cn } from '@/lib/utils'
+import { cn, validateWebsite } from '@/lib/utils'
 import { MapPin, Plus, Upload, X, Image, Loader2, AlertCircle, Phone, Mail, Globe } from 'lucide-react'
 import { Textarea } from '@/components/ui/textarea'
 import OpeningHoursEditor from '@/components/places/opening-hours-editor'
@@ -241,8 +241,9 @@ export default function PlaceForm({
       } else if (contactPhone.trim() && contactPhone.trim().length < 7) {
         setPhoneError('Telefonnummer zu kurz'); hasContactError = true
       }
-      if (contactWebsite.trim() && !/\.[a-zA-Z]{2,6}$/.test(contactWebsite.trim())) {
-        setWebsiteError('Ungültige Website-Adresse'); hasContactError = true
+      const websiteValidation = validateWebsite(contactWebsite)
+      if (websiteValidation) {
+        setWebsiteError(websiteValidation); hasContactError = true
       }
       if (hasContactError) return
     }
