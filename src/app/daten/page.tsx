@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowLeft, ExternalLink } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
 
@@ -71,7 +71,7 @@ const DATA_SOURCES = [
     license: 'Datenlizenz Deutschland Namensnennung 2.0',
   },
   {
-    source: 'Stadt Dresden',
+    source: 'Stadt Wien',
     url: 'https://www.data.gv.at/datasets/71084c02-973d-4544-b804-7ed82bd53027?locale=de',
     license: 'Namensnennung 4.0 International',
   },
@@ -97,17 +97,9 @@ export default function DatenquellenPage() {
           </CardHeader>
           <CardContent className="p-0">
             <div className="divide-y">
-              {DATA_SOURCES.map(({ source, url, license }) => (
+              {DATA_SOURCES.map(({ source, license }) => (
                 <div key={source} className="flex items-center justify-between gap-3 px-4 py-3 text-sm">
-                  <a
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1 font-medium hover:underline underline-offset-2"
-                  >
-                    {source}
-                    <ExternalLink className="h-3 w-3 shrink-0" />
-                  </a>
+                  <span className="font-medium">{source}</span>
                   <span className="text-muted-foreground shrink-0">{license}</span>
                 </div>
               ))}
@@ -155,7 +147,7 @@ export default function DatenquellenPage() {
       
 
             <div>
-              <h2 className="font-semibold mb-1">© 2026 OpenSportMap. Daten verfügbar unter CC BY 4.0.</h2>
+              <h2 className="font-semibold mb-1">© 2026 OpenSportMap</h2>
            
             </div>
           </CardContent>
