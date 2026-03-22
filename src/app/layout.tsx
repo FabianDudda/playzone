@@ -66,7 +66,7 @@ export default function RootLayout({
   return (
     <html lang="de">
       <head>
-        <link rel="preconnect" href="https://abminvrgugkbzgxvqxap.supabase.co" />
+        <link rel="preconnect" href="https://abminvrgugkbzgxvqxap.supabase.co" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://abminvrgugkbzgxvqxap.supabase.co" />
         <script
           type="application/ld+json"

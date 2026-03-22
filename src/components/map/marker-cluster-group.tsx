@@ -111,6 +111,9 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
     const clusterGroup = clusterGroupRef.current
     if (!clusterGroup) return
 
+    const toAdd: L.Marker[] = []
+    const toRemove: L.Marker[] = []
+
     markerMapRef.current.forEach((marker, id) => {
       const court = courtMapRef.current.get(id)
       if (!court) return
@@ -119,9 +122,9 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
       const inGroup = clusterGroup.hasLayer(marker)
 
       if (visible && !inGroup) {
-        clusterGroup.addLayer(marker)
+        toAdd.push(marker)
       } else if (!visible && inGroup) {
-        clusterGroup.removeLayer(marker)
+        toRemove.push(marker)
       }
 
       // Also update icon for sport highlight
@@ -132,6 +135,9 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
         marker.setIcon(createSportIcon(sportsForIcon, false))
       }
     })
+
+    if (toRemove.length > 0) clusterGroup.removeLayers(toRemove)
+    if (toAdd.length > 0) clusterGroup.addLayers(toAdd)
   }, [selectedSports, selectedPlaceType])
 
   // Handle court selection events from popups

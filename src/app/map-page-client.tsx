@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, Suspense } from 'react'
+import { useState, useMemo, Suspense, useTransition, useDeferredValue } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/components/providers/auth-provider'
@@ -22,6 +22,7 @@ function MapPage() {
   const { user, loading } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
+  const [, startTransition] = useTransition()
   const [selectedSports, setSelectedSports] = useState<SportType[]>([])
   const [selectedPlaceType, setSelectedPlaceType] = useState<PlaceType | null>(null)
   const [selectedPlace, setSelectedPlace] = useState<PlaceMarker | null>(null)
@@ -30,7 +31,9 @@ function MapPage() {
 
   const handleCourtSelect = (court: PlaceMarker) => {
     setSelectedPlace(court)
-    router.replace(`/?place=${court.id}`, { scroll: false })
+    startTransition(() => {
+      router.replace(`/?place=${court.id}`, { scroll: false })
+    })
   }
 
   const handleSheetClose = () => {
@@ -43,14 +46,17 @@ function MapPage() {
 
   const { places, isInitialLoading, isLoadingMore } = useProgressivePlaces(!loading)
 
+  const deferredSports = useDeferredValue(selectedSports)
+  const deferredPlaceType = useDeferredValue(selectedPlaceType)
+
   // Only used for the pin count display — filtering is handled inside MarkerClusterGroup
   const visibleCount = useMemo(() => {
     return places.filter((place) => {
-      if (selectedSports.length > 0 && !selectedSports.some(sport => place.sports?.includes(sport))) return false
-      if (selectedPlaceType !== null && (place.place_type || 'öffentlich') !== selectedPlaceType) return false
+      if (deferredSports.length > 0 && !deferredSports.some(sport => place.sports?.includes(sport))) return false
+      if (deferredPlaceType !== null && (place.place_type || 'öffentlich') !== deferredPlaceType) return false
       return true
     }).length
-  }, [places, selectedSports, selectedPlaceType])
+  }, [places, deferredSports, deferredPlaceType])
 
   return (
     <div className="relative">

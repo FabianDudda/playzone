@@ -1930,7 +1930,7 @@ function ReportedTab() {
   )
 }
 
-const PAGE_SIZE = 50
+const PAGE_SIZE = 250
 
 function DataToolsTab({ isActive }: { isActive: boolean }) {
   const [isGeocoding, setIsGeocoding] = useState(false)
