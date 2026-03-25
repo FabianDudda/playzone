@@ -6,9 +6,26 @@ import Link from 'next/link'
 
 const CHANGELOG = [
   {
+    version: '0.3.0-alpha',
+    date: '25.03.2026',
+    current: true,
+    items: [
+      'contact details and opening hours added for all place types',
+      'fix show password icon in sign-in & sign-up form',
+      'fix: guest user cant upload images',
+      'fix: if place title is too long, buttons get moved out of screen',
+      'change place sheet ux: moved "bearbeiten" and "report" button inline in sheet, so that title has more space',
+      'remove bottom sheets that ask for login (add place & edit place), since guest can do these actions too',
+      'remove blue outline/shape of cluster',
+      'added active state for place pin when selected',
+      'added a new page "partner"',
+      'admin dashboard: add pagination to tab "pending places", make position editable',
+    ],
+  },
+  {
     version: '0.2.4-alpha',
     date: '19.03.2026',
-    current: true,
+    current: false,
     items: [
       'Fix website-url input',
       'Rework loading spinner',

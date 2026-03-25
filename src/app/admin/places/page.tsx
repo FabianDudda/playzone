@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import React from 'react'
 import dynamic from 'next/dynamic'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -445,6 +445,90 @@ function PlaceCard({
 
       {isExpanded && (
         <CardContent className="space-y-4 pt-0">
+          {/* Actions */}
+          {isEditing && (
+            <div className="flex gap-2">
+              {place.moderation_status === 'pending' && (
+                <Button
+                  onClick={() => handleSave(true)}
+                  disabled={isSaving || !editForm.name.trim()}
+                  className="flex-1"
+                >
+                  {isSaving
+                    ? <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    : <CheckCircle className="h-4 w-4 mr-2" />}
+                  Save & Approve
+                </Button>
+              )}
+              <Button
+                variant="outline"
+                onClick={() => handleSave(false)}
+                disabled={isSaving || !editForm.name.trim()}
+                className="flex-1"
+              >
+                {isSaving
+                  ? <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  : <Save className="h-4 w-4 mr-2" />}
+                Save draft
+              </Button>
+              <Button variant="ghost" onClick={() => setIsEditing(false)} disabled={isSaving}>
+                Cancel
+              </Button>
+            </div>
+          )}
+          {!isEditing && place.moderation_status === 'pending' && (
+            <div className="flex gap-2">
+              <Button onClick={() => onApprove(place.id)} className="flex-1">
+                <CheckCircle className="h-4 w-4 mr-2" />
+                Approve
+              </Button>
+
+              <Button variant="outline" onClick={startEditing} className="flex-1">
+                <Edit className="h-4 w-4 mr-2" />
+                Edit
+              </Button>
+
+              <Dialog open={isRejectDialogOpen} onOpenChange={setIsRejectDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="destructive" className="flex-1">
+                    <XCircle className="h-4 w-4 mr-2" />
+                    Reject
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Reject Place</DialogTitle>
+                    <DialogDescription>
+                      Please provide a reason for rejecting "{place.name}". This will be shown to the user.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-2">
+                    <Label htmlFor="rejection-reason">Rejection Reason</Label>
+                    <Textarea
+                      id="rejection-reason"
+                      placeholder="Enter reason for rejection..."
+                      value={rejectionReason}
+                      onChange={(e) => setRejectionReason(e.target.value)}
+                      rows={3}
+                    />
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setIsRejectDialogOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      onClick={handleReject}
+                      disabled={!rejectionReason.trim()}
+                    >
+                      Reject Place
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
+          )}
+
           {/* Map */}
           {hasCoords ? (
             <AdminMiniMap
@@ -453,7 +537,12 @@ function PlaceCard({
               placeName={place.name}
               sports={availableSports}
               nearbyPlaces={nearbyPlaces}
-              height="220px"
+              onLocationSelect={isEditing ? (lat, lng) => setEditForm(prev => ({
+                ...prev,
+                latitude: lat.toFixed(7),
+                longitude: lng.toFixed(7),
+              })) : undefined}
+              height="440px"
               className="w-full"
             />
           ) : (
@@ -681,59 +770,6 @@ function PlaceCard({
                 </div>
               )}
 
-              {/* Actions */}
-              {place.moderation_status === 'pending' && (
-                <div className="flex gap-2 pt-2">
-                  <Button onClick={() => onApprove(place.id)} className="flex-1">
-                    <CheckCircle className="h-4 w-4 mr-2" />
-                    Approve
-                  </Button>
-
-                  <Button variant="outline" onClick={startEditing} className="flex-1">
-                    <Edit className="h-4 w-4 mr-2" />
-                    Edit
-                  </Button>
-
-                  <Dialog open={isRejectDialogOpen} onOpenChange={setIsRejectDialogOpen}>
-                    <DialogTrigger asChild>
-                      <Button variant="destructive" className="flex-1">
-                        <XCircle className="h-4 w-4 mr-2" />
-                        Reject
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Reject Place</DialogTitle>
-                        <DialogDescription>
-                          Please provide a reason for rejecting "{place.name}". This will be shown to the user.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="space-y-2">
-                        <Label htmlFor="rejection-reason">Rejection Reason</Label>
-                        <Textarea
-                          id="rejection-reason"
-                          placeholder="Enter reason for rejection..."
-                          value={rejectionReason}
-                          onChange={(e) => setRejectionReason(e.target.value)}
-                          rows={3}
-                        />
-                      </div>
-                      <DialogFooter>
-                        <Button variant="outline" onClick={() => setIsRejectDialogOpen(false)}>
-                          Cancel
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          onClick={handleReject}
-                          disabled={!rejectionReason.trim()}
-                        >
-                          Reject Place
-                        </Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-              )}
             </>
           ) : (
             // ── Edit form ──
@@ -1041,34 +1077,6 @@ function PlaceCard({
                 )}
               </div>
 
-              <div className="flex gap-2 pt-2">
-                {place.moderation_status === 'pending' && (
-                  <Button
-                    onClick={() => handleSave(true)}
-                    disabled={isSaving || !editForm.name.trim()}
-                    className="flex-1"
-                  >
-                    {isSaving
-                      ? <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      : <CheckCircle className="h-4 w-4 mr-2" />}
-                    Save & Approve
-                  </Button>
-                )}
-                <Button
-                  variant="outline"
-                  onClick={() => handleSave(false)}
-                  disabled={isSaving || !editForm.name.trim()}
-                  className="flex-1"
-                >
-                  {isSaving
-                    ? <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    : <Save className="h-4 w-4 mr-2" />}
-                  Save draft
-                </Button>
-                <Button variant="ghost" onClick={() => setIsEditing(false)} disabled={isSaving}>
-                  Cancel
-                </Button>
-              </div>
             </>
           )}
         </CardContent>
@@ -1077,19 +1085,41 @@ function PlaceCard({
   )
 }
 
+const PENDING_PAGE_SIZE = 25
+
+const RADIUS_OPTIONS = [
+  { label: '50m', value: 50 },
+  { label: '100m', value: 100 },
+  { label: '200m', value: 200 },
+  { label: '300m', value: 300 },
+]
+
 function PlacesList({ status }: { status: ModerationStatus }) {
   const { user } = useAuth()
   const { toast } = useToast()
   const queryClient = useQueryClient()
-  
+
   // Bulk selection state
   const [selectedPlaces, setSelectedPlaces] = useState<Set<string>>(new Set())
   const [isBulkMode, setIsBulkMode] = useState(false)
-  
+  const [page, setPage] = useState(0)
+
+  // Isolated filter state
+  const [isolatedOnly, setIsolatedOnly] = useState(false)
+  const [isolatedRadius, setIsolatedRadius] = useState(200)
+  const [isolatedIncludePending, setIsolatedIncludePending] = useState(false)
+
   const { data: places, isLoading } = useQuery({
     queryKey: ['places', status],
     queryFn: () => database.moderation.getPlacesByStatus(status),
     refetchInterval: status === 'pending' ? 10000 : undefined, // Refresh pending more often
+  })
+
+  const { data: isolatedIds, isLoading: isLoadingIsolated } = useQuery({
+    queryKey: ['isolated-pending-ids', isolatedRadius, isolatedIncludePending],
+    queryFn: () => database.moderation.getIsolatedPendingIds(isolatedRadius, isolatedIncludePending),
+    enabled: status === 'pending' && isolatedOnly,
+    staleTime: 30000,
   })
 
   const approveMutation = useMutation({
@@ -1171,6 +1201,60 @@ function PlacesList({ status }: { status: ModerationStatus }) {
     },
   })
 
+  const bulkDeleteMutation = useMutation({
+    mutationFn: (placeIds: string[]) => database.moderation.bulkDeletePlaces(placeIds),
+    onSuccess: (result) => {
+      if (result.failureCount === 0) {
+        toast({ title: 'Deleted', description: `Successfully deleted ${result.successCount} places.` })
+      } else {
+        toast({
+          title: 'Partial success',
+          description: `Deleted ${result.successCount} places, ${result.failureCount} failed.`,
+          variant: result.failureCount > result.successCount ? 'destructive' : 'default',
+        })
+      }
+      setSelectedPlaces(new Set())
+      queryClient.invalidateQueries({ queryKey: ['places'], exact: false })
+      queryClient.invalidateQueries({ queryKey: ['moderation-stats'] })
+    },
+    onError: (error) => {
+      toast({
+        title: 'Delete failed',
+        description: error instanceof Error ? error.message : 'Failed to delete places',
+        variant: 'destructive',
+      })
+    },
+  })
+
+  const handleBulkDelete = () => {
+    if (selectedPlaces.size === 0) return
+    const count = selectedPlaces.size
+    if (!window.confirm(`Delete ${count} place${count !== 1 ? 's' : ''}? This cannot be undone.`)) return
+    bulkDeleteMutation.mutate(Array.from(selectedPlaces))
+  }
+
+  // Filtered list: when isolatedOnly is active, keep only isolated places
+  const filteredPlaces = (status === 'pending' && isolatedOnly && isolatedIds)
+    ? (places?.filter(p => isolatedIds.includes(p.id)) ?? [])
+    : (places ?? [])
+
+  // Clamp page when list shrinks after approvals/rejections or filter changes
+  useEffect(() => {
+    const maxPage = Math.max(0, Math.ceil(filteredPlaces.length / PENDING_PAGE_SIZE) - 1)
+    if (page > maxPage) setPage(maxPage)
+  }, [filteredPlaces.length, page])
+
+  // Reset page and selection when filter toggles
+  useEffect(() => {
+    setPage(0)
+    setSelectedPlaces(new Set())
+  }, [isolatedOnly, isolatedRadius, isolatedIncludePending])
+
+  const totalPages = Math.ceil(filteredPlaces.length / PENDING_PAGE_SIZE)
+  const paginatedPlaces = status === 'pending'
+    ? filteredPlaces.slice(page * PENDING_PAGE_SIZE, (page + 1) * PENDING_PAGE_SIZE)
+    : filteredPlaces
+
   // Bulk selection helpers
   const togglePlaceSelection = (placeId: string) => {
     const newSelection = new Set(selectedPlaces)
@@ -1183,8 +1267,7 @@ function PlacesList({ status }: { status: ModerationStatus }) {
   }
 
   const selectAllPlaces = () => {
-    if (!places) return
-    setSelectedPlaces(new Set(places.map(place => place.id)))
+    setSelectedPlaces(new Set(paginatedPlaces.map(place => place.id)))
   }
 
   const clearSelection = () => {
@@ -1194,6 +1277,11 @@ function PlacesList({ status }: { status: ModerationStatus }) {
   const handleBulkApprove = () => {
     if (selectedPlaces.size === 0) return
     bulkApproveMutation.mutate(Array.from(selectedPlaces))
+  }
+
+  const handleApproveAllIsolated = () => {
+    if (!isolatedIds || isolatedIds.length === 0) return
+    bulkApproveMutation.mutate(isolatedIds)
   }
 
   if (isLoading) {
@@ -1211,13 +1299,77 @@ function PlacesList({ status }: { status: ModerationStatus }) {
   return (
     <div>
       {/* Bulk operations controls - only show for pending places */}
-      {status === 'pending' && places.length > 0 && (
-        <div className="mb-4 p-4 bg-muted/50 rounded-lg border">
-          <div className="flex items-center justify-between mb-3">
+      {status === 'pending' && (places?.length ?? 0) > 0 && (
+        <div className="mb-4 p-4 bg-muted/50 rounded-lg border space-y-3">
+          {/* Row 1: Isolated filter */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Button
+                variant={isolatedOnly ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setIsolatedOnly(v => !v)}
+              >
+                <Filter className="h-4 w-4 mr-2" />
+                {isolatedOnly ? 'Showing isolated only' : 'Show isolated only'}
+              </Button>
+
+              <Select
+                value={String(isolatedRadius)}
+                onValueChange={(v) => setIsolatedRadius(Number(v))}
+              >
+                <SelectTrigger className="w-24 h-8 text-sm">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {RADIUS_OPTIONS.map(opt => (
+                    <SelectItem key={opt.value} value={String(opt.value)}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {isolatedOnly && (
+                <label className="flex items-center gap-2 text-sm cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={isolatedIncludePending}
+                    onChange={e => setIsolatedIncludePending(e.target.checked)}
+                    className="rounded"
+                  />
+                  also check pending
+                </label>
+              )}
+
+              {isolatedOnly && (
+                <span className="text-sm text-muted-foreground">
+                  {isLoadingIsolated
+                    ? 'Calculating…'
+                    : `${filteredPlaces.length} of ${places?.length ?? 0} pending places are isolated`}
+                </span>
+              )}
+            </div>
+
+            {/* Approve all isolated */}
+            {isolatedOnly && !isLoadingIsolated && filteredPlaces.length > 0 && (
+              <Button
+                size="sm"
+                onClick={handleApproveAllIsolated}
+                disabled={bulkApproveMutation.isPending}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                <CheckCircle className="h-4 w-4 mr-2" />
+                Approve all isolated ({filteredPlaces.length})
+              </Button>
+            )}
+          </div>
+
+          {/* Row 2: Bulk select controls */}
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button
                 variant={isBulkMode ? "default" : "outline"}
-               
+                size="sm"
                 onClick={() => {
                   setIsBulkMode(!isBulkMode)
                   setSelectedPlaces(new Set())
@@ -1225,37 +1377,44 @@ function PlacesList({ status }: { status: ModerationStatus }) {
               >
                 {isBulkMode ? 'Exit Bulk Mode' : 'Bulk Select'}
               </Button>
-              
+
               {isBulkMode && (
-                <>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={selectedPlaces.size === places.length}
-                      onChange={selectedPlaces.size === places.length ? clearSelection : selectAllPlaces}
-                      className="rounded"
-                    />
-                    <span className="text-sm font-medium">
-                      Select All ({selectedPlaces.size}/{places.length})
-                    </span>
-                  </div>
-                </>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={paginatedPlaces.length > 0 && paginatedPlaces.every(p => selectedPlaces.has(p.id))}
+                    onChange={paginatedPlaces.every(p => selectedPlaces.has(p.id)) ? clearSelection : selectAllPlaces}
+                    className="rounded"
+                  />
+                  <span className="text-sm font-medium">
+                    Select All ({selectedPlaces.size}/{paginatedPlaces.length} this page)
+                  </span>
+                </div>
               )}
             </div>
-            
+
             {isBulkMode && selectedPlaces.size > 0 && (
               <div className="flex items-center gap-2">
                 <Button
-                 
+                  size="sm"
                   onClick={handleBulkApprove}
-                  disabled={bulkApproveMutation.isPending}
+                  disabled={bulkApproveMutation.isPending || bulkDeleteMutation.isPending}
                   className="bg-green-600 hover:bg-green-700"
                 >
                   <CheckCircle className="h-4 w-4 mr-2" />
                   Approve Selected ({selectedPlaces.size})
                 </Button>
                 <Button
-                 
+                  size="sm"
+                  variant="destructive"
+                  onClick={handleBulkDelete}
+                  disabled={bulkDeleteMutation.isPending || bulkApproveMutation.isPending}
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete Selected ({selectedPlaces.size})
+                </Button>
+                <Button
+                  size="sm"
                   variant="outline"
                   onClick={clearSelection}
                 >
@@ -1264,30 +1423,59 @@ function PlacesList({ status }: { status: ModerationStatus }) {
               </div>
             )}
           </div>
-          
+
           {bulkApproveMutation.isPending && (
             <div className="text-sm text-muted-foreground">
-              Approving {selectedPlaces.size} places...
+              Approving places…
             </div>
           )}
         </div>
       )}
-      
-      {places.map((place) => (
+
+      {paginatedPlaces.map((place) => (
         <PlaceCard
           key={place.id}
           place={place}
           onApprove={(id) => {
-            // console.log('🎯 Approving place from PlacesList:', id)
             approveMutation.mutate(id)
           }}
           onReject={(id, reason) => rejectMutation.mutate({ placeId: id, reason })}
-          showStatus={false} // Don't show status badge in filtered views
+          showStatus={false}
           isSelectable={isBulkMode}
           isSelected={selectedPlaces.has(place.id)}
           onToggleSelection={() => togglePlaceSelection(place.id)}
         />
       ))}
+
+      {/* Pagination controls - only for pending tab */}
+      {status === 'pending' && totalPages > 1 && (
+        <div className="flex items-center justify-between mt-6 pt-4 border-t">
+          <span className="text-sm text-muted-foreground">
+            Showing {page * PENDING_PAGE_SIZE + 1}–{Math.min((page + 1) * PENDING_PAGE_SIZE, filteredPlaces.length)} of {filteredPlaces.length}
+          </span>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => { setPage(p => p - 1); setSelectedPlaces(new Set()) }}
+              disabled={page === 0}
+            >
+              ← Prev
+            </Button>
+            <span className="text-sm font-medium px-2">
+              Page {page + 1} / {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => { setPage(p => p + 1); setSelectedPlaces(new Set()) }}
+              disabled={page >= totalPages - 1}
+            >
+              Next →
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

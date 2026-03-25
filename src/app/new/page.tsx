@@ -20,7 +20,7 @@ import { database } from '@/lib/supabase/database'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { reverseGeocode, AddressComponents } from '@/lib/geocoding'
 import { uploadCourtImage, UploadProgress } from '@/lib/supabase/storage'
-import { MapPin, Plus, Upload, X, Image, Loader2, Heart, ArrowLeft, Phone, Mail, Globe } from 'lucide-react'
+import { MapPin, Plus, Upload, X, Image, Loader2, ArrowLeft, Phone, Mail, Globe } from 'lucide-react'
 import Link from 'next/link'
 
 const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map'), {
@@ -72,7 +72,7 @@ function AddPlacePage() {
   const searchParams = useSearchParams()
   const queryClient = useQueryClient()
 
-  const isGuestMode = searchParams.get('guest') === 'true'
+  const isGuestMode = !user || searchParams.get('guest') === 'true'
 
   const mapInitialCenter = useMemo(() => {
     const lat = parseFloat(searchParams.get('lat') ?? '')
@@ -250,7 +250,7 @@ function AddPlacePage() {
     if (selectedSports.length === 0) { toast({ title: 'Mindestens eine Sportart auswählen', variant: 'destructive' }); return }
     if (!location) { toast({ title: 'Standort erforderlich', description: 'Tippe auf die Karte, um einen Standort zu setzen.', variant: 'destructive' }); return }
 
-    if (placeType === 'verein' || placeType === 'schule') {
+    {
       let hasContactError = false
       if (contactPhone.trim() && /\D/.test(contactPhone.trim())) {
         setPhoneError('Nur Ziffern erlaubt'); hasContactError = true
@@ -273,6 +273,7 @@ function AddPlacePage() {
         imageUrl = result.url
       } catch (err) {
         toast({ title: 'Bild-Upload fehlgeschlagen', description: err instanceof Error ? err.message : '', variant: 'destructive' })
+        return
       } finally {
         setIsUploadingImage(false)
         setUploadProgress(null)
@@ -295,10 +296,10 @@ function AddPlacePage() {
       image_url: imageUrl,
       courts,
       address: Object.values(address).some(v => v) ? address : undefined,
-      contact_phone: (placeType === 'verein' || placeType === 'schule') ? contactPhone.trim() || null : null,
-      contact_email: (placeType === 'verein' || placeType === 'schule') ? contactEmail.trim() || null : null,
-      contact_website: (placeType === 'verein' || placeType === 'schule') ? contactWebsite.trim() || null : null,
-      opening_hours: (placeType === 'verein' || placeType === 'schule') ? openingHours : null,
+      contact_phone: contactPhone.trim() || null,
+      contact_email: contactEmail.trim() || null,
+      contact_website: contactWebsite.trim() || null,
+      opening_hours: openingHours,
     }
 
     if (isGuestMode) {
@@ -330,44 +331,6 @@ function AddPlacePage() {
       <div className="container px-4 py-4 overflow-x-hidden">
         <div className="max-w-xl mx-auto">
           <Card><CardContent className="p-6"><div className="h-24 animate-pulse bg-muted rounded" /></CardContent></Card>
-        </div>
-      </div>
-    )
-  }
-
-  if (!user && !isGuestMode) {
-    return (
-      <div className="container px-4 py-4 overflow-x-hidden">
-        <div className="max-w-xl mx-auto space-y-6">
-        {/* Placeholder icon */}
-        <div className="flex justify-center">
-          <div className="h-24 w-24 rounded-full bg-muted flex items-center justify-center">
-            <Heart className="h-12 w-12 text-muted-foreground" />
-          </div>
-        </div>
-
-        {/* Auth card */}
-        <Card>
-          <CardContent className="p-6 space-y-4">
-            <div className="space-y-1">
-              <h2 className="text-xl font-semibold">Anmelden, um einen Ort hinzuzufügen</h2>
-              <p className="text-sm text-muted-foreground">
-                Erstelle ein Konto, um Sportplätze und Veranstaltungsorte zur Karte hinzuzufügen.
-              </p>
-            </div>
-            <div className="flex flex-col gap-3">
-              <Button asChild className="w-full">
-                <Link href="/auth/signin">Anmelden</Link>
-              </Button>
-              <Button asChild variant="outline" className="w-full">
-                <Link href="/auth/signup">Registrieren</Link>
-              </Button>
-              <Button asChild variant="ghost" className="w-full text-muted-foreground">
-                <Link href="/new?guest=true">Weiter als Gast</Link>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
         </div>
       </div>
     )
@@ -550,44 +513,40 @@ function AddPlacePage() {
             </div>
           </div>
 
-          {/* 6. Contact (verein/schule) */}
-          {(placeType === 'verein' || placeType === 'schule') && (
+          {/* 6. Contact */}
+          <div className="space-y-2">
+            <Label>Kontakt (Optional)</Label>
             <div className="space-y-2">
-              <Label>Kontakt (Optional)</Label>
-              <div className="space-y-2">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
-                    <Input placeholder="Telefon" value={contactPhone} onChange={e => { setContactPhone(e.target.value); setPhoneError('') }} className={phoneError ? 'border-destructive' : ''} />
-                  </div>
-                  {phoneError && <p className="text-xs text-destructive pl-6">{phoneError}</p>}
-                </div>
+              <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
-                  <Input type="email" placeholder="E-Mail" value={contactEmail} onChange={e => setContactEmail(e.target.value)} />
+                  <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
+                  <Input placeholder="Telefon" value={contactPhone} onChange={e => { setContactPhone(e.target.value); setPhoneError('') }} className={phoneError ? 'border-destructive' : ''} />
                 </div>
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <Globe className="h-4 w-4 text-muted-foreground shrink-0" />
-                    <Input placeholder="Website (https://...)" value={contactWebsite} onChange={e => { setContactWebsite(e.target.value); setWebsiteError('') }} className={websiteError ? 'border-destructive' : ''} />
-                  </div>
-                  {websiteError && <p className="text-xs text-destructive pl-6">{websiteError}</p>}
+                {phoneError && <p className="text-xs text-destructive pl-6">{phoneError}</p>}
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
+                <Input type="email" placeholder="E-Mail" value={contactEmail} onChange={e => setContactEmail(e.target.value)} />
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <Globe className="h-4 w-4 text-muted-foreground shrink-0" />
+                  <Input placeholder="Website (https://...)" value={contactWebsite} onChange={e => { setContactWebsite(e.target.value); setWebsiteError('') }} className={websiteError ? 'border-destructive' : ''} />
                 </div>
+                {websiteError && <p className="text-xs text-destructive pl-6">{websiteError}</p>}
               </div>
             </div>
-          )}
+          </div>
 
-          {/* 7. Opening Hours (verein/schule) */}
-          {(placeType === 'verein' || placeType === 'schule') && (
-            <div className="space-y-2">
-              <Label>Öffnungszeiten (Optional)</Label>
-              <OpeningHoursEditor
-                key="new"
-                value={openingHours}
-                onChange={setOpeningHours}
-              />
-            </div>
-          )}
+          {/* 7. Opening Hours */}
+          <div className="space-y-2">
+            <Label>Öffnungszeiten (Optional)</Label>
+            <OpeningHoursEditor
+              key="new"
+              value={openingHours}
+              onChange={setOpeningHours}
+            />
+          </div>
 
           {/* 8. Description */}
           <div className="space-y-2">

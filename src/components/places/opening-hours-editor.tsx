@@ -43,11 +43,40 @@ interface OpeningHoursEditorProps {
   onChange: (hours: OpeningHours | null) => void
 }
 
+const HOURS = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'))
+const MINUTES = ['00', '15', '30', '45']
+
+function TimePicker({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const [h, m] = value.split(':')
+  const hour = HOURS.includes(h) ? h : '09'
+  const minute = MINUTES.includes(m) ? m : '00'
+  return (
+    <div className="flex items-center gap-0.5">
+      <select
+        value={hour}
+        onChange={e => onChange(`${e.target.value}:${minute}`)}
+        className="text-sm border border-input rounded-md px-1.5 py-1 bg-background focus:outline-none"
+      >
+        {HOURS.map(h => <option key={h} value={h}>{h}</option>)}
+      </select>
+      <span className="text-sm text-muted-foreground">:</span>
+      <select
+        value={minute}
+        onChange={e => onChange(`${hour}:${e.target.value}`)}
+        className="text-sm border border-input rounded-md px-1.5 py-1 bg-background focus:outline-none"
+      >
+        {MINUTES.map(m => <option key={m} value={m}>{m}</option>)}
+      </select>
+    </div>
+  )
+}
+
 const SEGMENTS: { value: DayStatus; label: string }[] = [
   { value: 'open', label: 'Geöffnet' },
   { value: 'closed', label: 'Geschlossen' },
-  { value: 'unknown', label: '–' },
+  { value: 'unknown', label: 'Unbekannt' },
 ]
+
 
 export default function OpeningHoursEditor({ value, onChange }: OpeningHoursEditorProps) {
   const [week, setWeek] = useState<WeekState>(() => initWeekState(value))
@@ -91,19 +120,9 @@ export default function OpeningHoursEditor({ value, onChange }: OpeningHoursEdit
             </div>
             {day.status === 'open' && (
               <div className="flex items-center gap-2 pl-9">
-                <input
-                  type="time"
-                  value={day.open}
-                  onChange={e => updateDay(key, { open: e.target.value })}
-                  className="text-sm border border-input rounded-md px-2 py-1 bg-background w-28"
-                />
+                <TimePicker value={day.open} onChange={v => updateDay(key, { open: v })} />
                 <span className="text-sm text-muted-foreground">–</span>
-                <input
-                  type="time"
-                  value={day.close}
-                  onChange={e => updateDay(key, { close: e.target.value })}
-                  className="text-sm border border-input rounded-md px-2 py-1 bg-background w-28"
-                />
+                <TimePicker value={day.close} onChange={v => updateDay(key, { close: v })} />
               </div>
             )}
           </div>

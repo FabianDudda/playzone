@@ -41,7 +41,6 @@ export default function PlaceBottomSheetVaul({
   const { toast } = useToast()
   const queryClient = useQueryClient()
   const [imageFile, setImageFile] = useState<File | null>(null)
-  const [isLoginPromptOpen, setIsLoginPromptOpen] = useState(false)
   const [isSaveLoginPromptOpen, setIsSaveLoginPromptOpen] = useState(false)
   const [isReportOpen, setIsReportOpen] = useState(false)
   const [isPlaceTypeInfoOpen, setIsPlaceTypeInfoOpen] = useState(false)
@@ -126,13 +125,6 @@ export default function PlaceBottomSheetVaul({
   return (
     <>
     <LoginPromptBottomSheet
-      isOpen={isLoginPromptOpen}
-      onOpenChange={setIsLoginPromptOpen}
-      onGuestContinue={() => {
-        window.location.href = `/places/${selectedCourt?.id}/edit?guest=true`
-      }}
-    />
-    <LoginPromptBottomSheet
       isOpen={isSaveLoginPromptOpen}
       onOpenChange={setIsSaveLoginPromptOpen}
       title="Ort speichern"
@@ -179,45 +171,19 @@ export default function PlaceBottomSheetVaul({
         {selectedCourt && (
           <>
             <DrawerHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex-1 text-left">
-                  <DrawerTitle className="text-xl text-left">
+              <div className="flex items-center justify-between overflow-hidden gap-3">
+                <div className="min-w-0 text-left">
+                  <DrawerTitle className="text-xl text-left truncate">
                     {selectedCourt.name}
                   </DrawerTitle>
                 </div>
 
                 {/* Button group */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 shrink-0">
                   <Button
                     variant="secondary"
                     size="icon"
-                    className="rounded-full"
-                    onClick={() => {
-                      if (!user) {
-                        setIsLoginPromptOpen(true)
-                      } else {
-                        window.location.href = `/places/${selectedCourt.id}/edit`
-                      }
-                    }}
-                    title={user && profile?.user_role === 'admin' ? 'Ort bearbeiten' : user ? 'Bearbeitung vorschlagen' : 'Anmelden zum Bearbeiten'}
-                  >
-                    <Pencil className="h-[18px] w-[18px]" />
-                  </Button>
-
-                  <Button
-                    variant="secondary"
-                    size="icon"
-                    className="rounded-full"
-                    onClick={() => setIsReportOpen(true)}
-                    title="Platz melden"
-                  >
-                    <Flag className="h-[18px] w-[18px]" />
-                  </Button>
-
-                  <Button
-                    variant="secondary"
-                    size="icon"
-                    className="rounded-full"
+                    className="rounded-full h-10 w-10"
                     onClick={() => {
                       const shareUrl = `${window.location.origin}/map?place=${selectedCourt.id}`
                       if (navigator.share) {
@@ -236,17 +202,17 @@ export default function PlaceBottomSheetVaul({
                     }}
                     title="Teilen"
                   >
-                    <Share2 className="h-[18px] w-[18px]" />
+                    <Share2 className="h-4 w-4" />
                   </Button>
 
                   <Button
                     variant="secondary"
                     size="icon"
-                    className="rounded-full"
+                    className="rounded-full h-10 w-10"
                     onClick={() => onOpenChange(false)}
                     title="Schließen"
                   >
-                    <X className="h-5 w-5" />
+                    <X className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
@@ -348,107 +314,98 @@ export default function PlaceBottomSheetVaul({
                 )
               })()}
 
-              {/* Verein/Schule: contact */}
-              {(place?.place_type === 'verein' || place?.place_type === 'schule') && !isLoadingPlace && (
+              {/* Contact */}
+              {!isLoadingPlace && (place?.contact_phone || place?.contact_email || place?.contact_website) && (
                 <div className="flex flex-col gap-2">
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Kontakt</p>
-                  {(place?.contact_phone || place?.contact_email || place?.contact_website) ? (
-                    <>
-                      {place.contact_phone && (
-                        <a href={`tel:${place.contact_phone}`} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-                          <Phone className="h-4 w-4 shrink-0" />
-                          <span>{place.contact_phone}</span>
-                        </a>
-                      )}
-                      {place.contact_email && (
-                        <a href={`mailto:${place.contact_email}`} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-                          <Mail className="h-4 w-4 shrink-0" />
-                          <span>{place.contact_email}</span>
-                        </a>
-                      )}
-                      {place.contact_website && (
-                        <a href={place.contact_website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-                          <Globe className="h-4 w-4 shrink-0" />
-                          <span className="truncate">{place.contact_website.replace(/^https?:\/\//, '')}</span>
-                        </a>
-                      )}
-                    </>
-                  ) : (
-                    <button
-                      className="flex items-center gap-1.5 text-sm text-muted-foreground/60 hover:text-muted-foreground transition-colors self-start"
-                      onClick={() => {
-                        if (!user) {
-                          setIsLoginPromptOpen(true)
-                        } else {
-                          window.location.href = `/places/${selectedCourt.id}/edit`
-                        }
-                      }}
-                    >
-                      <span>Hinzufügen</span>
-                    </button>
+                  {place.contact_phone && (
+                    <a href={`tel:${place.contact_phone}`} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+                      <Phone className="h-4 w-4 shrink-0" />
+                      <span>{place.contact_phone}</span>
+                    </a>
+                  )}
+                  {place.contact_email && (
+                    <a href={`mailto:${place.contact_email}`} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+                      <Mail className="h-4 w-4 shrink-0" />
+                      <span>{place.contact_email}</span>
+                    </a>
+                  )}
+                  {place.contact_website && (
+                    <a href={place.contact_website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+                      <Globe className="h-4 w-4 shrink-0" />
+                      <span className="truncate">{place.contact_website.replace(/^https?:\/\//, '')}</span>
+                    </a>
                   )}
                 </div>
               )}
 
-              {/* Verein/Schule: opening hours */}
-              {(place?.place_type === 'verein' || place?.place_type === 'schule') && !isLoadingPlace && (() => {
+              {/* Opening hours */}
+              {!isLoadingPlace && (() => {
                 const hoursData = (place?.opening_hours ?? null) as OpeningHours | null
-                const status = hoursData ? getOpeningStatus(hoursData) : null
+                if (!hoursData) return null
+                const status = getOpeningStatus(hoursData)
                 const todayKey = getCurrentDayKey()
                 return (
                   <div className="flex flex-col gap-2">
                     <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Öffnungszeiten</p>
-                    {hoursData ? (
-                      <>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <span className={cn('h-2 w-2 rounded-full shrink-0', status!.isOpen ? 'bg-green-500' : status!.isUnknown ? 'bg-amber-400' : 'bg-muted-foreground/50')} />
-                            <span className="text-sm text-muted-foreground">{status!.statusText}</span>
-                          </div>
-                          <button
-                            onClick={() => setIsHoursExpanded(prev => !prev)}
-                            className="text-muted-foreground hover:text-foreground transition-colors p-1"
-                          >
-                            <ChevronDown className={cn('h-4 w-4 transition-transform', isHoursExpanded && 'rotate-180')} />
-                          </button>
-                        </div>
-                        {isHoursExpanded && (
-                          <div className="flex flex-col gap-1 pt-1">
-                            {DAY_ORDER.map(key => {
-                              const day = hoursData[key]
-                              const isToday = key === todayKey
-                              return (
-                                <div key={key} className={cn('flex justify-between text-sm', isToday ? 'font-medium text-foreground' : 'text-muted-foreground')}>
-                                  <span>{DAY_SHORT_DE[key]}</span>
-                                  {day === undefined
-                                    ? <span className="text-muted-foreground/40 font-normal">–</span>
-                                    : day.closed || !day.open || !day.close
-                                      ? <span className={isToday ? 'text-muted-foreground font-normal' : ''}>Geschlossen</span>
-                                      : <span>{day.open} – {day.close} Uhr</span>
-                                  }
-                                </div>
-                              )
-                            })}
-                          </div>
-                        )}
-                      </>
-                    ) : (
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className={cn('h-2 w-2 rounded-full shrink-0', status.isOpen ? 'bg-green-500' : status.isUnknown ? 'bg-amber-400' : 'bg-muted-foreground/50')} />
+                        <span className="text-sm text-muted-foreground">{status.statusText}</span>
+                      </div>
                       <button
-                        className="flex items-center gap-1.5 text-sm text-muted-foreground/60 hover:text-muted-foreground transition-colors self-start"
-                        onClick={() => {
-                          if (!user) {
-                            setIsLoginPromptOpen(true)
-                          } else {
-                            window.location.href = `/places/${selectedCourt.id}/edit`
-                          }
-                        }}
+                        onClick={() => setIsHoursExpanded(prev => !prev)}
+                        className="text-muted-foreground hover:text-foreground transition-colors p-1"
                       >
-                        <span>Hinzufügen</span>
+                        <ChevronDown className={cn('h-4 w-4 transition-transform', isHoursExpanded && 'rotate-180')} />
                       </button>
+                    </div>
+                    {isHoursExpanded && (
+                      <div className="flex flex-col gap-1 pt-1">
+                        {DAY_ORDER.map(key => {
+                          const day = hoursData[key]
+                          const isToday = key === todayKey
+                          return (
+                            <div key={key} className={cn('flex justify-between text-sm', isToday ? 'font-medium text-foreground' : 'text-muted-foreground')}>
+                              <span>{DAY_SHORT_DE[key]}</span>
+                              {day === undefined
+                                ? <span className="text-muted-foreground/40 font-normal">–</span>
+                                : day.closed || !day.open || !day.close
+                                  ? <span className={isToday ? 'text-muted-foreground font-normal' : ''}>Geschlossen</span>
+                                  : <span>{day.open} – {day.close} Uhr</span>
+                              }
+                            </div>
+                          )
+                        })}
+                      </div>
                     )}
                   </div>
                 )
               })()}
+
+              {!isLoadingPlace && (
+                <div className="flex flex-col gap-2">
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Details</p>
+                  <div className="flex items-center gap-4">
+                    <button
+                      className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                      onClick={() => {
+                        window.location.href = `/places/${selectedCourt.id}/edit`
+                      }}
+                    >
+                      <Pencil className="h-3.5 w-3.5" />
+                      <span>Bearbeiten</span>
+                    </button>
+                    <button
+                      className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                      onClick={() => setIsReportOpen(true)}
+                    >
+                      <Flag className="h-3.5 w-3.5" />
+                      <span>Melden</span>
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {!isLoadingPlace && place?.description && (
                 <div className="flex flex-col gap-2">

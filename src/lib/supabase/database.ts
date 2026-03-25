@@ -1079,6 +1079,105 @@ export const database = {
       return { data: data[0], error }
     },
 
+    // Get IDs of pending places that have no nearby place with an overlapping sport within radiusMeters.
+    // includePending=true also checks other pending places (not just approved).
+    getIsolatedPendingIds: async (radiusMeters: number, includePending: boolean): Promise<string[]> => {
+      type PlaceWithSports = { id: string; latitude: number; longitude: number; courts: { sport: string }[] }
+
+      try {
+        // Fetch ALL pending places with coordinates and sports (paginated)
+        const pending = await fetchAllRecords<PlaceWithSports>(
+          supabase
+            .from('places')
+            .select('id, latitude, longitude, courts(sport)')
+            .eq('moderation_status', 'pending')
+            .not('latitude', 'is', null)
+            .not('longitude', 'is', null)
+        )
+
+        if (!pending || pending.length === 0) return []
+
+        // Fetch ALL approved places with coordinates and sports (paginated)
+        const approved = await fetchAllRecords<PlaceWithSports>(
+          supabase
+            .from('places')
+            .select('id, latitude, longitude, courts(sport)')
+            .eq('moderation_status', 'approved')
+            .not('latitude', 'is', null)
+            .not('longitude', 'is', null)
+        )
+
+        const toRad = (deg: number) => (deg * Math.PI) / 180
+
+        const haversine = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
+          const R = 6371000
+          const dLat = toRad(lat2 - lat1)
+          const dLng = toRad(lng2 - lng1)
+          const a =
+            Math.sin(dLat / 2) ** 2 +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2
+          return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+        }
+
+        const getSports = (p: PlaceWithSports): Set<string> =>
+          new Set(p.courts?.map(c => c.sport).filter(Boolean) ?? [])
+
+        // Two places are considered sport-neighbors if they share at least one sport.
+        // If either place has no courts yet, fall back to plain proximity (treat as matching all sports).
+        const sportsOverlap = (a: Set<string>, b: Set<string>): boolean => {
+          if (a.size === 0 || b.size === 0) return true
+          for (const s of a) if (b.has(s)) return true
+          return false
+        }
+
+        // Build reference once: always approved, + all pending when includePending=true
+        const reference = [
+          ...(approved ?? []),
+          ...(includePending ? pending : []),
+        ]
+
+        const resultPlaces = pending.filter(p => {
+          const pSports = getSports(p)
+          return !reference.some(r =>
+            r.id !== p.id &&
+            haversine(p.latitude!, p.longitude!, r.latitude!, r.longitude!) < radiusMeters &&
+            sportsOverlap(pSports, getSports(r))
+          )
+        })
+
+        return resultPlaces.map(p => p.id)
+      } catch (error) {
+        console.error('Error fetching isolated pending IDs:', error)
+        return []
+      }
+    },
+
+    // Bulk delete multiple places
+    bulkDeletePlaces: async (placeIds: string[]) => {
+      const results = await Promise.allSettled(
+        placeIds.map(async (placeId) => {
+          const { error } = await supabase
+            .from('places')
+            .delete()
+            .eq('id', placeId)
+          if (error) return { placeId, success: false, error: error.message }
+          return { placeId, success: true }
+        })
+      )
+
+      const successful = results.filter(r => r.status === 'fulfilled' && r.value.success)
+      const failed = results.filter(r => r.status === 'rejected' || (r.status === 'fulfilled' && !r.value.success))
+        .map(r => r.status === 'rejected' ? { placeId: 'unknown', success: false, error: r.reason } : (r as any).value)
+
+      return {
+        successful,
+        failed,
+        totalCount: placeIds.length,
+        successCount: successful.length,
+        failureCount: failed.length,
+      }
+    },
+
     // Bulk approve multiple places
     bulkApprovePlace: async (placeIds: string[], moderatorId: string) => {
       // console.log('🔍 Bulk approving places:', { placeIds, moderatorId })

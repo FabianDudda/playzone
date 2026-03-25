@@ -25,7 +25,7 @@ function EditPlaceContent({ params }: EditPlacePageProps) {
   const { toast } = useToast()
   const queryClient = useQueryClient()
 
-  const isGuestMode = searchParams.get('guest') === 'true'
+  const isGuestMode = !user || searchParams.get('guest') === 'true'
 
   // Get place ID from params
   const [placeId, setPlaceId] = useState<string>('')
@@ -129,8 +129,8 @@ function EditPlaceContent({ params }: EditPlacePageProps) {
         })
       } else {
         toast({
-          title: 'Änderungen zur Überprüfung eingereicht!',
-          description: 'Deine vorgeschlagenen Änderungen werden von Administratoren geprüft. Danke für deinen Beitrag!',
+          title: 'Ort eingereicht!',
+          description: 'Er erscheint auf der Karte, sobald er genehmigt wurde.',
         })
       }
       
@@ -184,34 +184,6 @@ function EditPlaceContent({ params }: EditPlacePageProps) {
           <div className="text-center py-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
             <p className="text-sm text-muted-foreground">Laden...</p>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  // Show auth prompt for unauthenticated users (unless guest mode)
-  if (!user && !isGuestMode) {
-    const currentPath = placeId ? `/places/${placeId}/edit` : '/map'
-    return (
-      <div className="container px-4 py-8">
-        <div className="max-w-xl mx-auto space-y-6">
-          <div className="text-center space-y-1">
-            <h1 className="text-2xl font-bold">Ort bearbeiten</h1>
-            <p className="text-muted-foreground">
-              Melde dich an, um Änderungen an diesem Ort vorzuschlagen.
-            </p>
-          </div>
-          <div className="flex flex-col gap-3 max-w-xs mx-auto">
-            <Button asChild className="w-full">
-              <Link href="/auth/signin">Anmelden</Link>
-            </Button>
-            <Button asChild variant="outline" className="w-full">
-              <Link href="/auth/signup">Registrieren</Link>
-            </Button>
-            <Button asChild variant="ghost" className="w-full text-muted-foreground">
-              <Link href={`${currentPath}?guest=true`}>Weiter als Gast</Link>
-            </Button>
           </div>
         </div>
       </div>
@@ -273,7 +245,6 @@ function EditPlaceContent({ params }: EditPlacePageProps) {
             ? "Nimm Änderungen an diesem Ort vor. Deine Änderungen werden sofort übernommen."
             : "Schlage Verbesserungen für diesen Ort vor. Deine Änderungen werden vor der Veröffentlichung geprüft."
         }
-        showCommunityMessage={!isAdmin}
         submitButtonText={isAdmin ? "Änderungen speichern" : "Zur Überprüfung einreichen"}
       />
     </div>

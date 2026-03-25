@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { MapContainer, TileLayer, Marker, Tooltip, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Tooltip, useMap, useMapEvents } from 'react-leaflet'
 import { createSportIcon } from '@/lib/utils/sport-styles'
 import { MAP_LAYERS, DEFAULT_LAYER_ID, getSavedLayerPreference, saveLayerPreference } from '@/lib/utils/map-layers'
 import L from 'leaflet'
@@ -29,8 +29,23 @@ interface AdminMiniMapProps {
   sports?: string[]
   nearbyPlaces?: NearbyPlace[]
   proposedLocation?: ProposedLocation
+  onLocationSelect?: (lat: number, lng: number) => void
   height?: string
   className?: string
+}
+
+function MapClickHandler({ onLocationSelect, setMarkerPos }: {
+  onLocationSelect: (lat: number, lng: number) => void
+  setMarkerPos: (pos: [number, number]) => void
+}) {
+  useMapEvents({
+    click(e) {
+      const { lat, lng } = e.latlng
+      setMarkerPos([lat, lng])
+      onLocationSelect(lat, lng)
+    },
+  })
+  return null
 }
 
 function createProposedIcon(): L.DivIcon {
@@ -128,11 +143,13 @@ export default function AdminMiniMap({
   sports = [],
   nearbyPlaces = [],
   proposedLocation,
+  onLocationSelect,
   height = '220px',
   className = '',
 }: AdminMiniMapProps) {
   const [isClient, setIsClient] = useState(false)
   const [currentLayerId, setCurrentLayerId] = useState<string>(() => getSavedLayerPreference())
+  const [markerPos, setMarkerPos] = useState<[number, number]>([latitude, longitude])
 
   useEffect(() => { setIsClient(true) }, [])
 
@@ -156,14 +173,21 @@ export default function AdminMiniMap({
   }
 
   const layer = MAP_LAYERS[currentLayerId] || MAP_LAYERS[DEFAULT_LAYER_ID]
-  const position: [number, number] = [latitude, longitude]
+  const initialPosition: [number, number] = [latitude, longitude]
 
   return (
-    <div className={`rounded-lg overflow-hidden ${className}`} style={{ height }}>
+    <div className={`rounded-lg overflow-hidden relative ${className}`} style={{ height }}>
+      {onLocationSelect && (
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 z-[1000] pointer-events-none">
+          <span className="bg-black/70 text-white text-xs px-2 py-1 rounded">
+            Click to reposition
+          </span>
+        </div>
+      )}
       <MapContainer
-        center={position}
-        zoom={15}
-        style={{ height: '100%', width: '100%' }}
+        center={initialPosition}
+        zoom={18}
+        style={{ height: '100%', width: '100%', cursor: onLocationSelect ? 'crosshair' : '' }}
         scrollWheelZoom={false}
         zoomControl={true}
         attributionControl={false}
@@ -178,7 +202,11 @@ export default function AdminMiniMap({
           })}
         />
 
-        <Marker position={position} icon={createSportIcon(sports, false)}>
+        {onLocationSelect && (
+          <MapClickHandler onLocationSelect={onLocationSelect} setMarkerPos={setMarkerPos} />
+        )}
+
+        <Marker position={markerPos} icon={createSportIcon(sports, false)}>
           <Tooltip permanent={false} direction="top">
             {placeName}
           </Tooltip>

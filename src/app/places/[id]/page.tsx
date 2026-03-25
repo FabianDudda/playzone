@@ -189,36 +189,31 @@ export default async function PlacePage({ params }: PlacePageProps) {
           <p className="text-sm text-muted-foreground">{place.description}</p>
         )}
 
-        {/* Verein: Contact & Opening Hours */}
-        {place.place_type === 'verein' && (
-          <>
-            {(place.contact_phone || place.contact_email || place.contact_website) && (
-              <div className="space-y-2 pt-2">
-                <p className="text-sm font-medium text-muted-foreground">Kontakt</p>
-                <div className="space-y-2">
-                  {place.contact_phone && (
-                    <a href={`tel:${place.contact_phone}`} className="flex items-center gap-2 text-sm hover:text-primary">
-                      <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
-                      <span>{place.contact_phone}</span>
-                    </a>
-                  )}
-                  {place.contact_email && (
-                    <a href={`mailto:${place.contact_email}`} className="flex items-center gap-2 text-sm hover:text-primary">
-                      <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
-                      <span>{place.contact_email}</span>
-                    </a>
-                  )}
-                  {place.contact_website && (
-                    <a href={place.contact_website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm hover:text-primary">
-                      <Globe className="h-4 w-4 text-muted-foreground shrink-0" />
-                      <span>{place.contact_website.replace(/^https?:\/\//, '')}</span>
-                    </a>
-                  )}
-                </div>
-              </div>
-            )}
-
-          </>
+        {/* Contact */}
+        {(place.contact_phone || place.contact_email || place.contact_website) && (
+          <div className="space-y-2 pt-2">
+            <p className="text-sm font-medium text-muted-foreground">Kontakt</p>
+            <div className="space-y-2">
+              {place.contact_phone && (
+                <a href={`tel:${place.contact_phone}`} className="flex items-center gap-2 text-sm hover:text-primary">
+                  <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
+                  <span>{place.contact_phone}</span>
+                </a>
+              )}
+              {place.contact_email && (
+                <a href={`mailto:${place.contact_email}`} className="flex items-center gap-2 text-sm hover:text-primary">
+                  <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
+                  <span>{place.contact_email}</span>
+                </a>
+              )}
+              {place.contact_website && (
+                <a href={place.contact_website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm hover:text-primary">
+                  <Globe className="h-4 w-4 text-muted-foreground shrink-0" />
+                  <span>{place.contact_website.replace(/^https?:\/\//, '')}</span>
+                </a>
+              )}
+            </div>
+          </div>
         )}
 
         {/* Route button */}

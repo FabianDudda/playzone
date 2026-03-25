@@ -188,7 +188,7 @@ function renderIconHtml(icon: string, fontSize: number): string {
 // Create horizontal sport icons layout within pin
 function createSimpleSportIcon(sports: string[], baseSize: number, isSelected: boolean = false): string {
   const borderWidth = isSelected ? 3 : 2
-  const borderColor = isSelected ? '#1F2937' : '#FFFFFF'
+  const borderColor = '#FFFFFF'
   const primaryColor = sportColors[sports[0]] || '#6B7280'
   
   // Determine how many icons to show and if we need +X indicator
@@ -367,6 +367,9 @@ function createSimpleSportIcon(sports: string[], baseSize: number, isSelected: b
   }
   
   // Single unified teardrop background for ALL cases
+  const bgColor = isSelected ? 'hsl(var(--primary))' : 'white'
+  const boxShadow = '0 3px 8px rgba(0,0,0,0.3)'
+
   return `
     <!-- Unified teardrop pin background -->
     <div style="
@@ -375,14 +378,14 @@ function createSimpleSportIcon(sports: string[], baseSize: number, isSelected: b
       left: 0;
       width: ${pinSize}px;
       height: ${Math.round(pinSize)}px;
-      background-color: white;
+      background-color: ${bgColor};
       border-radius: 50% 50% 50% 0;
       transform: rotate(-45deg);
       transform-origin: center center;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+      box-shadow: ${boxShadow};
       z-index: 10;
     "></div>
-    
+
     ${iconElements}
   `
 }

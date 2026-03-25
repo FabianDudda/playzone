@@ -15,7 +15,7 @@ import { reverseGeocode, AddressComponents } from '@/lib/geocoding'
 import { uploadCourtImage, UploadProgress } from '@/lib/supabase/storage'
 import { sportIcons } from '@/lib/utils/sport-utils'
 import { cn, validateWebsite } from '@/lib/utils'
-import { MapPin, Plus, Upload, X, Image, Loader2, AlertCircle, Phone, Mail, Globe } from 'lucide-react'
+import { MapPin, Plus, Upload, X, Image, Loader2, Phone, Mail, Globe } from 'lucide-react'
 import { Textarea } from '@/components/ui/textarea'
 import OpeningHoursEditor from '@/components/places/opening-hours-editor'
 import { OpeningHours } from '@/lib/supabase/types'
@@ -86,7 +86,6 @@ interface PlaceFormProps {
   submitButtonText?: string
   title: string
   description: string
-  showCommunityMessage?: boolean
 }
 
 export default function PlaceForm({
@@ -95,7 +94,6 @@ export default function PlaceForm({
   onSubmit,
   isLoading,
   submitButtonText,
-  showCommunityMessage = false,
 }: PlaceFormProps) {
   const { toast } = useToast()
 
@@ -234,7 +232,7 @@ export default function PlaceForm({
     if (selectedSports.length === 0) { toast({ title: 'Mindestens eine Sportart auswählen', variant: 'destructive' }); return }
     if (!location) { toast({ title: 'Standort erforderlich', description: 'Tippe auf die Karte, um einen Standort zu setzen.', variant: 'destructive' }); return }
 
-    if (placeType === 'verein' || placeType === 'schule') {
+    {
       let hasContactError = false
       if (contactPhone.trim() && /\D/.test(contactPhone.trim())) {
         setPhoneError('Nur Ziffern erlaubt'); hasContactError = true
@@ -280,27 +278,15 @@ export default function PlaceForm({
       address: Object.values(address).some(v => v) ? address : {},
       imageFile,
       imageUrl: finalImageUrl,
-      contactPhone: (placeType === 'verein' || placeType === 'schule') ? contactPhone.trim() : '',
-      contactEmail: (placeType === 'verein' || placeType === 'schule') ? contactEmail.trim() : '',
-      contactWebsite: (placeType === 'verein' || placeType === 'schule') ? contactWebsite.trim() : '',
-      openingHours: (placeType === 'verein' || placeType === 'schule') ? openingHours : null,
+      contactPhone: contactPhone.trim(),
+      contactEmail: contactEmail.trim(),
+      contactWebsite: contactWebsite.trim(),
+      openingHours: openingHours,
     })
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {showCommunityMessage && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-          <div className="flex items-start gap-2">
-            <AlertCircle className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
-            <div className="text-sm">
-              <div className="font-medium text-blue-800">Community-Beitrag</div>
-              <div className="text-blue-700">Deine Änderungen werden von Administratoren geprüft, bevor sie für andere Nutzer sichtbar sind.</div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* 1. Name */}
       <div className="space-y-2">
         <Label htmlFor="pf-name">Ortsname *</Label>
@@ -463,44 +449,40 @@ export default function PlaceForm({
         </div>
       </div>
 
-      {/* 6. Contact (verein/schule) */}
-      {(placeType === 'verein' || placeType === 'schule') && (
+      {/* 6. Contact */}
+      <div className="space-y-2">
+        <Label>Kontakt (Optional)</Label>
         <div className="space-y-2">
-          <Label>Kontakt (Optional)</Label>
-          <div className="space-y-2">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
-                <Input placeholder="Telefon" value={contactPhone} onChange={e => { setContactPhone(e.target.value); setPhoneError('') }} className={phoneError ? 'border-destructive' : ''} />
-              </div>
-              {phoneError && <p className="text-xs text-destructive pl-6">{phoneError}</p>}
-            </div>
+          <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
-              <Input type="email" placeholder="E-Mail" value={contactEmail} onChange={e => setContactEmail(e.target.value)} />
+              <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
+              <Input placeholder="Telefon" value={contactPhone} onChange={e => { setContactPhone(e.target.value); setPhoneError('') }} className={phoneError ? 'border-destructive' : ''} />
             </div>
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <Globe className="h-4 w-4 text-muted-foreground shrink-0" />
-                <Input placeholder="Website (https://...)" value={contactWebsite} onChange={e => { setContactWebsite(e.target.value); setWebsiteError('') }} className={websiteError ? 'border-destructive' : ''} />
-              </div>
-              {websiteError && <p className="text-xs text-destructive pl-6">{websiteError}</p>}
+            {phoneError && <p className="text-xs text-destructive pl-6">{phoneError}</p>}
+          </div>
+          <div className="flex items-center gap-2">
+            <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
+            <Input type="email" placeholder="E-Mail" value={contactEmail} onChange={e => setContactEmail(e.target.value)} />
+          </div>
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <Globe className="h-4 w-4 text-muted-foreground shrink-0" />
+              <Input placeholder="Website (https://...)" value={contactWebsite} onChange={e => { setContactWebsite(e.target.value); setWebsiteError('') }} className={websiteError ? 'border-destructive' : ''} />
             </div>
+            {websiteError && <p className="text-xs text-destructive pl-6">{websiteError}</p>}
           </div>
         </div>
-      )}
+      </div>
 
-      {/* 7. Opening Hours (verein/schule) */}
-      {(placeType === 'verein' || placeType === 'schule') && (
-        <div className="space-y-2">
-          <Label>Öffnungszeiten (Optional)</Label>
-          <OpeningHoursEditor
-            key={initialData?.id ?? 'new'}
-            value={openingHours}
-            onChange={setOpeningHours}
-          />
-        </div>
-      )}
+      {/* 7. Opening Hours */}
+      <div className="space-y-2">
+        <Label>Öffnungszeiten (Optional)</Label>
+        <OpeningHoursEditor
+          key={initialData?.id ?? 'new'}
+          value={openingHours}
+          onChange={setOpeningHours}
+        />
+      </div>
 
       {/* 8. Description */}
       <div className="space-y-2">

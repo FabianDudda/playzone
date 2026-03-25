@@ -56,6 +56,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
   const onCourtSelectRef = useRef(onCourtSelect)
   const selectedSportsRef = useRef(selectedSports)
   const selectedPlaceTypeRef = useRef(selectedPlaceType)
+  const prevSelectedIdRef = useRef<string | null>(null)
 
   useEffect(() => { onCourtSelectRef.current = onCourtSelect }, [onCourtSelect])
   useEffect(() => { selectedSportsRef.current = selectedSports }, [selectedSports])
@@ -66,7 +67,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
     if (!clusterGroupRef.current) {
       clusterGroupRef.current = L.markerClusterGroup({
         maxClusterRadius: 100,
-        showCoverageOnHover: true,
+        showCoverageOnHover: false,
         zoomToBoundsOnClick: true,
         spiderfyOnMaxZoom: true,
         removeOutsideVisibleBounds: true,
@@ -139,6 +140,35 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
     if (toRemove.length > 0) clusterGroup.removeLayers(toRemove)
     if (toAdd.length > 0) clusterGroup.addLayers(toAdd)
   }, [selectedSports, selectedPlaceType])
+
+  // Update active marker icon on selection change
+  useEffect(() => {
+    const getSportsForIcon = (court: PlaceMarker) => {
+      const sports = court.sports || []
+      const matching = sports.filter(s => selectedSportsRef.current.includes(s))
+      return selectedSportsRef.current.length === 0 || matching.length === 0 ? sports : matching
+    }
+
+    // Deselect previous
+    if (prevSelectedIdRef.current) {
+      const prevMarker = markerMapRef.current.get(prevSelectedIdRef.current)
+      const prevCourt = courtMapRef.current.get(prevSelectedIdRef.current)
+      if (prevMarker && prevCourt) {
+        prevMarker.setIcon(createSportIcon(getSportsForIcon(prevCourt), false))
+      }
+    }
+
+    // Select new
+    if (selectedCourt) {
+      const marker = markerMapRef.current.get(selectedCourt.id)
+      const court = courtMapRef.current.get(selectedCourt.id)
+      if (marker && court) {
+        marker.setIcon(createSportIcon(getSportsForIcon(court), true))
+      }
+    }
+
+    prevSelectedIdRef.current = selectedCourt?.id ?? null
+  }, [selectedCourt])
 
   // Handle court selection events from popups
   useEffect(() => {
