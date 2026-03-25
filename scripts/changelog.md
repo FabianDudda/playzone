@@ -1,6 +1,6 @@
 - contact details and opening hours added for all place types
 - fix show password icon in sign-in & sign-up form
-- fix: guest user cant upload images
+- fix: guest user now can upload images
 - fix: if place title is too long, buttons get moved out of screen
 - change place sheet ux: moved "bearbeiten" and "report" button inline in sheet, so that title has more space
 - remove bottom sheets that ask for login (add place & edit place), since guest can do these actions too

@@ -48,9 +48,7 @@ export default function ProfilePage() {
           <CardContent className="p-6 space-y-4">
             <div className="space-y-1">
               <h2 className="text-xl font-semibold">Anmelden für vollen Zugriff auf alle Funktionen</h2>
-              <p className="text-sm text-muted-foreground">
-                Orte als Favoriten speichern und Orte für die Community hinzufügen oder bearbeiten.
-              </p>
+          
             </div>
             <div className="flex flex-col gap-3">
               <Button asChild className="w-full">
