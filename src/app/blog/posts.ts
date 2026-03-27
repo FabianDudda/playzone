@@ -39,7 +39,7 @@ export const blogPosts: BlogPost[] = [
     sportType: 'Fußball',
     author: 'OpenSportMap',
     coverEmoji: '⚽',
-    coverImage: '/blog/hamburg_fußball_sportparkSteinwiesenweg.jfif',
+    coverImage: '/blog/hamburg_fußball_sportparkSteinwiesenweg.png',
     coverGradient: 'from-red-500 to-rose-600',
   }
 ]
