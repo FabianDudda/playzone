@@ -203,25 +203,43 @@ function transformJsonPlace(jsonPlace: JsonPlace, sourceFilename: string) {
   return { place, courts }
 }
 
-async function checkForDuplicates(latitude: number, longitude: number, name: string) {
-  // Check for existing places with same coordinates (within 10 meters)
+async function checkForDuplicates(latitude: number, longitude: number) {
+  // Check for existing places with same coordinates (within ~20m tolerance)
   const { data, error } = await supabase
     .from('places')
     .select('id, name, latitude, longitude')
-    .gte('latitude', latitude - 0.0002) // ~20m tolerance
+    .gte('latitude', latitude - 0.0002)
     .lte('latitude', latitude + 0.0002)
     .gte('longitude', longitude - 0.0002)
     .lte('longitude', longitude + 0.0002)
-  
+
   if (error) {
     console.error('Error checking for duplicates:', error)
     return null
   }
-  
-  return data.find(place =>
+
+  const existingPlace = data.find(place =>
     Math.abs(place.latitude - latitude) < 0.0002 &&
     Math.abs(place.longitude - longitude) < 0.0002
   )
+
+  if (!existingPlace) return null
+
+  // Fetch existing sports for this place
+  const { data: existingCourts, error: courtsError } = await supabase
+    .from('courts')
+    .select('sport')
+    .eq('place_id', existingPlace.id)
+
+  if (courtsError) {
+    console.error('Error fetching existing courts:', courtsError)
+    return { ...existingPlace, existingSports: [] as string[] }
+  }
+
+  return {
+    ...existingPlace,
+    existingSports: existingCourts.map(c => c.sport as string)
+  }
 }
 
 async function importPlace(jsonPlace: JsonPlace, userId: string, sourceFilename: string) {
@@ -234,10 +252,34 @@ async function importPlace(jsonPlace: JsonPlace, userId: string, sourceFilename:
   }
   
   // Check for duplicates
-  const duplicate = await checkForDuplicates(placeWithUser.latitude, placeWithUser.longitude, placeWithUser.name)
+  const duplicate = await checkForDuplicates(placeWithUser.latitude, placeWithUser.longitude)
   if (duplicate) {
-    console.log(`⚠️  Skipping duplicate place: ${placeWithUser.name} (matches existing: ${duplicate.name})`)
-    return { success: true, skipped: true }
+    // Filter out courts for sports that already exist at this location
+    const newCourts = courts.filter(c => !duplicate.existingSports.includes(c.sport))
+
+    if (newCourts.length === 0) {
+      console.log(`⚠️  Skipping duplicate place: ${placeWithUser.name} (matches existing: ${duplicate.name}, all sports already present)`)
+      return { success: true, skipped: true }
+    }
+
+    // Insert only the new sports into the existing place
+    const courtInserts = newCourts.map(court => ({
+      place_id: duplicate.id,
+      sport: court.sport as Database['public']['Enums']['sport_type'],
+      quantity: court.quantity,
+      surface: court.surface || null,
+      notes: null
+    }))
+
+    const { error: courtsError } = await supabase.from('courts').insert(courtInserts)
+    if (courtsError) {
+      console.error(`❌ Error inserting new courts for existing place ${duplicate.name}:`, courtsError)
+      return { success: false, error: courtsError }
+    }
+
+    const newSports = newCourts.map(c => c.sport).join(', ')
+    console.log(`🔄 Merged ${newCourts.length} new courts (${newSports}) into existing place: ${duplicate.name}`)
+    return { success: true, skipped: false, merged: true }
   }
   
   try {
@@ -320,17 +362,20 @@ async function main() {
   // Import places
   let successCount = 0
   let skipCount = 0
+  let mergeCount = 0
   let errorCount = 0
-  
+
   for (let i = 0; i < jsonData.length; i++) {
     const place = jsonData[i]
     console.log(`\n[${i + 1}/${jsonData.length}] Processing: ${place.name}`)
-    
+
     const result = await importPlace(place, systemUserId, sourceFilename)
-    
+
     if (result.success) {
       if (result.skipped) {
         skipCount++
+      } else if ('merged' in result && result.merged) {
+        mergeCount++
       } else {
         successCount++
       }
@@ -345,7 +390,8 @@ async function main() {
   console.log('\n' + '='.repeat(50))
   console.log('📊 Import Summary:')
   console.log(`✅ Successful imports: ${successCount}`)
-  console.log(`⚠️  Skipped (duplicates): ${skipCount}`)
+  console.log(`🔄 Merged (new sports into existing place): ${mergeCount}`)
+  console.log(`⚠️  Skipped (all sports already present): ${skipCount}`)
   console.log(`❌ Errors: ${errorCount}`)
   console.log(`📦 Total processed: ${jsonData.length}`)
   

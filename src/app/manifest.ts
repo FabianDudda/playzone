@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next"
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Court Sports",
-    short_name: "Court Sports",
-    description: "Discover sports courts, log matches, and track your Elo rankings",
+    name: "OpenSportMap",
+    short_name: "OpenSportMap",
+    description: "Kostenlose Sportplätze in deiner Nähe finden – Basketball, Fußball, Tennis und mehr.",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",

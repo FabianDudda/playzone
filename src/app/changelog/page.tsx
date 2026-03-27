@@ -6,9 +6,18 @@ import Link from 'next/link'
 
 const CHANGELOG = [
   {
+    version: '0.3.1-alpha',
+    date: '27.03.2026',
+    current: true,
+    items: [
+      'added a blog page',
+      'change contribution limit for guest to 20 per day',
+    ],
+  },
+  {
     version: '0.3.0-alpha',
     date: '25.03.2026',
-    current: true,
+    current: false,
     items: [
       'contact details and opening hours added for all place types',
       'fix show password icon in sign-in & sign-up form',

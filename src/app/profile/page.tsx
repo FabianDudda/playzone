@@ -4,7 +4,7 @@ import { useAuth } from '@/components/providers/auth-provider'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { User, Mail, Trophy, Calendar, Edit2, Plus, Shield, LogOut, ChevronRight, MessageSquare, Info, Bell, Instagram, BookOpen, Sparkles, Download, Handshake } from 'lucide-react'
+import { User, Mail, Trophy, Calendar, Edit2, Plus, Shield, LogOut, ChevronRight, MessageSquare, Info, Bell, Instagram, BookOpen, Sparkles, Download, Handshake, Rss } from 'lucide-react'
 import { useInstallPrompt } from '@/hooks/use-install-prompt'
 import Link from 'next/link'
 
@@ -72,6 +72,11 @@ export default function ProfilePage() {
                   <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
                 </button>
               )}
+              <Link href="/blog" className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left">
+                <Rss className="h-4 w-4 text-muted-foreground" />
+                <span>Blog</span>
+                <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
+              </Link>
               <Link href="/about" className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left">
                 <Sparkles className="h-4 w-4 text-muted-foreground" />
                 <span>Was ist OpenSportMap?</span>
@@ -103,7 +108,7 @@ export default function ProfilePage() {
         <a href="https://www.instagram.com/opensportmap/" target="_blank" rel="noopener noreferrer" className="flex justify-center text-muted-foreground hover:text-foreground transition-colors">
           <Instagram className="h-5 w-5" />
         </a>
-        <Link href="/changelog" className="block text-center text-xs text-muted-foreground hover:text-foreground transition-colors">App Version 0.3.0-alpha</Link>
+        <Link href="/changelog" className="block text-center text-xs text-muted-foreground hover:text-foreground transition-colors">App Version 0.3.1-alpha</Link>
       </div>
     )
   }
@@ -167,6 +172,11 @@ export default function ProfilePage() {
                   <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
                 </button>
               )}
+              <Link href="/blog" className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left">
+                <Rss className="h-4 w-4 text-muted-foreground" />
+                <span>Blog</span>
+                <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
+              </Link>
               <Link href="/about" className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left">
                 <Sparkles className="h-4 w-4 text-muted-foreground" />
                 <span>Was ist OpenSportMap?</span>
@@ -211,7 +221,7 @@ export default function ProfilePage() {
         <a href="https://www.instagram.com/opensportmapde/" target="_blank" rel="noopener noreferrer" className="flex justify-center text-muted-foreground hover:text-foreground transition-colors">
           <Instagram className="h-5 w-5" />
         </a>
-        <Link href="/changelog" className="block text-center text-xs text-muted-foreground hover:text-foreground transition-colors">App Version 0.3.0-alpha</Link>
+        <Link href="/changelog" className="block text-center text-xs text-muted-foreground hover:text-foreground transition-colors">App Version 0.3.1-alpha</Link>
       </div>
     </div>
   )

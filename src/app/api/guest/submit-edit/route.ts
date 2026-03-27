@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 import { NextRequest } from 'next/server'
 import { Database } from '@/lib/supabase/types'
 
-const RATE_LIMIT = 3
+const RATE_LIMIT = 20
 
 function getClientIp(req: NextRequest): string {
   return (

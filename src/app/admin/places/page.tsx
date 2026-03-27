@@ -1085,7 +1085,7 @@ function PlaceCard({
   )
 }
 
-const PENDING_PAGE_SIZE = 25
+const PENDING_PAGE_SIZE = 50
 
 const RADIUS_OPTIONS = [
   { label: '50m', value: 50 },
