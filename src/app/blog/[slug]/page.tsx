@@ -39,7 +39,7 @@ const postContent: Record<string, React.ReactNode> = {
 
       <h3 className="font-semibold text-foreground">Bolzplatz im Sportpark Steinwiesenweg</h3>
       <p>Der Bolzplatz im Sportpark Steinwiesenweg wurde 2025 in Eidelstedt eröffnet. Besonders ist die Überdachung und Beleuchtung, sodass ihr auch am Abend oder bei schlechtem Wetter spielen könnt.</p>
-      <SportPlaceImage name="Sportpark Steinwiesenweg" location="Hamburg-Eidelstedt" emoji="⚽" gradient="from-red-500 to-rose-600" badge="Überdacht" image="/blog/hamburg_fußball_sportparkSteinwiesenweg.jfif" mapUrl="/?place=db0517dc-57b6-42d6-b1f0-5794262678a7" />
+      <SportPlaceImage name="Sportpark Steinwiesenweg" location="Hamburg-Eidelstedt" emoji="⚽" gradient="from-red-500 to-rose-600" badge="Überdacht" image="/blog/hamburg_fußball_sportparkSteinwiesenweg.png" mapUrl="/?place=db0517dc-57b6-42d6-b1f0-5794262678a7" />
 
       <h3 className="font-semibold text-foreground">Bolzplatz Lohsepark</h3>
       <p>Der Bolzplatz Lohsepark gehört zur neu entstandenen HafenCity. Zwischen dem Park und den Bahngleisen befinden sich zwei Kunstrasen-Bolzplätze, ein großer und ein kleiner.</p>
