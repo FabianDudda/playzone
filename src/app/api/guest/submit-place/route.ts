@@ -100,12 +100,13 @@ export async function POST(req: NextRequest) {
     const { error: courtsError } = await supabase
       .from('courts')
       .insert(
-        body.courts.map((court: { sport: string; quantity: number; surface: string | null; notes: string | null }) => ({
+        body.courts.map((court: { sport: string; quantity: number; surface: string | null; notes: string | null; customSportName?: string | null }) => ({
           place_id: place.id,
           sport: court.sport,
           quantity: court.quantity,
           surface: court.surface || null,
           notes: court.notes || null,
+          custom_sport_name: court.customSportName || null,
         }))
       )
 

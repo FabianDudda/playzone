@@ -20,6 +20,7 @@ export const sportColors: Record<string, string> = {
   padel: '#A3E635',        // Lime
   calisthenics: '#6366F1', // Indigo
   schach: '#6B21A8',       // Purple
+  other: '#9CA3AF',        // Gray
 }
 
 // Sport display names (for consistency)
@@ -45,6 +46,7 @@ export const sportNames: Record<string, string> = {
   klettern: 'Klettern',
   padel: 'Padel',
   schach: 'Schach',
+  other: 'Andere Sportart',
 }
 
 // Modern badge styling with subtle backgrounds and default text color using Tailwind
@@ -70,6 +72,7 @@ export const sportBadgeStyles: Record<string, { bg: string, text: string }> = {
   padel: { bg: 'bg-lime-50', text: 'text-foreground' },
   calisthenics: { bg: 'bg-indigo-50', text: 'text-foreground' },
   schach: { bg: 'bg-purple-50', text: 'text-foreground' },
+  other: { bg: 'bg-gray-50', text: 'text-foreground' },
 }
 
 // Sport icon mapping - using Unicode symbols for visual representation
@@ -95,6 +98,7 @@ export const sportIcons: Record<string, string> = {
   klettern: '🧗',      // Klettern
   padel: '🎾',         // Padel
   schach: '♟️',        // Chess
+  other: '🏅',          // Other sport
 }
 
 // Get color for a court based on its sports

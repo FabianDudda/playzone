@@ -17,6 +17,7 @@ export type Database = {
       courts: {
         Row: {
           created_at: string | null
+          custom_sport_name: string | null
           id: string
           notes: string | null
           place_id: string
@@ -26,6 +27,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
+          custom_sport_name?: string | null
           id?: string
           notes?: string | null
           place_id: string
@@ -35,6 +37,7 @@ export type Database = {
         }
         Update: {
           created_at?: string | null
+          custom_sport_name?: string | null
           id?: string
           notes?: string | null
           place_id?: string
@@ -592,6 +595,7 @@ export type Database = {
         | "klettern"
         | "padel"
         | "schach"
+        | "other"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -780,7 +784,7 @@ export interface PlaceMarker {
 
 export interface PlaceWithCourts extends Place {
   courts?: Court[]
-  profiles?: Pick<Profile, 'name' | 'avatar'>
+  profiles?: Pick<Profile, 'name' | 'avatar' | 'user_role'>
 }
 
 export interface DayHours {

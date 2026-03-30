@@ -160,6 +160,7 @@ export const database = {
               quantity,
               surface,
               notes,
+              custom_sport_name,
               created_at
             ),
             profiles:added_by_user (
@@ -236,6 +237,7 @@ export const database = {
             quantity,
             surface,
             notes,
+            custom_sport_name,
             created_at
           ),
           profiles:added_by_user (
@@ -320,6 +322,7 @@ export const database = {
               quantity,
               surface,
               notes,
+              custom_sport_name,
               created_at
             )
           `, { count: 'exact' })
@@ -961,6 +964,7 @@ export const database = {
               quantity,
               surface,
               notes,
+              custom_sport_name,
               created_at
             ),
             profiles:added_by_user (
@@ -996,11 +1000,13 @@ export const database = {
               quantity,
               surface,
               notes,
+              custom_sport_name,
               created_at
             ),
             profiles:added_by_user (
               name,
-              avatar
+              avatar,
+              user_role
             )
           `)
           .eq('moderation_status', status)
@@ -1260,6 +1266,7 @@ export const database = {
               quantity,
               surface,
               notes,
+              custom_sport_name,
               created_at
             ),
             profiles:added_by_user (
@@ -1330,6 +1337,7 @@ export const database = {
             quantity,
             surface,
             notes,
+            custom_sport_name,
             created_at
           ),
           profiles:added_by_user (
@@ -1472,8 +1480,12 @@ export const database = {
               .from('courts')
               .insert(
                 proposedData.courts.map((court: any) => ({
-                  ...court,
-                  place_id: change.place_id
+                  place_id: change.place_id,
+                  sport: court.sport,
+                  surface: court.surface ?? null,
+                  quantity: court.quantity ?? null,
+                  notes: court.notes ?? null,
+                  custom_sport_name: court.custom_sport_name ?? court.customSportName ?? null,
                 }))
               )
             
@@ -1578,6 +1590,7 @@ export const database = {
               quantity,
               surface,
               notes,
+              custom_sport_name,
               created_at
             )
           )

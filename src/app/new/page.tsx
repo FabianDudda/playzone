@@ -63,6 +63,7 @@ interface CourtDetails {
   quantity: number
   surface: string
   notes: string
+  customSportName?: string
 }
 
 function AddPlacePage() {
@@ -93,7 +94,10 @@ function AddPlacePage() {
   const [name, setName] = useState('')
   const [placeType, setPlaceType] = useState<PlaceType>('öffentlich')
   const [selectedSports, setSelectedSports] = useState<SportType[]>([])
-  const [courtSurfaces, setCourtSurfaces] = useState<Partial<Record<SportType, string[]>>>({})
+  const [customSports, setCustomSports] = useState<string[]>([])
+  const [customSportInput, setCustomSportInput] = useState('')
+  const [showCustomSportInput, setShowCustomSportInput] = useState(false)
+  const [courtSurfaces, setCourtSurfaces] = useState<Record<string, string[]>>({})
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [address, setAddress] = useState<AddressComponents>({})
   const [isDetectingAddress, setIsDetectingAddress] = useState(false)
@@ -164,6 +168,7 @@ function AddPlacePage() {
             quantity: court.quantity,
             surface: court.surface || null,
             notes: court.notes || null,
+            custom_sport_name: court.customSportName || null,
           })
         ))
       }
@@ -210,18 +215,42 @@ function AddPlacePage() {
     })
   }
 
-  const addCourtForSport = (sport: SportType) =>
+  const addCourtForSport = (sport: string) =>
     setCourtSurfaces(prev => ({ ...prev, [sport]: [...(prev[sport] || []), ''] }))
 
-  const updateCourtSurface = (sport: SportType, idx: number, surface: string) =>
+  const updateCourtSurface = (sport: string, idx: number, surface: string) =>
     setCourtSurfaces(prev => {
       const surfaces = [...(prev[sport] || [])]
       surfaces[idx] = surface
       return { ...prev, [sport]: surfaces }
     })
 
-  const removeCourtForSport = (sport: SportType, idx: number) =>
-    setCourtSurfaces(prev => ({ ...prev, [sport]: (prev[sport] || []).filter((_, i) => i !== idx) }))
+  const removeCourtForSport = (sport: string, idx: number, isCustom = false) => {
+    const surfaces = courtSurfaces[sport] || []
+    if (surfaces.length === 1) {
+      if (isCustom) {
+        handleCustomSportRemove(sport)
+      } else {
+        handleSportToggle(sport as SportType)
+      }
+    } else {
+      setCourtSurfaces(prev => ({ ...prev, [sport]: surfaces.filter((_, i) => i !== idx) }))
+    }
+  }
+
+  const handleCustomSportAdd = () => {
+    const name = customSportInput.trim()
+    if (!name || customSports.includes(name)) return
+    setCustomSports(prev => [...prev, name])
+    setCourtSurfaces(prev => ({ ...prev, [name]: [''] }))
+    setCustomSportInput('')
+    setShowCustomSportInput(false)
+  }
+
+  const handleCustomSportRemove = (name: string) => {
+    setCustomSports(prev => prev.filter(s => s !== name))
+    setCourtSurfaces(prev => { const u = { ...prev }; delete u[name]; return u })
+  }
 
   const updateAddressField = (field: keyof AddressComponents, value: string) => {
     setAddress(prev => ({ ...prev, [field]: value.trim() || undefined }))
@@ -247,7 +276,7 @@ function AddPlacePage() {
     e.preventDefault()
     if (!user && !isGuestMode) return
     if (!name.trim()) { toast({ title: 'Name erforderlich', variant: 'destructive' }); return }
-    if (selectedSports.length === 0) { toast({ title: 'Mindestens eine Sportart auswählen', variant: 'destructive' }); return }
+    if (selectedSports.length === 0 && customSports.length === 0) { toast({ title: 'Mindestens eine Sportart auswählen', variant: 'destructive' }); return }
     if (!location) { toast({ title: 'Standort erforderlich', description: 'Tippe auf die Karte, um einen Standort zu setzen.', variant: 'destructive' }); return }
 
     {
@@ -280,18 +309,25 @@ function AddPlacePage() {
       }
     }
 
-    const courts: CourtDetails[] = selectedSports.flatMap(sport => {
-      const surfaces = (courtSurfaces[sport] || ['']).map(s => s || 'Unbekannt')
-      const counts = surfaces.reduce<Record<string, number>>((acc, s) => { acc[s] = (acc[s] || 0) + 1; return acc }, {})
-      return Object.entries(counts).map(([surface, quantity]) => ({ sport, quantity, surface, notes: '' }))
-    })
+    const courts: CourtDetails[] = [
+      ...selectedSports.flatMap(sport => {
+        const surfaces = (courtSurfaces[sport] || ['']).map(s => s || 'Unbekannt')
+        const counts = surfaces.reduce<Record<string, number>>((acc, s) => { acc[s] = (acc[s] || 0) + 1; return acc }, {})
+        return Object.entries(counts).map(([surface, quantity]) => ({ sport, quantity, surface, notes: '' }))
+      }),
+      ...customSports.flatMap(name => {
+        const surfaces = (courtSurfaces[name] || ['']).map(s => s || 'Unbekannt')
+        const counts = surfaces.reduce<Record<string, number>>((acc, s) => { acc[s] = (acc[s] || 0) + 1; return acc }, {})
+        return Object.entries(counts).map(([surface, quantity]) => ({ sport: 'other' as SportType, quantity, surface, notes: '', customSportName: name }))
+      }),
+    ]
 
     const placePayload = {
       name: name.trim(),
       place_type: placeType,
       latitude: location.lat,
       longitude: location.lng,
-      sports: selectedSports,
+      sports: [...selectedSports, ...(customSports.length > 0 ? ['other' as SportType] : [])],
       description: description.trim() || null,
       image_url: imageUrl,
       courts,
@@ -452,10 +488,51 @@ function AddPlacePage() {
                 )
               })}
             </div>
+
+            {/* Custom sports chips */}
+            {customSports.length > 0 && (
+              <div className="flex flex-wrap gap-2 pt-1">
+                {customSports.map(name => (
+                  <span key={name} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary bg-primary text-primary-foreground text-sm font-medium">
+                    🏅 {name}
+                    <button type="button" onClick={() => handleCustomSportRemove(name)} className="ml-0.5 opacity-70 hover:opacity-100">
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Other sport input */}
+            {showCustomSportInput ? (
+              <div className="flex items-center gap-2 pt-1">
+                <Input
+                  autoFocus
+                  placeholder="Sportart eingeben..."
+                  value={customSportInput}
+                  onChange={e => setCustomSportInput(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleCustomSportAdd() } if (e.key === 'Escape') { setShowCustomSportInput(false); setCustomSportInput('') } }}
+                  className="flex-1"
+                />
+                <Button type="button" size="sm" onClick={handleCustomSportAdd} disabled={!customSportInput.trim()}>Hinzufügen</Button>
+                <Button type="button" size="sm" variant="ghost" onClick={() => { setShowCustomSportInput(false); setCustomSportInput('') }}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setShowCustomSportInput(true)}
+                className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors pt-1"
+              >
+                <Plus className="h-4 w-4" />
+                Andere Sportart hinzufügen
+              </button>
+            )}
           </div>
 
           {/* Court Details */}
-          {selectedSports.length > 0 && (
+          {(selectedSports.length > 0 || customSports.length > 0) && (
             <div className="space-y-3">
               <Label>Platz-Details</Label>
               {selectedSports.map(sport => {
@@ -472,12 +549,36 @@ function AddPlacePage() {
                             {SURFACE_TYPES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
                           </SelectContent>
                         </Select>
-                        <Button type="button" variant="ghost" size="icon" onClick={() => surfaces.length === 1 ? handleSportToggle(sport) : removeCourtForSport(sport, idx)}>
+                        <Button type="button" variant="ghost" size="icon" onClick={() => removeCourtForSport(sport, idx)}>
                           <X className="h-4 w-4" />
                         </Button>
                       </div>
                     ))}
                     <Button type="button" variant="outline" size="sm" onClick={() => addCourtForSport(sport)}>
+                      <Plus className="h-4 w-4 mr-1" />Weiteren Platz hinzufügen
+                    </Button>
+                  </div>
+                )
+              })}
+              {customSports.map(name => {
+                const surfaces = courtSurfaces[name] || ['']
+                return (
+                  <div key={name} className="space-y-2">
+                    {surfaces.map((surface, idx) => (
+                      <div key={idx} className="flex items-center gap-2">
+                        <span className="text-sm text-muted-foreground min-w-[8rem]">{name} Platz {idx + 1}</span>
+                        <Select value={surface || 'Unbekannt'} onValueChange={val => updateCourtSurface(name, idx, val)}>
+                          <SelectTrigger className="flex-1"><SelectValue placeholder="Belagstyp..." /></SelectTrigger>
+                          <SelectContent>
+                            {SURFACE_TYPES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                          </SelectContent>
+                        </Select>
+                        <Button type="button" variant="ghost" size="icon" onClick={() => removeCourtForSport(name, idx, true)}>
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                    <Button type="button" variant="outline" size="sm" onClick={() => addCourtForSport(name)}>
                       <Plus className="h-4 w-4 mr-1" />Weiteren Platz hinzufügen
                     </Button>
                   </div>

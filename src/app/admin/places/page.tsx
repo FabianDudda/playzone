@@ -77,6 +77,7 @@ interface CourtEditRow {
   surface: string
   quantity: string
   notes: string
+  customSportName?: string
 }
 
 interface PlaceEditForm {
@@ -286,6 +287,7 @@ function PlaceCard({
         surface: c.surface || '',
         quantity: c.quantity?.toString() || '',
         notes: c.notes || '',
+        customSportName: c.custom_sport_name || '',
       })),
       contact_phone: place.contact_phone || '',
       contact_email: place.contact_email || '',
@@ -313,7 +315,7 @@ function PlaceCard({
           county: editForm.county,
           state: editForm.state,
           country: editForm.country,
-          sports: editForm.sports,
+          sports: [...new Set([...editForm.sports, ...editForm.courts.map(c => c.sport).filter(Boolean)])],
           latitude: editForm.latitude ? parseFloat(editForm.latitude) : null,
           longitude: editForm.longitude ? parseFloat(editForm.longitude) : null,
           courts: editForm.courts.map(c => ({
@@ -322,6 +324,7 @@ function PlaceCard({
             surface: c.surface || null,
             quantity: c.quantity ? parseInt(c.quantity) : null,
             notes: c.notes || null,
+            customSportName: c.customSportName || null,
           })),
           contact_phone: editForm.contact_phone || null,
           contact_email: editForm.contact_email || null,
@@ -678,7 +681,7 @@ function PlaceCard({
                     {place.courts.map((court) => (
                       <div key={court.id} className="text-xs bg-muted p-2 rounded">
                         <div className="flex justify-between">
-                          <span className="font-medium">{sportNames[court.sport] || court.sport}</span>
+                          <span className="font-medium">{court.sport === 'other' ? (court.custom_sport_name || 'Andere Sportart') : (sportNames[court.sport] || court.sport)}</span>
                           <span>Qty: {court.quantity}</span>
                         </div>
                         {court.surface && <div className="text-muted-foreground">Surface: {court.surface}</div>}
@@ -997,7 +1000,7 @@ function PlaceCard({
                             value={court.sport}
                             onValueChange={val => setEditForm(prev => {
                               const courts = [...prev.courts]
-                              courts[i] = { ...courts[i], sport: val }
+                              courts[i] = { ...courts[i], sport: val, customSportName: val !== 'other' ? '' : courts[i].customSportName }
                               return { ...prev, courts }
                             })}
                           >
@@ -1012,6 +1015,18 @@ function PlaceCard({
                               ))}
                             </SelectContent>
                           </Select>
+                          {court.sport === 'other' && (
+                            <Input
+                              placeholder="Sport name…"
+                              value={court.customSportName || ''}
+                              onChange={e => setEditForm(prev => {
+                                const courts = [...prev.courts]
+                                courts[i] = { ...courts[i], customSportName: e.target.value }
+                                return { ...prev, courts }
+                              })}
+                              className="mt-1 h-7 text-xs"
+                            />
+                          )}
                         </div>
                         <div>
                           <Label className="text-xs text-muted-foreground">Surface</Label>
@@ -1103,6 +1118,9 @@ function PlacesList({ status }: { status: ModerationStatus }) {
   const [selectedPlaces, setSelectedPlaces] = useState<Set<string>>(new Set())
   const [isBulkMode, setIsBulkMode] = useState(false)
   const [page, setPage] = useState(0)
+
+  // Submitter filter state
+  const [submitterFilter, setSubmitterFilter] = useState<'all' | 'admin' | 'user'>('all')
 
   // Isolated filter state
   const [isolatedOnly, setIsolatedOnly] = useState(false)
@@ -1233,10 +1251,16 @@ function PlacesList({ status }: { status: ModerationStatus }) {
     bulkDeleteMutation.mutate(Array.from(selectedPlaces))
   }
 
-  // Filtered list: when isolatedOnly is active, keep only isolated places
+  // Filtered list: apply submitter filter, then isolated filter
+  const submitterFiltered = (places ?? []).filter(p => {
+    if (submitterFilter === 'all') return true
+    const role = p.profiles?.user_role
+    if (submitterFilter === 'admin') return role === 'admin'
+    return role !== 'admin'
+  })
   const filteredPlaces = (status === 'pending' && isolatedOnly && isolatedIds)
-    ? (places?.filter(p => isolatedIds.includes(p.id)) ?? [])
-    : (places ?? [])
+    ? submitterFiltered.filter(p => isolatedIds.includes(p.id))
+    : submitterFiltered
 
   // Clamp page when list shrinks after approvals/rejections or filter changes
   useEffect(() => {
@@ -1248,7 +1272,7 @@ function PlacesList({ status }: { status: ModerationStatus }) {
   useEffect(() => {
     setPage(0)
     setSelectedPlaces(new Set())
-  }, [isolatedOnly, isolatedRadius, isolatedIncludePending])
+  }, [isolatedOnly, isolatedRadius, isolatedIncludePending, submitterFilter])
 
   const totalPages = Math.ceil(filteredPlaces.length / PENDING_PAGE_SIZE)
   const paginatedPlaces = status === 'pending'
@@ -1301,6 +1325,28 @@ function PlacesList({ status }: { status: ModerationStatus }) {
       {/* Bulk operations controls - only show for pending places */}
       {status === 'pending' && (places?.length ?? 0) > 0 && (
         <div className="mb-4 p-4 bg-muted/50 rounded-lg border space-y-3">
+          {/* Row 0: Submitter filter */}
+          {status === 'pending' && (
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Submitted by:</span>
+              {(['all', 'user', 'admin'] as const).map(f => (
+                <Button
+                  key={f}
+                  variant={submitterFilter === f ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setSubmitterFilter(f)}
+                >
+                  {f === 'all' ? 'All' : f === 'admin' ? 'Admins' : 'Users'}
+                  {f !== 'all' && (
+                    <span className="ml-1.5 text-xs opacity-70">
+                      ({(places ?? []).filter(p => f === 'admin' ? p.profiles?.user_role === 'admin' : p.profiles?.user_role !== 'admin').length})
+                    </span>
+                  )}
+                </Button>
+              ))}
+            </div>
+          )}
+
           {/* Row 1: Isolated filter */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">

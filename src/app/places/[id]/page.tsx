@@ -237,9 +237,9 @@ export default async function PlacePage({ params }: PlacePageProps) {
               {courts.map((court) => (
                 <div key={court.id} className="flex items-center justify-between p-3 rounded-xl border bg-card">
                   <div className="flex items-center gap-2">
-                    <span className="text-[18px]">{sportIcons[court.sport] || '📍'}</span>
+                    <span className="text-[18px]">{court.sport === 'other' ? '🏅' : (sportIcons[court.sport] || '📍')}</span>
                     <div>
-                      <p className="text-sm font-medium">{sportNames[court.sport] || court.sport}</p>
+                      <p className="text-sm font-medium">{court.sport === 'other' ? ((court as any).custom_sport_name || 'Andere Sportart') : (sportNames[court.sport] || court.sport)}</p>
                       {(court.surface || court.notes) && (
                         <p className="text-xs text-muted-foreground">
                           {[court.surface, court.notes].filter(Boolean).join(' · ')}

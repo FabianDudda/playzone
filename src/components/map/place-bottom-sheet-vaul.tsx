@@ -259,7 +259,8 @@ export default function PlaceBottomSheetVaul({
                   {(() => {
                     const sportsWithCounts = (place?.courts?.length ?? 0) > 0
                       ? place!.courts!.reduce((acc, c) => {
-                          acc[c.sport] = (acc[c.sport] || 0) + (c.quantity || 1)
+                          const key = c.sport === 'other' ? ((c as any).custom_sport_name || 'other') : c.sport
+                          acc[key] = (acc[key] || 0) + (c.quantity || 1)
                           return acc
                         }, {} as Record<string, number>)
                       : (place?.sports?.reduce((acc, sport) => ({ ...acc, [sport]: 1 }), {} as Record<string, number>) || {})
@@ -271,7 +272,7 @@ export default function PlaceBottomSheetVaul({
                             key={sport}
                             className="flex items-center gap-1 border border-border rounded-full px-3 py-1.5 self-start"
                           >
-                            <span className="text-[16px] leading-none">{sportIcons[sport] || '📍'}</span>
+                            <span className="text-[16px] leading-none">{sportIcons[sport] || '🏅'}</span>
                             <span className="text-[14px] font-medium text-muted-foreground">{sportNames[sport] || sport}</span>
                           </div>
                         ))}

@@ -7,6 +7,61 @@ import SportPlaceImage from '../_components/sport-place-image'
 
 // Placeholder content per slug
 const postContent: Record<string, React.ReactNode> = {
+  'fussball-muenchen': (
+    <div className="space-y-4 [&>h3+p]:!mt-0 [&>p+div]:!mt-2 text-sm text-muted-foreground leading-relaxed">
+      <p>München als ehemaliger Gastgeber der Olympischen Spiele hat viele kostenlosen Bolzplätzen zu bieten. In diesem Beitrag stellen wir euch fünf der besten Bolzplätze vor.</p>
+
+      <h3 className="font-semibold text-foreground">Bolzplatz im Amphionpark</h3>
+      <p>Im Amphionpark findest du diesen Bolzplatz im kleinen Feld. Daneben befindet sich noch ein Basketballplatz und ein größeres Fußballfeld. Ein moderner Spot für alle, die Fußball oder Basketball spielen wollen!</p>
+      <SportPlaceImage name="Bolzplatz Agrippinaufer in der Kölner Südstadt" location="Köln-Südstadt" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Öffentlich" image="/blog/muenchen_fußball_amphionpark.png" mapUrl="/?place=03d2cb6a-e88f-4d16-b98c-59b0f88a3c1b" />
+
+      <h3 className="font-semibold text-foreground">Bolzplatz Neuhofen</h3>
+      <p>Dieser Bolzplatz in Neuhofen ist perfekt für eine spontane Runde Fußball. Außerdem findest du hier ein Volleyballfeld, einen Basketballplatz.</p>
+      <SportPlaceImage name="Bolzplatz Heckweg in Köln-Nippes" location="Köln-Nippes" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Kostenlos" image="/blog/muenchen_fußball_neuhofen.png" mapUrl="/?place=0411fc8c-0da0-4bed-8bc5-d3f6403756fa" />
+
+      <h3 className="font-semibold text-foreground">Bolzplatz Keilberthstraße</h3>
+      <p>Dieser Bolzplatz am Stadtrand im Grünen bietet neben zwei Fußballtoren auch Platz zum Basketball spielen. </p>
+      <SportPlaceImage name="Bolzplatz Bergisch Gladbacher Straße" location="Köln-Mülheim" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Familie" image="/blog/muenchen_fußball_keilberthstraße.png" mapUrl="/?place=d3aa4f72-8ebe-40df-b171-a7a72122607a"/>
+
+      <h3 className="font-semibold text-foreground">Bolzplatz Alter Botanischer Garten</h3>
+      <p>Dieser kleine Bolzplatz im Alten Botanischen Garten ist zentral im Stadtzentrum gelegen. 
+      </p>
+      <SportPlaceImage name="Bolzplatz Manstedter Weg in Köln-Lindenthal" location="Köln-Lindenthal" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Öffentlich" image="/blog/muenchen_fußball_alter-botanischer-garten.png" mapUrl="/?place=0765788c-77b0-49fc-ac36-a19ec3958f2a"/>
+
+      <h3 className="font-semibold text-foreground">Bolzplatz Panzerwiese</h3>
+      <p>Dieser Bolzplatz direkt an der Panzerwiese wurde 2025 renoviert. Neben dem Fußballplatz gibt es auch einen Basketballplatz und einen Skatepark.
+      </p>
+      <SportPlaceImage name="Fußballplatz mit Stadionflair auf den Jahnwiesen" location="Köln-Müngersdorf" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Park" image="/blog/muenchen_fußball_panzerwiese.png" mapUrl="/?place=97a01c1c-356b-4e3b-8e95-04cc75a00b69"/>
+   
+    </div>
+  ),
+  'fussball-koeln': (
+    <div className="space-y-4 [&>h3+p]:!mt-0 [&>p+div]:!mt-2 text-sm text-muted-foreground leading-relaxed">
+      <p>Köln als Heimat des 1. FC Kölns bietet eine große Auswahl an kostenlosen Bolzplätzen. In diesem Beitrag stellen wir euch fünf der besten Bolzplätze vor.</p>
+
+      <h3 className="font-semibold text-foreground">Bolzplatz Agrippinaufer in der Kölner Südstadt</h3>
+      <p>Direkt am Agrippinaufer liegt dieser lässige Kunstrasen Bolzplatz. Zwischen Rheinblick und urbaner Atmosphäre ist dieser Platz perfekt für alle, die Sport mitten in Köln mit entspanntem Vibe verbinden wollen!</p>
+      <SportPlaceImage name="Bolzplatz Agrippinaufer in der Kölner Südstadt" location="Köln-Südstadt" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Öffentlich" image="/blog/koeln_fußball_agrippinaufer.png" mapUrl="/?place=ce76e69a-45d3-4d91-9aff-3cba594ccb9a" />
+
+      <h3 className="font-semibold text-foreground">Bolzplatz Heckweg in Köln-Nippes</h3>
+      <p>Am Heckweg findest du diesen Kunstrasen Bolzplatz direkt neben der S-Bahn. Außerdem gibt es hier auch noch einen Basketballplatz. </p>
+      <SportPlaceImage name="Bolzplatz Heckweg in Köln-Nippes" location="Köln-Nippes" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Kostenlos" image="/blog/koeln_fußball_heckweg.png" mapUrl="/?place=6dd8a11a-cf80-44ce-85e5-72c65e50f444" />
+
+      <h3 className="font-semibold text-foreground">Bolzplatz Bergisch Gladbacher Straße</h3>
+      <p>Auf diesem Bolzplatz mit Käfig-Flair kannst du deine technischen Tricks zeigen und deine Gegner schwindelig spielen.</p>
+      <SportPlaceImage name="Bolzplatz Bergisch Gladbacher Straße" location="Köln-Mülheim" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Familie" image="/blog/koeln_fußball_bergisch-gladbacher-str.png" mapUrl="/?place=24b23cd5-b804-4800-b001-3f3228f25aed"/>
+
+      <h3 className="font-semibold text-foreground">Bolzplatz Manstedter Weg in Köln-Lindenthal</h3>
+      <p>Am Manstedter Weg liegt dieser Kunstrasen Bolzplatz an einem Spielplatz mit Bänken zum chillen. Außerdem gibt es hier noch einen Basketballkorb und eine Tischtennisplatte. Ein klassischer Veedel-Spot für alle, die draußen kicken wollen!</p>
+      <SportPlaceImage name="Bolzplatz Manstedter Weg in Köln-Lindenthal" location="Köln-Lindenthal" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Öffentlich" image="/blog/koeln_fußball_manstedter-weg.png" mapUrl="/?place=5a06ec06-3fce-4ee2-b9a4-907889b3b11a"/>
+
+      <h3 className="font-semibold text-foreground">Fußballplatz mit Stadionflair auf den Jahnwiesen</h3>
+      <p>Direkt am RheinEnergieSTADION liegt die Jahnwiese, einer der bekanntesten Spots für Fußball in Köln. Große Wiesen, viele Tore und immer Leute für ein Match.
+      </p>
+      <SportPlaceImage name="Fußballplatz mit Stadionflair auf den Jahnwiesen" location="Köln-Müngersdorf" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Park" image="/blog/koeln_fußball_jahnwiesen.png" mapUrl="/?place=8e278151-6096-442d-a587-ff07b40041ca"/>
+   
+    </div>
+  ),
   'fussball-berlin': (
     <div className="space-y-4 [&>h3+p]:!mt-0 [&>p+div]:!mt-2 text-sm text-muted-foreground leading-relaxed">
       <p>Berlin hat eine riesige Auswahl an kostenlosen Bolzplätzen. In diesem Beitrag stellen wir euch fünf der besten Bolzplätze vor.</p>

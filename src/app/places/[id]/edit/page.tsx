@@ -56,7 +56,7 @@ function EditPlaceContent({ params }: EditPlacePageProps) {
         place_type: formData.placeType,
         latitude: formData.location.lat,
         longitude: formData.location.lng,
-        sports: formData.selectedSports,
+        sports: [...formData.selectedSports, ...((formData.customSports?.length ?? 0) > 0 ? ['other' as SportType] : [])],
         image_url: formData.imageUrl,
         // Address fields
         street: formData.address.street,
@@ -91,10 +91,14 @@ function EditPlaceContent({ params }: EditPlacePageProps) {
 
         // Add new courts
         await Promise.all(
-          courts.map(court =>
+          courts.map((court: any) =>
             database.courtDetails.addCourt({
-              ...court,
-              place_id: place.id
+              place_id: place.id,
+              sport: court.sport,
+              quantity: court.quantity,
+              surface: court.surface || null,
+              notes: court.notes || null,
+              custom_sport_name: court.customSportName || null,
             })
           )
         )
@@ -112,10 +116,18 @@ function EditPlaceContent({ params }: EditPlacePageProps) {
         return json.data
       } else {
         // Regular users submit for community review
+        // Normalize courts to snake_case for DB storage
+        const normalizedCourts = courts.map((c: any) => ({
+          sport: c.sport,
+          quantity: c.quantity,
+          surface: c.surface || null,
+          notes: c.notes || null,
+          custom_sport_name: c.custom_sport_name ?? c.customSportName ?? null,
+        }))
         const result = await database.community.submitPlaceEdit(
           place.id,
           placeData,
-          courts,
+          normalizedCourts,
           user!.id
         )
         return result

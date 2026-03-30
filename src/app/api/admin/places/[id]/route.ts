@@ -14,6 +14,7 @@ interface CourtInput {
   surface?: string | null
   quantity?: number | null
   notes?: string | null
+  customSportName?: string | null
 }
 
 export async function PATCH(
@@ -71,7 +72,7 @@ export async function PATCH(
         .from('courts')
         .delete()
         .eq('place_id', id)
-        .not('id', 'in', `(${keepIds.map(i => `"${i}"`).join(',')})`)
+        .not('id', 'in', `(${keepIds.join(',')})`)
       if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     } else {
       // No existing courts to keep — delete all
@@ -82,18 +83,37 @@ export async function PATCH(
       if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    // Upsert courts
+    // Insert new courts / update existing courts
     if (courts.length > 0) {
-      const rows = courts.map(c => ({
-        ...(c.id ? { id: c.id } : {}),
-        place_id: id,
-        sport: c.sport as Database['public']['Enums']['sport_type'],
-        surface: c.surface ?? null,
-        quantity: c.quantity ?? null,
-        notes: c.notes ?? null,
-      }))
-      const { error } = await adminSupabase.from('courts').upsert(rows)
-      if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+      const newCourts = courts.filter(c => !c.id)
+      const existingCourts = courts.filter(c => c.id)
+
+      if (newCourts.length > 0) {
+        const rows = newCourts.map(c => ({
+          place_id: id,
+          sport: c.sport as Database['public']['Enums']['sport_type'],
+          surface: c.surface ?? null,
+          quantity: c.quantity ?? null,
+          notes: c.notes ?? null,
+          custom_sport_name: c.customSportName ?? null,
+        }))
+        const { error } = await adminSupabase.from('courts').insert(rows)
+        if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+      }
+
+      for (const c of existingCourts) {
+        const { error } = await adminSupabase
+          .from('courts')
+          .update({
+            sport: c.sport as Database['public']['Enums']['sport_type'],
+            surface: c.surface ?? null,
+            quantity: c.quantity ?? null,
+            notes: c.notes ?? null,
+            custom_sport_name: c.customSportName ?? null,
+          })
+          .eq('id', c.id!)
+        if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+      }
     }
   }
 
