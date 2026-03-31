@@ -17,12 +17,25 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: 'basketball-koeln',
+    title: 'Die besten Basketballplätze in Köln',
+    description: 'Deutzer Werft, Grüngürtel, Zoobrücke, Pionierpark, Lohsepark  – die besten kostenlosen Basketballplätze in Köln',
+    category: 'city',
+    date: '2026-03-30',
+    tag: 'Köln',
+    sportType: 'Basketball',
+    author: 'OpenSportMap',
+    coverEmoji: '🏀',
+    coverImage: '/blog/koeln_basketball_deutzer-rheinufer.jpg',
+    coverGradient: 'from-blue-500 to-indigo-600',
+  },
+  {
     slug: 'fussball-muenchen',
     title: 'Die besten Bolzplätze in München',
     description: 'Olypmiastadt München – die besten kostenlosen Bolzplätze in München',
     category: 'city',
-    date: '2026-03-30',
-    tag: 'münchen',
+    date: '2026-03-27',
+    tag: 'München',
     sportType: 'Fußball',
     author: 'OpenSportMap',
     coverEmoji: '⚽',

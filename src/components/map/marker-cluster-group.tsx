@@ -72,7 +72,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
         spiderfyOnMaxZoom: true,
         removeOutsideVisibleBounds: true,
         iconCreateFunction: createClusterIcon,
-        disableClusteringAtZoom: 15,
+        disableClusteringAtZoom: 14,
       })
       map.addLayer(clusterGroupRef.current)
     }

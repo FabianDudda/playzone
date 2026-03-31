@@ -5,12 +5,20 @@ import { Card, CardContent } from '@/components/ui/card'
 import Link from 'next/link'
 
 
-
 const CHANGELOG = [
+  {
+    version: '0.3.3-alpha',
+    date: '31.03.2026',
+    current: true,
+    items: [
+      'start clustering one zoom level later',
+      'added pwa app install for android',
+    ],
+  },
   {
     version: '0.3.2-alpha',
     date: '30.03.2026',
-    current: true,
+    current: false,
     items: [
       'admin: fix edit sport types for places in pending places tab',
       'add field for other sport types',

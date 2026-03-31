@@ -7,6 +7,32 @@ import SportPlaceImage from '../_components/sport-place-image'
 
 // Placeholder content per slug
 const postContent: Record<string, React.ReactNode> = {
+  'basketball-koeln': (
+    <div className="space-y-4 [&>h3+p]:!mt-0 [&>p+div]:!mt-2 text-sm text-muted-foreground leading-relaxed">
+      <p>Als Austragungsort der Basketball-EM 2022 hat Köln eine Vielzahl an kostenlosen und öffentlichen Basketballplätzen zu bieten. In diesem Beitrag stellen wir euch fünf der besten Basketballplätze vor.</p>
+
+      <h3 className="font-semibold text-foreground">Basketball an der Deutzer Werft direkt am Rhein</h3>
+      <p>Dieser Spot ist einer der beliebtesten für alle Kölner Basketballer, daher findet man hier immer Mitspieler. Er bietet ein großes Spielfeld mit zwei Körben sowie einen zusätzlichen Halbfeldbereich.</p>
+      <SportPlaceImage name="Bolzplatz Agrippinaufer in der Kölner Südstadt" location="Köln-Südstadt" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Öffentlich" image="/blog/koeln_basketball_deutzer-rheinufer.jpg" mapUrl="/?place=2061f231-108f-45a0-915d-e83b6b4c79f6" />
+
+      <h3 className="font-semibold text-foreground">Basketballplatz im Pionierpark</h3>
+      <p>Der Basketballplatz im Pionierpark wurde erst 2025 eröffnet und ist daher noch in einem sehr guten Zustand. Hier findest du außerdem noch eine Calisthenics-Anlage und eine große Grünfläche. </p>
+      <SportPlaceImage name="Bolzplatz Heckweg in Köln-Nippes" location="Köln-Nippes" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Kostenlos" image="/blog/koeln_basketball_calisthenic_pionerpark.jpg" mapUrl="/?place=91ba0f77-3ff6-41b4-8bbd-941532ade48e" />
+
+      <h3 className="font-semibold text-foreground">Basketballplatz im Grüngürtel</h3>
+      <p>Dieser Spot mitten im Grüngürtel gilt ebenfalls als einer der beliebtesten Basketballplätze in Köln und überzeugt durch seine zentrale Lage. Mit insgesamt vier Körben, einem Full Court und zwei Half Courts sind verschiedene Spielmöglichkeiten gegeben. In direkter Nähe befindet sich zudem ein kostenloser Tennisplatz, eine Calisthenics-Anlage und mehrere Tischtennisplatten.</p>
+      <SportPlaceImage name="Bolzplatz Bergisch Gladbacher Straße" location="Köln-Mülheim" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Familie" image="/blog/koeln_basketball_gruenguertel.jpeg" mapUrl="/?place=965e02c7-8cf7-4f66-8d01-70387e69f885"/>
+
+      <h3 className="font-semibold text-foreground">Basketball im Lohsepark</h3>
+      <p>Der Basketballplatz im Lohsepark bietet ein komplettes Spielfeld. Insgesamt gibt es zwei Bereiche: ein Full Court für Spiele im 5-gegen-5 mit zwei Körben sowie einen Half Court mit drei Körben, darunter auch niedrigere Varianten für Kinder. Die Umgebung mit Fußballplatz, Fitnessbereich und Tischtennis sorgt zusätzlich für eine vielseitige Nutzung des Areals.</p>
+      <SportPlaceImage name="Bolzplatz Manstedter Weg in Köln-Lindenthal" location="Köln-Lindenthal" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Öffentlich" image="/blog/koeln_multisport_lohsepark.png" mapUrl="/?place=f0d88600-a99e-4254-a417-78b020dc78e8 "/>
+
+      <h3 className="font-semibold text-foreground">Basketballplatz unter der Zoobrücke</h3>
+      <p>Der Basketballplatz unter der Zoobrücke hat einen Vorteil. Durch die Überdachung kann hier auch bei schlechtem Wetter gespielt werden. Die eingezäunte Anlage erinnert an klassische Streetball-Courts und schafft eine besondere Atmosphäre. Das Spielfeld ist gut gepflegt, mit klaren Markierungen und zwei Metallkörben auf einem Full Court sowie einem zusätzlichen, niedrigeren Korb daneben. Aufgrund der begrenzten Größe eignet sich der Platz eher für kleinere Spiele wie 3-gegen-3 oder höchstens 4-gegen-4.</p>
+      <SportPlaceImage name="Fußballplatz mit Stadionflair auf den Jahnwiesen" location="Köln-Müngersdorf" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Park" image="/blog/koeln_basketball_zoobruecke.jpg" mapUrl="/?place=f409ff25-61d2-4a69-b557-24e6d5fa3897"/>
+   
+    </div>
+  ),
   'fussball-muenchen': (
     <div className="space-y-4 [&>h3+p]:!mt-0 [&>p+div]:!mt-2 text-sm text-muted-foreground leading-relaxed">
       <p>München als ehemaliger Gastgeber der Olympischen Spiele hat viele kostenlosen Bolzplätzen zu bieten. In diesem Beitrag stellen wir euch fünf der besten Bolzplätze vor.</p>
