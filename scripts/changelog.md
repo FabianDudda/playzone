@@ -1,0 +1,1 @@
+- admin dashboard: add function to delete image

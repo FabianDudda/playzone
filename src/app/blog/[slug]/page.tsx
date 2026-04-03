@@ -7,29 +7,55 @@ import SportPlaceImage from '../_components/sport-place-image'
 
 // Placeholder content per slug
 const postContent: Record<string, React.ReactNode> = {
+  'skatepark-koeln': (
+    <div className="space-y-4 [&>h3+p]:!mt-0 [&>p+div]:!mt-2 text-sm text-muted-foreground leading-relaxed">
+      <p>Köln hat ein vielfältiges Angebot an Skateparks im ganzen Stadtgebiet. In diesem Beitrag stellen wir euch fünf der besten Skateparks vor.</p>
+
+      <h3 className="font-semibold text-foreground">Skatepark KAP 686 am Rhein</h3>
+      <p>Der Skatepark KAP686 ist ein bekannter Spot in Köln, der auch überregional und international viele Skater*innen anzieht. Auf rund 2.000 m² bietet die beleuchtete Anlage ideale Bedingungen für Streetskating mit abwechslungsreichen Elementen wie Curbs, Banks und Manual Pads. Direkt am Rhein gelegen, überzeugt der Platz nicht nur durch seine Architektur, sondern auch durch seine besondere Atmosphäre. Regelmäßige Events und die enge Zusammenarbeit mit der Skate-Community machen ihn zu einem wichtigen Treffpunkt der Szene.</p>
+      <SportPlaceImage name="Skatepark KAP 686 am Rhein" location="Köln-Südstadt" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Öffentlich" image="/blog/koeln_skatepark_kap686-am-rhein.jpg" mapUrl="/?place=6d300d83-5a40-44b0-a3af-cfeda8b42bb0" />
+
+      <h3 className="font-semibold text-foreground">Skatepark Lohserampe im Lohsepark</h3>
+      <p>Die Lohserampe in Köln befindet sich im Grüngürtel an der Inneren Kanalstraße und liegt eingebettet in einer kleinen, von begrünten Hügeln umgebenen Senke mit amphitheaterartiger Atmosphäre. Die Anlage bietet eine vielseitige Miniramp mit unterschiedlichen Höhen, Transition und Pool-Elementen sowie ergänzende Street-Features wie Quarter und Curb. Als öffentlich zugänglicher Spot ist sie frei nutzbar und gilt als einer der beliebtesten Treffpunkte für Skater in der Stadt. </p>
+      <SportPlaceImage name="Skatepark Lohserampe im Lohsepark" location="Köln-Nippes" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Kostenlos" image="/blog/koeln_skatepark_lohserampe.png" mapUrl="/?place=de65c417-c986-4340-96aa-0edc6af71354" />
+
+      <h3 className="font-semibold text-foreground">Skatepark unter der Zoobrücke</h3>
+      <p>Unter der Zoobrücke in Köln befindet sich dieser Skatepark direkt am Rhein. Die Anlage bietet vielfältige Obstacles und genug Platz für Skateboarder, BMX-Fahrer, Scooter und Inline-Skater. Dank der Überdachung kann man hier auch bei schlechtem Wetter fahren, ohne dass es schnell zu eng wird. Außerdem befindet sich direkt daneben noch ein Basketballplatz.</p>
+      <SportPlaceImage name="Skatepark unter der Zoobrücke" location="Köln-Mülheim" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Familie" image="/blog/koeln_skatepark_zoobruecke.jpg" mapUrl="/?place=73fe1505-8882-4cfb-9976-905659c9dc58"/>
+
+      <h3 className="font-semibold text-foreground">Skatepark im Lentpark</h3>
+      <p>Der Skatepark im Lentpark ist ein rund 800 m² großer Betonpark mit vielseitigen Street- und Transition-Elementen. Neben Rails, Curbs und Manual Pads sorgen auch Banks, Quarterpipes und urbane Setups für abwechslungsreiche Lines. Besonders angenehm ist die Lage: Umgeben von vielen Bäumen bietet der Spot selbst an heißen Tagen ausreichend Schatten und lädt zu entspannten Sessions für Skater und BMX-Fahrer ein.</p>
+      <SportPlaceImage name="Skatepark im Lentpark" location="Köln-Agnesviertel" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Öffentlich" image="/blog/koeln_skatepark_lentpark.png" mapUrl="/?place=1ccd18bc-0fe3-4cfe-a450-9e619c05c312"/>
+
+      <h3 className="font-semibold text-foreground">Skatepark im Vorgebirgspark</h3>
+      <p>Der Skatepark im Vorgebirgspark ist eher kompakt, bietet aber genau die richtigen Features zum Üben. Neben Beton-Curbs und kleineren Street-Elementen sticht vor allem die vertikale Pipe hervor, die sich perfekt für Old-School-Wallrides eignet.</p>
+      <SportPlaceImage name="Skatepark im Vorgebirgspark" location="Köln-Raderberg" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Park" image="/blog/koeln_skatepark_vorgebirgspark.png" mapUrl="/?place=4b19f9f6-2a36-4921-94cb-67c5bf86df1b"/>
+   
+    </div>
+  ),
   'basketball-koeln': (
     <div className="space-y-4 [&>h3+p]:!mt-0 [&>p+div]:!mt-2 text-sm text-muted-foreground leading-relaxed">
       <p>Als Austragungsort der Basketball-EM 2022 hat Köln eine Vielzahl an kostenlosen und öffentlichen Basketballplätzen zu bieten. In diesem Beitrag stellen wir euch fünf der besten Basketballplätze vor.</p>
 
       <h3 className="font-semibold text-foreground">Basketball an der Deutzer Werft direkt am Rhein</h3>
       <p>Dieser Spot ist einer der beliebtesten für alle Kölner Basketballer, daher findet man hier immer Mitspieler. Er bietet ein großes Spielfeld mit zwei Körben sowie einen zusätzlichen Halbfeldbereich.</p>
-      <SportPlaceImage name="Bolzplatz Agrippinaufer in der Kölner Südstadt" location="Köln-Südstadt" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Öffentlich" image="/blog/koeln_basketball_deutzer-rheinufer.jpg" mapUrl="/?place=2061f231-108f-45a0-915d-e83b6b4c79f6" />
+      <SportPlaceImage name="Basketball an der Deutzer Werft direkt am Rhein" location="Köln-Deutz" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Öffentlich" image="/blog/koeln_basketball_deutzer-rheinufer.jpg" mapUrl="/?place=2061f231-108f-45a0-915d-e83b6b4c79f6" />
 
       <h3 className="font-semibold text-foreground">Basketballplatz im Pionierpark</h3>
       <p>Der Basketballplatz im Pionierpark wurde erst 2025 eröffnet und ist daher noch in einem sehr guten Zustand. Hier findest du außerdem noch eine Calisthenics-Anlage und eine große Grünfläche. </p>
-      <SportPlaceImage name="Bolzplatz Heckweg in Köln-Nippes" location="Köln-Nippes" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Kostenlos" image="/blog/koeln_basketball_calisthenic_pionerpark.jpg" mapUrl="/?place=91ba0f77-3ff6-41b4-8bbd-941532ade48e" />
+      <SportPlaceImage name="Basketballplatz im Pionierpark" location="Köln-Südstadt" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Kostenlos" image="/blog/koeln_basketball_calisthenic_pionerpark.jpg" mapUrl="/?place=91ba0f77-3ff6-41b4-8bbd-941532ade48e" />
 
       <h3 className="font-semibold text-foreground">Basketballplatz im Grüngürtel</h3>
       <p>Dieser Spot mitten im Grüngürtel gilt ebenfalls als einer der beliebtesten Basketballplätze in Köln und überzeugt durch seine zentrale Lage. Mit insgesamt vier Körben, einem Full Court und zwei Half Courts sind verschiedene Spielmöglichkeiten gegeben. In direkter Nähe befindet sich zudem ein kostenloser Tennisplatz, eine Calisthenics-Anlage und mehrere Tischtennisplatten.</p>
-      <SportPlaceImage name="Bolzplatz Bergisch Gladbacher Straße" location="Köln-Mülheim" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Familie" image="/blog/koeln_basketball_gruenguertel.jpeg" mapUrl="/?place=965e02c7-8cf7-4f66-8d01-70387e69f885"/>
+      <SportPlaceImage name="Basketballplatz im Grüngürtel" location="Köln-Belgisches Viertel" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Familie" image="/blog/koeln_basketball_gruenguertel.jpeg" mapUrl="/?place=965e02c7-8cf7-4f66-8d01-70387e69f885"/>
 
       <h3 className="font-semibold text-foreground">Basketball im Lohsepark</h3>
       <p>Der Basketballplatz im Lohsepark bietet ein komplettes Spielfeld. Insgesamt gibt es zwei Bereiche: ein Full Court für Spiele im 5-gegen-5 mit zwei Körben sowie einen Half Court mit drei Körben, darunter auch niedrigere Varianten für Kinder. Die Umgebung mit Fußballplatz, Fitnessbereich und Tischtennis sorgt zusätzlich für eine vielseitige Nutzung des Areals.</p>
-      <SportPlaceImage name="Bolzplatz Manstedter Weg in Köln-Lindenthal" location="Köln-Lindenthal" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Öffentlich" image="/blog/koeln_multisport_lohsepark.png" mapUrl="/?place=f0d88600-a99e-4254-a417-78b020dc78e8 "/>
+      <SportPlaceImage name="Basketball im Lohsepark" location="Köln-Nippes" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Öffentlich" image="/blog/koeln_multisport_lohsepark.png" mapUrl="/?place=f0d88600-a99e-4254-a417-78b020dc78e8 "/>
 
       <h3 className="font-semibold text-foreground">Basketballplatz unter der Zoobrücke</h3>
       <p>Der Basketballplatz unter der Zoobrücke hat einen Vorteil. Durch die Überdachung kann hier auch bei schlechtem Wetter gespielt werden. Die eingezäunte Anlage erinnert an klassische Streetball-Courts und schafft eine besondere Atmosphäre. Das Spielfeld ist gut gepflegt, mit klaren Markierungen und zwei Metallkörben auf einem Full Court sowie einem zusätzlichen, niedrigeren Korb daneben. Aufgrund der begrenzten Größe eignet sich der Platz eher für kleinere Spiele wie 3-gegen-3 oder höchstens 4-gegen-4.</p>
-      <SportPlaceImage name="Fußballplatz mit Stadionflair auf den Jahnwiesen" location="Köln-Müngersdorf" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Park" image="/blog/koeln_basketball_zoobruecke.jpg" mapUrl="/?place=f409ff25-61d2-4a69-b557-24e6d5fa3897"/>
+      <SportPlaceImage name="Basketballplatz unter der Zoobrücke" location="Köln-Mülheim" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Park" image="/blog/koeln_basketball_zoobruecke.jpg" mapUrl="/?place=f409ff25-61d2-4a69-b557-24e6d5fa3897"/>
    
     </div>
   ),
@@ -39,25 +65,25 @@ const postContent: Record<string, React.ReactNode> = {
 
       <h3 className="font-semibold text-foreground">Bolzplatz im Amphionpark</h3>
       <p>Im Amphionpark findest du diesen Bolzplatz im kleinen Feld. Daneben befindet sich noch ein Basketballplatz und ein größeres Fußballfeld. Ein moderner Spot für alle, die Fußball oder Basketball spielen wollen!</p>
-      <SportPlaceImage name="Bolzplatz Agrippinaufer in der Kölner Südstadt" location="Köln-Südstadt" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Öffentlich" image="/blog/muenchen_fußball_amphionpark.png" mapUrl="/?place=03d2cb6a-e88f-4d16-b98c-59b0f88a3c1b" />
+      <SportPlaceImage name="Bolzplatz im Amphionpark" location="München-Moosach" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Öffentlich" image="/blog/muenchen_fußball_amphionpark.png" mapUrl="/?place=03d2cb6a-e88f-4d16-b98c-59b0f88a3c1b" />
 
       <h3 className="font-semibold text-foreground">Bolzplatz Neuhofen</h3>
       <p>Dieser Bolzplatz in Neuhofen ist perfekt für eine spontane Runde Fußball. Außerdem findest du hier ein Volleyballfeld, einen Basketballplatz.</p>
-      <SportPlaceImage name="Bolzplatz Heckweg in Köln-Nippes" location="Köln-Nippes" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Kostenlos" image="/blog/muenchen_fußball_neuhofen.png" mapUrl="/?place=0411fc8c-0da0-4bed-8bc5-d3f6403756fa" />
+      <SportPlaceImage name="Bolzplatz Neuhofen" location="München-Sendling" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Kostenlos" image="/blog/muenchen_fußball_neuhofen.png" mapUrl="/?place=0411fc8c-0da0-4bed-8bc5-d3f6403756fa" />
 
       <h3 className="font-semibold text-foreground">Bolzplatz Keilberthstraße</h3>
       <p>Dieser Bolzplatz am Stadtrand im Grünen bietet neben zwei Fußballtoren auch Platz zum Basketball spielen. </p>
-      <SportPlaceImage name="Bolzplatz Bergisch Gladbacher Straße" location="Köln-Mülheim" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Familie" image="/blog/muenchen_fußball_keilberthstraße.png" mapUrl="/?place=d3aa4f72-8ebe-40df-b171-a7a72122607a"/>
+      <SportPlaceImage name="Bolzplatz Keilberthstraße" location="München-Teufelshart" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Familie" image="/blog/muenchen_fußball_keilberthstraße.png" mapUrl="/?place=d3aa4f72-8ebe-40df-b171-a7a72122607a"/>
 
       <h3 className="font-semibold text-foreground">Bolzplatz Alter Botanischer Garten</h3>
       <p>Dieser kleine Bolzplatz im Alten Botanischen Garten ist zentral im Stadtzentrum gelegen. 
       </p>
-      <SportPlaceImage name="Bolzplatz Manstedter Weg in Köln-Lindenthal" location="Köln-Lindenthal" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Öffentlich" image="/blog/muenchen_fußball_alter-botanischer-garten.png" mapUrl="/?place=0765788c-77b0-49fc-ac36-a19ec3958f2a"/>
+      <SportPlaceImage name="Bolzplatz Alter Botanischer Garten" location="München-Maxvorstadt" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Öffentlich" image="/blog/muenchen_fußball_alter-botanischer-garten.png" mapUrl="/?place=0765788c-77b0-49fc-ac36-a19ec3958f2a"/>
 
       <h3 className="font-semibold text-foreground">Bolzplatz Panzerwiese</h3>
       <p>Dieser Bolzplatz direkt an der Panzerwiese wurde 2025 renoviert. Neben dem Fußballplatz gibt es auch einen Basketballplatz und einen Skatepark.
       </p>
-      <SportPlaceImage name="Fußballplatz mit Stadionflair auf den Jahnwiesen" location="Köln-Müngersdorf" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Park" image="/blog/muenchen_fußball_panzerwiese.png" mapUrl="/?place=97a01c1c-356b-4e3b-8e95-04cc75a00b69"/>
+      <SportPlaceImage name="Bolzplatz Panzerwiese" location="München-Nordhaide" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Park" image="/blog/muenchen_fußball_panzerwiese.png" mapUrl="/?place=97a01c1c-356b-4e3b-8e95-04cc75a00b69"/>
    
     </div>
   ),

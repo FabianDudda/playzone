@@ -17,6 +17,19 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: 'skatepark-koeln',
+    title: 'Die besten Skateparks in Köln',
+    description: 'Südstadt, Lohsepark, Zoobrücke, Lentpark, Vorgebirgspark  – die besten kostenlosen Skateparks in Köln',
+    category: 'city',
+    date: '2026-04-03',
+    tag: 'Köln',
+    sportType: 'Skatepark',
+    author: 'OpenSportMap',
+    coverEmoji: '🛹',
+    coverImage: '/blog/koeln_skatepark_kap686-am-rhein.jpg',
+    coverGradient: 'from-blue-500 to-indigo-600',
+  },
+  {
     slug: 'basketball-koeln',
     title: 'Die besten Basketballplätze in Köln',
     description: 'Deutzer Werft, Grüngürtel, Zoobrücke, Pionierpark, Lohsepark  – die besten kostenlosen Basketballplätze in Köln',

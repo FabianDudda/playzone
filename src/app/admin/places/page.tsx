@@ -100,6 +100,7 @@ interface PlaceEditForm {
   contact_email: string
   contact_website: string
   opening_hours: OpeningHours | null
+  image_url: string | null
 }
 
 function getSourceLabel(source: string | null | undefined): string {
@@ -211,6 +212,7 @@ function PlaceCard({
     district: '', county: '', state: '', country: '',
     latitude: '', longitude: '', sports: [], courts: [],
     contact_phone: '', contact_email: '', contact_website: '',
+    image_url: null,
   })
   const queryClient = useQueryClient()
   const { toast } = useToast()
@@ -293,6 +295,7 @@ function PlaceCard({
       contact_email: place.contact_email || '',
       contact_website: place.contact_website || '',
       opening_hours: (place.opening_hours as OpeningHours | null) ?? null,
+      image_url: place.image_url || null,
     })
     setIsEditing(true)
   }
@@ -330,6 +333,7 @@ function PlaceCard({
           contact_email: editForm.contact_email || null,
           contact_website: editForm.contact_website || null,
           opening_hours: (editForm.place_type === 'verein' || editForm.place_type === 'schule') ? editForm.opening_hours : null,
+          image_url: editForm.image_url,
         }),
       })
       if (!res.ok) throw new Error('Save failed')
@@ -578,12 +582,37 @@ function PlaceCard({
           )}
 
           {/* Image */}
-          {place.image_url && (
-            <img
-              src={place.image_url}
-              alt={place.name}
-              className="w-full h-40 object-cover rounded-lg"
-            />
+          {isEditing ? (
+            editForm.image_url ? (
+              <div className="relative">
+                <img
+                  src={editForm.image_url}
+                  alt={place.name}
+                  className="w-full h-40 object-cover rounded-lg"
+                />
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  className="absolute top-2 right-2"
+                  onClick={() => setEditForm(prev => ({ ...prev, image_url: null }))}
+                >
+                  <Trash2 className="h-3 w-3 mr-1" />
+                  Delete Image
+                </Button>
+              </div>
+            ) : (
+              <div className="w-full h-16 bg-muted rounded-lg flex items-center justify-center text-sm text-muted-foreground">
+                No image
+              </div>
+            )
+          ) : (
+            place.image_url && (
+              <img
+                src={place.image_url}
+                alt={place.name}
+                className="w-full h-40 object-cover rounded-lg"
+              />
+            )
           )}
 
           {!isEditing ? (
