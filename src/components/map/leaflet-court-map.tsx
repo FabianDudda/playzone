@@ -209,29 +209,122 @@ function FavoritesButtonHandler({ onClick }: { onClick: () => void }) {
   return null
 }
 
-// Component to handle user location with modern bottom-right positioning
-function UserLocationHandler({ onLocationFound }: { onLocationFound: (lat: number, lng: number) => void }) {
+// Component to handle user location with auto-locate, follow mode, and accuracy circle
+function UserLocationHandler({
+  onLocationFound,
+  autoLocate,
+}: {
+  onLocationFound: (lat: number, lng: number) => void
+  autoLocate: boolean
+}) {
   const map = useMap()
   const callbackRef = useRef(onLocationFound)
   useEffect(() => { callbackRef.current = onLocationFound }, [onLocationFound])
 
+  const followModeRef = useRef(false)
+  const watchIdRef = useRef<number | null>(null)
+  const accuracyCircleRef = useRef<L.Circle | null>(null)
+  const buttonRef = useRef<HTMLButtonElement | null>(null)
+
+  // Auto-locate silently on mount when no explicit center is provided
   useEffect(() => {
-    const findUserLocation = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const lat = position.coords.latitude
-            const lng = position.coords.longitude
-            callbackRef.current(lat, lng)
-            map.setView([lat, lng], 14)
-          },
-          (error) => {
-            console.warn('Could not get user location:', error)
-            alert('Could not access your location. Please check your browser settings and try again.')
-          }
-        )
+    if (!autoLocate || !navigator.geolocation) return
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude: lat, longitude: lng, accuracy } = position.coords
+        callbackRef.current(lat, lng)
+        map.setView([lat, lng], 14)
+        try { localStorage.setItem('user-location-cache', JSON.stringify({ lat, lng })) } catch {}
+        if (!accuracyCircleRef.current) {
+          accuracyCircleRef.current = L.circle([lat, lng], {
+            radius: accuracy,
+            color: '#4F9CF9',
+            fillColor: '#4F9CF9',
+            fillOpacity: 0.15,
+            weight: 1,
+          }).addTo(map)
+        }
+      },
+      () => {} // silent failure — user can still tap the button manually
+    )
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map])
+
+  // Cleanup watch and circle on unmount
+  useEffect(() => {
+    return () => {
+      if (watchIdRef.current !== null) navigator.geolocation?.clearWatch(watchIdRef.current)
+      if (accuracyCircleRef.current) { accuracyCircleRef.current.remove(); accuracyCircleRef.current = null }
+    }
+  }, [])
+
+  // Button + follow mode setup (DOM created once)
+  useEffect(() => {
+    const setButtonActive = (active: boolean) => {
+      buttonRef.current?.classList.toggle('location-button--follow', active)
+    }
+
+    const stopWatch = () => {
+      if (watchIdRef.current !== null) {
+        navigator.geolocation?.clearWatch(watchIdRef.current)
+        watchIdRef.current = null
       }
     }
+
+    const exitFollow = () => {
+      followModeRef.current = false
+      setButtonActive(false)
+      stopWatch()
+    }
+
+    const updateUI = (lat: number, lng: number, accuracy: number) => {
+      callbackRef.current(lat, lng)
+      try { localStorage.setItem('user-location-cache', JSON.stringify({ lat, lng })) } catch {}
+      if (accuracyCircleRef.current) {
+        accuracyCircleRef.current.setLatLng([lat, lng])
+        accuracyCircleRef.current.setRadius(accuracy)
+      } else {
+        accuracyCircleRef.current = L.circle([lat, lng], {
+          radius: accuracy,
+          color: '#4F9CF9',
+          fillColor: '#4F9CF9',
+          fillOpacity: 0.15,
+          weight: 1,
+        }).addTo(map)
+      }
+    }
+
+    const handleClick = () => {
+      if (!navigator.geolocation) return
+
+      if (followModeRef.current) {
+        exitFollow()
+        return
+      }
+
+      // Locate once, fly to position, then enter live follow mode
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude: lat, longitude: lng, accuracy } = pos.coords
+          updateUI(lat, lng, accuracy)
+          map.setView([lat, lng], Math.max(map.getZoom(), 14))
+
+          followModeRef.current = true
+          setButtonActive(true)
+          watchIdRef.current = navigator.geolocation.watchPosition(
+            (p) => {
+              updateUI(p.coords.latitude, p.coords.longitude, p.coords.accuracy)
+              if (followModeRef.current) map.setView([p.coords.latitude, p.coords.longitude], map.getZoom())
+            },
+            () => exitFollow()
+          )
+        },
+        (error) => console.warn('Could not get user location:', error)
+      )
+    }
+
+    // Exit follow mode when user manually pans
+    map.on('dragstart', exitFollow)
 
     let bottomRightStack = map.getContainer().querySelector('.map-control-bottom-right-stack') as HTMLElement
     if (!bottomRightStack) {
@@ -240,7 +333,8 @@ function UserLocationHandler({ onLocationFound }: { onLocationFound: (lat: numbe
     }
 
     const locationContainer = L.DomUtil.create('div', 'leaflet-control-location-modern')
-    const locationButton = L.DomUtil.create('button', 'location-button map-control-button', locationContainer)
+    const locationButton = L.DomUtil.create('button', 'location-button map-control-button', locationContainer) as HTMLButtonElement
+    buttonRef.current = locationButton
     locationButton.innerHTML = `
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
@@ -250,12 +344,18 @@ function UserLocationHandler({ onLocationFound }: { onLocationFound: (lat: numbe
     locationButton.title = 'Find my location'
 
     L.DomEvent.on(locationButton, 'click', L.DomEvent.preventDefault)
-    L.DomEvent.on(locationButton, 'click', findUserLocation)
+    L.DomEvent.on(locationButton, 'click', handleClick)
     L.DomEvent.disableClickPropagation(locationContainer)
     L.DomEvent.disableScrollPropagation(locationContainer)
     bottomRightStack.appendChild(locationContainer)
 
-    return () => { locationContainer.remove() }
+    return () => {
+      map.off('dragstart', exitFollow)
+      locationContainer.remove()
+      buttonRef.current = null
+      stopWatch()
+      if (accuracyCircleRef.current) { accuracyCircleRef.current.remove(); accuracyCircleRef.current = null }
+    }
   }, [map])
 
   return null
@@ -533,10 +633,24 @@ export default function LeafletCourtMap({
   }, [])
 
 
-  // Default center (Germany)
+  // Default center (Germany) — prefer explicit prop, then localStorage cache, then country default
   const defaultCenter: [number, number] = [51.165691, 10.451526]
-  const mapCenter: [number, number] = initialCenter ? [initialCenter.lat, initialCenter.lng] : defaultCenter
-  const mapZoom = initialZoom ?? (initialCenter ? 13 : 7)
+  let mapCenter: [number, number] = defaultCenter
+  let mapZoom = initialZoom ?? 7
+  if (initialCenter) {
+    mapCenter = [initialCenter.lat, initialCenter.lng]
+    mapZoom = initialZoom ?? 13
+  } else if (!initialArea) {
+    try {
+      const cached = localStorage.getItem('user-location-cache')
+      if (cached) {
+        const { lat, lng } = JSON.parse(cached)
+        mapCenter = [lat, lng]
+        mapZoom = initialZoom ?? 13
+      }
+    } catch {}
+  }
+  const autoLocate = !initialCenter && !initialArea
 
   // Get current layer configuration (memoized)
   const currentLayer = useMemo(() => MAP_LAYERS[currentLayerId] || MAP_LAYERS[DEFAULT_LAYER_ID], [currentLayerId])
@@ -638,7 +752,7 @@ export default function LeafletCourtMap({
           />
           
           {/* User location control */}
-          <UserLocationHandler onLocationFound={handleLocationFound} />
+          <UserLocationHandler onLocationFound={handleLocationFound} autoLocate={autoLocate} />
 
           {/* Fly to target when selected from favorites */}
           {flyToTarget && <FlyToHandler target={flyToTarget} onDone={() => setFlyToTarget(null)} />}

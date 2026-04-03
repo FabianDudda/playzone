@@ -134,6 +134,16 @@
   /* Uses base .map-control-button styles */
 }
 
+.location-button--follow {
+  background: #3b82f6;
+  color: white;
+}
+
+.location-button--follow:hover {
+  background: #2563eb;
+  color: white;
+}
+
 /* Layer Toggle Button */
 .leaflet-control-layer-toggle {
   /* Positioning handled by parent stack */

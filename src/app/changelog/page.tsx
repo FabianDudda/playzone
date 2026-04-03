@@ -7,9 +7,20 @@ import Link from 'next/link'
 
 const CHANGELOG = [
   {
+    version: '0.3.4-alpha',
+    date: '03.04.2026',
+    current: true,
+    items: [
+      'implement zoom to specific area function',
+      'implement map widget for external website',
+      'use geolocation api to show user current map area',
+      'admin dashboard functions',
+    ],
+  },
+  {
     version: '0.3.3-alpha',
     date: '31.03.2026',
-    current: true,
+    current: false,
     items: [
       'start clustering one zoom level later',
       'added pwa app install for android',

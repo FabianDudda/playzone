@@ -1,3 +1,0 @@
-- implement zoom to specific area function
-- implement map widget for external website
-- admin dashboard functions

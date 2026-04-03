@@ -240,7 +240,6 @@ export default function WidgetMap({ courts, area, siteUrl }: WidgetMapProps) {
         style={{ height: '100%', width: '100%' }}
         scrollWheelZoom={true}
         zoomControl={false}
-        attributionControl={false}
       >
         <TileLayer
           attribution={tileLayer.attribution}

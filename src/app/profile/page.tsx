@@ -108,7 +108,7 @@ export default function ProfilePage() {
         <a href="https://www.instagram.com/opensportmap/" target="_blank" rel="noopener noreferrer" className="flex justify-center text-muted-foreground hover:text-foreground transition-colors">
           <Instagram className="h-5 w-5" />
         </a>
-        <Link href="/changelog" className="block text-center text-xs text-muted-foreground hover:text-foreground transition-colors">App Version 0.3.3-alpha</Link>
+        <Link href="/changelog" className="block text-center text-xs text-muted-foreground hover:text-foreground transition-colors">App Version 0.3.4-alpha</Link>
       </div>
     )
   }
@@ -221,7 +221,7 @@ export default function ProfilePage() {
         <a href="https://www.instagram.com/opensportmapde/" target="_blank" rel="noopener noreferrer" className="flex justify-center text-muted-foreground hover:text-foreground transition-colors">
           <Instagram className="h-5 w-5" />
         </a>
-        <Link href="/changelog" className="block text-center text-xs text-muted-foreground hover:text-foreground transition-colors">App Version 0.3.3-alpha</Link>
+        <Link href="/changelog" className="block text-center text-xs text-muted-foreground hover:text-foreground transition-colors">App Version 0.3.4-alpha</Link>
       </div>
     </div>
   )
