@@ -7,6 +7,32 @@ import SportPlaceImage from '../_components/sport-place-image'
 
 // Placeholder content per slug
 const postContent: Record<string, React.ReactNode> = {
+  'basketball-hamburg': (
+    <div className="space-y-4 [&>h3+p]:!mt-0 [&>p+div]:!mt-2 text-sm text-muted-foreground leading-relaxed">
+      <p>Hamburg hat viele kostenlose Basketballplätze in der Stadt. In diesem Beitrag stellen wir euch fünf der besten Basketballplätze vor.</p>
+
+      <h3 className="font-semibold text-foreground">Basketball im Sportpark Außenmühle</h3>
+      <p>Der Sportpark Außenmühle im Harburger Stadtpark ist ein großzügiger Freizeit- und Erholungsbereich in Wilstorf. Auf rund 27.000 Quadratmetern bietet die modernisierte Anlage vielseitige Möglichkeiten für Sport und Bewegung – von Basketball über Beachvolleyball bis hin zu Calisthenics. Sie wird sowohl von Schulen und Vereinen als auch von Freizeitsportlern genutzt und lädt Menschen jeden Alters zur aktiven Erholung ein.</p>
+      <SportPlaceImage name="Skatepark KAP 686 am Rhein" location="Hamburg-Wilstorf" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Öffentlich" image="/blog/hamburg_basketball_sportpark-außenmühle.jpg" mapUrl="/?place=f4ea9126-5814-4c60-8d1b-ca0f1a3abab8" />
+
+      <h3 className="font-semibold text-foreground">Basketball im Inselpark </h3>
+      <p>Mitten im Inselpark findest du die Welt der Bewegung. Einen vielseitigen Outdoor-Bereich für Sport und Bewegung. Egal ob Fußball, Basketball, Skaten oder Klettern. Hier kannst du dich kostenlos austoben und neue Übungen ausprobieren. Perfekt für alle, die draußen trainieren und dabei etwas Abwechslung wollen!</p>
+      <SportPlaceImage name="Skatepark Lohserampe im Lohsepark" location="Hamburg-Wilhelmsburg" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Kostenlos" image="/blog/hamburg_basketball_inselpark.jpg" mapUrl="/?place=8f204a5e-407c-4316-b7ba-a676f441eda1" />
+
+      <h3 className="font-semibold text-foreground">Basketball im Antonipark</h3>
+      <p>Der Park Fiction im Antonipark verbindet urbanes Lebensgefühl mit kreativem Stadtdesign. Zwischen ikonischen Plastikpalmen und entspannten Holzliegen entsteht eine Atmosphäre, die fast an einen Streetball-Spot wie Venice Beach erinnert – ideal für spontane Basketball-Matches mit Freunden. Gleichzeitig lädt der Ort mit seinem freien Blick auf die Elbe zum Verweilen ein und steht sinnbildlich für bürgerschaftliches Engagement zur Erhaltung von Freiräumen.</p>
+      <SportPlaceImage name="Skatepark unter der Zoobrücke" location="Hamburg-Altona Altstadt" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Familie" image="/blog/hamburg_basketball_park-fiction.jpg" mapUrl="/?place=26f88b9b-2c4a-4dd2-9f5f-be3d52af0b6e"/>
+
+      <h3 className="font-semibold text-foreground">Basketball am Haus der Jugend</h3>
+      <p>Diesen überdachten Basketballplatz findest du unter dem Haus der Jugend. Abends ist er beleuchtet.</p>
+      <SportPlaceImage name="Skatepark im Lentpark" location="Hamburg-Wilhelmsburg" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Öffentlich" image="/blog/hamburg_basketball_haus-der-jugend.jpg" mapUrl="/?place=a2aed8d4-1b0c-4872-8c8f-b1e37c420b8f"/>
+
+      <h3 className="font-semibold text-foreground">Basketball im Lohmühlenpark</h3>
+      <p>Der Basketballplatz im Lohmühlenpark ist ein beliebter Treffpunkt für Sportbegeisterte, besonders attraktiv durch die Möglichkeit, dank Flutlicht auch am Abend zu spielen. Der Lohmühlenpark liegt eingebettet zwischen kleinen Läden, Gastronomie und der nahegelegenen Außenalster. </p>
+      <SportPlaceImage name="Skatepark im Vorgebirgspark" location="Hamburg-St Georg" emoji="⚽" gradient="from-blue-500 to-indigo-600" badge="Park" image="/blog/hamburg_basketball_lohmühlenpark.jpg" mapUrl="/?place=decbd142-2574-4182-bf12-5a60fa4843a4"/>
+   
+    </div>
+  ),
   'skatepark-koeln': (
     <div className="space-y-4 [&>h3+p]:!mt-0 [&>p+div]:!mt-2 text-sm text-muted-foreground leading-relaxed">
       <p>Köln hat ein vielfältiges Angebot an Skateparks im ganzen Stadtgebiet. In diesem Beitrag stellen wir euch fünf der besten Skateparks vor.</p>

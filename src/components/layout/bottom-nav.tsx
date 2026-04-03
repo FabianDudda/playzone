@@ -20,6 +20,8 @@ export default function BottomNav() {
 
   const addActive = pathname === '/new'
 
+  if (pathname.startsWith('/widget')) return null
+
   return (
     <>
       <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background">

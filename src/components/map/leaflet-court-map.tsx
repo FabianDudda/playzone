@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useMemo, useCallback } from 'react'
 import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet'
-import { Court, SportType, PlaceWithCourts, PlaceMarker } from '@/lib/supabase/types'
+import { Court, SportType, PlaceWithCourts, PlaceMarker, Area } from '@/lib/supabase/types'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 // import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
@@ -19,6 +19,7 @@ import { MAP_LAYERS, DEFAULT_LAYER_ID, createTileLayer, getSavedLayerPreference,
 import { getDistanceText } from '@/lib/utils/distance'
 import L from 'leaflet'
 import MarkerClusterGroup from './marker-cluster-group'
+import AreaBanner from './area-banner'
 
 // Import Leaflet CSS
 import 'leaflet/dist/leaflet.css'
@@ -53,6 +54,7 @@ interface LeafletCourtMapProps {
   trackPosition?: boolean
   embedded?: boolean
   isLoading?: boolean
+  initialArea?: Area
 }
 
 // Component to handle map clicks
@@ -98,6 +100,24 @@ function MapPositionTracker({ enabled }: { enabled: boolean }) {
       sessionStorage.setItem('map-position', JSON.stringify({ lat: center.lat, lng: center.lng, zoom }))
     },
   })
+  return null
+}
+
+
+// Fit map to a named area's bounding box on first render
+function FitBoundsHandler({ area }: { area: Area }) {
+  const map = useMap()
+  useEffect(() => {
+    map.fitBounds(
+      [[area.min_lat, area.min_lng], [area.max_lat, area.max_lng]],
+      { animate: false }
+    )
+    // Strip ?area param so back-button and session storage work cleanly
+    const url = new URL(window.location.href)
+    url.searchParams.delete('area')
+    window.history.replaceState(null, '', url.toString())
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return null
 }
 
@@ -420,6 +440,7 @@ export default function LeafletCourtMap({
   trackPosition = false,
   embedded = false,
   isLoading = false,
+  initialArea,
 }: LeafletCourtMapProps) {
   const { user, profile } = useAuth()
   const [selectedCourt, setSelectedCourt] = useState<PlaceMarker | null>(null)
@@ -541,6 +562,9 @@ export default function LeafletCourtMap({
           {/* Track map position for "Hinzufügen" nav */}
           <MapPositionTracker enabled={trackPosition} />
 
+          {/* Fit to named area bounds on first load */}
+          {initialArea && <FitBoundsHandler area={initialArea} />}
+
           {/* Court markers - with optional clustering */}
           {useMemo(() => {
             if (enableClustering && courts.length > 10) {
@@ -640,6 +664,9 @@ export default function LeafletCourtMap({
           )}
         </MapContainer>
       
+      {/* Area banner — shown when map was opened via ?area= QR link */}
+      {initialArea && <AreaBanner area={initialArea} />}
+
       {/* Loading overlay */}
       {isLoading && (
         <div className="absolute inset-0 z-[1000] flex flex-col items-center justify-center gap-3 bg-background/60 backdrop-blur-sm">

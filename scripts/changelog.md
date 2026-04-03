@@ -1,1 +1,3 @@
-- admin dashboard: add function to delete image
+- implement zoom to specific area function
+- implement map widget for external website
+- admin dashboard functions

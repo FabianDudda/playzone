@@ -853,3 +853,16 @@ export interface EventWithDetails extends Event {
   place?: PlaceWithCourts
   creator?: Pick<Profile, 'name' | 'avatar'>
 }
+
+export interface Area {
+  id: string
+  slug: string
+  name: string
+  description: string | null
+  min_lat: number
+  max_lat: number
+  min_lng: number
+  max_lng: number
+  is_active: boolean
+  created_at: string
+}

@@ -192,6 +192,7 @@ function PlaceCard({
   isSelectable = false,
   isSelected = false,
   onToggleSelection,
+  forceExpanded = false,
 }: {
   place: PlaceWithCourts
   onApprove: (id: string) => void
@@ -200,11 +201,11 @@ function PlaceCard({
   isSelectable?: boolean
   isSelected?: boolean
   onToggleSelection?: () => void
+  forceExpanded?: boolean
 }) {
   const [isExpanded, setIsExpanded] = useState(false)
+  const expanded = forceExpanded || isExpanded
   const [isEditing, setIsEditing] = useState(false)
-  const [rejectionReason, setRejectionReason] = useState('')
-  const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [editForm, setEditForm] = useState<PlaceEditForm>({
     name: '', description: '', place_type: '',
@@ -227,7 +228,7 @@ function PlaceCard({
       )
       return res.json()
     },
-    enabled: isExpanded && hasCoords,
+    enabled: expanded && hasCoords,
     staleTime: 60000,
   })
   const nearbyPlaces: { id: string; name: string; moderation_status: string; distance: number }[] =
@@ -263,7 +264,7 @@ function PlaceCard({
   }
 
   const handleToggleExpand = () => {
-    if (isExpanded && isEditing) setIsEditing(false)
+    if (expanded && isEditing) setIsEditing(false)
     setIsExpanded(prev => !prev)
   }
 
@@ -352,13 +353,6 @@ function PlaceCard({
     }
   }
 
-  const handleReject = () => {
-    if (!rejectionReason.trim()) return
-    onReject(place.id, rejectionReason)
-    setRejectionReason('')
-    setIsRejectDialogOpen(false)
-  }
-
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
     toast({ title: 'Copied', description: text })
@@ -444,13 +438,13 @@ function PlaceCard({
             onClick={handleToggleExpand}
             className="shrink-0"
           >
-            {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-            <span className="ml-1 text-xs hidden sm:inline">{isExpanded ? 'Collapse' : 'View Details'}</span>
+            {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            <span className="ml-1 text-xs hidden sm:inline">{expanded ? 'Collapse' : 'View Details'}</span>
           </Button>
         </div>
       </CardHeader>
 
-      {isExpanded && (
+      {expanded && (
         <CardContent className="space-y-4 pt-0">
           {/* Actions */}
           {isEditing && (
@@ -495,44 +489,10 @@ function PlaceCard({
                 Edit
               </Button>
 
-              <Dialog open={isRejectDialogOpen} onOpenChange={setIsRejectDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button variant="destructive" className="flex-1">
-                    <XCircle className="h-4 w-4 mr-2" />
-                    Reject
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Reject Place</DialogTitle>
-                    <DialogDescription>
-                      Please provide a reason for rejecting "{place.name}". This will be shown to the user.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-2">
-                    <Label htmlFor="rejection-reason">Rejection Reason</Label>
-                    <Textarea
-                      id="rejection-reason"
-                      placeholder="Enter reason for rejection..."
-                      value={rejectionReason}
-                      onChange={(e) => setRejectionReason(e.target.value)}
-                      rows={3}
-                    />
-                  </div>
-                  <DialogFooter>
-                    <Button variant="outline" onClick={() => setIsRejectDialogOpen(false)}>
-                      Cancel
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      onClick={handleReject}
-                      disabled={!rejectionReason.trim()}
-                    >
-                      Reject Place
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+              <Button variant="destructive" className="flex-1" onClick={() => onReject(place.id, '')}>
+                <XCircle className="h-4 w-4 mr-2" />
+                Reject
+              </Button>
             </div>
           )}
 
@@ -1147,6 +1107,7 @@ function PlacesList({ status }: { status: ModerationStatus }) {
   const [selectedPlaces, setSelectedPlaces] = useState<Set<string>>(new Set())
   const [isBulkMode, setIsBulkMode] = useState(false)
   const [page, setPage] = useState(0)
+  const [expandAll, setExpandAll] = useState(false)
 
   // Submitter filter state
   const [submitterFilter, setSubmitterFilter] = useState<'all' | 'admin' | 'user'>('all')
@@ -1453,6 +1414,14 @@ function PlacesList({ status }: { status: ModerationStatus }) {
                 {isBulkMode ? 'Exit Bulk Mode' : 'Bulk Select'}
               </Button>
 
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setExpandAll(prev => !prev)}
+              >
+                {expandAll ? <><ChevronUp className="h-4 w-4 mr-1" /> Collapse All</> : <><ChevronDown className="h-4 w-4 mr-1" /> Expand All</>}
+              </Button>
+
               {isBulkMode && (
                 <div className="flex items-center gap-2">
                   <input
@@ -1519,6 +1488,7 @@ function PlacesList({ status }: { status: ModerationStatus }) {
           isSelectable={isBulkMode}
           isSelected={selectedPlaces.has(place.id)}
           onToggleSelection={() => togglePlaceSelection(place.id)}
+          forceExpanded={expandAll}
         />
       ))}
 

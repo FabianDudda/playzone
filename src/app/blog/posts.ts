@@ -17,6 +17,19 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: 'basketball-hamburg',
+    title: 'Die besten Basketballplätze in Hamburg',
+    description: 'Sportpark Außenmühle, Lohmühlenpark, Inselpark, Antonipark, Haus der Jugend   – die besten kostenlosen Basketballplätze in Hamburg',
+    category: 'city',
+    date: '2026-04-03',
+    tag: 'Hamburg',
+    sportType: 'Basketball',
+    author: 'OpenSportMap',
+    coverEmoji: '🏀',
+    coverImage: '/blog/hamburg_basketball_sportpark-außenmühle.jpg',
+    coverGradient: 'from-blue-500 to-indigo-600',
+  },
+  {
     slug: 'skatepark-koeln',
     title: 'Die besten Skateparks in Köln',
     description: 'Südstadt, Lohsepark, Zoobrücke, Lentpark, Vorgebirgspark  – die besten kostenlosen Skateparks in Köln',

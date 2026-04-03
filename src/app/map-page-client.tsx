@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/components/providers/auth-provider'
 import { useProgressivePlaces } from '@/hooks/use-progressive-places'
-import { SportType, PlaceMarker } from '@/lib/supabase/types'
+import { SportType, PlaceMarker, Area } from '@/lib/supabase/types'
 import { PlaceType } from '@/lib/utils/sport-utils'
 
 const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map'), {
@@ -18,7 +18,7 @@ const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map
   ),
 })
 
-function MapPage() {
+function MapPage({ initialArea }: { initialArea?: Area | null }) {
   const { user, loading } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -77,6 +77,7 @@ function MapPage() {
         initialCenter={savedPosition ? { lat: savedPosition.lat, lng: savedPosition.lng } : undefined}
         initialZoom={savedPosition?.zoom}
         initialPlaceId={initialPlaceId}
+        initialArea={initialArea ?? undefined}
         trackPosition={true}
         isLoading={isInitialLoading}
       />
@@ -92,10 +93,10 @@ function MapPage() {
   )
 }
 
-export default function MapPageClient() {
+export default function MapPageClient({ initialArea }: { initialArea?: Area | null }) {
   return (
     <Suspense>
-      <MapPage />
+      <MapPage initialArea={initialArea} />
     </Suspense>
   )
 }

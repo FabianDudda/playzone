@@ -2,9 +2,10 @@ import { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { sportNames } from '@/lib/utils/sport-utils'
 import MapPageClient from './map-page-client'
+import { Area } from '@/lib/supabase/types'
 
 interface PageProps {
-  searchParams: Promise<{ place?: string }>
+  searchParams: Promise<{ place?: string; area?: string }>
 }
 
 async function getPlaceForSeo(placeId: string) {
@@ -62,8 +63,21 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   }
 }
 
+async function getAreaBySlug(slug: string): Promise<Area | null> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('areas')
+    .select('*')
+    .eq('slug', slug)
+    .eq('is_active', true)
+    .single()
+  return data ?? null
+}
+
 export default async function CourtsPage({ searchParams }: PageProps) {
-  const { place: placeId } = await searchParams
+  const { place: placeId, area: areaSlug } = await searchParams
+
+  const area = areaSlug ? await getAreaBySlug(areaSlug) : null
 
   let jsonLd: object | null = null
 
@@ -101,7 +115,7 @@ export default async function CourtsPage({ searchParams }: PageProps) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       )}
-      <MapPageClient />
+      <MapPageClient initialArea={area} />
     </>
   )
 }

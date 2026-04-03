@@ -10,7 +10,8 @@ import {
   BarChart3,
   Shield,
   ArrowLeft,
-  MessageSquare
+  MessageSquare,
+  QrCode
 } from 'lucide-react'
 
 function AdminSidebar() {
@@ -40,6 +41,12 @@ function AdminSidebar() {
       href: '/admin/feedback',
       icon: MessageSquare,
       description: 'User feedback & bug reports'
+    },
+    {
+      label: 'Areas',
+      href: '/admin/areas',
+      icon: QrCode,
+      description: 'QR code map areas'
     },
     {
       label: 'Settings',
