@@ -80,7 +80,7 @@ export default function ProfilePage() {
                   {isIOS && iosInstructionsOpen && (
                     <div className="flex items-start gap-3 px-4 py-3 bg-muted/30 text-sm text-muted-foreground">
                       <Share className="h-4 w-4 mt-0.5 shrink-0" />
-                      <p>Tippe auf <span className="font-medium text-foreground">Teilen</span> in Safari und dann auf <span className="font-medium text-foreground">»Zum Home-Bildschirm«</span></p>
+                      <p>Tippe auf die <span className="font-medium text-foreground">drei Punkte</span>, dann auf <span className="font-medium text-foreground">Teilen</span> und anschließend auf <span className="font-medium text-foreground">»Zum Home-Bildschirm«</span></p>
                     </div>
                   )}
                 </>
@@ -191,7 +191,7 @@ export default function ProfilePage() {
                   {isIOS && iosInstructionsOpen && (
                     <div className="flex items-start gap-3 px-4 py-3 bg-muted/30 text-sm text-muted-foreground">
                       <Share className="h-4 w-4 mt-0.5 shrink-0" />
-                      <p>Tippe auf <span className="font-medium text-foreground">Teilen</span> in Safari und dann auf <span className="font-medium text-foreground">»Zum Home-Bildschirm«</span></p>
+                      <p>Tippe auf die <span className="font-medium text-foreground">drei Punkte</span>, dann auf <span className="font-medium text-foreground">Teilen</span> und anschließend auf <span className="font-medium text-foreground">»Zum Home-Bildschirm«</span></p>
                     </div>
                   )}
                 </>

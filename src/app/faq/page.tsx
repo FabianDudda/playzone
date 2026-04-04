@@ -88,14 +88,13 @@ const FAQ_CATEGORIES: FaqCategory[] = [
           'Stuttgart', 'Düsseldorf', 'Leipzig', 'Dortmund', 'Essen',
           'Bremen', 'Dresden', 'Hannover', 'Nürnberg', 'Duisburg',
           'Bonn', 'Dormagen', 'Ennepe-Ruhr-Kreis', 'Gelsenkirchen',
-          'Norderstedt', 'Münster',
+          'Norderstedt', 'Münster', 'Bielefeld', 'Freiburg', 'Wien',
         ],
-        link: { href: '/daten', label: 'Alle Datenquellen ansehen' },
       },
       {
         question: 'Woher stammen die Daten?',
-        answer: 'Die Daten stammen aus offiziellen Open-Data-Quellen verschiedener Städte (u. a. Bonn, Köln, Dormagen, Dortmund) sowie aus Beiträgen der Community. Alle Quellen und Lizenzen findest du auf der Seite „Daten".',
-        link: { href: '/daten', label: 'Zur Daten-Übersicht' },
+        answer: 'Die Daten stammen aus offiziellen Open-Data-Quellen verschiedener Städte sowie aus Beiträgen der Community.',
+        link: { href: '/daten', label: 'Zur den Datenlizenzen' },
       },
       {
         question: 'Wie aktuell sind die Sportplatzdaten?',

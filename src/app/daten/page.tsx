@@ -7,73 +7,75 @@ import Link from 'next/link'
 const DATA_SOURCES = [
   {
     source: 'Dormagen',
-    url: 'https://opendata.rhein-kreis-neuss.de/explore/dataset/dormagen-spiel-bolzplaetze/information/?disjunctive.art=&sort=art&flg=de-de&disjunctive.ortsteil&disjunctive.art_des_angebotes',
     license: 'Datenlizenz Deutschland – Zero – Version 2.0',
   },
   {
     source: 'Stadt Köln',
-    url: 'https://www.offenedaten-koeln.de/dataset/spiel-und-sportpl%C3%A4tze-k%C3%B6ln',
     license: 'Datenlizenz Deutschland – Zero – Version 2.0',
   },
   {
     source: 'Stadt Bonn',
-    url: 'https://opendata.bonn.de/dataset/sportst%C3%A4tten-sportanlagen',
     license: 'Creative Commons CC Zero License',
   },
   {
     source: 'Stadt Dortmund',
-    url: 'https://open-data.dortmund.de/explore/dataset/spielplatze/information/?disjunctive.ptl_anschl&disjunctive.p_email&disjunctive.i_zusinfo&disjunctive.i_beschr&disjunctive.ubz&disjunctive.statbezibe&disjunctive.stadtbezbe&disjunctive.sozialrbe&disjunctive.aktionsrbz&disjunctive.aktionsrnr&disjunctive.sozialrnr&disjunctive.stadtbeznr&disjunctive.statbeznr&disjunctive.ubznr&disjunctive.objektname&disjunctive.strasse&disjunctive.ort&disjunctive.objektart&disjunctive.link&disjunctive.objektkate&disjunctive.objektzusa',
     license: 'Datenlizenz Deutschland – Zero – Version 2.0',
   },
   {
     source: 'Ennepe-Ruhr-Kreis',
-    url: 'https://opendata.ruhr/dataset/spiel-und-bolzplatze-des-ennepe-ruhr-kreises',
     license: 'Datenlizenz Deutschland – Zero – Version 2.0',
   },
   {
     source: 'Stadt Gelsenkirchen',
-    url: 'https://gelsenkirchen.opendata.ruhr/dataset/stadt-gelsenkirchen-infrastrukturdaten-spielflache',
     license: 'Datenlizenz Deutschland – Zero – Version 2.0',
   },
   {
     source: 'Stadtverwaltung Norderstedt',
-    url: 'https://opendata.schleswig-holstein.de/dataset/bolzplatze',
     license: 'Datenlizenz Deutschland – Zero – Version 2.0',
   },
   {
     source: 'Stadt Münster',
-    url: 'https://open.nrw/dataset/tischtennisplatten-in-munster-ms',
     license: 'Datenlizenz Deutschland – Zero – Version 2.0',
   },
   {
     source: 'OpenStreetMap',
-    url: 'https://www.openstreetmap.org/copyright',
     license: 'Open Database-Lizenz ',
   },
   {
     source: 'Freie und Hansestadt Hamburg, Behörde für Umwelt und Energie',
-    url: 'https://suche.transparenz.hamburg.de/dataset/spielplaetze-hamburg',
     license: 'Datenlizenz Deutschland Namensnennung 2.0',
   },
   {
     source: 'Stadt München',
-    url: 'https://opendata.muenchen.de/dataset/oeffentliche-spielplaetze-muenchen',
     license: 'Datenlizenz Deutschland Namensnennung 2.0',
   },
   {
     source: 'Stadt Dusiburg',
-    url: 'https://geoportal.duisburg.de/arcgisserver/rest/services/OpenData/OpenData/MapServer/29/query?where=OBJECTID+IS+NOT+NULL&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&f=pjson',
     license: 'Datenlizenz Deutschland Namensnennung 2.0',
   },
   {
     source: 'Stadt Dresden',
-    url: 'https://opendata.dresden.de/informationsportal/?open=1&result=289C064F-9263-4E07-9E1E-F9FDC0C643F0#app/mainpage////',
     license: 'Datenlizenz Deutschland Namensnennung 2.0',
   },
   {
     source: 'Stadt Wien',
-    url: 'https://www.data.gv.at/datasets/71084c02-973d-4544-b804-7ed82bd53027?locale=de',
     license: 'Namensnennung 4.0 International',
+  },
+  {
+    source: 'Stadt Essen',
+    license: 'Datenlizenz Deutschland Namensnennung 2.0',
+  },
+  {
+    source: 'Stadt Bielefeld',
+    license: 'Namensnennung 4.0 International',
+  },
+  {
+    source: 'Stadt Freiburg',
+    license: 'Datenlizenz Deutschland Namensnennung 2.0',
+  },
+  {
+    source: 'Stadt Berlin',
+    license: 'Datenlizenz Deutschland Namensnennung 2.0',
   },
 
 ]
@@ -93,7 +95,7 @@ export default function DatenquellenPage() {
 
         <Card>
           <CardHeader className="p-4 pb-2">
-            <CardTitle className="text-base">Importierte Datensätze</CardTitle>
+            <CardTitle className="text-base">Daten</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             <div className="divide-y">
@@ -136,7 +138,7 @@ export default function DatenquellenPage() {
               <h2 className="font-semibold mb-1">Nutzerbeiträge</h2>
               <p className="text-muted-foreground">
                 Sportplätze und Orte werden von der Community eingereicht und von unserem Team
-                geprüft. Alle Beiträge stehen unter der Creative Commons Namensnennung 4.0 International Lizenz (CC BY 4.0).
+                geprüft. Alle Rechte vorbehalten. Die Inhalte dürfen ohne ausdrückliche Genehmigung nicht verwendet, kopiert oder weiterverbreitet werden.
               </p>
             </div>
           </CardContent>

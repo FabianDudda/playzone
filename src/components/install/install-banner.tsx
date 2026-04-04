@@ -39,8 +39,7 @@ export default function InstallBanner() {
         ) : (
           <p className="flex-1 text-sm leading-snug">
             <span className="font-medium">Als App speichern: </span>
-            Tippe auf <Share className="inline h-3.5 w-3.5 align-text-bottom" /> und dann{' '}
-            <span className="font-medium">»Zum Home-Bildschirm«</span>
+            Tippe auf <span className="font-medium">···</span>, dann auf <Share className="inline h-3.5 w-3.5 align-text-bottom" /> <span className="font-medium">Teilen</span> und dann auf <span className="font-medium">»Zum Home-Bildschirm«</span>
           </p>
         )}
         <button
