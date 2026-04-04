@@ -7,6 +7,7 @@ import { useAuth } from '@/components/providers/auth-provider'
 import { useProgressivePlaces } from '@/hooks/use-progressive-places'
 import { SportType, PlaceMarker, Area } from '@/lib/supabase/types'
 import { PlaceType } from '@/lib/utils/sport-utils'
+import InstallBanner from '@/components/install/install-banner'
 
 const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map'), {
   ssr: false,
@@ -81,6 +82,7 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
         trackPosition={true}
         isLoading={isInitialLoading}
       />
+      <InstallBanner />
       {isLoadingMore && (
         <div className="pointer-events-none absolute bottom-16 left-1/2 z-[1000] -translate-x-1/2">
           <div className="flex items-center gap-2 rounded-full bg-background/80 px-3 py-1.5 text-xs font-medium text-foreground shadow backdrop-blur-sm">

@@ -13,11 +13,26 @@ declare global {
   }
 }
 
+function detectIOS() {
+  if (typeof navigator === 'undefined') return false
+  return /iPad|iPhone|iPod/.test(navigator.userAgent)
+}
+
+function detectStandalone() {
+  if (typeof window === 'undefined') return false
+  return (
+    window.matchMedia('(display-mode: standalone)').matches ||
+    (navigator as Navigator & { standalone?: boolean }).standalone === true
+  )
+}
+
 export function useInstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(() => {
     if (typeof window === 'undefined') return null
     return window.__installPrompt ?? null
   })
+  const [isStandalone] = useState(detectStandalone)
+  const isIOS = detectIOS()
 
   useEffect(() => {
     const handler = (e: Event) => {
@@ -47,5 +62,10 @@ export function useInstallPrompt() {
     setDeferredPrompt(null)
   }
 
-  return { canInstall: !!deferredPrompt, promptInstall }
+  return {
+    canInstall: !!deferredPrompt,
+    isIOS,
+    isStandalone,
+    promptInstall,
+  }
 }

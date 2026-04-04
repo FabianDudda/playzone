@@ -1,10 +1,11 @@
 'use client'
 
+import { useState } from 'react'
 import { useAuth } from '@/components/providers/auth-provider'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { User, Mail, Trophy, Calendar, Edit2, Plus, Shield, LogOut, ChevronRight, MessageSquare, Info, Bell, Instagram, BookOpen, Sparkles, Download, Handshake, Rss } from 'lucide-react'
+import { User, Mail, Trophy, Calendar, Edit2, Plus, Shield, LogOut, ChevronRight, MessageSquare, Info, Bell, Instagram, BookOpen, Sparkles, Download, Handshake, Rss, Share } from 'lucide-react'
 import { useInstallPrompt } from '@/hooks/use-install-prompt'
 import Link from 'next/link'
 
@@ -20,7 +21,8 @@ const NAV_ITEMS = [
 
 export default function ProfilePage() {
   const { user, profile, loading, isAdmin, signOut } = useAuth()
-  const { canInstall, promptInstall } = useInstallPrompt()
+  const { canInstall, isIOS, isStandalone, promptInstall } = useInstallPrompt()
+  const [iosInstructionsOpen, setIosInstructionsOpen] = useState(false)
 
   if (loading) {
     return (
@@ -65,12 +67,23 @@ export default function ProfilePage() {
         <Card>
           <CardContent className="p-0">
             <div className="flex flex-col divide-y">
-              {canInstall && (
-                <button onClick={promptInstall} className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left w-full">
-                  <Download className="h-4 w-4 text-muted-foreground" />
-                  <span>Als App installieren</span>
-                  <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
-                </button>
+              {!isStandalone && (canInstall || isIOS) && (
+                <>
+                  <button
+                    onClick={canInstall ? promptInstall : () => setIosInstructionsOpen(o => !o)}
+                    className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left w-full"
+                  >
+                    <Download className="h-4 w-4 text-muted-foreground" />
+                    <span>Als App installieren</span>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
+                  </button>
+                  {isIOS && iosInstructionsOpen && (
+                    <div className="flex items-start gap-3 px-4 py-3 bg-muted/30 text-sm text-muted-foreground">
+                      <Share className="h-4 w-4 mt-0.5 shrink-0" />
+                      <p>Tippe auf <span className="font-medium text-foreground">Teilen</span> in Safari und dann auf <span className="font-medium text-foreground">»Zum Home-Bildschirm«</span></p>
+                    </div>
+                  )}
+                </>
               )}
               <Link href="/blog" className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left">
                 <Rss className="h-4 w-4 text-muted-foreground" />
@@ -165,12 +178,23 @@ export default function ProfilePage() {
         <Card>
           <CardContent className="p-0">
             <div className="flex flex-col divide-y">
-              {canInstall && (
-                <button onClick={promptInstall} className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left w-full">
-                  <Download className="h-4 w-4 text-muted-foreground" />
-                  <span>Als App installieren</span>
-                  <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
-                </button>
+              {!isStandalone && (canInstall || isIOS) && (
+                <>
+                  <button
+                    onClick={canInstall ? promptInstall : () => setIosInstructionsOpen(o => !o)}
+                    className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left w-full"
+                  >
+                    <Download className="h-4 w-4 text-muted-foreground" />
+                    <span>Als App installieren</span>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
+                  </button>
+                  {isIOS && iosInstructionsOpen && (
+                    <div className="flex items-start gap-3 px-4 py-3 bg-muted/30 text-sm text-muted-foreground">
+                      <Share className="h-4 w-4 mt-0.5 shrink-0" />
+                      <p>Tippe auf <span className="font-medium text-foreground">Teilen</span> in Safari und dann auf <span className="font-medium text-foreground">»Zum Home-Bildschirm«</span></p>
+                    </div>
+                  )}
+                </>
               )}
               <Link href="/blog" className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left">
                 <Rss className="h-4 w-4 text-muted-foreground" />
