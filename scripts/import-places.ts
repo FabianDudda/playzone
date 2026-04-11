@@ -36,19 +36,29 @@ interface JsonPlace {
   fußballplätze?: number | null
   platzbelag_fußball?: string | null
   basketballplätze?: number | null
+  platzbelag_basketball?: string | null
   beachvolleyballplätze?: number | null
+  platzbelag_beachvolleyball?: string | null
   bouleplätze?: number | null
+  platzbelag_boule?: string | null
   skatepark?: number | null
+  platzbelag_skatepark?: string | null
   tischtennisplatten?: number | null
+  platzbelag_tischtennis?: string | null
   tennisplätze?: number | null
   platzbelag_tennis?: string | null
   hockeyplätze?: number | null
+  platzbelag_hockey?: string | null
   volleyballplätze?: number | null
+  platzbelag_volleyball?: string | null
   klettern?: number | null
   calisthenics?: number | null
+  platzbelag_calisthenics?: string | null
   laufbahnen?: number | null
   padelplätze?: number | null
+  platzbelag_padel?: string | null
   badmintonplätze?: number | null
+  platzbelag_badminton?: string | null
   schwimmplätze?: number | null
   schachfelder?: number | null
   geometry: {
@@ -74,117 +84,67 @@ function transformJsonPlace(jsonPlace: JsonPlace, sourceFilename: string) {
   
   // Map each sport field to court data
   if (jsonPlace.fußballplätze && jsonPlace.fußballplätze > 0) {
-    courts.push({
-      sport: 'fußball',
-      quantity: jsonPlace.fußballplätze,
-      surface: jsonPlace.platzbelag_fußball || undefined
-    })
+    courts.push({ sport: 'fußball', quantity: jsonPlace.fußballplätze, surface: jsonPlace.platzbelag_fußball || undefined })
   }
-  
+
   if (jsonPlace.basketballplätze && jsonPlace.basketballplätze > 0) {
-    courts.push({
-      sport: 'basketball',
-      quantity: jsonPlace.basketballplätze
-    })
+    courts.push({ sport: 'basketball', quantity: jsonPlace.basketballplätze, surface: jsonPlace.platzbelag_basketball || undefined })
   }
-  
+
   if (jsonPlace.beachvolleyballplätze && jsonPlace.beachvolleyballplätze > 0) {
-    courts.push({
-      sport: 'beachvolleyball',
-      quantity: jsonPlace.beachvolleyballplätze
-    })
+    courts.push({ sport: 'beachvolleyball', quantity: jsonPlace.beachvolleyballplätze, surface: jsonPlace.platzbelag_beachvolleyball || undefined })
   }
-  
+
   if (jsonPlace.bouleplätze && jsonPlace.bouleplätze > 0) {
-    courts.push({
-      sport: 'boule',
-      quantity: jsonPlace.bouleplätze
-    })
+    courts.push({ sport: 'boule', quantity: jsonPlace.bouleplätze, surface: jsonPlace.platzbelag_boule || undefined })
   }
-  
+
   if (jsonPlace.skatepark && jsonPlace.skatepark > 0) {
-    courts.push({
-      sport: 'skatepark',
-      quantity: jsonPlace.skatepark
-    })
+    courts.push({ sport: 'skatepark', quantity: jsonPlace.skatepark, surface: jsonPlace.platzbelag_skatepark || undefined })
   }
-  
+
   if (jsonPlace.tischtennisplatten && jsonPlace.tischtennisplatten > 0) {
-    courts.push({
-      sport: 'tischtennis',
-      quantity: jsonPlace.tischtennisplatten
-    })
+    courts.push({ sport: 'tischtennis', quantity: jsonPlace.tischtennisplatten, surface: jsonPlace.platzbelag_tischtennis || undefined })
   }
-  
+
   if (jsonPlace.tennisplätze && jsonPlace.tennisplätze > 0) {
-    courts.push({
-      sport: 'tennis',
-      quantity: jsonPlace.tennisplätze,
-      surface: jsonPlace.platzbelag_tennis || undefined
-    })
+    courts.push({ sport: 'tennis', quantity: jsonPlace.tennisplätze, surface: jsonPlace.platzbelag_tennis || undefined })
   }
-  
+
   if (jsonPlace.volleyballplätze && jsonPlace.volleyballplätze > 0) {
-    courts.push({
-      sport: 'volleyball',
-      quantity: jsonPlace.volleyballplätze
-    })
+    courts.push({ sport: 'volleyball', quantity: jsonPlace.volleyballplätze, surface: jsonPlace.platzbelag_volleyball || undefined })
   }
-  
+
   if (jsonPlace.hockeyplätze && jsonPlace.hockeyplätze > 0) {
-    courts.push({
-      sport: 'hockey',
-      quantity: jsonPlace.hockeyplätze
-    })
+    courts.push({ sport: 'hockey', quantity: jsonPlace.hockeyplätze, surface: jsonPlace.platzbelag_hockey || undefined })
   }
-  
+
   if (jsonPlace.klettern && jsonPlace.klettern > 0) {
-    courts.push({
-      sport: 'klettern',
-      quantity: jsonPlace.klettern
-    })
+    courts.push({ sport: 'klettern', quantity: jsonPlace.klettern })
   }
 
   if (jsonPlace.calisthenics && jsonPlace.calisthenics > 0) {
-    courts.push({
-      sport: 'calisthenics',
-      quantity: jsonPlace.calisthenics
-    })
+    courts.push({ sport: 'calisthenics', quantity: jsonPlace.calisthenics, surface: jsonPlace.platzbelag_calisthenics || undefined })
   }
 
   if (jsonPlace.laufbahnen && jsonPlace.laufbahnen > 0) {
-    courts.push({
-      sport: 'laufen',
-      quantity: jsonPlace.laufbahnen
-    })
+    courts.push({ sport: 'laufen', quantity: jsonPlace.laufbahnen })
   }
 
   if (jsonPlace.padelplätze && jsonPlace.padelplätze > 0) {
-    courts.push({
-      sport: 'padel',
-      quantity: jsonPlace.padelplätze
-    })
+    courts.push({ sport: 'padel', quantity: jsonPlace.padelplätze, surface: jsonPlace.platzbelag_padel || undefined })
   }
 
   if (jsonPlace.badmintonplätze && jsonPlace.badmintonplätze > 0) {
-    courts.push({
-      sport: 'badminton',
-      quantity: jsonPlace.badmintonplätze
-    })
+    courts.push({ sport: 'badminton', quantity: jsonPlace.badmintonplätze, surface: jsonPlace.platzbelag_badminton || undefined })
   }
 
   if (jsonPlace.schwimmplätze && jsonPlace.schwimmplätze > 0) {
-    courts.push({
-      sport: 'schwimmen',
-      quantity: jsonPlace.schwimmplätze
-    })
+    courts.push({ sport: 'schwimmen', quantity: jsonPlace.schwimmplätze })
   }
 
   if (jsonPlace.schachfelder && jsonPlace.schachfelder > 0) {
-    courts.push({
-      sport: 'schach',
-      quantity: jsonPlace.schachfelder
-    })
+    courts.push({ sport: 'schach', quantity: jsonPlace.schachfelder })
   }
 
   // Create the place data (added_by_user will be set later)

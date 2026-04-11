@@ -19,8 +19,8 @@ import { PlaceType, placeTypeLabels, placeTypeIcons } from '@/lib/utils/sport-ut
 import { database } from '@/lib/supabase/database'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { reverseGeocode, AddressComponents } from '@/lib/geocoding'
-import { uploadCourtImage, UploadProgress } from '@/lib/supabase/storage'
-import { MapPin, Plus, Upload, X, Image, Loader2, ArrowLeft, Phone, Mail, Globe } from 'lucide-react'
+import { uploadCourtImage } from '@/lib/supabase/storage'
+import { MapPin, Plus, Upload, X, Image, Loader2, ArrowLeft, Phone, Mail, Globe, Camera } from 'lucide-react'
 import Link from 'next/link'
 
 const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map'), {
@@ -102,10 +102,12 @@ function AddPlacePage() {
   const [address, setAddress] = useState<AddressComponents>({})
   const [isDetectingAddress, setIsDetectingAddress] = useState(false)
   const [addressAutoDetected, setAddressAutoDetected] = useState(false)
-  const [imageFile, setImageFile] = useState<File | null>(null)
-  const [imagePreview, setImagePreview] = useState<string | null>(null)
-  const [isUploadingImage, setIsUploadingImage] = useState(false)
-  const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null)
+  const [imageFiles, setImageFiles] = useState<File[]>([])
+  const [imagePreviews, setImagePreviews] = useState<string[]>([])
+  const [isUploadingImages, setIsUploadingImages] = useState(false)
+  const [uploadStep, setUploadStep] = useState(0)
+
+  const MAX_IMAGES = 5
 
   const [description, setDescription] = useState('')
   const [openingHours, setOpeningHours] = useState<OpeningHours | null>(null)
@@ -131,6 +133,7 @@ function AddPlacePage() {
       contact_email?: string | null
       contact_website?: string | null
       opening_hours?: OpeningHours | null
+      all_images?: { path: string; url: string }[]
     }) => {
       const { data: place, error: placeError } = await database.courts.addCourt({
         name: placeData.name,
@@ -172,6 +175,13 @@ function AddPlacePage() {
           })
         ))
       }
+
+      if (placeData.all_images && placeData.all_images.length > 0) {
+        await Promise.all(placeData.all_images.map((img, i) =>
+          database.community.insertPlaceImage(place.id, img.path, img.url, i === 0, i, placeData.added_by_user)
+        ))
+      }
+
       return place
     },
     onSuccess: () => {
@@ -258,18 +268,24 @@ function AddPlacePage() {
   }
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    if (file.size > 10 * 1024 * 1024) {
-      toast({ title: 'Datei zu groß', description: 'Max. 10MB.', variant: 'destructive' }); return
+    const selected = Array.from(e.target.files || []).slice(0, MAX_IMAGES - imageFiles.length)
+    const valid = selected.filter(f => {
+      if (!f.type.startsWith('image/')) return false
+      if (f.size > 10 * 1024 * 1024) return false
+      return true
+    })
+    if (valid.length < selected.length) {
+      toast({ title: 'Einige Dateien übersprungen', description: 'Nur Bilder bis 10 MB erlaubt.', variant: 'destructive' })
     }
-    if (!file.type.startsWith('image/')) {
-      toast({ title: 'Ungültiger Dateityp', description: 'Bitte Bilddatei auswählen.', variant: 'destructive' }); return
-    }
-    setImageFile(file)
-    const reader = new FileReader()
-    reader.onload = () => setImagePreview(reader.result as string)
-    reader.readAsDataURL(file)
+    setImageFiles(prev => [...prev, ...valid])
+    setImagePreviews(prev => [...prev, ...valid.map(f => URL.createObjectURL(f))])
+    e.target.value = ''
+  }
+
+  const removeImage = (idx: number) => {
+    URL.revokeObjectURL(imagePreviews[idx])
+    setImageFiles(prev => prev.filter((_, i) => i !== idx))
+    setImagePreviews(prev => prev.filter((_, i) => i !== idx))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -294,18 +310,23 @@ function AddPlacePage() {
     }
 
     let imageUrl: string | undefined
-    if (imageFile) {
+    const allUploadedImages: { path: string; url: string }[] = []
+
+    if (imageFiles.length > 0) {
+      setIsUploadingImages(true)
       try {
-        setIsUploadingImage(true)
-        setUploadProgress({ loaded: 0, total: 100, percentage: 0 })
-        const result = await uploadCourtImage(imageFile, p => setUploadProgress(p))
-        imageUrl = result.url
+        for (let i = 0; i < imageFiles.length; i++) {
+          setUploadStep(i + 1)
+          const result = await uploadCourtImage(imageFiles[i])
+          allUploadedImages.push({ path: result.path, url: result.url })
+          if (i === 0) imageUrl = result.url
+        }
       } catch (err) {
         toast({ title: 'Bild-Upload fehlgeschlagen', description: err instanceof Error ? err.message : '', variant: 'destructive' })
         return
       } finally {
-        setIsUploadingImage(false)
-        setUploadProgress(null)
+        setIsUploadingImages(false)
+        setUploadStep(0)
       }
     }
 
@@ -343,7 +364,7 @@ function AddPlacePage() {
         const res = await fetch('/api/guest/submit-place', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(placePayload),
+          body: JSON.stringify({ ...placePayload, all_images: allUploadedImages }),
         })
         const json = await res.json()
         if (!res.ok) throw new Error(json.error || 'Fehler beim Einreichen')
@@ -359,6 +380,7 @@ function AddPlacePage() {
     createCourtMutation.mutate({
       ...placePayload,
       added_by_user: user!.id,
+      all_images: allUploadedImages,
     })
   }
 
@@ -590,28 +612,55 @@ function AddPlacePage() {
           {/* 5. Image */}
           <div className="space-y-2">
             <Label>Platzbild (Optional)</Label>
-            <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-4">
-              {imagePreview ? (
-                <div className="space-y-2">
-                  <div className="relative">
-                    <img src={imagePreview} alt="Court preview" className="w-full h-40 object-cover rounded-lg" />
-                    <Button type="button" variant="destructive" size="icon" className="absolute top-2 right-2" onClick={() => { setImageFile(null); setImagePreview(null) }}>
-                      <X className="h-4 w-4" />
-                    </Button>
+
+            {/* Previews grid */}
+            {imagePreviews.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {imagePreviews.map((src, i) => (
+                  <div key={i} className="relative w-20 h-20 rounded-lg overflow-hidden shrink-0">
+                    <img src={src} alt="" className="w-full h-full object-cover" />
+                    {i === 0 && (
+                      <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-[10px] text-center py-0.5">
+                        Cover
+                      </div>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeImage(i)}
+                      className="absolute top-0.5 right-0.5 bg-black/60 rounded-full p-0.5 text-white"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
                   </div>
-                  <p className="text-xs text-muted-foreground text-center">{imageFile?.name}</p>
-                </div>
-              ) : (
-                <div className="text-center space-y-2">
-                  <Image className="h-10 w-10 mx-auto text-muted-foreground" />
-                  <Button type="button" size="sm" onClick={() => document.getElementById('ap-image-upload')?.click()}>
-                    <Upload className="h-4 w-4 mr-1" />Bild hochladen
-                  </Button>
-                  <Input id="ap-image-upload" type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
-                  <p className="text-xs text-muted-foreground">JPG, PNG, WebP bis 10MB</p>
-                </div>
-              )}
-            </div>
+                ))}
+              </div>
+            )}
+
+            {/* Add photo button */}
+            {imageFiles.length < MAX_IMAGES && (
+              <button
+                type="button"
+                onClick={() => document.getElementById('ap-image-upload')?.click()}
+                className="w-full border-2 border-dashed border-muted-foreground/25 rounded-lg p-4 flex flex-col items-center gap-2 hover:border-primary/40 hover:bg-muted/20 transition-colors"
+              >
+                <Camera className="h-7 w-7 text-muted-foreground/50" />
+                <span className="text-sm text-muted-foreground">
+                  {imagePreviews.length === 0 ? 'Foto hinzufügen' : 'Weiteres Foto hinzufügen'}
+                </span>
+                <span className="text-xs text-muted-foreground/60">
+                  JPG, PNG, WebP · max. 10 MB · bis zu {MAX_IMAGES} Fotos
+                </span>
+              </button>
+            )}
+
+            <Input
+              id="ap-image-upload"
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleImageChange}
+              className="hidden"
+            />
           </div>
 
           {/* 6. Contact */}
@@ -662,17 +711,20 @@ function AddPlacePage() {
           </div>
 
           {/* Submit */}
-          <Button type="submit" className="w-full" disabled={createCourtMutation.isPending || isUploadingImage}>
-            {isUploadingImage ? (
-              <><Loader2 className="h-4 w-4 animate-spin mr-2" />Hochladen... {uploadProgress && `${uploadProgress.percentage.toFixed(0)}%`}</>
+          <Button type="submit" className="w-full" disabled={createCourtMutation.isPending || isUploadingImages}>
+            {isUploadingImages ? (
+              <><Loader2 className="h-4 w-4 animate-spin mr-2" />Fotos hochladen… {uploadStep}/{imageFiles.length}</>
             ) : createCourtMutation.isPending ? (
               <><Loader2 className="h-4 w-4 animate-spin mr-2" />Hinzufügen...</>
             ) : 'Ort hinzufügen'}
           </Button>
 
-          {isUploadingImage && uploadProgress && (
+          {isUploadingImages && imageFiles.length > 0 && (
             <div className="w-full bg-muted rounded-full h-2">
-              <div className="bg-primary h-2 rounded-full transition-all duration-300" style={{ width: `${uploadProgress.percentage}%` }} />
+              <div
+                className="bg-primary h-2 rounded-full transition-all duration-300"
+                style={{ width: `${Math.round((uploadStep / imageFiles.length) * 100)}%` }}
+              />
             </div>
           )}
         </form>

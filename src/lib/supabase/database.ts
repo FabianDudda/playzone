@@ -1355,6 +1355,60 @@ export const database = {
       return data
     },
 
+    // Insert a place image row directly (used when creating a place with multiple images)
+    insertPlaceImage: async (
+      placeId: string,
+      storagePath: string,
+      url: string,
+      isCover: boolean,
+      sortOrder: number,
+      uploadedBy: string | null
+    ) => {
+      const { error } = await (supabase as any)
+        .from('place_images')
+        .insert({ place_id: placeId, storage_path: storagePath, url, is_cover: isCover, sort_order: sortOrder, uploaded_by: uploadedBy })
+      if (error) console.error('Failed to insert place image:', error)
+    },
+
+    // Get all approved images for a place
+    getPlaceImages: async (placeId: string) => {
+      const { data, error } = await (supabase as any)
+        .from('place_images')
+        .select('*')
+        .eq('place_id', placeId)
+        .order('sort_order', { ascending: true })
+
+      if (error) {
+        console.error('Error fetching place images:', error)
+        return []
+      }
+      return data || []
+    },
+
+    // Submit a new image as a community contribution (goes through moderation)
+    submitPlaceImageAdd: async (
+      placeId: string,
+      storagePath: string,
+      url: string,
+      userId: string
+    ) => {
+      const { data, error } = await supabase
+        .from('pending_place_changes')
+        .insert({
+          place_id: placeId,
+          submitted_by: userId,
+          change_type: 'image_add',
+          proposed_data: { storage_path: storagePath, url } as any,
+          current_data: null,
+          status: 'pending',
+        })
+        .select()
+        .single()
+
+      if (error) throw new Error('Failed to submit image: ' + error.message)
+      return data
+    },
+
     // Submit a place edit as community contribution
     submitPlaceImageEdit: async (placeId: string, imageUrl: string, userId: string) => {
       const currentPlace = await database.community.getPlaceForEdit(placeId)
@@ -1451,7 +1505,42 @@ export const database = {
       }
 
       const proposedData = change.proposed_data as any
-      
+
+      // Handle image_add: insert into place_images, sync cover
+      if (change.change_type === 'image_add' && change.place_id) {
+        const { storage_path, url } = proposedData
+
+        const { data: existingImages } = await (supabase as any)
+          .from('place_images')
+          .select('id')
+          .eq('place_id', change.place_id)
+
+        const isCover = !existingImages || existingImages.length === 0
+        const sortOrder = existingImages?.length || 0
+
+        const { error: imageInsertError } = await (supabase as any)
+          .from('place_images')
+          .insert({
+            place_id: change.place_id,
+            storage_path,
+            url,
+            is_cover: isCover,
+            sort_order: sortOrder,
+            uploaded_by: change.submitted_by,
+          })
+
+        if (imageInsertError) {
+          throw new Error('Failed to insert place image: ' + imageInsertError.message)
+        }
+
+        if (isCover) {
+          await supabase
+            .from('places')
+            .update({ image_url: url, updated_at: new Date().toISOString() })
+            .eq('id', change.place_id)
+        }
+      }
+
       // Apply the changes to the place
       if (change.place_id && proposedData.place) {
         const { error: placeUpdateError } = await supabase
@@ -1513,6 +1602,20 @@ export const database = {
 
     // Reject a community place edit
     rejectPlaceEdit: async (changeId: string, moderatorId: string, reason: string) => {
+      // For image_add rejections, clean up the orphaned storage file
+      const { data: change } = await supabase
+        .from('pending_place_changes')
+        .select('change_type, proposed_data')
+        .eq('id', changeId)
+        .single()
+
+      if (change?.change_type === 'image_add') {
+        const proposedData = change.proposed_data as any
+        if (proposedData?.storage_path) {
+          await supabase.storage.from('court-images').remove([proposedData.storage_path])
+        }
+      }
+
       const { data, error } = await supabase
         .from('pending_place_changes')
         .update({
@@ -1524,7 +1627,7 @@ export const database = {
         .eq('id', changeId)
         .select()
         .single()
-      
+
       return { data, error }
     },
 
@@ -1561,9 +1664,9 @@ export const database = {
           .order('created_at', { ascending: false }),
         supabase
           .from('pending_place_changes')
-          .select('id, place_id, status, created_at, rejection_reason, places(name, image_url, street, house_number, city, postcode, sports)')
+          .select('id, place_id, status, created_at, rejection_reason, change_type, proposed_data, places(name, image_url, street, house_number, city, postcode, sports)')
           .eq('submitted_by', userId)
-          .eq('change_type', 'update')
+          .in('change_type', ['update', 'image_add'])
           .order('created_at', { ascending: false }),
       ])
 
@@ -1706,6 +1809,57 @@ export const database = {
         .delete()
         .eq('id', placeId)
       if (error) throw error
+    },
+  },
+
+  admin: {
+    deletePlaceImage: async (imageId: string, placeId: string): Promise<{ storagePath: string }> => {
+      // Fetch the image to check cover status and get storage path
+      const { data: image, error: fetchError } = await (supabase as any)
+        .from('place_images')
+        .select('*')
+        .eq('id', imageId)
+        .single()
+
+      if (fetchError || !image) throw new Error('Image not found')
+
+      // Delete from place_images
+      const { error: deleteError } = await (supabase as any)
+        .from('place_images')
+        .delete()
+        .eq('id', imageId)
+
+      if (deleteError) throw new Error('Failed to delete image: ' + deleteError.message)
+
+      // If this was the cover, promote the next image
+      if (image.is_cover) {
+        const { data: remaining } = await (supabase as any)
+          .from('place_images')
+          .select('*')
+          .eq('place_id', placeId)
+          .order('sort_order', { ascending: true })
+          .limit(1)
+
+        if (remaining && remaining.length > 0) {
+          await (supabase as any)
+            .from('place_images')
+            .update({ is_cover: true })
+            .eq('id', remaining[0].id)
+
+          await supabase
+            .from('places')
+            .update({ image_url: remaining[0].url, updated_at: new Date().toISOString() })
+            .eq('id', placeId)
+        } else {
+          // No images left — clear cover
+          await supabase
+            .from('places')
+            .update({ image_url: null, updated_at: new Date().toISOString() })
+            .eq('id', placeId)
+        }
+      }
+
+      return { storagePath: image.storage_path }
     },
   },
 }

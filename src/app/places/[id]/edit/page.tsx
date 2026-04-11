@@ -12,7 +12,9 @@ import Link from 'next/link'
 import React from 'react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { ArrowLeft, Trash2 } from 'lucide-react'
+import { Trash2 } from 'lucide-react'
+import { SportType, PlaceImage } from '@/lib/supabase/types'
+import { deleteCourtImage } from '@/lib/supabase/storage'
 
 interface EditPlacePageProps {
   params: Promise<{ id: string }>
@@ -163,6 +165,22 @@ function EditPlaceContent({ params }: EditPlacePageProps) {
     },
   })
 
+  const deleteImageMutation = useMutation({
+    mutationFn: async (image: PlaceImage) => {
+      if (!isAdmin) throw new Error('Unauthorized')
+      const { storagePath } = await database.admin.deletePlaceImage(image.id, image.place_id)
+      if (storagePath) await deleteCourtImage(storagePath)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['place-images', placeId] })
+      queryClient.invalidateQueries({ queryKey: ['place-edit', placeId] })
+      toast({ title: 'Foto gelöscht' })
+    },
+    onError: (error: Error) => {
+      toast({ title: 'Fehler beim Löschen', description: error.message, variant: 'destructive' })
+    },
+  })
+
   const deleteMutation = useMutation({
     mutationFn: async () => {
       if (!isAdmin) throw new Error('Unauthorized')
@@ -212,7 +230,7 @@ function EditPlaceContent({ params }: EditPlacePageProps) {
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" asChild>
-            <Link href="/"><ArrowLeft className="h-5 w-5" /></Link>
+            <button onClick={() => router.back()} className="text-muted-foreground hover:text-foreground transition-colors" aria-label="Zurück"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg></button>
           </Button>
           <h1 className="text-2xl font-bold">Ort bearbeiten</h1>
         </div>
@@ -249,6 +267,7 @@ function EditPlaceContent({ params }: EditPlacePageProps) {
       <PlaceForm
         mode="edit"
         initialData={place}
+        placeId={placeId}
         onSubmit={(formData) => submitMutation.mutateAsync(formData)}
         isLoading={submitMutation.isPending}
         title={isAdmin ? `${place.name} bearbeiten` : `Änderungen für ${place.name} vorschlagen`}
@@ -258,6 +277,7 @@ function EditPlaceContent({ params }: EditPlacePageProps) {
             : "Schlage Verbesserungen für diesen Ort vor. Deine Änderungen werden vor der Veröffentlichung geprüft."
         }
         submitButtonText={isAdmin ? "Änderungen speichern" : "Zur Überprüfung einreichen"}
+        onDeleteImage={isAdmin ? (image) => deleteImageMutation.mutate(image) : undefined}
       />
     </div>
   )

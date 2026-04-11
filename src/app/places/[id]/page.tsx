@@ -1,14 +1,16 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { database } from '@/lib/supabase/database'
-import { PlaceWithCourts } from '@/lib/supabase/types'
+import { PlaceImage, PlaceWithCourts } from '@/lib/supabase/types'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { MapPin, ArrowLeft, Navigation, Image, Phone, Mail, Globe } from 'lucide-react'
+import { MapPin, Navigation, Phone, Mail, Globe } from 'lucide-react'
 import { sportNames, sportIcons, getPlaceTypeBadgeClasses, placeTypeLabels, placeTypeIcons, PlaceType } from '@/lib/utils/sport-utils'
 import { Metadata } from 'next'
 import PlaceActions from '@/components/places/place-actions'
 import PlaceLocationMap from '@/components/places/place-location-map'
+import PlaceImageGallery from '@/components/places/place-image-gallery'
+import BackButton from '@/components/places/back-button'
 
 interface PlacePageProps {
   params: Promise<{ id: string }>
@@ -66,11 +68,33 @@ export async function generateMetadata({ params }: PlacePageProps): Promise<Meta
 
 export default async function PlacePage({ params }: PlacePageProps) {
   const { id } = await params
-  const place = await getPlace(id)
+  const [place, placeImages] = await Promise.all([
+    getPlace(id),
+    database.community.getPlaceImages(id) as Promise<PlaceImage[]>,
+  ])
 
   if (!place) {
     notFound()
   }
+
+  // Fall back to legacy image_url if no gallery images yet
+  const galleryImages: PlaceImage[] =
+    placeImages.length > 0
+      ? placeImages
+      : place.image_url
+      ? [
+          {
+            id: 'legacy',
+            place_id: place.id,
+            storage_path: '',
+            url: place.image_url,
+            is_cover: true,
+            sort_order: 0,
+            uploaded_by: null,
+            created_at: '',
+          },
+        ]
+      : []
 
   const courts = place.courts ?? []
 
@@ -119,13 +143,7 @@ export default async function PlacePage({ params }: PlacePageProps) {
       {/* Header */}
       <div className="flex items-center justify-between px-4 pt-4 pb-2">
         <div className="flex items-center gap-3 flex-1 min-w-0">
-          <Link
-            href="/"
-            className="text-muted-foreground hover:text-foreground transition-colors shrink-0"
-            title="Zurück zur Karte"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
+          <BackButton />
           <h1 className="text-xl font-semibold truncate">{place.name}</h1>
         </div>
         <PlaceActions place={place} />
@@ -150,39 +168,27 @@ export default async function PlacePage({ params }: PlacePageProps) {
           </div>
         )}
 
-        {/* Thumbnail + sports pills */}
-        <div className="flex gap-3 items-start">
-          {place.image_url ? (
-            <div className="shrink-0 w-[88px] h-[88px] rounded-[10px] overflow-hidden">
-              <img
-                src={place.image_url}
-                alt={place.name}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          ) : (
-            <div
-              className="shrink-0 w-[88px] h-[88px] rounded-[10px] border-2 border-dashed border-muted-foreground/30 flex items-center justify-center"
-              style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(0,0,0,0.03) 4px, rgba(0,0,0,0.03) 5px), repeating-linear-gradient(-45deg, transparent, transparent 4px, rgba(0,0,0,0.03) 4px, rgba(0,0,0,0.03) 5px)' }}
-            >
-              <Image className="h-5 w-5 text-muted-foreground/40" />
-            </div>
-          )}
+        {/* Image gallery */}
+        <PlaceImageGallery
+          images={galleryImages}
+          placeId={place.id}
+          placeName={place.name}
+        />
 
-          {Object.keys(sportsWithCounts).length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {Object.entries(sportsWithCounts).map(([sport, count]) => (
-                <div
-                  key={sport}
-                  className="flex items-center gap-1 border border-border rounded-full px-3 py-1.5 self-start"
-                >
-                  <span className="text-[16px] leading-none">{sportIcons[sport] || '📍'}</span>
-                  <span className="text-[14px] font-medium text-muted-foreground">{sportNames[sport] || sport}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        {/* Sports pills */}
+        {Object.keys(sportsWithCounts).length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {Object.entries(sportsWithCounts).map(([sport, count]) => (
+              <div
+                key={sport}
+                className="flex items-center gap-1 border border-border rounded-full px-3 py-1.5 self-start"
+              >
+                <span className="text-[16px] leading-none">{sportIcons[sport] || '📍'}</span>
+                <span className="text-[14px] font-medium text-muted-foreground">{sportNames[sport] || sport}</span>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Description */}
         {place.description && (

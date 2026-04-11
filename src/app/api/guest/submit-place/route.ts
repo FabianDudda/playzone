@@ -115,5 +115,21 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  // Insert place images
+  if (body.all_images?.length > 0) {
+    await supabase
+      .from('place_images')
+      .insert(
+        body.all_images.map((img: { path: string; url: string }, i: number) => ({
+          place_id: place.id,
+          storage_path: img.path,
+          url: img.url,
+          is_cover: i === 0,
+          sort_order: i,
+          uploaded_by: null,
+        }))
+      )
+  }
+
   return Response.json({ data: place })
 }

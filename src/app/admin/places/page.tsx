@@ -39,6 +39,7 @@ import {
   ChevronDown,
   ChevronUp,
   Copy,
+  Camera,
 } from 'lucide-react'
 import { getSportBadgeClasses, sportNames, sportIcons, getPlaceTypeBadgeClasses, placeTypeLabels, placeTypeIcons, PlaceType } from '@/lib/utils/sport-utils'
 import Link from 'next/link'
@@ -359,12 +360,20 @@ function PlaceCard({
   }
 
   const toggleSport = (sport: string) => {
-    setEditForm(prev => ({
-      ...prev,
-      sports: prev.sports.includes(sport)
-        ? prev.sports.filter(s => s !== sport)
-        : [...prev.sports, sport],
-    }))
+    setEditForm(prev => {
+      const isRemoving = prev.sports.includes(sport)
+      return {
+        ...prev,
+        sports: isRemoving
+          ? prev.sports.filter(s => s !== sport)
+          : [...prev.sports, sport],
+        courts: isRemoving
+          ? prev.courts.filter(c => c.sport !== sport)
+          : prev.courts.some(c => c.sport === sport)
+            ? prev.courts
+            : [...prev.courts, { sport, surface: '', quantity: '1', notes: '' }],
+      }
+    })
   }
 
   return (
@@ -541,42 +550,67 @@ function PlaceCard({
             </div>
           )}
 
-          {/* Image */}
-          {isEditing ? (
-            editForm.image_url ? (
-              <div className="relative">
-                <img
-                  src={editForm.image_url}
-                  alt={place.name}
-                  className="w-full h-40 object-cover rounded-lg"
-                />
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  className="absolute top-2 right-2"
-                  onClick={() => setEditForm(prev => ({ ...prev, image_url: null }))}
-                >
-                  <Trash2 className="h-3 w-3 mr-1" />
-                  Delete Image
-                </Button>
-              </div>
-            ) : (
-              <div className="w-full h-16 bg-muted rounded-lg flex items-center justify-center text-sm text-muted-foreground">
-                No image
-              </div>
-            )
-          ) : (
-            place.image_url && (
-              <img
-                src={place.image_url}
-                alt={place.name}
-                className="w-full h-40 object-cover rounded-lg"
+          {/* Google Maps iframe + Apple Maps button */}
+          {hasCoords && (
+            <div className="space-y-2">
+              <iframe
+                src={`https://www.google.com/maps?q=${place.latitude},${place.longitude}&t=k&output=embed`}
+                width="100%"
+                height="480"
+                className="rounded-lg border"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
               />
-            )
+              <a
+                href={`https://maps.apple.com/?ll=${place.latitude},${place.longitude}&q=${encodeURIComponent(place.name)}&t=k`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button variant="outline" size="sm" className="w-full h-7 text-xs gap-1.5">
+                  <MapIcon className="h-3 w-3" />
+                  Apple Maps
+                </Button>
+              </a>
+            </div>
           )}
 
           {!isEditing ? (
             <>
+              {/* Sports */}
+              <div>
+                <Label className="text-xs font-medium text-muted-foreground">Sports</Label>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {availableSports.length > 0 ? (
+                    availableSports.map((sport) => (
+                      <Badge key={sport} className={`text-xs ${getSportBadgeClasses(sport)}`}>
+                        {sportIcons[sport] || '📍'} {sportNames[sport] || sport}
+                      </Badge>
+                    ))
+                  ) : (
+                    <span className="text-sm text-muted-foreground">No sports specified</span>
+                  )}
+                </div>
+              </div>
+
+              {/* Courts */}
+              {place.courts && place.courts.length > 0 && (
+                <div>
+                  <Label className="text-xs font-medium text-muted-foreground">Courts</Label>
+                  <div className="space-y-2 mt-1">
+                    {place.courts.map((court) => (
+                      <div key={court.id} className="text-xs bg-muted p-2 rounded">
+                        <div className="flex justify-between">
+                          <span className="font-medium">{court.sport === 'other' ? (court.custom_sport_name || 'Andere Sportart') : (sportNames[court.sport] || court.sport)}</span>
+                          <span>Qty: {court.quantity}</span>
+                        </div>
+                        {court.surface && <div className="text-muted-foreground">Surface: {court.surface}</div>}
+                        {court.notes && <div className="text-muted-foreground">Notes: {court.notes}</div>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Core Info */}
               <div className="space-y-3">
                 <div>
@@ -626,6 +660,15 @@ function PlaceCard({
                 </div>
               )}
 
+              {/* Image */}
+              {place.image_url && (
+                <img
+                  src={place.image_url}
+                  alt={place.name}
+                  className="w-full h-40 object-cover rounded-lg"
+                />
+              )}
+
               {/* Coordinates */}
               {hasCoords && (
                 <div>
@@ -642,41 +685,6 @@ function PlaceCard({
                     >
                       <Copy className="h-3 w-3" />
                     </Button>
-                  </div>
-                </div>
-              )}
-
-              {/* Sports */}
-              <div>
-                <Label className="text-xs font-medium text-muted-foreground">Sports</Label>
-                <div className="flex flex-wrap gap-1 mt-1">
-                  {availableSports.length > 0 ? (
-                    availableSports.map((sport) => (
-                      <Badge key={sport} className={`text-xs ${getSportBadgeClasses(sport)}`}>
-                        {sportIcons[sport] || '📍'} {sportNames[sport] || sport}
-                      </Badge>
-                    ))
-                  ) : (
-                    <span className="text-sm text-muted-foreground">No sports specified</span>
-                  )}
-                </div>
-              </div>
-
-              {/* Courts */}
-              {place.courts && place.courts.length > 0 && (
-                <div>
-                  <Label className="text-xs font-medium text-muted-foreground">Courts</Label>
-                  <div className="space-y-2 mt-1">
-                    {place.courts.map((court) => (
-                      <div key={court.id} className="text-xs bg-muted p-2 rounded">
-                        <div className="flex justify-between">
-                          <span className="font-medium">{court.sport === 'other' ? (court.custom_sport_name || 'Andere Sportart') : (sportNames[court.sport] || court.sport)}</span>
-                          <span>Qty: {court.quantity}</span>
-                        </div>
-                        {court.surface && <div className="text-muted-foreground">Surface: {court.surface}</div>}
-                        {court.notes && <div className="text-muted-foreground">Notes: {court.notes}</div>}
-                      </div>
-                    ))}
                   </div>
                 </div>
               )}
@@ -766,6 +774,148 @@ function PlaceCard({
           ) : (
             // ── Edit form ──
             <>
+              {/* Sports */}
+              <div>
+                <Label className="text-xs">Sports</Label>
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {Object.entries(sportNames).map(([key, label]) => (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => toggleSport(key)}
+                      className={`text-xs px-2 py-1 rounded border transition-colors ${
+                        editForm.sports.includes(key)
+                          ? getSportBadgeClasses(key) + ' border-transparent'
+                          : 'bg-background border-border text-muted-foreground hover:border-primary'
+                      }`}
+                    >
+                      {sportIcons[key] || '📍'} {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Courts editor */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <Label className="text-xs">Courts</Label>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="h-6 text-xs"
+                    onClick={() => setEditForm(prev => ({
+                      ...prev,
+                      courts: [...prev.courts, { sport: '', surface: '', quantity: '', notes: '' }],
+                    }))}
+                  >
+                    + Add court
+                  </Button>
+                </div>
+                {editForm.courts.length === 0 ? (
+                  <p className="text-xs text-muted-foreground">No courts — click &quot;Add court&quot; to add one.</p>
+                ) : (
+                  <div className="space-y-2">
+                    {editForm.courts.map((court, i) => (
+                      <div key={i} className="grid grid-cols-[1fr_1fr_60px_1fr_28px] gap-2 items-start bg-muted/50 p-2 rounded">
+                        <div>
+                          <Label className="text-xs text-muted-foreground">Sport</Label>
+                          <Select
+                            value={court.sport}
+                            onValueChange={val => setEditForm(prev => {
+                              const courts = [...prev.courts]
+                              courts[i] = { ...courts[i], sport: val, customSportName: val !== 'other' ? '' : courts[i].customSportName }
+                              return { ...prev, courts }
+                            })}
+                          >
+                            <SelectTrigger className="mt-0.5 h-7 text-xs">
+                              <SelectValue placeholder="Select…" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {Object.entries(sportNames).map(([key, label]) => (
+                                <SelectItem key={key} value={key} className="text-xs">
+                                  {sportIcons[key] || '📍'} {label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          {court.sport === 'other' && (
+                            <Input
+                              placeholder="Sport name…"
+                              value={court.customSportName || ''}
+                              onChange={e => setEditForm(prev => {
+                                const courts = [...prev.courts]
+                                courts[i] = { ...courts[i], customSportName: e.target.value }
+                                return { ...prev, courts }
+                              })}
+                              className="mt-1 h-7 text-xs"
+                            />
+                          )}
+                        </div>
+                        <div>
+                          <Label className="text-xs text-muted-foreground">Surface</Label>
+                          <Select
+                            value={court.surface || ''}
+                            onValueChange={val => setEditForm(prev => {
+                              const courts = [...prev.courts]
+                              courts[i] = { ...courts[i], surface: val }
+                              return { ...prev, courts }
+                            })}
+                          >
+                            <SelectTrigger className="mt-0.5 h-7 text-xs">
+                              <SelectValue placeholder="Select…" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {['Unbekannt', 'Rasen', 'Kunstrasen', 'Hartplatz', 'Asphalt', 'Kunststoffbelag', 'Asche', 'Sand', 'Sonstiges'].map(s => (
+                                <SelectItem key={s} value={s} className="text-xs">{s}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label className="text-xs text-muted-foreground">Qty</Label>
+                          <Input
+                            type="number"
+                            min="1"
+                            value={court.quantity}
+                            onChange={e => setEditForm(prev => {
+                              const courts = [...prev.courts]
+                              courts[i] = { ...courts[i], quantity: e.target.value }
+                              return { ...prev, courts }
+                            })}
+                            className="mt-0.5 h-7 text-xs"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-xs text-muted-foreground">Notes</Label>
+                          <Input
+                            value={court.notes}
+                            onChange={e => setEditForm(prev => {
+                              const courts = [...prev.courts]
+                              courts[i] = { ...courts[i], notes: e.target.value }
+                              return { ...prev, courts }
+                            })}
+                            className="mt-0.5 h-7 text-xs"
+                            placeholder="Optional"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setEditForm(prev => ({
+                            ...prev,
+                            courts: prev.courts.filter((_, idx) => idx !== i),
+                          }))}
+                          className="mt-5 text-muted-foreground hover:text-destructive transition-colors"
+                          aria-label="Remove court"
+                        >
+                          <XCircle className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               <div className="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <div className="col-span-2">
@@ -917,6 +1067,32 @@ function PlaceCard({
                     />
                   </div>
 
+                  {/* Image */}
+                  <div className="col-span-2">
+                    {editForm.image_url ? (
+                      <div className="relative">
+                        <img
+                          src={editForm.image_url}
+                          alt={place.name}
+                          className="w-full h-40 object-cover rounded-lg"
+                        />
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          className="absolute top-2 right-2"
+                          onClick={() => setEditForm(prev => ({ ...prev, image_url: null }))}
+                        >
+                          <Trash2 className="h-3 w-3 mr-1" />
+                          Delete Image
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="w-full h-16 bg-muted rounded-lg flex items-center justify-center text-sm text-muted-foreground">
+                        No image
+                      </div>
+                    )}
+                  </div>
+
                   <div>
                     <Label className="text-xs">Latitude</Label>
                     <Input
@@ -939,146 +1115,6 @@ function PlaceCard({
                   </div>
                 </div>
 
-                <div>
-                  <Label className="text-xs">Sports</Label>
-                  <div className="flex flex-wrap gap-2 mt-1">
-                    {Object.entries(sportNames).map(([key, label]) => (
-                      <button
-                        key={key}
-                        type="button"
-                        onClick={() => toggleSport(key)}
-                        className={`text-xs px-2 py-1 rounded border transition-colors ${
-                          editForm.sports.includes(key)
-                            ? getSportBadgeClasses(key) + ' border-transparent'
-                            : 'bg-background border-border text-muted-foreground hover:border-primary'
-                        }`}
-                      >
-                        {sportIcons[key] || '📍'} {label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Courts editor */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <Label className="text-xs">Courts</Label>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    className="h-6 text-xs"
-                    onClick={() => setEditForm(prev => ({
-                      ...prev,
-                      courts: [...prev.courts, { sport: '', surface: '', quantity: '', notes: '' }],
-                    }))}
-                  >
-                    + Add court
-                  </Button>
-                </div>
-                {editForm.courts.length === 0 ? (
-                  <p className="text-xs text-muted-foreground">No courts — click &quot;Add court&quot; to add one.</p>
-                ) : (
-                  <div className="space-y-2">
-                    {editForm.courts.map((court, i) => (
-                      <div key={i} className="grid grid-cols-[1fr_1fr_60px_1fr_28px] gap-2 items-start bg-muted/50 p-2 rounded">
-                        <div>
-                          <Label className="text-xs text-muted-foreground">Sport</Label>
-                          <Select
-                            value={court.sport}
-                            onValueChange={val => setEditForm(prev => {
-                              const courts = [...prev.courts]
-                              courts[i] = { ...courts[i], sport: val, customSportName: val !== 'other' ? '' : courts[i].customSportName }
-                              return { ...prev, courts }
-                            })}
-                          >
-                            <SelectTrigger className="mt-0.5 h-7 text-xs">
-                              <SelectValue placeholder="Select…" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {Object.entries(sportNames).map(([key, label]) => (
-                                <SelectItem key={key} value={key} className="text-xs">
-                                  {sportIcons[key] || '📍'} {label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          {court.sport === 'other' && (
-                            <Input
-                              placeholder="Sport name…"
-                              value={court.customSportName || ''}
-                              onChange={e => setEditForm(prev => {
-                                const courts = [...prev.courts]
-                                courts[i] = { ...courts[i], customSportName: e.target.value }
-                                return { ...prev, courts }
-                              })}
-                              className="mt-1 h-7 text-xs"
-                            />
-                          )}
-                        </div>
-                        <div>
-                          <Label className="text-xs text-muted-foreground">Surface</Label>
-                          <Select
-                            value={court.surface || ''}
-                            onValueChange={val => setEditForm(prev => {
-                              const courts = [...prev.courts]
-                              courts[i] = { ...courts[i], surface: val }
-                              return { ...prev, courts }
-                            })}
-                          >
-                            <SelectTrigger className="mt-0.5 h-7 text-xs">
-                              <SelectValue placeholder="Select…" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {['Unbekannt', 'Rasen', 'Kunstrasen', 'Hartplatz', 'Asphalt', 'Kunststoffbelag', 'Asche', 'Sand', 'Sonstiges'].map(s => (
-                                <SelectItem key={s} value={s} className="text-xs">{s}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div>
-                          <Label className="text-xs text-muted-foreground">Qty</Label>
-                          <Input
-                            type="number"
-                            min="1"
-                            value={court.quantity}
-                            onChange={e => setEditForm(prev => {
-                              const courts = [...prev.courts]
-                              courts[i] = { ...courts[i], quantity: e.target.value }
-                              return { ...prev, courts }
-                            })}
-                            className="mt-0.5 h-7 text-xs"
-                          />
-                        </div>
-                        <div>
-                          <Label className="text-xs text-muted-foreground">Notes</Label>
-                          <Input
-                            value={court.notes}
-                            onChange={e => setEditForm(prev => {
-                              const courts = [...prev.courts]
-                              courts[i] = { ...courts[i], notes: e.target.value }
-                              return { ...prev, courts }
-                            })}
-                            className="mt-0.5 h-7 text-xs"
-                            placeholder="Optional"
-                          />
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => setEditForm(prev => ({
-                            ...prev,
-                            courts: prev.courts.filter((_, idx) => idx !== i),
-                          }))}
-                          className="mt-5 text-muted-foreground hover:text-destructive transition-colors"
-                          aria-label="Remove court"
-                        >
-                          <XCircle className="h-4 w-4" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
 
             </>
@@ -1111,6 +1147,16 @@ function PlacesList({ status }: { status: ModerationStatus }) {
 
   // Submitter filter state
   const [submitterFilter, setSubmitterFilter] = useState<'all' | 'admin' | 'user'>('all')
+
+  // Country / district filter state
+  const [countryFilter, setCountryFilter] = useState<string>('all')
+  const [cityFilter, setCityFilter] = useState<string>('all')
+  const [districtFilter, setDistrictFilter] = useState<string>('all')
+
+  // Source / place type / sport filter state
+  const [sourceFilter, setSourceFilter] = useState<string>('all')
+  const [placeTypeFilter, setPlaceTypeFilter] = useState<string>('all')
+  const [sportFilter, setSportFilter] = useState<string>('all')
 
   // Isolated filter state
   const [isolatedOnly, setIsolatedOnly] = useState(false)
@@ -1241,12 +1287,46 @@ function PlacesList({ status }: { status: ModerationStatus }) {
     bulkDeleteMutation.mutate(Array.from(selectedPlaces))
   }
 
-  // Filtered list: apply submitter filter, then isolated filter
+  // Derive unique filter options from loaded data
+  const countryOptions = Array.from(new Set((places ?? []).map(p => (p as any).country).filter(Boolean))).sort()
+  const cityOptions = Array.from(
+    new Set(
+      (places ?? [])
+        .filter(p => countryFilter === 'all' || (p as any).country === countryFilter)
+        .map(p => (p as any).city)
+        .filter(Boolean)
+    )
+  ).sort()
+  const districtOptions = Array.from(
+    new Set(
+      (places ?? [])
+        .filter(p => countryFilter === 'all' || (p as any).country === countryFilter)
+        .filter(p => cityFilter === 'all' || (p as any).city === cityFilter)
+        .map(p => (p as any).district)
+        .filter(Boolean)
+    )
+  ).sort()
+
+  const sourceOptions = Array.from(new Set((places ?? []).map(p => (p as any).source ?? null).filter(Boolean))).sort()
+  const placeTypeOptions = Array.from(new Set((places ?? []).map(p => (p as any).place_type ?? null).filter(Boolean))).sort()
+  const sportOptions = Array.from(
+    new Set((places ?? []).flatMap(p => (p as any).sports ?? []).filter(Boolean))
+  ).sort()
+
+  // Filtered list: apply all filters, then isolated filter
   const submitterFiltered = (places ?? []).filter(p => {
-    if (submitterFilter === 'all') return true
-    const role = p.profiles?.user_role
-    if (submitterFilter === 'admin') return role === 'admin'
-    return role !== 'admin'
+    if (submitterFilter !== 'all') {
+      const role = p.profiles?.user_role
+      if (submitterFilter === 'admin' && role !== 'admin') return false
+      if (submitterFilter === 'user' && role === 'admin') return false
+    }
+    if (countryFilter !== 'all' && (p as any).country !== countryFilter) return false
+    if (cityFilter !== 'all' && (p as any).city !== cityFilter) return false
+    if (districtFilter !== 'all' && (p as any).district !== districtFilter) return false
+    if (sourceFilter !== 'all' && (p as any).source !== sourceFilter) return false
+    if (placeTypeFilter !== 'all' && (p as any).place_type !== placeTypeFilter) return false
+    if (sportFilter !== 'all' && !((p as any).sports ?? []).includes(sportFilter)) return false
+    return true
   })
   const filteredPlaces = (status === 'pending' && isolatedOnly && isolatedIds)
     ? submitterFiltered.filter(p => isolatedIds.includes(p.id))
@@ -1262,7 +1342,7 @@ function PlacesList({ status }: { status: ModerationStatus }) {
   useEffect(() => {
     setPage(0)
     setSelectedPlaces(new Set())
-  }, [isolatedOnly, isolatedRadius, isolatedIncludePending, submitterFilter])
+  }, [isolatedOnly, isolatedRadius, isolatedIncludePending, submitterFilter, countryFilter, cityFilter, districtFilter, sourceFilter, placeTypeFilter, sportFilter])
 
   const totalPages = Math.ceil(filteredPlaces.length / PENDING_PAGE_SIZE)
   const paginatedPlaces = status === 'pending'
@@ -1337,7 +1417,127 @@ function PlacesList({ status }: { status: ModerationStatus }) {
             </div>
           )}
 
-          {/* Row 1: Isolated filter */}
+          {/* Row 1: Country / district filter */}
+          {status === 'pending' && (
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Location:</span>
+              <Select
+                value={countryFilter}
+                onValueChange={(v) => { setCountryFilter(v); setCityFilter('all'); setDistrictFilter('all') }}
+              >
+                <SelectTrigger className="w-36 h-8 text-sm">
+                  <SelectValue placeholder="Country" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All countries</SelectItem>
+                  {countryOptions.map(c => (
+                    <SelectItem key={c} value={c}>{c}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={cityFilter}
+                onValueChange={(v) => { setCityFilter(v); setDistrictFilter('all') }}
+                disabled={cityOptions.length === 0}
+              >
+                <SelectTrigger className="w-36 h-8 text-sm">
+                  <SelectValue placeholder="City" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All cities</SelectItem>
+                  {cityOptions.map(c => (
+                    <SelectItem key={c} value={c}>{c}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={districtFilter}
+                onValueChange={setDistrictFilter}
+                disabled={districtOptions.length === 0}
+              >
+                <SelectTrigger className="w-36 h-8 text-sm">
+                  <SelectValue placeholder="District" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All districts</SelectItem>
+                  {districtOptions.map(d => (
+                    <SelectItem key={d} value={d}>{d}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {(countryFilter !== 'all' || cityFilter !== 'all' || districtFilter !== 'all') && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => { setCountryFilter('all'); setCityFilter('all'); setDistrictFilter('all') }}
+                >
+                  Clear
+                </Button>
+              )}
+            </div>
+          )}
+
+          {/* Row 2: Source / place type / sport filter */}
+          {status === 'pending' && (
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-sm text-muted-foreground">Filter:</span>
+
+              <Select value={sourceFilter} onValueChange={setSourceFilter}>
+                <SelectTrigger className="w-40 h-8 text-sm">
+                  <SelectValue placeholder="Source" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All sources</SelectItem>
+                  {sourceOptions.map(s => (
+                    <SelectItem key={s} value={s}>{getSourceLabel(s)}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={placeTypeFilter} onValueChange={setPlaceTypeFilter}>
+                <SelectTrigger className="w-36 h-8 text-sm">
+                  <SelectValue placeholder="Place type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All types</SelectItem>
+                  {placeTypeOptions.map(t => (
+                    <SelectItem key={t} value={t}>
+                      {placeTypeIcons[t as PlaceType] ?? ''} {placeTypeLabels[t as PlaceType] ?? t}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={sportFilter} onValueChange={setSportFilter}>
+                <SelectTrigger className="w-40 h-8 text-sm">
+                  <SelectValue placeholder="Sport" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All sports</SelectItem>
+                  {sportOptions.map(s => (
+                    <SelectItem key={s} value={s}>
+                      {sportIcons[s] ?? ''} {sportNames[s] ?? s}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {(sourceFilter !== 'all' || placeTypeFilter !== 'all' || sportFilter !== 'all') && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => { setSourceFilter('all'); setPlaceTypeFilter('all'); setSportFilter('all') }}
+                >
+                  Clear
+                </Button>
+              )}
+            </div>
+          )}
+
+          {/* Row 3: Isolated filter */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Button
@@ -1400,7 +1600,7 @@ function PlacesList({ status }: { status: ModerationStatus }) {
             )}
           </div>
 
-          {/* Row 2: Bulk select controls */}
+          {/* Row 3: Bulk select controls */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button
@@ -1609,6 +1809,7 @@ function CommunityEditCard({ edit, onApprove, onReject }: {
 
   const proposedData = edit.proposed_data as any
   const currentData = edit.current_data as any
+  const isImageAdd = edit.change_type === 'image_add'
 
   // ── Change detection ──
   const addressFields: { key: string; label: string }[] = [
@@ -1642,17 +1843,19 @@ function CommunityEditCard({ edit, onApprove, onReject }: {
   const contactWebsiteChanged = proposedData?.place?.contact_website !== currentData?.place?.contact_website
   const contactChanged = contactPhoneChanged || contactEmailChanged || contactWebsiteChanged
 
-  const changeSummary: string[] = [
-    nameChanged && 'Name',
-    placeTypeChanged && 'Platzart',
-    descriptionChanged && 'Description',
-    imageChanged && 'Image',
-    locationChanged && 'Location',
-    changedAddressFields.length > 0 && 'Address',
-    sportsChanged && 'Sports',
-    courtsChanged && 'Courts',
-    contactChanged && 'Kontakt',
-  ].filter(Boolean) as string[]
+  const changeSummary: string[] = isImageAdd
+    ? ['Neues Foto']
+    : [
+        nameChanged && 'Name',
+        placeTypeChanged && 'Platzart',
+        descriptionChanged && 'Description',
+        imageChanged && 'Image',
+        locationChanged && 'Location',
+        changedAddressFields.length > 0 && 'Address',
+        sportsChanged && 'Sports',
+        courtsChanged && 'Courts',
+        contactChanged && 'Kontakt',
+      ].filter(Boolean) as string[]
 
   // ── Map data ──
   const currentLat = currentData?.place?.latitude
@@ -1671,7 +1874,9 @@ function CommunityEditCard({ edit, onApprove, onReject }: {
       }
     : undefined
 
-  const thumbnail = currentData?.place?.image_url || edit.places?.image_url
+  const thumbnail = isImageAdd
+    ? (proposedData?.url ?? null)
+    : (currentData?.place?.image_url || edit.places?.image_url)
 
   return (
     <Card className="mb-4 border-l-4 border-l-blue-400">
@@ -1698,10 +1903,17 @@ function CommunityEditCard({ edit, onApprove, onReject }: {
                     {edit.places?.name || 'Unknown Place'}
                   </Link>
                 </CardTitle>
-                <Badge className="text-xs bg-blue-100 text-blue-800">
-                  <Edit className="h-3 w-3 mr-1" />
-                  Community Edit
-                </Badge>
+                {isImageAdd ? (
+                  <Badge className="text-xs bg-purple-100 text-purple-800">
+                    <Camera className="h-3 w-3 mr-1" />
+                    Neues Foto
+                  </Badge>
+                ) : (
+                  <Badge className="text-xs bg-blue-100 text-blue-800">
+                    <Edit className="h-3 w-3 mr-1" />
+                    Community Edit
+                  </Badge>
+                )}
               </div>
 
               {/* Change summary badges */}
@@ -1740,7 +1952,71 @@ function CommunityEditCard({ edit, onApprove, onReject }: {
         </div>
       </CardHeader>
 
-      {isExpanded && (
+      {isExpanded && isImageAdd && (
+        <CardContent className="space-y-4 pt-0">
+          <div className="border rounded-lg p-4 bg-muted/50 space-y-3">
+            <p className="text-xs font-medium text-muted-foreground">Eingereichtes Foto</p>
+            {proposedData?.url ? (
+              <img
+                src={proposedData.url}
+                alt="Eingereicht"
+                className="w-full max-h-72 object-contain rounded border bg-black/5"
+              />
+            ) : (
+              <p className="text-sm text-muted-foreground">Kein Bild verfügbar</p>
+            )}
+          </div>
+
+          {/* Actions */}
+          <div className="flex gap-2 pt-2">
+            <Button onClick={() => onApprove(edit.id)} className="flex-1">
+              <CheckCircle className="h-4 w-4 mr-2" />
+              Foto freigeben
+            </Button>
+
+            <Dialog open={isRejectDialogOpen} onOpenChange={setIsRejectDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="destructive" className="flex-1">
+                  <XCircle className="h-4 w-4 mr-2" />
+                  Ablehnen
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Foto ablehnen</DialogTitle>
+                  <DialogDescription>
+                    Bitte gib einen Grund an. Das Bild wird aus dem Speicher gelöscht.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-2">
+                  <Label htmlFor="image-rejection-reason">Ablehnungsgrund</Label>
+                  <Textarea
+                    id="image-rejection-reason"
+                    placeholder="z.B. Kein Bezug zum Ort, ungeeignetes Bild..."
+                    value={rejectionReason}
+                    onChange={(e) => setRejectionReason(e.target.value)}
+                    rows={3}
+                  />
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setIsRejectDialogOpen(false)}>
+                    Abbrechen
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    onClick={handleReject}
+                    disabled={!rejectionReason.trim()}
+                  >
+                    Ablehnen
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </CardContent>
+      )}
+
+      {isExpanded && !isImageAdd && (
         <CardContent className="space-y-4 pt-0">
           {/* Map */}
           {hasCurrentCoords ? (

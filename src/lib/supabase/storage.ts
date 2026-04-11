@@ -139,6 +139,53 @@ export async function deleteCourtImage(path: string): Promise<void> {
 }
 
 /**
+ * Upload a place image scoped to a specific place folder
+ * Used by the multi-image gallery system (stores under places/{placeId}/)
+ */
+export async function uploadPlaceImageScoped(
+  file: File,
+  placeId: string,
+  onProgress?: (progress: UploadProgress) => void
+): Promise<UploadResult> {
+  try {
+    if (!file.type.startsWith('image/')) {
+      throw new Error('File must be an image')
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      throw new Error('File size must be less than 10MB')
+    }
+
+    let fileToUpload = file
+    if (file.size > 2 * 1024 * 1024) {
+      fileToUpload = await compressImage(file)
+    }
+
+    const fileName = generateFileName(file.name)
+    const filePath = `places/${placeId}/${fileName}`
+
+    const { data, error } = await supabase.storage
+      .from(BUCKET_NAME)
+      .upload(filePath, fileToUpload, {
+        cacheControl: '3600',
+        upsert: false,
+      })
+
+    if (error) {
+      throw new Error(`Upload failed: ${error.message}`)
+    }
+
+    const { data: { publicUrl } } = supabase.storage
+      .from(BUCKET_NAME)
+      .getPublicUrl(data.path)
+
+    return { url: publicUrl, path: data.path }
+  } catch (error) {
+    throw error instanceof Error ? error : new Error('Upload failed')
+  }
+}
+
+/**
  * Check if storage bucket exists and is accessible
  */
 export async function checkStorageHealth(): Promise<boolean> {

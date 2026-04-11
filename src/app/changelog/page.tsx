@@ -7,9 +7,19 @@ import Link from 'next/link'
 
 const CHANGELOG = [
   {
+    version: '0.3.5-alpha',
+    date: '11.04.2026',
+    current: true,
+    items: [
+      'implement functionality to upload more than 1 image per place',
+      'add pages with place list sort by sport type and location',
+      'admin dashboard functions: filter and google maps map view',
+    ],
+  },
+  {
     version: '0.3.4-alpha',
     date: '03.04.2026',
-    current: true,
+    current: false,
     items: [
       'implement zoom to specific area function',
       'implement map widget for external website',

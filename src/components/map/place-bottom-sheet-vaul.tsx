@@ -1,14 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
 import LoginPromptBottomSheet from './login-prompt-bottom-sheet-vaul'
 import ReportPlaceBottomSheet from './report-place-bottom-sheet-vaul'
 import PlaceTypeInfoSheet from './place-type-info-sheet'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { MapPin, Navigation, Share2, Heart, Pencil, X, Upload, Image, Loader2, Maximize2, Flag, Phone, Mail, Globe, ChevronDown } from 'lucide-react'
-import { PlaceWithCourts, PlaceMarker, OpeningHours } from '@/lib/supabase/types'
+import { MapPin, Navigation, Share2, Heart, Pencil, X, Upload, Image, Loader2, Maximize2, Flag, Phone, Mail, Globe, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react'
+import { PlaceWithCourts, PlaceMarker, OpeningHours, PlaceImage } from '@/lib/supabase/types'
 import { getOpeningStatus, getCurrentDayKey, DAY_ORDER, DAY_SHORT_DE } from '@/lib/utils/opening-hours'
 import { cn } from '@/lib/utils'
 import { sportNames, sportIcons, getPlaceTypeBadgeClasses, placeTypeLabels, placeTypeIcons, PlaceType } from '@/lib/utils/sport-utils'
@@ -78,7 +78,55 @@ export default function PlaceBottomSheetVaul({
   })
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [isUploadingImage, setIsUploadingImage] = useState(false)
-  const [isFullscreenOpen, setIsFullscreenOpen] = useState(false)
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
+
+  // Fetch gallery images for the selected place
+  const { data: placeImages = [] } = useQuery<PlaceImage[]>({
+    queryKey: ['place-images', selectedCourt?.id],
+    queryFn: () => database.community.getPlaceImages(selectedCourt!.id),
+    enabled: !!selectedCourt,
+    staleTime: 5 * 60 * 1000,
+  })
+
+  // Build sorted gallery: use place_images if available, fall back to image_url
+  const galleryImages: PlaceImage[] = placeImages.length > 0
+    ? [...placeImages].sort((a, b) => {
+        if (a.is_cover !== b.is_cover) return a.is_cover ? -1 : 1
+        return a.sort_order - b.sort_order
+      })
+    : place?.image_url
+      ? [{ id: 'legacy', place_id: selectedCourt?.id ?? '', storage_path: '', url: place.image_url, is_cover: true, sort_order: 0, uploaded_by: null, created_at: '' }]
+      : []
+
+  const closeLightbox = useCallback(() => setLightboxIndex(null), [])
+  const prevImage = useCallback(
+    () => setLightboxIndex(i => (i !== null ? (i - 1 + galleryImages.length) % galleryImages.length : null)),
+    [galleryImages.length]
+  )
+  const nextImage = useCallback(
+    () => setLightboxIndex(i => (i !== null ? (i + 1) % galleryImages.length : null)),
+    [galleryImages.length]
+  )
+
+  useEffect(() => {
+    if (lightboxIndex === null) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeLightbox()
+      if (e.key === 'ArrowLeft') prevImage()
+      if (e.key === 'ArrowRight') nextImage()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [lightboxIndex, closeLightbox, prevImage, nextImage])
+
+  useEffect(() => {
+    if (lightboxIndex !== null) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => { document.body.style.overflow = '' }
+  }, [lightboxIndex])
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -143,23 +191,58 @@ export default function PlaceBottomSheetVaul({
       onOpenChange={setIsPlaceTypeInfoOpen}
     />
 
-    {/* Fullscreen image overlay - outside drawer to avoid stacking context issues */}
-    {isFullscreenOpen && place?.image_url && (
+    {/* Lightbox - outside drawer to avoid stacking context issues */}
+    {lightboxIndex !== null && galleryImages[lightboxIndex] && (
       <div
-        className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center"
-        onClick={() => setIsFullscreenOpen(false)}
+        className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center"
+        onClick={closeLightbox}
       >
-        <img
-          src={place.image_url}
-          alt={place.name}
-          className="max-w-full max-h-full object-contain"
-        />
+        {/* Close */}
         <button
-          className="absolute top-4 right-4 text-white bg-black/40 rounded-full p-2"
-          onClick={() => setIsFullscreenOpen(false)}
+          type="button"
+          className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors"
+          onClick={closeLightbox}
+          aria-label="Schließen"
         >
-          <X className="h-5 w-5" />
+          <X className="h-6 w-6" />
         </button>
+
+        {/* Prev / Next */}
+        {galleryImages.length > 1 && (
+          <>
+            <button
+              type="button"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors p-2"
+              onClick={(e) => { e.stopPropagation(); prevImage() }}
+              aria-label="Vorheriges Bild"
+            >
+              <ChevronLeft className="h-8 w-8" />
+            </button>
+            <button
+              type="button"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors p-2"
+              onClick={(e) => { e.stopPropagation(); nextImage() }}
+              aria-label="Nächstes Bild"
+            >
+              <ChevronRight className="h-8 w-8" />
+            </button>
+          </>
+        )}
+
+        {/* Image */}
+        <img
+          src={galleryImages[lightboxIndex].url}
+          alt={place?.name ?? ''}
+          className="max-w-full max-h-full object-contain px-14 py-12"
+          onClick={(e) => e.stopPropagation()}
+        />
+
+        {/* Counter */}
+        {galleryImages.length > 1 && (
+          <div className="absolute bottom-4 text-white/50 text-sm select-none">
+            {lightboxIndex + 1} / {galleryImages.length}
+          </div>
+        )}
       </div>
     )}
 
@@ -232,19 +315,26 @@ export default function PlaceBottomSheetVaul({
               ) : (
                 <div className="flex gap-3 items-start">
                   {/* 88×88 thumbnail */}
-                  {place?.image_url ? (
+                  {galleryImages.length > 0 ? (
                     <button
+                      type="button"
                       className="relative shrink-0 w-[88px] h-[88px] rounded-[10px] overflow-hidden block"
-                      onClick={() => setIsFullscreenOpen(true)}
+                      onClick={() => setLightboxIndex(0)}
                     >
                       <img
-                        src={place.image_url}
-                        alt={place.name}
+                        src={galleryImages[0].url}
+                        alt={place?.name ?? ''}
                         className="w-full h-full object-cover"
                       />
-                      <span className="absolute top-1 right-1 bg-black/40 rounded p-0.5">
-                        <Maximize2 className="h-3 w-3 text-white" />
-                      </span>
+                      {galleryImages.length > 1 ? (
+                        <span className="absolute bottom-1 right-1 bg-black/55 text-white text-[10px] px-1.5 py-0.5 rounded-full leading-none">
+                          1 / {galleryImages.length}
+                        </span>
+                      ) : (
+                        <span className="absolute top-1 right-1 bg-black/40 rounded p-0.5">
+                          <Maximize2 className="h-3 w-3 text-white" />
+                        </span>
+                      )}
                     </button>
                   ) : (
                     <div
@@ -254,6 +344,7 @@ export default function PlaceBottomSheetVaul({
                       <Image className="h-5 w-5 text-muted-foreground/40" />
                     </div>
                   )}
+
 
                   {/* Sports pills */}
                   {(() => {

@@ -9,16 +9,17 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/hooks/use-toast'
-import { SportType, PlaceWithCourts } from '@/lib/supabase/types'
+import { SportType, PlaceWithCourts, PlaceImage, OpeningHours } from '@/lib/supabase/types'
 import { PlaceType, placeTypeLabels, placeTypeIcons } from '@/lib/utils/sport-utils'
 import { reverseGeocode, AddressComponents } from '@/lib/geocoding'
-import { uploadCourtImage, UploadProgress } from '@/lib/supabase/storage'
+import { uploadCourtImage, uploadPlaceImageScoped, UploadProgress } from '@/lib/supabase/storage'
+import { useAuth } from '@/components/providers/auth-provider'
 import { sportIcons } from '@/lib/utils/sport-utils'
 import { cn, validateWebsite } from '@/lib/utils'
-import { MapPin, Plus, Upload, X, Image, Loader2, Phone, Mail, Globe } from 'lucide-react'
+import { MapPin, Plus, Upload, X, Image, Camera, Loader2, Phone, Mail, Globe } from 'lucide-react'
 import { Textarea } from '@/components/ui/textarea'
 import OpeningHoursEditor from '@/components/places/opening-hours-editor'
-import { OpeningHours } from '@/lib/supabase/types'
+import PlaceImageGallery from '@/components/places/place-image-gallery'
 
 const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map'), {
   ssr: false,
@@ -83,26 +84,44 @@ export interface PlaceFormData {
 interface PlaceFormProps {
   mode: 'create' | 'edit'
   initialData?: PlaceWithCourts
+  placeId?: string
   onSubmit: (data: PlaceFormData) => Promise<void>
   isLoading: boolean
   submitButtonText?: string
   title: string
   description: string
+  onDeleteImage?: (image: PlaceImage) => void
 }
 
 export default function PlaceForm({
   mode,
   initialData,
+  placeId,
   onSubmit,
   isLoading,
   submitButtonText,
+  onDeleteImage,
 }: PlaceFormProps) {
   const { toast } = useToast()
+  const { user } = useAuth()
 
   const { data: allPlaces = [] } = useQuery({
     queryKey: ['places'],
     queryFn: () => database.courts.getAllCourts(),
   })
+
+  const { data: placeImages = [] } = useQuery<PlaceImage[]>({
+    queryKey: ['place-images', placeId],
+    queryFn: () => database.community.getPlaceImages(placeId!) as Promise<PlaceImage[]>,
+    enabled: !!placeId,
+  })
+
+  const galleryImages: PlaceImage[] =
+    placeImages.length > 0
+      ? placeImages
+      : initialData?.image_url
+      ? [{ id: 'legacy', place_id: placeId ?? '', storage_path: '', url: initialData.image_url, is_cover: true, sort_order: 0, uploaded_by: null, created_at: '' }]
+      : []
 
   const [name, setName] = useState(initialData?.name || '')
   const [description, setDescription] = useState(initialData?.description || '')
@@ -160,6 +179,24 @@ export default function PlaceForm({
   const [imageRemoved, setImageRemoved] = useState(false)
   const [isUploadingImage, setIsUploadingImage] = useState(false)
   const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null)
+
+  // Edit mode: staged images are uploaded on form save
+  const [stagedFiles, setStagedFiles] = useState<File[]>([])
+  const [stagedPreviews, setStagedPreviews] = useState<string[]>([])
+
+  const handleAddStagedFiles = useCallback((files: File[]) => {
+    const previews = files.map(f => URL.createObjectURL(f))
+    setStagedFiles(prev => [...prev, ...files])
+    setStagedPreviews(prev => [...prev, ...previews])
+  }, [])
+
+  const handleRemoveStagedFile = useCallback((idx: number) => {
+    setStagedPreviews(prev => {
+      URL.revokeObjectURL(prev[idx])
+      return prev.filter((_, i) => i !== idx)
+    })
+    setStagedFiles(prev => prev.filter((_, i) => i !== idx))
+  }, [])
 
   const [contactPhone, setContactPhone] = useState(initialData?.contact_phone || '')
   const [contactEmail, setContactEmail] = useState(initialData?.contact_email || '')
@@ -291,6 +328,34 @@ export default function PlaceForm({
       } finally {
         setIsUploadingImage(false)
         setUploadProgress(null)
+      }
+    }
+
+    // Upload staged images for edit mode (uploaded to review queue on save)
+    if (placeId && stagedFiles.length > 0) {
+      setIsUploadingImage(true)
+      try {
+        for (const file of stagedFiles) {
+          if (user) {
+            const result = await uploadPlaceImageScoped(file, placeId)
+            await database.community.submitPlaceImageAdd(placeId, result.path, result.url, user.id)
+          } else {
+            const formData = new FormData()
+            formData.append('file', file)
+            formData.append('placeId', placeId)
+            const res = await fetch('/api/guest/submit-image', { method: 'POST', body: formData })
+            if (!res.ok) {
+              const json = await res.json()
+              throw new Error(json.error || 'Upload fehlgeschlagen')
+            }
+          }
+        }
+        setStagedFiles([])
+        setStagedPreviews(prev => { prev.forEach(u => URL.revokeObjectURL(u)); return [] })
+      } catch (err) {
+        toast({ title: 'Bild-Upload fehlgeschlagen', description: err instanceof Error ? err.message : '', variant: 'destructive' })
+      } finally {
+        setIsUploadingImage(false)
       }
     }
 
@@ -530,29 +595,55 @@ export default function PlaceForm({
       {/* 5. Image */}
       <div className="space-y-2">
         <Label>Platzbild (Optional)</Label>
-        <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-4">
-          {imagePreview ? (
-            <div className="space-y-2">
-              <div className="relative">
-                <img src={imagePreview} alt="Preview" className="w-full h-40 object-cover rounded-lg" />
-                <Button type="button" variant="destructive" size="icon" className="absolute top-2 right-2"
-                  onClick={() => { setImageFile(null); setImagePreview(null); setImageRemoved(true) }}>
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-              <p className="text-xs text-muted-foreground text-center">{imageFile?.name || 'Aktuelles Bild'}</p>
-            </div>
-          ) : (
-            <div className="text-center space-y-2">
-              <Image className="h-10 w-10 mx-auto text-muted-foreground" />
-              <Button type="button" size="sm" onClick={() => document.getElementById('pf-image-upload')?.click()}>
-                <Upload className="h-4 w-4 mr-1" />Bild hochladen
-              </Button>
-              <Input id="pf-image-upload" type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
-              <p className="text-xs text-muted-foreground">JPG, PNG, WebP bis 10MB</p>
-            </div>
-          )}
-        </div>
+        {placeId ? (
+          <PlaceImageGallery
+            images={galleryImages}
+            placeId={placeId}
+            placeName={initialData?.name ?? ''}
+            stagedPreviews={stagedPreviews}
+            onAddFiles={handleAddStagedFiles}
+            onRemoveStagedFile={handleRemoveStagedFile}
+            isUploading={isLoading || isUploadingImage}
+            onDeleteImage={onDeleteImage}
+          />
+        ) : (
+          <div className="space-y-2">
+            {imagePreview ? (
+              <>
+                <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden">
+                  <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => { setImageFile(null); setImagePreview(null); setImageRemoved(true) }}
+                    className="absolute top-2 right-2 bg-black/60 rounded-full p-1 text-white hover:bg-black/80 transition-colors"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => document.getElementById('pf-image-upload')?.click()}
+                    className="shrink-0 w-16 h-16 rounded-lg border-2 border-dashed border-muted-foreground/25 flex items-center justify-center hover:border-primary/50 hover:bg-muted/20 transition-colors"
+                    title="Foto ersetzen"
+                  >
+                    <Camera className="h-5 w-5 text-muted-foreground/40" />
+                  </button>
+                </div>
+              </>
+            ) : (
+              <button
+                type="button"
+                onClick={() => document.getElementById('pf-image-upload')?.click()}
+                className="w-full h-[88px] rounded-xl border-2 border-dashed border-muted-foreground/25 flex items-center justify-center gap-2 hover:border-primary/40 hover:bg-muted/20 transition-colors"
+              >
+                <Camera className="h-5 w-5 text-muted-foreground/40" />
+                <span className="text-sm text-muted-foreground">Foto hinzufügen</span>
+              </button>
+            )}
+            <Input id="pf-image-upload" type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+          </div>
+        )}
       </div>
 
       {/* 6. Contact */}

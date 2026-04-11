@@ -574,7 +574,7 @@ export type Database = {
       event_status: "active" | "cancelled" | "full" | "completed"
       match_result: "team_a" | "team_b" | "draw"
       moderation_status: "pending" | "approved" | "rejected"
-      place_change_type: "create" | "update" | "delete"
+      place_change_type: "create" | "update" | "delete" | "image_add"
       skill_level: "beginner" | "intermediate" | "advanced" | "any"
       sport_type:
         | "tennis"
@@ -726,7 +726,7 @@ export const Constants = {
       event_status: ["active", "cancelled", "full", "completed"],
       match_result: ["team_a", "team_b", "draw"],
       moderation_status: ["pending", "approved", "rejected"],
-      place_change_type: ["create", "update", "delete"],
+      place_change_type: ["create", "update", "delete", "image_add"],
       skill_level: ["beginner", "intermediate", "advanced", "any"],
       sport_type: [
         "tennis",
@@ -864,5 +864,16 @@ export interface Area {
   min_lng: number
   max_lng: number
   is_active: boolean
+  created_at: string
+}
+
+export interface PlaceImage {
+  id: string
+  place_id: string
+  storage_path: string
+  url: string
+  is_cover: boolean
+  sort_order: number
+  uploaded_by: string | null
   created_at: string
 }
