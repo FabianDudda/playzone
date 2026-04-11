@@ -268,7 +268,7 @@ export default function PlaceBottomSheetVaul({
                     size="icon"
                     className="rounded-full h-10 w-10"
                     onClick={() => {
-                      const shareUrl = `${window.location.origin}/map?place=${selectedCourt.id}`
+                      const shareUrl = `${window.location.origin}/?place=${selectedCourt.id}`
                       if (navigator.share) {
                         navigator.share({
                           title: selectedCourt.name,

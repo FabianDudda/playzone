@@ -69,7 +69,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
         maxClusterRadius: 100,
         showCoverageOnHover: false,
         zoomToBoundsOnClick: true,
-        spiderfyOnMaxZoom: true,
+        spiderfyOnMaxZoom: false,
         removeOutsideVisibleBounds: true,
         iconCreateFunction: createClusterIcon,
         disableClusteringAtZoom: 14,

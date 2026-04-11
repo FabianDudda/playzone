@@ -26,8 +26,6 @@ const nextConfig: NextConfig = {
     return [
       { source: '/map', destination: '/', permanent: true },
       { source: '/map/new', destination: '/new', permanent: true },
-      // Old sitemap URLs: /?place=<id> → /places/<id>
-      { source: '/', has: [{ type: 'query', key: 'place', value: '(?<id>.+)' }], destination: '/places/:id', permanent: true },
     ]
   },
 };
