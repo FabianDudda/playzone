@@ -779,7 +779,7 @@ export default function LeafletCourtMap({
         </MapContainer>
       
       {/* Area banner — shown when map was opened via ?area= QR link */}
-      {initialArea && <AreaBanner area={initialArea} />}
+      {initialArea && initialArea.name && <AreaBanner area={initialArea} />}
 
       {/* Loading overlay */}
       {isLoading && (

@@ -85,11 +85,6 @@ export default function ProfilePage() {
                   )}
                 </>
               )}
-              <Link href="/orte" className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left">
-                <MapPin className="h-4 w-4 text-muted-foreground" />
-                <span>Orte</span>
-                <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
-              </Link>
               <Link href="/blog" className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left">
                 <Rss className="h-4 w-4 text-muted-foreground" />
                 <span>Blog</span>
@@ -201,11 +196,13 @@ export default function ProfilePage() {
                   )}
                 </>
               )}
-              <Link href="/orte" className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left">
-                <MapPin className="h-4 w-4 text-muted-foreground" />
-                <span>Orte</span>
-                <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
-              </Link>
+              {isAdmin && (
+                <Link href="/orte" className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left">
+                  <MapPin className="h-4 w-4 text-muted-foreground" />
+                  <span>Orte</span>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
+                </Link>
+              )}
               <Link href="/blog" className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left">
                 <Rss className="h-4 w-4 text-muted-foreground" />
                 <span>Blog</span>

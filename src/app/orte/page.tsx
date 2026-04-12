@@ -1,25 +1,25 @@
 import Link from 'next/link'
 import { Metadata } from 'next'
-import { getSportCounts } from '@/lib/supabase/seo-queries'
-import { sportToSlug } from '@/lib/utils/seo-slugs'
-import { sportIcons, sportNames } from '@/lib/utils/sport-utils'
+import { getCityList } from '@/lib/supabase/seo-queries'
+import { toSlug } from '@/lib/utils/seo-slugs'
 
 export const revalidate = 86400
 
 export const metadata: Metadata = {
   title: 'Sportplätze in Deutschland | OpenSportMap',
   description:
-    'Finde Sportplätze für Basketball, Fußball, Tennis, Volleyball und viele weitere Sportarten. Interaktive Karte mit allen Plätzen in Deutschland, Österreich und der Schweiz.',
+    'Finde Sportplätze in deiner Stadt. Basketball, Fußball, Tennis, Volleyball und viele weitere Sportarten in Deutschland, Österreich und der Schweiz.',
+  alternates: { canonical: '/orte' },
 }
 
 export default async function OrtePage() {
-  const sports = await getSportCounts()
+  const cities = await getCityList()
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: 'Sportplätze in Deutschland',
-    description: 'Übersicht aller Sportarten und Sportplätze auf OpenSportMap',
+    description: 'Übersicht aller Städte mit Sportplätzen auf OpenSportMap',
     url: 'https://opensportmap.de/orte',
   }
 
@@ -33,28 +33,24 @@ export default async function OrtePage() {
         <div className="space-y-1">
           <h1 className="text-2xl font-bold">Sportplätze entdecken</h1>
           <p className="text-muted-foreground">
-            Wähle eine Sportart, um alle Plätze in deiner Region zu finden.
+            Wähle eine Stadt, um alle Sportplätze in deiner Region zu finden.
           </p>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          {sports.map(({ sport, count }) => {
-            const slug = sportToSlug[sport]
-            if (!slug) return null
-            return (
-              <Link
-                key={sport}
-                href={`/orte/${slug}`}
-                className="flex items-center gap-3 p-4 rounded-xl border bg-card hover:bg-accent/50 transition-colors"
-              >
-                <span className="text-2xl">{sportIcons[sport] ?? '📍'}</span>
-                <div className="min-w-0">
-                  <p className="font-medium text-sm">{sportNames[sport] ?? sport}</p>
-                  <p className="text-xs text-muted-foreground">{count} Plätze</p>
-                </div>
-              </Link>
-            )
-          })}
+          {cities.map(({ city, count }) => (
+            <Link
+              key={city}
+              href={`/orte/${toSlug(city)}`}
+              className="flex items-center justify-between p-4 rounded-xl border bg-card hover:bg-accent/50 transition-colors"
+            >
+              <div className="min-w-0">
+                <p className="font-medium text-sm truncate">{city}</p>
+                <p className="text-xs text-muted-foreground">{count} Plätze</p>
+              </div>
+              <span className="text-muted-foreground shrink-0 ml-2">→</span>
+            </Link>
+          ))}
         </div>
 
         {/* CTA */}

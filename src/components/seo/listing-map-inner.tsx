@@ -1,10 +1,11 @@
 'use client'
 
 import { useEffect } from 'react'
-import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet'
-import { createSportIcon } from '@/lib/utils/sport-styles'
+import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 import { MAP_LAYERS } from '@/lib/utils/map-layers'
+import MarkerClusterGroup from '@/components/map/marker-cluster-group'
 import 'leaflet/dist/leaflet.css'
+import '@/components/map/cluster-styles.css'
 
 interface PlacePin {
   id: string
@@ -14,38 +15,39 @@ interface PlacePin {
   sports: string[] | null
 }
 
-interface BoundsFitterProps {
-  bounds: [[number, number], [number, number]]
+interface CenterSetterProps {
+  center: [number, number]
 }
 
-function BoundsFitter({ bounds }: BoundsFitterProps) {
+function CenterSetter({ center }: CenterSetterProps) {
   const map = useMap()
   useEffect(() => {
-    map.fitBounds(bounds, { padding: [32, 32], maxZoom: 13 })
-  }, [map, bounds])
+    map.setView(center, 14)
+  }, [map, center])
   return null
 }
 
 interface ListingMapInnerProps {
   places: PlacePin[]
+  center?: { lat: number; lng: number }
 }
 
-export default function ListingMapInner({ places }: ListingMapInnerProps) {
+export default function ListingMapInner({ places, center }: ListingMapInnerProps) {
   if (places.length === 0) return null
 
   const lats = places.map(p => p.latitude)
   const lngs = places.map(p => p.longitude)
-  const bounds: [[number, number], [number, number]] = [
-    [Math.min(...lats), Math.min(...lngs)],
-    [Math.max(...lats), Math.max(...lngs)],
-  ]
+
+  const fallbackLat = (Math.min(...lats) + Math.max(...lats)) / 2
+  const fallbackLng = (Math.min(...lngs) + Math.max(...lngs)) / 2
+  const mapCenter: [number, number] = center ? [center.lat, center.lng] : [fallbackLat, fallbackLng]
 
   const layer = MAP_LAYERS['voyager']
 
   return (
     <MapContainer
-      bounds={bounds}
-      boundsOptions={{ padding: [32, 32], maxZoom: 13 }}
+      center={mapCenter}
+      zoom={14}
       style={{ height: '100%', width: '100%' }}
       scrollWheelZoom={false}
       zoomControl={true}
@@ -57,22 +59,11 @@ export default function ListingMapInner({ places }: ListingMapInnerProps) {
         maxZoom={layer.maxZoom}
         subdomains={layer.subdomains ?? []}
       />
-      <BoundsFitter bounds={bounds} />
-      {places.map(place => {
-        const sports = (place.sports ?? []).filter(s => s !== 'other')
-        return (
-          <Marker
-            key={place.id}
-            position={[place.latitude, place.longitude]}
-            icon={createSportIcon(sports, false)}
-            eventHandlers={{
-              click: () => {
-                window.location.href = `/places/${place.id}`
-              },
-            }}
-          />
-        )
-      })}
+      <CenterSetter center={mapCenter} />
+      <MarkerClusterGroup
+        courts={places}
+        onCourtSelect={(place) => { window.location.href = `/places/${place.id}` }}
+      />
     </MapContainer>
   )
 }

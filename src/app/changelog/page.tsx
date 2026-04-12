@@ -8,7 +8,7 @@ import Link from 'next/link'
 const CHANGELOG = [
   {
     version: '0.3.5-alpha',
-    date: '11.04.2026',
+    date: '12.04.2026',
     current: true,
     items: [
       'implement functionality to upload more than 1 image per place',

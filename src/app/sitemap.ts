@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { blogPosts } from './blog/posts'
-import { getCityCombosStatic } from '@/lib/supabase/seo-queries'
+import { getCityCombosStatic, getCityListStatic } from '@/lib/supabase/seo-queries'
 import { toSlug, sportToSlug } from '@/lib/utils/seo-slugs'
 
 const BASE_URL = 'https://opensportmap.de'
@@ -22,35 +22,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }))
 
-  // Flat listing pages: /orte/[sport]/[stadt]
+  // City hub pages: /orte/[stadt]
+  const cities = await getCityListStatic()
+  const cityUrls: MetadataRoute.Sitemap = cities.map(({ city }) => ({
+    url: `${BASE_URL}/orte/${toSlug(city)}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  }))
+
+  // Sport-filtered city pages: /orte/[stadt]/[sport]
   const combos = await getCityCombosStatic()
-
-  const sportKeys = new Set<string>()
-  const sportUrls: MetadataRoute.Sitemap = []
-  const cityUrls: MetadataRoute.Sitemap = []
-
-  for (const c of combos) {
-    const sportSlug = sportToSlug[c.sport]
-    if (!sportSlug) continue
-    const stadtSlug = toSlug(c.city)
-
-    cityUrls.push({
-      url: `${BASE_URL}/orte/${sportSlug}/${stadtSlug}`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    })
-
-    if (!sportKeys.has(sportSlug)) {
-      sportKeys.add(sportSlug)
-      sportUrls.push({
-        url: `${BASE_URL}/orte/${sportSlug}`,
+  const citySportUrls: MetadataRoute.Sitemap = combos
+    .map(c => {
+      const sportSlug = sportToSlug[c.sport]
+      if (!sportSlug) return null
+      return {
+        url: `${BASE_URL}/orte/${toSlug(c.city)}/${sportSlug}`,
         lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      })
-    }
-  }
+        changeFrequency: 'weekly' as const,
+        priority: 0.7,
+      }
+    })
+    .filter(Boolean) as MetadataRoute.Sitemap
 
   const blogUrls: MetadataRoute.Sitemap = blogPosts.map(post => ({
     url: `${BASE_URL}/blog/${post.slug}`,
@@ -91,8 +85,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.4,
     },
     ...blogUrls,
-    ...sportUrls,
     ...cityUrls,
+    ...citySportUrls,
     ...placeUrls,
   ]
 }

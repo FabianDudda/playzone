@@ -1,26 +1,31 @@
 import { ImageResponse } from 'next/og'
-import { sportPlural, slugToSport } from '@/lib/utils/seo-slugs'
-import { sportIcons } from '@/lib/utils/sport-utils'
-import { resolveCitySlug, getCityPlaceCount } from '@/lib/supabase/seo-queries'
+import { resolveCitySlugOnly } from '@/lib/supabase/seo-queries'
+import { createClient } from '@/lib/supabase/server'
 
 export const runtime = 'nodejs'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
 interface Props {
-  params: Promise<{ sport: string; stadt: string }>
+  params: Promise<{ stadt: string }>
+}
+
+async function getCityTotalCount(city: string): Promise<number> {
+  const supabase = await createClient()
+  const { count } = await supabase
+    .from('places')
+    .select('id', { count: 'exact', head: true })
+    .eq('moderation_status', 'approved')
+    .eq('city', city)
+  return count ?? 0
 }
 
 export default async function Image({ params }: Props) {
-  const { sport: sportSlug, stadt: stadtSlug } = await params
+  const { stadt: stadtSlug } = await params
 
-  const resolved = await resolveCitySlug(sportSlug, stadtSlug)
-
-  const sport = resolved?.sport ?? slugToSport[sportSlug] ?? sportSlug
-  const city = resolved?.city ?? stadtSlug
-  const count = resolved ? await getCityPlaceCount(resolved.sport, resolved.city) : 0
-  const plural = sportPlural[sport] ?? sport
-  const icon = sportIcons[sport] ?? '📍'
+  const city = await resolveCitySlugOnly(stadtSlug)
+  const displayCity = city ?? stadtSlug
+  const count = city ? await getCityTotalCount(city) : 0
 
   return new ImageResponse(
     (
@@ -44,7 +49,7 @@ export default async function Image({ params }: Props) {
           }}
         />
 
-        {/* Decorative large sport icon — blurred background accent */}
+        {/* Decorative large icon */}
         <div
           style={{
             position: 'absolute',
@@ -56,7 +61,7 @@ export default async function Image({ params }: Props) {
             userSelect: 'none',
           }}
         >
-          {icon}
+          🗺️
         </div>
 
         {/* Decorative circle */}
@@ -106,9 +111,8 @@ export default async function Image({ params }: Props) {
             </span>
           </div>
 
-          {/* Middle: City + sport */}
+          {/* Middle: City + count */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {/* Count badge */}
             {count > 0 && (
               <div
                 style={{
@@ -123,24 +127,24 @@ export default async function Image({ params }: Props) {
                   fontWeight: 600,
                 }}
               >
-                {count} {plural}
+                {count} Sportplätze
               </div>
             )}
 
             <div
               style={{
-                fontSize: city.length > 14 ? 72 : 88,
+                fontSize: displayCity.length > 14 ? 72 : 88,
                 fontWeight: 800,
                 color: '#f8fafc',
                 lineHeight: 1,
                 letterSpacing: '-2px',
               }}
             >
-              {city}
+              {displayCity}
             </div>
           </div>
 
-          {/* Bottom: Sport pill */}
+          {/* Bottom: Category pill */}
           <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
             <div
               style={{
@@ -156,8 +160,8 @@ export default async function Image({ params }: Props) {
                 gap: 10,
               }}
             >
-              <span>{icon}</span>
-              <span>{plural}</span>
+              <span>📍</span>
+              <span>Alle Sportplätze</span>
             </div>
           </div>
         </div>

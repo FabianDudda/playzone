@@ -5,7 +5,7 @@ import MapPageClient from './map-page-client'
 import { Area } from '@/lib/supabase/types'
 
 interface PageProps {
-  searchParams: Promise<{ place?: string; area?: string }>
+  searchParams: Promise<{ place?: string; area?: string; bbox?: string }>
 }
 
 async function getPlaceForSeo(placeId: string) {
@@ -74,10 +74,25 @@ async function getAreaBySlug(slug: string): Promise<Area | null> {
   return data ?? null
 }
 
-export default async function CourtsPage({ searchParams }: PageProps) {
-  const { place: placeId, area: areaSlug } = await searchParams
+function parseBbox(bbox: string): Area | null {
+  const parts = bbox.split(',').map(Number)
+  if (parts.length !== 4 || parts.some(isNaN)) return null
+  const [min_lat, min_lng, max_lat, max_lng] = parts
+  return {
+    id: 'bbox',
+    slug: 'bbox',
+    name: '',
+    description: null,
+    min_lat, min_lng, max_lat, max_lng,
+    is_active: true,
+    created_at: '',
+  }
+}
 
-  const area = areaSlug ? await getAreaBySlug(areaSlug) : null
+export default async function CourtsPage({ searchParams }: PageProps) {
+  const { place: placeId, area: areaSlug, bbox } = await searchParams
+
+  const area = areaSlug ? await getAreaBySlug(areaSlug) : bbox ? parseBbox(bbox) : null
 
   let jsonLd: object | null = null
 

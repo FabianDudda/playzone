@@ -23,18 +23,20 @@ interface ListingMapProps {
   places: PlacePin[]
   height?: string
   className?: string
+  center?: { lat: number; lng: number }
 }
 
 export default function ListingMap({
   places,
   height = '280px',
   className = '',
+  center,
 }: ListingMapProps) {
   if (places.length === 0) return null
 
   return (
     <div className={`rounded-xl overflow-hidden border ${className}`} style={{ height }}>
-      <ListingMapInner places={places} />
+      <ListingMapInner places={places} center={center} />
     </div>
   )
 }

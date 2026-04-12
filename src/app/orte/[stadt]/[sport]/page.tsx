@@ -1,13 +1,16 @@
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import { Metadata } from 'next'
 import { sportPlural, toSlug, sportToSlug } from '@/lib/utils/seo-slugs'
 import {
   resolveCitySlug,
   getListingPlacesCity,
   getAllCitiesForSport,
+  getAllPlacesInCityForMapBySport,
   getOtherSportsInCity,
   getCityCombosStatic,
   getCityPlaceCount,
+  getCityCenter,
   MIN_PLACES,
   PAGE_SIZE,
 } from '@/lib/supabase/seo-queries'
@@ -17,25 +20,24 @@ import PlaceListCard from '@/components/seo/place-list-card'
 import ListingMap from '@/components/seo/listing-map'
 import FaqSection, { buildListingFaq } from '@/components/seo/faq-section'
 import Pagination from '@/components/seo/pagination'
-import Link from 'next/link'
 
 export const revalidate = 86400
 
 interface PageProps {
-  params: Promise<{ sport: string; stadt: string }>
+  params: Promise<{ stadt: string; sport: string }>
   searchParams: Promise<{ seite?: string }>
 }
 
 export async function generateStaticParams() {
   const combos = await getCityCombosStatic()
   return combos.map(c => ({
-    sport: sportToSlug[c.sport] ?? toSlug(c.sport),
     stadt: toSlug(c.city),
+    sport: sportToSlug[c.sport] ?? toSlug(c.sport),
   }))
 }
 
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
-  const { sport: sportSlug, stadt: stadtSlug } = await params
+  const { stadt: stadtSlug, sport: sportSlug } = await params
   const { seite } = await searchParams
   const page = Math.max(1, Number(seite ?? '1'))
 
@@ -50,7 +52,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   const plural = sportPlural[resolved.sport] ?? resolved.sport
   const city = resolved.city
   const year = new Date().getFullYear()
-  const basePath = `/orte/${sportSlug}/${stadtSlug}`
+  const basePath = `/orte/${stadtSlug}/${sportSlug}`
 
   return {
     title: `${plural} in ${city} | OpenSportMap`,
@@ -62,7 +64,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
 }
 
 export default async function CityListingPage({ params, searchParams }: PageProps) {
-  const { sport: sportSlug, stadt: stadtSlug } = await params
+  const { stadt: stadtSlug, sport: sportSlug } = await params
   const { seite } = await searchParams
   const page = Math.max(1, Number(seite ?? '1'))
 
@@ -73,17 +75,17 @@ export default async function CityListingPage({ params, searchParams }: PageProp
   const plural = sportPlural[sport] ?? sport
   const icon = sportIcons[sport] ?? '📍'
   const year = new Date().getFullYear()
-  const basePath = `/orte/${sportSlug}/${stadtSlug}`
+  const basePath = `/orte/${stadtSlug}/${sportSlug}`
 
-  const [{ places, total }, otherCities, otherSports] = await Promise.all([
+  const [{ places, total }, mapPlaces, otherCities, otherSports, cityCenter] = await Promise.all([
     getListingPlacesCity({ sport, city, page }),
-    getAllCitiesForSport(sport).then(cities =>
+    getAllPlacesInCityForMapBySport(city, sport),
+    getAllCitiesForSport(sport, MIN_PLACES).then(cities =>
       cities.filter(c => c.city !== city).slice(0, 12),
     ),
     getOtherSportsInCity(city, sport),
+    getCityCenter(city),
   ])
-
-  if (total < MIN_PLACES) notFound()
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -126,8 +128,8 @@ export default async function CityListingPage({ params, searchParams }: PageProp
           items={[
             { label: 'OpenSportMap', href: '/' },
             { label: 'Sportplätze', href: '/orte' },
-            { label: plural, href: `/orte/${sportSlug}` },
-            { label: city },
+            { label: city, href: `/orte/${stadtSlug}` },
+            { label: plural },
           ]}
         />
 
@@ -141,17 +143,24 @@ export default async function CityListingPage({ params, searchParams }: PageProp
         </div>
 
         {/* Map */}
-        <ListingMap places={places} height="280px" />
+        <ListingMap places={mapPlaces} height="280px" center={cityCenter ?? undefined} />
 
-        <a
-          href="/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
-        >
-          <span>{icon}</span>
-          Entdecke alle {plural} auf der Karte
-        </a>
+        {mapPlaces.length > 0 && (() => {
+          const lats = mapPlaces.map(p => p.latitude)
+          const lngs = mapPlaces.map(p => p.longitude)
+          const bbox = `${Math.min(...lats)},${Math.min(...lngs)},${Math.max(...lats)},${Math.max(...lngs)}`
+          return (
+            <a
+              href={`/?bbox=${bbox}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+            >
+              <span>{icon}</span>
+              Entdecke noch mehr {plural}
+            </a>
+          )
+        })()}
 
         {/* Place list */}
         <div className="space-y-2">
@@ -190,7 +199,7 @@ export default async function CityListingPage({ params, searchParams }: PageProp
                   return (
                     <Link
                       key={s}
-                      href={`/orte/${slug}/${stadtSlug}`}
+                      href={`/orte/${stadtSlug}/${slug}`}
                       className="text-sm px-3 py-1.5 rounded-full border hover:bg-accent/50 transition-colors flex items-center gap-1"
                     >
                       <span>{sportIcons[s] ?? ''}</span>
@@ -213,7 +222,7 @@ export default async function CityListingPage({ params, searchParams }: PageProp
                 {otherCities.map(({ city: c, count }) => (
                   <Link
                     key={c}
-                    href={`/orte/${sportSlug}/${toSlug(c)}`}
+                    href={`/orte/${toSlug(c)}/${sportSlug}`}
                     className="text-sm px-3 py-1.5 rounded-full border hover:bg-accent/50 transition-colors"
                   >
                     {c}{' '}
@@ -224,19 +233,19 @@ export default async function CityListingPage({ params, searchParams }: PageProp
             </section>
           )}
 
-          {/* Back to hub */}
+          {/* Back links */}
           <section className="space-y-1">
             <Link
-              href={`/orte/${sportSlug}`}
+              href={`/orte/${stadtSlug}`}
               className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              ← Alle {plural}
+              ← Alle Sportplätze in {city}
             </Link>
             <Link
               href="/orte"
               className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              ← Alle Sportarten
+              ← Alle Städte
             </Link>
           </section>
         </div>
