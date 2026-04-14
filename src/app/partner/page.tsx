@@ -33,7 +33,27 @@ export default function PartnerPage() {
                   rel="noopener noreferrer"
                   className="inline-block text-muted-foreground hover:text-foreground transition-colors underline underline-offset-4"
                 >
-                  dubisteinzoccer.de
+                  https://www.dubisteinzoccer.de/
+                </a>
+              </div>
+            </div>
+            <div className="flex items-start gap-4">
+            <img src="/partner/Deutscher_Sportlehrerverband_logo.png"
+                 alt="Deutscher Sportlehrerverband e.V."                                
+                 className="h-12 w-12 rounded-lg object-contain shrink-0"
+            />            
+            <div className="text-sm space-y-1">
+                <p className="font-medium">Deutscher Sportlehrerverband e.V.</p>
+                <p className="text-muted-foreground leading-relaxed">
+                Der Deutsche Sportlehrerverband ist der größte Berufsverband in Deutschland für alle Sportlehrkräfte. Er vertritt die Belange des Schulsports und des Sportunterrichts in allen Bereichen des öffentlichen Lebens.
+                </p>
+                <a
+                  href="https://www.dslv.de/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block text-muted-foreground hover:text-foreground transition-colors underline underline-offset-4"
+                >
+                  https://www.dslv.de/
                 </a>
               </div>
             </div>

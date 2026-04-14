@@ -40,7 +40,10 @@ import {
   ChevronUp,
   Copy,
   Camera,
+  ShieldCheck,
 } from 'lucide-react'
+import ValidationBadge from '@/components/admin/validation-badge'
+import type { ValidationResult } from '@/lib/validation/place-validation'
 import { getSportBadgeClasses, sportNames, sportIcons, getPlaceTypeBadgeClasses, placeTypeLabels, placeTypeIcons, PlaceType } from '@/lib/utils/sport-utils'
 import Link from 'next/link'
 import {
@@ -194,6 +197,7 @@ function PlaceCard({
   isSelected = false,
   onToggleSelection,
   forceExpanded = false,
+  validationResult,
 }: {
   place: PlaceWithCourts
   onApprove: (id: string) => void
@@ -203,6 +207,7 @@ function PlaceCard({
   isSelected?: boolean
   onToggleSelection?: () => void
   forceExpanded?: boolean
+  validationResult?: ValidationResult
 }) {
   const [isExpanded, setIsExpanded] = useState(false)
   const expanded = forceExpanded || isExpanded
@@ -418,6 +423,9 @@ function PlaceCard({
                     {getStatusIcon(place.moderation_status)}
                     <span className="ml-1 capitalize">{place.moderation_status}</span>
                   </Badge>
+                )}
+                {place.moderation_status === 'pending' && (
+                  <ValidationBadge place={place} initialResult={validationResult} />
                 )}
               </div>
 
@@ -1145,6 +1153,11 @@ function PlacesList({ status }: { status: ModerationStatus }) {
   const [page, setPage] = useState(0)
   const [expandAll, setExpandAll] = useState(false)
 
+  // Validation state
+  const [validationResults, setValidationResults] = useState<Record<string, ValidationResult>>({})
+  const [isBulkValidating, setIsBulkValidating] = useState(false)
+  const [validationProgress, setValidationProgress] = useState(0)
+
   // Submitter filter state
   const [submitterFilter, setSubmitterFilter] = useState<'all' | 'admin' | 'user'>('all')
 
@@ -1285,6 +1298,48 @@ function PlacesList({ status }: { status: ModerationStatus }) {
     const count = selectedPlaces.size
     if (!window.confirm(`Delete ${count} place${count !== 1 ? 's' : ''}? This cannot be undone.`)) return
     bulkDeleteMutation.mutate(Array.from(selectedPlaces))
+  }
+
+  const handleBulkValidate = async (source: 'osm' | 'google') => {
+    if (selectedPlaces.size === 0) return
+    setIsBulkValidating(true)
+    setValidationProgress(0)
+    const ids = Array.from(selectedPlaces)
+    const BATCH_SIZE = 10
+    let completed = 0
+
+    for (let i = 0; i < ids.length; i += BATCH_SIZE) {
+      const batch = ids.slice(i, i + BATCH_SIZE)
+      try {
+        const res = await fetch('/api/admin/places/validate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ placeIds: batch, source }),
+        })
+        if (res.ok) {
+          const data = await res.json()
+          setValidationResults(prev => {
+            const updated = { ...prev }
+            for (const result of (data.results as ValidationResult[]) || []) {
+              // Merge: keep existing result for the other source
+              const existing = updated[result.placeId]
+              updated[result.placeId] = {
+                ...result,
+                osm: source === 'osm' ? result.osm : (existing?.osm ?? result.osm),
+                google: source === 'google' ? result.google : (existing?.google ?? result.google),
+              }
+            }
+            return updated
+          })
+        }
+      } catch (err) {
+        console.error('Validation batch error:', err)
+      }
+      completed += batch.length
+      setValidationProgress(completed)
+    }
+
+    setIsBulkValidating(false)
   }
 
   // Derive unique filter options from loaded data
@@ -1641,8 +1696,30 @@ function PlacesList({ status }: { status: ModerationStatus }) {
               <div className="flex items-center gap-2">
                 <Button
                   size="sm"
+                  variant="outline"
+                  onClick={() => handleBulkValidate('osm')}
+                  disabled={isBulkValidating || bulkApproveMutation.isPending || bulkDeleteMutation.isPending}
+                >
+                  {isBulkValidating
+                    ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />OSM ({validationProgress}/{selectedPlaces.size})</>
+                    : <><ShieldCheck className="h-4 w-4 mr-2" />OSM ({selectedPlaces.size})</>
+                  }
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => handleBulkValidate('google')}
+                  disabled={isBulkValidating || bulkApproveMutation.isPending || bulkDeleteMutation.isPending}
+                >
+                  {isBulkValidating
+                    ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Google ({validationProgress}/{selectedPlaces.size})</>
+                    : <><ShieldCheck className="h-4 w-4 mr-2" />Google ({selectedPlaces.size})</>
+                  }
+                </Button>
+                <Button
+                  size="sm"
                   onClick={handleBulkApprove}
-                  disabled={bulkApproveMutation.isPending || bulkDeleteMutation.isPending}
+                  disabled={bulkApproveMutation.isPending || bulkDeleteMutation.isPending || isBulkValidating}
                   className="bg-green-600 hover:bg-green-700"
                 >
                   <CheckCircle className="h-4 w-4 mr-2" />
@@ -1652,7 +1729,7 @@ function PlacesList({ status }: { status: ModerationStatus }) {
                   size="sm"
                   variant="destructive"
                   onClick={handleBulkDelete}
-                  disabled={bulkDeleteMutation.isPending || bulkApproveMutation.isPending}
+                  disabled={bulkDeleteMutation.isPending || bulkApproveMutation.isPending || isBulkValidating}
                 >
                   <Trash2 className="h-4 w-4 mr-2" />
                   Delete Selected ({selectedPlaces.size})
@@ -1689,6 +1766,7 @@ function PlacesList({ status }: { status: ModerationStatus }) {
           isSelected={selectedPlaces.has(place.id)}
           onToggleSelection={() => togglePlaceSelection(place.id)}
           forceExpanded={expandAll}
+          validationResult={validationResults[place.id]}
         />
       ))}
 
