@@ -72,7 +72,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
         spiderfyOnMaxZoom: false,
         removeOutsideVisibleBounds: true,
         iconCreateFunction: createClusterIcon,
-        disableClusteringAtZoom: 14,
+        disableClusteringAtZoom: 13,
       })
       map.addLayer(clusterGroupRef.current)
     }
@@ -87,6 +87,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
       const availableSports = court.sports || []
       const marker = L.marker([court.latitude, court.longitude], {
         icon: createSportIcon(availableSports, false),
+        zIndexOffset: availableSports.length > 1 ? 1000 : availableSports.length === 1 && availableSports[0] === 'tischtennis' ? -1000 : 0,
       } as any)
       ;(marker as any).options.placeData = court
       marker.on('click', (e) => {

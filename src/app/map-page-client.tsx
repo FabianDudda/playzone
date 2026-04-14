@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, Suspense, useTransition, useDeferredValue } from 'react'
+import { useState, useMemo, Suspense, useTransition, useDeferredValue, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/components/providers/auth-provider'
@@ -20,6 +20,15 @@ const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map
 })
 
 function MapPage({ initialArea }: { initialArea?: Area | null }) {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
+    }
+  }, [])
+
   const { user, loading } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()

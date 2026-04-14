@@ -212,7 +212,7 @@ function createSimpleSportIcon(sports: string[], baseSize: number, isSelected: b
   const remainingCount = showOverflow ? Math.max(0, sports.length - 2) : 0
   
   // All pins use consistent size - unified width
-  const pinSize = 44
+  const pinSize = 36
   
   // Dynamic icon sizing based on number of sports
   let iconSizeRatio
@@ -415,7 +415,7 @@ export function createSportIcon(sports: string[], isSelected = false): L.DivIcon
   }
   
   // All pins now use consistent teardrop size
-  const pinSize = 40 // Updated to match current pin size
+  const pinSize = 36
   const containerWidth = pinSize + 8
   const containerHeight = Math.round(pinSize * 1.3) + 8 // Account for teardrop height
   

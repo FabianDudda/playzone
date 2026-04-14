@@ -57,6 +57,17 @@ interface LeafletCourtMapProps {
   initialArea?: Area
 }
 
+// Attach a wheel listener that stops both propagation and default scroll/zoom.
+// Called once per stack element (guarded by a data attribute).
+function blockWheelOnStack(el: HTMLElement) {
+  if (el.dataset.wheelBlocked) return
+  el.dataset.wheelBlocked = '1'
+  el.addEventListener('wheel', (e) => {
+    e.stopPropagation()
+    e.preventDefault()
+  }, { passive: false })
+}
+
 // Component to handle map clicks
 function MapClickHandler({ 
   onMapClick, 
@@ -135,6 +146,7 @@ function FilterButtonHandler({ onFilterClick, isFilterActive }: { onFilterClick:
       topRightStack = L.DomUtil.create('div', 'map-control-top-right-stack')
       map.getContainer().appendChild(topRightStack)
     }
+    blockWheelOnStack(topRightStack)
 
     const filterContainer = L.DomUtil.create('div', 'leaflet-control-filter')
     const filterButton = L.DomUtil.create('button', 'filter-button map-control-button', filterContainer)
@@ -185,6 +197,7 @@ function FavoritesButtonHandler({ onClick }: { onClick: () => void }) {
       topRightStack = L.DomUtil.create('div', 'map-control-top-right-stack')
       map.getContainer().appendChild(topRightStack)
     }
+    blockWheelOnStack(topRightStack)
 
     const container = L.DomUtil.create('div', 'leaflet-control-favorites')
     const button = L.DomUtil.create('button', 'favorites-button map-control-button', container)
@@ -331,6 +344,7 @@ function UserLocationHandler({
       bottomRightStack = L.DomUtil.create('div', 'map-control-bottom-right-stack')
       map.getContainer().appendChild(bottomRightStack)
     }
+    blockWheelOnStack(bottomRightStack)
 
     const locationContainer = L.DomUtil.create('div', 'leaflet-control-location-modern')
     const locationButton = L.DomUtil.create('button', 'location-button map-control-button', locationContainer) as HTMLButtonElement
@@ -411,6 +425,7 @@ function LayerToggleHandler({ currentLayerId, onLayerChange }: { currentLayerId:
       bottomRightStack = L.DomUtil.create('div', 'map-control-bottom-right-stack')
       map.getContainer().appendChild(bottomRightStack)
     }
+    blockWheelOnStack(bottomRightStack)
 
     const layerContainer = L.DomUtil.create('div', 'leaflet-control-layer-toggle')
     const layerButton = L.DomUtil.create('button', 'layer-toggle-button map-control-button', layerContainer)
@@ -478,6 +493,7 @@ function AddCourtButtonHandler({ onAddCourtClick, user }: { onAddCourtClick: () 
       topRightStack = L.DomUtil.create('div', 'map-control-top-right-stack')
       map.getContainer().appendChild(topRightStack)
     }
+    blockWheelOnStack(topRightStack)
 
     const addCourtContainer = L.DomUtil.create('div', 'leaflet-control-add-court')
     const addCourtButton = L.DomUtil.create('button', 'add-court-button map-control-button', addCourtContainer)
