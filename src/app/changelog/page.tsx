@@ -7,9 +7,19 @@ import Link from 'next/link'
 
 const CHANGELOG = [
   {
+    version: '0.3.6-alpha',
+    date: '14.04.2026',
+    current: true,
+    items: [
+      'make place pins smaller',
+      'disable clustering place pins one zoom level earlier',
+      'removed all openstreetmap data',
+    ],
+  },
+  {
     version: '0.3.5-alpha',
     date: '12.04.2026',
-    current: true,
+    current: false,
     items: [
       'implement functionality to upload more than 1 image per place',
       'add pages with place list sort by sport type and location',

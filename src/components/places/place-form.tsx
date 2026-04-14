@@ -409,6 +409,7 @@ export default function PlaceForm({
             onMapClick={handleMapClick}
             height="260px"
             allowAddCourt={true}
+            embedded={true}
             selectedLocation={location}
             placesCount={allPlaces.length}
             showFilter={false}

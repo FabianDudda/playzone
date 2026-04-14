@@ -1,6 +1,2 @@
-- admin dashboard: filter for source, placetype, sporttype, country, city and district
-- pages with list of all places per sport and location
-- add multiple images
-
-
-
+TO DO:
+- DONT LOAD ALL PLACES ON EDIT-PLACE/ADD-PLACE PAGE (MAYBE ONLY THESE IN RADIUS OF 1000m?)

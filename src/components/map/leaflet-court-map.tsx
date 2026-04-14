@@ -785,9 +785,6 @@ export default function LeafletCourtMap({
           {/* Layer toggle button */}
           <LayerToggleHandler currentLayerId={currentLayerId} onLayerChange={handleLayerChange} />
           
-          {/* Places count display */}
-          <PlacesCountHandler count={placesCount} />
-          
           {/* Add court button */}
           {showAddCourtButton && onAddCourtClick && (
             <AddCourtButtonHandler onAddCourtClick={onAddCourtClick} user={user} />

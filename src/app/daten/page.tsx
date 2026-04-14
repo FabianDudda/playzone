@@ -38,10 +38,6 @@ const DATA_SOURCES = [
     license: 'Datenlizenz Deutschland – Zero – Version 2.0',
   },
   {
-    source: 'OpenStreetMap',
-    license: 'Open Database-Lizenz ',
-  },
-  {
     source: 'Freie und Hansestadt Hamburg, Behörde für Umwelt und Energie',
     license: 'Datenlizenz Deutschland Namensnennung 2.0',
   },
@@ -109,40 +105,6 @@ export default function DatenquellenPage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="p-4 text-sm space-y-4">
-            <div>
-              <h2 className="font-semibold mb-1">Karten</h2>
-              <p className="text-muted-foreground">
-                Kartendaten werden von  <a
-                  href="https://www.openstreetmap.org/copyright"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground underline underline-offset-2"
-                >OpenStreetMap</a> bereitgestellt.
-                OpenStreetMap ist eine freie, bearbeitbare Weltkarte, die von einer Gemeinschaft
-                freiwilliger Mitwirkender erstellt wird.
-              </p>
-         
-            </div>
-
-            <div>
-              <h2 className="font-semibold mb-1">Nominatim</h2>
-              <p className="text-muted-foreground">
-                Geocodierung (Umwandlung von Adressen in Koordinaten und umgekehrt) erfolgt
-                über den Nominatim-Dienst, der auf OpenStreetMap-Daten basiert.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="font-semibold mb-1">Nutzerbeiträge</h2>
-              <p className="text-muted-foreground">
-                Sportplätze und Orte werden von der Community eingereicht und von unserem Team
-                geprüft. Alle Rechte vorbehalten. Die Inhalte dürfen ohne ausdrückliche Genehmigung nicht verwendet, kopiert oder weiterverbreitet werden.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
 
         <Card>
           <CardContent className="p-4 text-sm space-y-4">

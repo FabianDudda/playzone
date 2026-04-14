@@ -237,6 +237,17 @@ async function importPlace(jsonPlace: JsonPlace, userId: string, sourceFilename:
       return { success: false, error: courtsError }
     }
 
+    // Update the places.sports array to include the newly added sports
+    const updatedSports = [...duplicate.existingSports, ...newCourts.map(c => c.sport)]
+    const { error: updateError } = await supabase
+      .from('places')
+      .update({ sports: updatedSports })
+      .eq('id', duplicate.id)
+    if (updateError) {
+      console.error(`❌ Error updating sports array for existing place ${duplicate.name}:`, updateError)
+      return { success: false, error: updateError }
+    }
+
     const newSports = newCourts.map(c => c.sport).join(', ')
     console.log(`🔄 Merged ${newCourts.length} new courts (${newSports}) into existing place: ${duplicate.name}`)
     return { success: true, skipped: false, merged: true }

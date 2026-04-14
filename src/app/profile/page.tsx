@@ -121,7 +121,7 @@ export default function ProfilePage() {
         <a href="https://www.instagram.com/opensportmap/" target="_blank" rel="noopener noreferrer" className="flex justify-center text-muted-foreground hover:text-foreground transition-colors">
           <Instagram className="h-5 w-5" />
         </a>
-        <Link href="/changelog" className="block text-center text-xs text-muted-foreground hover:text-foreground transition-colors">App Version 0.3.5-alpha</Link>
+        <Link href="/changelog" className="block text-center text-xs text-muted-foreground hover:text-foreground transition-colors">App Version 0.3.6-alpha</Link>
       </div>
     )
   }
@@ -196,13 +196,11 @@ export default function ProfilePage() {
                   )}
                 </>
               )}
-              {isAdmin && (
-                <Link href="/orte" className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left">
-                  <MapPin className="h-4 w-4 text-muted-foreground" />
-                  <span>Orte</span>
-                  <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
-                </Link>
-              )}
+              <Link href="/orte" className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left">
+                <MapPin className="h-4 w-4 text-muted-foreground" />
+                <span>Orte</span>
+                <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
+              </Link>
               <Link href="/blog" className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left">
                 <Rss className="h-4 w-4 text-muted-foreground" />
                 <span>Blog</span>
@@ -252,7 +250,7 @@ export default function ProfilePage() {
         <a href="https://www.instagram.com/opensportmapde/" target="_blank" rel="noopener noreferrer" className="flex justify-center text-muted-foreground hover:text-foreground transition-colors">
           <Instagram className="h-5 w-5" />
         </a>
-        <Link href="/changelog" className="block text-center text-xs text-muted-foreground hover:text-foreground transition-colors">App Version 0.3.5-alpha</Link>
+        <Link href="/changelog" className="block text-center text-xs text-muted-foreground hover:text-foreground transition-colors">App Version 0.3.6-alpha</Link>
       </div>
     </div>
   )
