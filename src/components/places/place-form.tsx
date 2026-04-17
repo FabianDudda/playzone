@@ -15,7 +15,7 @@ import { ATTRIBUTE_DEFINITIONS, getRelevantAttributes, rowsToAttributeMap } from
 import { reverseGeocode, AddressComponents } from '@/lib/geocoding'
 import { uploadCourtImage, uploadPlaceImageScoped, UploadProgress } from '@/lib/supabase/storage'
 import { useAuth } from '@/components/providers/auth-provider'
-import { sportIcons } from '@/lib/utils/sport-utils'
+import { sportIcons, sportNames } from '@/lib/utils/sport-utils'
 import { cn, validateWebsite } from '@/lib/utils'
 import { MapPin, Plus, Upload, X, Image, Camera, Loader2, Phone, Mail, Globe } from 'lucide-react'
 import { Textarea } from '@/components/ui/textarea'
@@ -614,20 +614,24 @@ export default function PlaceForm({
 
       {/* Court Details */}
       {(selectedSports.length > 0 || customSports.length > 0) && (
-        <div className="space-y-3">
+        <div className="space-y-4">
           <Label>Platz-Details</Label>
           {selectedSports.map(sport => {
             const surfaces = courtSurfaces[sport] || ['']
-            const sportLabel = sport.charAt(0).toUpperCase() + sport.slice(1)
+            const sportLabel = sportNames[sport] || sport.charAt(0).toUpperCase() + sport.slice(1)
             const courtAttrs = getRelevantAttributes('court', [sport as SportType])
             return (
               <div key={sport} className="space-y-2">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-base leading-none">{sportIcons[sport] || '🏅'}</span>
+                  <span className="text-sm font-medium">{sportLabel}</span>
+                </div>
                 {surfaces.map((surface, idx) => (
                   <div key={idx} className="space-y-1.5">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground min-w-[8rem]">{sportLabel} Platz {idx + 1}</span>
+                      <span className="text-sm text-muted-foreground min-w-[4rem]">Platz {idx + 1}</span>
                       <Select value={surface || 'Unbekannt'} onValueChange={val => updateCourtSurface(sport, idx, val)}>
-                        <SelectTrigger className="flex-1"><SelectValue placeholder="Belagstyp..." /></SelectTrigger>
+                        <SelectTrigger className="flex-1"><SelectValue placeholder="Untergrund wählen" /></SelectTrigger>
                         <SelectContent>
                           {SURFACE_TYPES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
                         </SelectContent>
@@ -666,7 +670,7 @@ export default function PlaceForm({
                   </div>
                 ))}
                 <Button type="button" variant="outline" size="sm" onClick={() => addCourtForSport(sport)}>
-                  <Plus className="h-4 w-4 mr-1" />Weiteren Platz hinzufügen
+                  <Plus className="h-4 w-4 mr-1" />Weiteren {sportLabel} Platz hinzufügen
                 </Button>
               </div>
             )
@@ -675,11 +679,15 @@ export default function PlaceForm({
             const surfaces = courtSurfaces[name] || ['']
             return (
               <div key={name} className="space-y-2">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-base leading-none">🏅</span>
+                  <span className="text-sm font-medium">{name}</span>
+                </div>
                 {surfaces.map((surface, idx) => (
                   <div key={idx} className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground min-w-[8rem]">{name} Platz {idx + 1}</span>
+                    <span className="text-sm text-muted-foreground min-w-[4rem]">Platz {idx + 1}</span>
                     <Select value={surface || 'Unbekannt'} onValueChange={val => updateCourtSurface(name, idx, val)}>
-                      <SelectTrigger className="flex-1"><SelectValue placeholder="Belagstyp..." /></SelectTrigger>
+                      <SelectTrigger className="flex-1"><SelectValue placeholder="Untergrund wählen" /></SelectTrigger>
                       <SelectContent>
                         {SURFACE_TYPES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
                       </SelectContent>
@@ -690,7 +698,7 @@ export default function PlaceForm({
                   </div>
                 ))}
                 <Button type="button" variant="outline" size="sm" onClick={() => addCourtForSport(name)}>
-                  <Plus className="h-4 w-4 mr-1" />Weiteren Platz hinzufügen
+                  <Plus className="h-4 w-4 mr-1" />Weiteren {name} Platz hinzufügen
                 </Button>
               </div>
             )
