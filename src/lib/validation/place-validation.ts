@@ -1,4 +1,5 @@
 export interface ValidationMatch {
+  osmId?: number            // OSM element id for deduplication
   name: string
   sportTag: string | null   // raw tag from OSM or primaryType from Google
   appSports: string[]       // mapped to app sport slugs
@@ -148,12 +149,46 @@ function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
   return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)))
 }
 
+const OVERPASS_MIRRORS = [
+  'https://overpass-api.de/api/interpreter',
+  'https://overpass.kumi.systems/api/interpreter',
+  'https://maps.mail.ru/osm/tools/overpass/api/interpreter',
+]
+
+async function fetchOverpass(queryData: string): Promise<Response> {
+  let lastError: Error | null = null
+  for (const endpoint of OVERPASS_MIRRORS) {
+    try {
+      const body = new URLSearchParams()
+      body.set('data', queryData)
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'User-Agent': 'PlayzoneAdminValidation/1.0 (admin tool)',
+        },
+        body: body.toString(),
+        signal: AbortSignal.timeout(12000),
+      })
+      if (res.ok) return res
+      if (res.status !== 504 && res.status !== 502 && res.status !== 429) {
+        // Non-retryable error — return as-is
+        return res
+      }
+      lastError = new Error(`HTTP ${res.status}`)
+    } catch (err) {
+      lastError = err instanceof Error ? err : new Error(String(err))
+    }
+  }
+  throw lastError ?? new Error('All Overpass mirrors failed')
+}
+
 export async function checkOSM(
   lat: number,
   lon: number,
   declaredSports: string[]
 ): Promise<ValidationCheckResult> {
-  const query = `[out:json][timeout:12];
+  const query = `[out:json][timeout:10];
 (
   node(around:200,${lat},${lon})[sport];
   way(around:200,${lat},${lon})[sport];
@@ -163,18 +198,7 @@ export async function checkOSM(
 out center tags;`
 
   try {
-    const body = new URLSearchParams()
-    body.set('data', query)
-
-    const res = await fetch('https://overpass-api.de/api/interpreter', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'User-Agent': 'PlayzoneAdminValidation/1.0 (admin tool)',
-      },
-      body: body.toString(),
-      signal: AbortSignal.timeout(14000),
-    })
+    const res = await fetchOverpass(query)
 
     if (!res.ok) {
       return { source: 'osm', status: 'error', matches: [], error: `HTTP ${res.status}` }
@@ -199,10 +223,13 @@ out center tags;`
 
         const tags = (el.tags as Record<string, string>) || {}
         const sportTag = tags.sport || tags.leisure || null
-        const appSports = sportTag ? (OSM_SPORT_MAP[sportTag] ?? []) : []
+        const appSports = sportTag
+          ? [...new Set(sportTag.split(';').flatMap(s => OSM_SPORT_MAP[s.trim()] ?? []))]
+          : []
         const matchesDeclared = appSports.some(s => declaredSports.includes(s))
 
         return {
+          osmId: el.id as number | undefined,
           name: tags.name || sportTag || 'Unnamed',
           sportTag,
           appSports,

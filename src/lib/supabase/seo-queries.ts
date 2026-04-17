@@ -30,6 +30,7 @@ export interface PlaceListing {
   features: string[] | null
   image_url: string | null
   updated_at: string | null
+  place_attributes: { key: string; value: string }[] | null
 }
 
 const BATCH_SIZE = 2000
@@ -166,7 +167,7 @@ export async function getListingPlaces(filters: {
   let query = supabase
     .from('places')
     .select(
-      'id, name, description, latitude, longitude, city, state, country, district, street, house_number, sports, place_type, features, image_url, updated_at',
+      'id, name, description, latitude, longitude, city, state, country, district, street, house_number, sports, place_type, features, image_url, updated_at, place_attributes(key, value)',
       { count: 'exact' },
     )
     .eq('moderation_status', 'approved')

@@ -1,5 +1,5 @@
 import { supabase } from './client'
-import { Profile, Place, Court, LegacyCourt, PlaceWithCourts, PlaceMarker, Match, MatchParticipant, SportType, MatchResult, LeaderboardEntry, ModerationStatus, PendingPlaceChange, PlaceChangeType, Event, EventParticipant, EventStatus, SkillLevel, EventWithDetails, UserFavorite } from './types'
+import { Profile, Place, Court, LegacyCourt, PlaceWithCourts, PlaceMarker, Match, MatchParticipant, SportType, MatchResult, LeaderboardEntry, ModerationStatus, PendingPlaceChange, PlaceChangeType, Event, EventParticipant, EventStatus, SkillLevel, EventWithDetails, UserFavorite, PlaceAttribute, CourtAttribute } from './types'
 
 // Helper function to fetch all records with automatic pagination
 async function fetchAllRecords<T>(queryBuilder: any): Promise<T[]> {
@@ -301,12 +301,19 @@ export const database = {
       return database.courts.getAllCourts()
     },
 
-    // Paginated + server-side filtered query for admin data tools
+    // Paginated + server-side filtered query for admin data tools and moderation tabs
     getPlacesAdminPaged: async (filters: {
       city?: string
       sport?: string
       sources?: string[]
       addressStatus?: 'all' | 'enriched' | 'coordinates-only'
+      // Moderation tab filters
+      moderationStatus?: ModerationStatus
+      country?: string
+      district?: string
+      placeType?: string
+      source?: string
+      ids?: string[]
       page: number
       pageSize: number
     }): Promise<{ data: PlaceWithCourts[]; count: number }> => {
@@ -324,11 +331,25 @@ export const database = {
               notes,
               custom_sport_name,
               created_at
+            ),
+            profiles:added_by_user (
+              name,
+              avatar,
+              user_role
             )
           `, { count: 'exact' })
 
+        if (filters.moderationStatus) query = query.eq('moderation_status', filters.moderationStatus)
         if (filters.city) query = query.eq('city', filters.city)
+        if (filters.country) query = query.eq('country', filters.country)
+        if (filters.district) query = query.eq('district', filters.district)
+        if (filters.placeType) query = query.eq('place_type', filters.placeType)
+        if (filters.source) query = query.eq('source', filters.source)
         if (filters.sources && filters.sources.length > 0) query = query.in('source', filters.sources)
+        if (filters.ids !== undefined) {
+          if (filters.ids.length === 0) return { data: [], count: 0 }
+          query = query.in('id', filters.ids)
+        }
         if (filters.addressStatus === 'enriched') {
           query = query.not('street', 'is', null).not('city', 'is', null)
         } else if (filters.addressStatus === 'coordinates-only') {
@@ -349,6 +370,47 @@ export const database = {
       } catch (error) {
         console.error('Error fetching admin places:', error)
         return { data: [], count: 0 }
+      }
+    },
+
+    // Lightweight meta query for moderation tab filter dropdowns
+    getModerationMeta: async (status: ModerationStatus): Promise<{
+      countries: string[]
+      cities: string[]
+      districts: string[]
+      sources: string[]
+      placeTypes: string[]
+      sports: string[]
+    }> => {
+      try {
+        const data = await fetchAllRecords<{
+          country: string | null
+          city: string | null
+          district: string | null
+          source: string | null
+          place_type: string | null
+          sports: string[] | null
+        }>(
+          supabase
+            .from('places')
+            .select('country, city, district, source, place_type, sports')
+            .eq('moderation_status', status)
+        )
+
+        const toSortedUnique = (vals: (string | null)[]): string[] =>
+          Array.from(new Set(vals.filter((v): v is string => !!v))).sort()
+
+        return {
+          countries:  toSortedUnique(data.map(p => p.country)),
+          cities:     toSortedUnique(data.map(p => p.city)),
+          districts:  toSortedUnique(data.map(p => p.district)),
+          sources:    toSortedUnique(data.map(p => p.source)),
+          placeTypes: toSortedUnique(data.map(p => p.place_type)),
+          sports:     toSortedUnique(data.flatMap(p => p.sports ?? [])),
+        }
+      } catch (error) {
+        console.error('Error fetching moderation meta:', error)
+        return { countries: [], cities: [], districts: [], sources: [], placeTypes: [], sports: [] }
       }
     },
 
@@ -500,6 +562,60 @@ export const database = {
         .eq('id', courtId)
       
       return { data, error }
+    },
+  },
+
+  // Attribute operations
+  attributes: {
+    getPlaceAttributes: async (placeId: string): Promise<PlaceAttribute[]> => {
+      const { data, error } = await supabase
+        .from('place_attributes')
+        .select('*')
+        .eq('place_id', placeId)
+      if (error) {
+        console.error('Error fetching place attributes:', error)
+        return []
+      }
+      return data ?? []
+    },
+
+    getCourtAttributes: async (courtIds: string[]): Promise<CourtAttribute[]> => {
+      if (courtIds.length === 0) return []
+      const { data, error } = await supabase
+        .from('court_attributes')
+        .select('*')
+        .in('court_id', courtIds)
+      if (error) {
+        console.error('Error fetching court attributes:', error)
+        return []
+      }
+      return data ?? []
+    },
+
+    /** Upsert (replace all) place attributes for a place. */
+    savePlaceAttributes: async (placeId: string, attrs: Record<string, boolean>): Promise<void> => {
+      // Delete existing then insert new ones that are true
+      await supabase.from('place_attributes').delete().eq('place_id', placeId)
+      const rows = Object.entries(attrs)
+        .filter(([, v]) => v)
+        .map(([key]) => ({ place_id: placeId, key, value: 'true' }))
+      if (rows.length > 0) {
+        await supabase.from('place_attributes').insert(rows)
+      }
+    },
+
+    /** Upsert (replace all) court attributes for a list of court IDs sharing the same attribute map. */
+    saveCourtAttributes: async (courtIds: string[], attrs: Record<string, boolean>): Promise<void> => {
+      if (courtIds.length === 0) return
+      await supabase.from('court_attributes').delete().in('court_id', courtIds)
+      const rows = courtIds.flatMap(courtId =>
+        Object.entries(attrs)
+          .filter(([, v]) => v)
+          .map(([key]) => ({ court_id: courtId, key, value: 'true' }))
+      )
+      if (rows.length > 0) {
+        await supabase.from('court_attributes').insert(rows)
+      }
     },
   },
 
@@ -1087,73 +1203,18 @@ export const database = {
 
     // Get IDs of pending places that have no nearby place with an overlapping sport within radiusMeters.
     // includePending=true also checks other pending places (not just approved).
+    // Runs as a server-side RPC to avoid downloading and comparing all places in JS.
     getIsolatedPendingIds: async (radiusMeters: number, includePending: boolean): Promise<string[]> => {
-      type PlaceWithSports = { id: string; latitude: number; longitude: number; courts: { sport: string }[] }
-
       try {
-        // Fetch ALL pending places with coordinates and sports (paginated)
-        const pending = await fetchAllRecords<PlaceWithSports>(
-          supabase
-            .from('places')
-            .select('id, latitude, longitude, courts(sport)')
-            .eq('moderation_status', 'pending')
-            .not('latitude', 'is', null)
-            .not('longitude', 'is', null)
-        )
-
-        if (!pending || pending.length === 0) return []
-
-        // Fetch ALL approved places with coordinates and sports (paginated)
-        const approved = await fetchAllRecords<PlaceWithSports>(
-          supabase
-            .from('places')
-            .select('id, latitude, longitude, courts(sport)')
-            .eq('moderation_status', 'approved')
-            .not('latitude', 'is', null)
-            .not('longitude', 'is', null)
-        )
-
-        const toRad = (deg: number) => (deg * Math.PI) / 180
-
-        const haversine = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
-          const R = 6371000
-          const dLat = toRad(lat2 - lat1)
-          const dLng = toRad(lng2 - lng1)
-          const a =
-            Math.sin(dLat / 2) ** 2 +
-            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2
-          return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-        }
-
-        const getSports = (p: PlaceWithSports): Set<string> =>
-          new Set(p.courts?.map(c => c.sport).filter(Boolean) ?? [])
-
-        // Two places are considered sport-neighbors if they share at least one sport.
-        // If either place has no courts yet, fall back to plain proximity (treat as matching all sports).
-        const sportsOverlap = (a: Set<string>, b: Set<string>): boolean => {
-          if (a.size === 0 || b.size === 0) return true
-          for (const s of a) if (b.has(s)) return true
-          return false
-        }
-
-        // Build reference once: always approved, + all pending when includePending=true
-        const reference = [
-          ...(approved ?? []),
-          ...(includePending ? pending : []),
-        ]
-
-        const resultPlaces = pending.filter(p => {
-          const pSports = getSports(p)
-          return !reference.some(r =>
-            r.id !== p.id &&
-            haversine(p.latitude!, p.longitude!, r.latitude!, r.longitude!) < radiusMeters &&
-            sportsOverlap(pSports, getSports(r))
-          )
+        const { data, error } = await supabase.rpc('get_isolated_pending_ids', {
+          radius_meters: radiusMeters,
+          include_pending: includePending,
         })
 
-        return resultPlaces.map(p => p.id)
+        if (error) throw error
+        return (data as { id: string }[]).map(r => r.id)
       } catch (error) {
-        console.error('Error fetching isolated pending IDs:', error)
+        console.error('Error fetching isolated pending IDs via RPC:', error)
         return []
       }
     },
@@ -1430,14 +1491,41 @@ export const database = {
       return { data, error }
     },
 
-    submitPlaceEdit: async (placeId: string, proposedData: Partial<Place>, courts: Partial<Court>[], userId: string) => {
+    submitPlaceEdit: async (
+      placeId: string,
+      proposedData: Partial<Place>,
+      courts: (Partial<Court> & { attributes?: Record<string, boolean> })[],
+      userId: string,
+      placeAttributes?: Record<string, boolean>,
+    ) => {
       // Get current place data for comparison
       const currentPlace = await database.community.getPlaceForEdit(placeId)
       if (!currentPlace) {
         throw new Error('Place not found')
       }
 
-      // Create the pending change record
+      // Snapshot current attributes for the diff
+      const currentPlaceAttrRows = await database.attributes.getPlaceAttributes(placeId)
+      const currentCourtIds = (currentPlace.courts ?? []).map((c: any) => c.id)
+      const currentCourtAttrRows = await database.attributes.getCourtAttributes(currentCourtIds)
+
+      // Build current court attrs keyed by court id for the diff snapshot
+      const currentCourtAttrsById: Record<string, Record<string, boolean>> = {}
+      for (const court of currentPlace.courts ?? []) {
+        const keys = currentCourtAttrRows
+          .filter((r: any) => r.court_id === court.id && r.value === 'true')
+          .map((r: any) => r.key)
+        if (keys.length > 0) {
+          const attrMap: Record<string, boolean> = {}
+          for (const k of keys) attrMap[k] = true
+          currentCourtAttrsById[court.id] = attrMap
+        }
+      }
+      const currentPlaceAttrs = Object.fromEntries(
+        currentPlaceAttrRows.filter((r: any) => r.value === 'true').map((r: any) => [r.key, true])
+      )
+
+      // Create the pending change record (courts include embedded attributes)
       const { data, error } = await supabase
         .from('pending_place_changes')
         .insert({
@@ -1446,17 +1534,20 @@ export const database = {
           change_type: 'update',
           proposed_data: {
             place: proposedData,
-            courts: courts
+            courts,
+            place_attributes: placeAttributes ?? {},
           },
           current_data: {
             place: currentPlace,
-            courts: currentPlace.courts
+            courts: currentPlace.courts,
+            place_attributes: currentPlaceAttrs,
+            court_attrs_by_id: currentCourtAttrsById,
           },
           status: 'pending'
         })
         .select()
         .single()
-      
+
       return { data, error }
     },
 
@@ -1562,10 +1653,10 @@ export const database = {
             .from('courts')
             .delete()
             .eq('place_id', change.place_id)
-          
-          // Insert new courts
+
+          // Insert new courts, capturing IDs for attribute assignment
           if (proposedData.courts.length > 0) {
-            const { error: courtsError } = await supabase
+            const { data: newCourts, error: courtsError } = await supabase
               .from('courts')
               .insert(
                 proposedData.courts.map((court: any) => ({
@@ -1577,11 +1668,30 @@ export const database = {
                   custom_sport_name: court.custom_sport_name ?? court.customSportName ?? null,
                 }))
               )
-            
+              .select('id, sport')
+
             if (courtsError) {
               console.error('Failed to update courts:', courtsError)
             }
+
+            // Apply court attributes per-court (newCourts[i] corresponds to proposedData.courts[i])
+            if (newCourts && newCourts.length > 0) {
+              await Promise.all(
+                newCourts.map((c: any, i: number) => {
+                  const attrs = proposedData.courts[i]?.attributes
+                  if (attrs) return database.attributes.saveCourtAttributes([c.id], attrs)
+                }).filter(Boolean)
+              )
+            }
           }
+        }
+
+        // Apply place attributes
+        if (proposedData.place_attributes) {
+          await database.attributes.savePlaceAttributes(
+            change.place_id!,
+            proposedData.place_attributes as Record<string, boolean>
+          )
         }
       }
 

@@ -11,6 +11,7 @@ import PlaceActions from '@/components/places/place-actions'
 import PlaceLocationMap from '@/components/places/place-location-map'
 import PlaceImageGallery from '@/components/places/place-image-gallery'
 import BackButton from '@/components/places/back-button'
+import { AttributeIconRow } from '@/components/attributes/attribute-icons'
 
 interface PlacePageProps {
   params: Promise<{ id: string }>
@@ -68,9 +69,10 @@ export async function generateMetadata({ params }: PlacePageProps): Promise<Meta
 
 export default async function PlacePage({ params }: PlacePageProps) {
   const { id } = await params
-  const [place, placeImages] = await Promise.all([
+  const [place, placeImages, placeAttrRows] = await Promise.all([
     getPlace(id),
     database.community.getPlaceImages(id) as Promise<PlaceImage[]>,
+    database.attributes.getPlaceAttributes(id),
   ])
 
   if (!place) {
@@ -111,6 +113,24 @@ export default async function PlacePage({ params }: PlacePageProps) {
         return acc
       }, {} as Record<string, number>)
     : (place.sports?.reduce((acc, sport) => ({ ...acc, [sport]: 1 }), {} as Record<string, number>) || {})
+
+  // Attributes
+  const placeAttrKeys = placeAttrRows.filter(r => r.value === 'true').map(r => r.key)
+  const courtIds = courts.map(c => c.id)
+  const courtAttrRows = await database.attributes.getCourtAttributes(courtIds)
+  // Group court attributes by court_id → then by sport
+  const courtAttrBySport: Record<string, string[]> = {}
+  for (const court of courts) {
+    const keys = courtAttrRows
+      .filter(r => r.court_id === court.id && r.value === 'true')
+      .map(r => r.key)
+    if (keys.length > 0) {
+      const sport = court.sport
+      const existing = courtAttrBySport[sport] ?? []
+      // Deduplicate (multiple courts of same sport might share attrs)
+      courtAttrBySport[sport] = [...new Set([...existing, ...keys])]
+    }
+  }
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -240,37 +260,59 @@ export default async function PlacePage({ params }: PlacePageProps) {
           <div className="space-y-2 pt-2">
             <p className="text-sm font-medium text-muted-foreground">Plätze & Einrichtungen</p>
             <div className="space-y-2">
-              {courts.map((court) => (
-                <div key={court.id} className="flex items-center justify-between p-3 rounded-xl border bg-card">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[18px]">{court.sport === 'other' ? '🏅' : (sportIcons[court.sport] || '📍')}</span>
-                    <div>
-                      <p className="text-sm font-medium">{court.sport === 'other' ? ((court as any).custom_sport_name || 'Andere Sportart') : (sportNames[court.sport] || court.sport)}</p>
-                      {(court.surface || court.notes) && (
-                        <p className="text-xs text-muted-foreground">
-                          {[court.surface, court.notes].filter(Boolean).join(' · ')}
-                        </p>
+              {(() => {
+                // Group courts by sport key (sport or custom name for 'other')
+                type CourtGroup = { sportKey: string; totalQty: number; surfaces: string[]; notes: string[] }
+                const groups: CourtGroup[] = []
+                const seen = new Map<string, CourtGroup>()
+                for (const court of courts) {
+                  const key = court.sport === 'other' ? ((court as any).custom_sport_name || 'other') : court.sport
+                  if (!seen.has(key)) {
+                    const g: CourtGroup = { sportKey: key, totalQty: 0, surfaces: [], notes: [] }
+                    seen.set(key, g)
+                    groups.push(g)
+                  }
+                  const g = seen.get(key)!
+                  g.totalQty += court.quantity ?? 1
+                  if (court.surface && court.surface !== 'Unbekannt' && !g.surfaces.includes(court.surface)) g.surfaces.push(court.surface)
+                  if (court.notes && !g.notes.includes(court.notes)) g.notes.push(court.notes)
+                }
+                return groups.map(({ sportKey, totalQty, surfaces, notes }) => {
+                  const isOther = !sportNames[sportKey]
+                  const label = isOther ? sportKey : (sportNames[sportKey] || sportKey)
+                  const icon = isOther ? '🏅' : (sportIcons[sportKey] || '📍')
+                  const attrKeys = courtAttrBySport[sportKey] ?? []
+                  const subtitle = [...surfaces, ...notes].join(' · ')
+                  return (
+                    <div key={sportKey} className="flex items-start justify-between p-3 rounded-xl border bg-card">
+                      <div className="flex items-start gap-2">
+                        <span className="text-[18px] mt-0.5 shrink-0">{icon}</span>
+                        <div className="space-y-1">
+                          <p className="text-sm font-medium leading-tight">{label}</p>
+                          {subtitle && (
+                            <p className="text-xs text-muted-foreground">{subtitle}</p>
+                          )}
+                          {attrKeys.length > 0 && (
+                            <AttributeIconRow activeKeys={attrKeys} size="xs" />
+                          )}
+                        </div>
+                      </div>
+                      {totalQty > 1 && (
+                        <span className="text-sm text-muted-foreground shrink-0 ml-2">{totalQty}×</span>
                       )}
                     </div>
-                  </div>
-                  {(court.quantity ?? 1) > 1 && (
-                    <span className="text-sm text-muted-foreground">{court.quantity}×</span>
-                  )}
-                </div>
-              ))}
+                  )
+                })
+              })()}
             </div>
           </div>
         )}
 
-        {/* Features */}
-        {place.features && place.features.length > 0 && (
+        {/* Place-level attributes (Anlage) */}
+        {placeAttrKeys.length > 0 && (
           <div className="space-y-2 pt-2">
-            <p className="text-sm font-medium text-muted-foreground">Ausstattung</p>
-            <div className="flex flex-wrap gap-2">
-              {place.features.map((feature) => (
-                <Badge key={feature} variant="outline">{feature}</Badge>
-              ))}
-            </div>
+            <p className="text-sm font-medium text-muted-foreground">Anlage</p>
+            <AttributeIconRow activeKeys={placeAttrKeys} size="sm" />
           </div>
         )}
 

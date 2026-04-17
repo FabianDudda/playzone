@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { useQuery } from '@tanstack/react-query'
 import { database } from '@/lib/supabase/database'
@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast'
 import { SportType, PlaceWithCourts, PlaceImage, OpeningHours } from '@/lib/supabase/types'
 import { PlaceType, placeTypeLabels, placeTypeIcons } from '@/lib/utils/sport-utils'
+import { ATTRIBUTE_DEFINITIONS, getRelevantAttributes, rowsToAttributeMap } from '@/lib/attributes/definitions'
 import { reverseGeocode, AddressComponents } from '@/lib/geocoding'
 import { uploadCourtImage, uploadPlaceImageScoped, UploadProgress } from '@/lib/supabase/storage'
 import { useAuth } from '@/components/providers/auth-provider'
@@ -49,11 +50,18 @@ const SPORTS = [
   { id: 'padel', label: 'Padel' },
   { id: 'badminton', label: 'Badminton' },
   { id: 'hockey', label: 'Hockey' },
+  { id: 'schach', label: 'Schach' },
+  { id: 'parkour', label: 'Parkour' },
+  { id: 'rugby', label: 'Rugby' },
+  { id: 'inliner', label: 'Inliner' },
+  { id: 'discgolf', label: 'Discgolf' },
+  { id: 'bmx', label: 'BMX' },
+  { id: 'dirtbike', label: 'Dirtbike' },
 ] as const
 
 const SURFACE_TYPES = [
   'Unbekannt', 'Rasen', 'Kunstrasen', 'Hartplatz', 'Asphalt',
-  'Kunststoffbelag', 'Asche', 'Sand', 'Sonstiges',
+  'Kunststoffbelag', 'Asche', 'Sand', 'Stein', 'Holzschnitze', 'Sonstiges',
 ] as const
 
 export interface PlaceFormCourt {
@@ -62,6 +70,7 @@ export interface PlaceFormCourt {
   surface: string
   notes: string
   customSportName?: string
+  attributes?: Record<string, boolean>
 }
 
 export interface PlaceFormData {
@@ -79,6 +88,7 @@ export interface PlaceFormData {
   contactEmail: string
   contactWebsite: string
   openingHours: OpeningHours | null
+  placeAttributes: Record<string, boolean>
 }
 
 interface PlaceFormProps {
@@ -208,6 +218,64 @@ export default function PlaceForm({
     (initialData?.opening_hours as OpeningHours | null) ?? null
   )
 
+  const [placeAttributes, setPlaceAttributes] = useState<Record<string, boolean>>({})
+  // Per-sport, per-court array: courtAttributesBySport[sport][courtIdx][key]
+  const [courtAttributesBySport, setCourtAttributesBySport] = useState<Record<string, Record<string, boolean>[]>>({})
+
+  // Load existing attribute values when editing
+  const { data: existingPlaceAttrs = [] } = useQuery({
+    queryKey: ['place-attributes', placeId],
+    queryFn: () => database.attributes.getPlaceAttributes(placeId!),
+    enabled: mode === 'edit' && !!placeId,
+    staleTime: Infinity,
+  })
+  const { data: existingCourtAttrs = [] } = useQuery({
+    queryKey: ['court-attributes', placeId],
+    queryFn: async () => {
+      const courtIds = (initialData?.courts ?? []).map(c => c.id)
+      return database.attributes.getCourtAttributes(courtIds)
+    },
+    enabled: mode === 'edit' && !!placeId && (initialData?.courts?.length ?? 0) > 0,
+    staleTime: Infinity,
+  })
+
+  // Populate attribute state once loaded
+  useEffect(() => {
+    if (existingPlaceAttrs.length > 0) {
+      setPlaceAttributes(rowsToAttributeMap(existingPlaceAttrs))
+    }
+  }, [existingPlaceAttrs])
+
+  useEffect(() => {
+    if (!existingCourtAttrs.length || !initialData?.courts) return
+    const bySport: Record<string, Record<string, boolean>[]> = {}
+    for (const court of initialData.courts) {
+      const rows = existingCourtAttrs.filter(r => r.court_id === court.id)
+      const attrMap: Record<string, boolean> = {}
+      for (const r of rows) {
+        if (r.value === 'true') attrMap[r.key] = true
+      }
+      const key = court.sport === 'other' ? (court.custom_sport_name || 'other') : court.sport
+      const qty = court.quantity || 1
+      // Expand each DB court record into qty individual entries with the same attr map
+      const expanded = Array.from({ length: qty }, () => ({ ...attrMap }))
+      bySport[key] = [...(bySport[key] ?? []), ...expanded]
+    }
+    setCourtAttributesBySport(bySport)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [existingCourtAttrs])
+
+  const togglePlaceAttr = useCallback((key: string) =>
+    setPlaceAttributes(prev => ({ ...prev, [key]: !prev[key] })), [])
+
+  const toggleCourtAttr = useCallback((sport: string, courtIdx: number, key: string) =>
+    setCourtAttributesBySport(prev => {
+      const arr = [...(prev[sport] ?? [])]
+      while (arr.length <= courtIdx) arr.push({})
+      arr[courtIdx] = { ...arr[courtIdx], [key]: !arr[courtIdx][key] }
+      return { ...prev, [sport]: arr }
+    }), [])
+
   const handleMapClick = useCallback(async (lng: number, lat: number) => {
     setLocation({ lat, lng })
     setIsDetectingAddress(true)
@@ -231,16 +299,20 @@ export default function PlaceForm({
     setSelectedSports(prev => {
       if (prev.includes(sport)) {
         setCourtSurfaces(cur => { const u = { ...cur }; delete u[sport]; return u })
+        setCourtAttributesBySport(cur => { const u = { ...cur }; delete u[sport]; return u })
         return prev.filter(s => s !== sport)
       } else {
         setCourtSurfaces(cur => ({ ...cur, [sport]: [''] }))
+        setCourtAttributesBySport(cur => ({ ...cur, [sport]: [{}] }))
         return [...prev, sport]
       }
     })
   }
 
-  const addCourtForSport = (sport: string) =>
+  const addCourtForSport = (sport: string) => {
     setCourtSurfaces(prev => ({ ...prev, [sport]: [...(prev[sport] || []), ''] }))
+    setCourtAttributesBySport(prev => ({ ...prev, [sport]: [...(prev[sport] ?? []), {}] }))
+  }
 
   const updateCourtSurface = (sport: string, idx: number, surface: string) =>
     setCourtSurfaces(prev => {
@@ -259,6 +331,7 @@ export default function PlaceForm({
       }
     } else {
       setCourtSurfaces(prev => ({ ...prev, [sport]: surfaces.filter((_, i) => i !== idx) }))
+      setCourtAttributesBySport(prev => ({ ...prev, [sport]: (prev[sport] ?? []).filter((_, i) => i !== idx) }))
     }
   }
 
@@ -267,6 +340,7 @@ export default function PlaceForm({
     if (!name || customSports.includes(name)) return
     setCustomSports(prev => [...prev, name])
     setCourtSurfaces(prev => ({ ...prev, [name]: [''] }))
+    setCourtAttributesBySport(prev => ({ ...prev, [name]: [{}] }))
     setCustomSportInput('')
     setShowCustomSportInput(false)
   }
@@ -274,6 +348,7 @@ export default function PlaceForm({
   const handleCustomSportRemove = (name: string) => {
     setCustomSports(prev => prev.filter(s => s !== name))
     setCourtSurfaces(prev => { const u = { ...prev }; delete u[name]; return u })
+    setCourtAttributesBySport(prev => { const u = { ...prev }; delete u[name]; return u })
   }
 
   const updateAddressField = (field: keyof AddressComponents, value: string) => {
@@ -359,17 +434,16 @@ export default function PlaceForm({
       }
     }
 
-    // Convert courtSurfaces to courts array
+    // Convert courtSurfaces to courts array — one record per UI row (quantity=1), attributes embedded
     const courts: PlaceFormCourt[] = [
       ...selectedSports.flatMap(sport => {
         const surfaces = (courtSurfaces[sport] || ['']).map(s => s || 'Unbekannt')
-        const counts = surfaces.reduce<Record<string, number>>((acc, s) => { acc[s] = (acc[s] || 0) + 1; return acc }, {})
-        return Object.entries(counts).map(([surface, quantity]) => ({ sport, quantity, surface, notes: '' }))
+        const attrsArr = courtAttributesBySport[sport] ?? []
+        return surfaces.map((surface, idx) => ({ sport, quantity: 1, surface, notes: '', attributes: attrsArr[idx] ?? {} }))
       }),
       ...customSports.flatMap(name => {
         const surfaces = (courtSurfaces[name] || ['']).map(s => s || 'Unbekannt')
-        const counts = surfaces.reduce<Record<string, number>>((acc, s) => { acc[s] = (acc[s] || 0) + 1; return acc }, {})
-        return Object.entries(counts).map(([surface, quantity]) => ({ sport: 'other' as SportType, quantity, surface, notes: '', customSportName: name }))
+        return surfaces.map((surface) => ({ sport: 'other' as SportType, quantity: 1, surface, notes: '', customSportName: name }))
       }),
     ]
 
@@ -388,6 +462,7 @@ export default function PlaceForm({
       contactEmail: contactEmail.trim(),
       contactWebsite: contactWebsite.trim(),
       openingHours: openingHours,
+      placeAttributes,
     })
   }
 
@@ -544,20 +619,50 @@ export default function PlaceForm({
           {selectedSports.map(sport => {
             const surfaces = courtSurfaces[sport] || ['']
             const sportLabel = sport.charAt(0).toUpperCase() + sport.slice(1)
+            const courtAttrs = getRelevantAttributes('court', [sport as SportType])
             return (
               <div key={sport} className="space-y-2">
                 {surfaces.map((surface, idx) => (
-                  <div key={idx} className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground min-w-[8rem]">{sportLabel} Platz {idx + 1}</span>
-                    <Select value={surface || 'Unbekannt'} onValueChange={val => updateCourtSurface(sport, idx, val)}>
-                      <SelectTrigger className="flex-1"><SelectValue placeholder="Belagstyp..." /></SelectTrigger>
-                      <SelectContent>
-                        {SURFACE_TYPES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
-                    <Button type="button" variant="ghost" size="icon" onClick={() => removeCourtForSport(sport, idx)}>
-                      <X className="h-4 w-4" />
-                    </Button>
+                  <div key={idx} className="space-y-1.5">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground min-w-[8rem]">{sportLabel} Platz {idx + 1}</span>
+                      <Select value={surface || 'Unbekannt'} onValueChange={val => updateCourtSurface(sport, idx, val)}>
+                        <SelectTrigger className="flex-1"><SelectValue placeholder="Belagstyp..." /></SelectTrigger>
+                        <SelectContent>
+                          {SURFACE_TYPES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
+                      <Button type="button" variant="ghost" size="icon" onClick={() => removeCourtForSport(sport, idx)}>
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    {courtAttrs.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {courtAttrs.map(def => {
+                          const active = !!(courtAttributesBySport[sport]?.[idx]?.[def.key])
+                          return (
+                            <button
+                              key={def.key}
+                              type="button"
+                              onClick={() => toggleCourtAttr(sport, idx, def.key)}
+                              className={cn(
+                                'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs transition-all',
+                                active
+                                  ? 'border-primary bg-primary/10 text-foreground'
+                                  : 'border-border text-muted-foreground hover:border-primary/40 hover:text-foreground'
+                              )}
+                            >
+                              <span className={cn('h-3.5 w-3.5 shrink-0 rounded border flex items-center justify-center',
+                                active ? 'bg-primary border-primary' : 'border-muted-foreground/40'
+                              )}>
+                                {active && <span className="text-[9px] text-primary-foreground font-bold leading-none">✓</span>}
+                              </span>
+                              {def.label}
+                            </button>
+                          )
+                        })}
+                      </div>
+                    )}
                   </div>
                 ))}
                 <Button type="button" variant="outline" size="sm" onClick={() => addCourtForSport(sport)}>
@@ -593,7 +698,43 @@ export default function PlaceForm({
         </div>
       )}
 
-      {/* 5. Image */}
+      {/* 5. Place-level attributes (Anlage) */}
+      {(() => {
+        const placeLevel = ATTRIBUTE_DEFINITIONS.filter(d => d.scope === 'place')
+        if (placeLevel.length === 0) return null
+        return (
+          <div className="space-y-2">
+            <Label>Anlage</Label>
+            <div className="flex flex-wrap gap-2">
+              {placeLevel.map(def => {
+                const active = !!placeAttributes[def.key]
+                return (
+                  <button
+                    key={def.key}
+                    type="button"
+                    onClick={() => togglePlaceAttr(def.key)}
+                    className={cn(
+                      'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs transition-all',
+                      active
+                        ? 'border-primary bg-primary/10 text-foreground'
+                        : 'border-border text-muted-foreground hover:border-primary/40 hover:text-foreground'
+                    )}
+                  >
+                    <span className={cn('h-3.5 w-3.5 shrink-0 rounded border flex items-center justify-center',
+                      active ? 'bg-primary border-primary' : 'border-muted-foreground/40'
+                    )}>
+                      {active && <span className="text-[9px] text-primary-foreground font-bold leading-none">✓</span>}
+                    </span>
+                    {def.label}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        )
+      })()}
+
+      {/* 6. Image */}
       <div className="space-y-2">
         <Label>Platzbild (Optional)</Label>
         {placeId ? (

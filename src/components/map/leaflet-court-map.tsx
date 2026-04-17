@@ -11,7 +11,7 @@ import { Plus, MapPin, Navigation, Share2, Search, Filter, Edit, Pencil, X, Load
 import Link from 'next/link'
 import { useAuth } from '@/components/providers/auth-provider'
 import FilterBottomSheetVaul from './filter-bottom-sheet-vaul'
-import PlaceBottomSheetVaul from './place-bottom-sheet-vaul'
+import PlaceBottomSheetVaul from './place-bottom-sheet-v2'
 import FavoritesBottomSheetVaul from './favorites-bottom-sheet-vaul'
 import { sportNames, getSportBadgeClasses, sportIcons, PlaceType } from '@/lib/utils/sport-utils'
 import { createSportIcon, createUserLocationIcon, createSelectedLocationIcon } from '@/lib/utils/sport-styles'

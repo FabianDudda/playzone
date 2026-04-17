@@ -95,12 +95,13 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: placeError?.message || 'Failed to create place' }, { status: 500 })
   }
 
-  // Insert courts
+  // Insert courts and save per-court attributes
   if (body.courts?.length > 0) {
-    const { error: courtsError } = await supabase
+    const courts: { sport: string; quantity: number; surface: string | null; notes: string | null; customSportName?: string | null; attributes?: Record<string, boolean> }[] = body.courts
+    const { data: newCourts, error: courtsError } = await supabase
       .from('courts')
       .insert(
-        body.courts.map((court: { sport: string; quantity: number; surface: string | null; notes: string | null; customSportName?: string | null }) => ({
+        courts.map(court => ({
           place_id: place.id,
           sport: court.sport,
           quantity: court.quantity,
@@ -109,9 +110,31 @@ export async function POST(req: NextRequest) {
           custom_sport_name: court.customSportName || null,
         }))
       )
+      .select('id, sport')
 
     if (courtsError) {
       return Response.json({ error: courtsError.message }, { status: 500 })
+    }
+
+    // Save per-court attributes
+    const courtAttrRows = (newCourts ?? []).flatMap((c, i) => {
+      const attrs = courts[i]?.attributes ?? {}
+      return Object.entries(attrs)
+        .filter(([, v]) => v)
+        .map(([key]) => ({ court_id: c.id, key, value: 'true' }))
+    })
+    if (courtAttrRows.length > 0) {
+      await supabase.from('court_attributes').insert(courtAttrRows)
+    }
+  }
+
+  // Save place attributes
+  if (body.placeAttributes) {
+    const placeAttrRows = Object.entries(body.placeAttributes as Record<string, boolean>)
+      .filter(([, v]) => v)
+      .map(([key]) => ({ place_id: place.id, key, value: 'true' }))
+    if (placeAttrRows.length > 0) {
+      await supabase.from('place_attributes').insert(placeAttrRows)
     }
   }
 

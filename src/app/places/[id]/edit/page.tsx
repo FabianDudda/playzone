@@ -83,16 +83,14 @@ function EditPlaceContent({ params }: EditPlacePageProps) {
         const { error: placeError } = await database.courts.updateCourt(place.id, placeData)
         if (placeError) throw new Error('Failed to update place')
 
-        // Update courts
-        // First delete existing courts
+        // Update courts: delete existing, add new, collect new court IDs by sport
         await Promise.all(
           place.courts?.map(court =>
             database.courtDetails.deleteCourt(court.id)
           ) || []
         )
 
-        // Add new courts
-        await Promise.all(
+        const newCourts = await Promise.all(
           courts.map((court: any) =>
             database.courtDetails.addCourt({
               place_id: place.id,
@@ -105,34 +103,55 @@ function EditPlaceContent({ params }: EditPlacePageProps) {
           )
         )
 
+        // Save place attributes
+        if (formData.placeAttributes) {
+          await database.attributes.savePlaceAttributes(place.id, formData.placeAttributes as Record<string, boolean>)
+        }
+
+        // Save court attributes per-court (courts[i].attributes maps to newCourts[i])
+        await Promise.all(
+          courts.map((court: any, i: number) => {
+            const courtId = newCourts[i]?.data?.id
+            if (courtId && court.attributes) {
+              return database.attributes.saveCourtAttributes([courtId], court.attributes)
+            }
+          }).filter(Boolean)
+        )
+
         return { directUpdate: true }
       } else if (isGuestMode) {
         // Guest users submit via API route (IP rate limiting + guest profile)
         const res = await fetch('/api/guest/submit-edit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ placeId: place.id, placeData, courts }),
+          body: JSON.stringify({
+            placeId: place.id,
+            placeData,
+            courts,
+            placeAttributes: formData.placeAttributes ?? {},
+          }),
         })
         const json = await res.json()
         if (!res.ok) throw new Error(json.error || 'Fehler beim Einreichen')
         return json.data
       } else {
         // Regular users submit for community review
-        // Normalize courts to snake_case for DB storage
+        // Normalize courts to snake_case for DB storage (attributes embedded)
         const normalizedCourts = courts.map((c: any) => ({
           sport: c.sport,
           quantity: c.quantity,
           surface: c.surface || null,
           notes: c.notes || null,
           custom_sport_name: c.custom_sport_name ?? c.customSportName ?? null,
+          attributes: c.attributes ?? {},
         }))
-        const result = await database.community.submitPlaceEdit(
+        return await database.community.submitPlaceEdit(
           place.id,
           placeData,
           normalizedCourts,
-          user!.id
+          user!.id,
+          formData.placeAttributes as Record<string, boolean> | undefined,
         )
-        return result
       }
     },
     onSuccess: (result) => {

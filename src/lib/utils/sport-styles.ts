@@ -31,6 +31,11 @@ export const sportColors: Record<string, string> = {
   klettern: '#78716C',    // Stone
   padel: '#A3E635',       // Lime
   schach: '#6B21A8',      // Purple
+  parkour: '#F97316',     // Orange
+  rugby: '#15803D',       // Green
+  inliner: '#0284C7',     // Blue
+  discgolf: '#65A30D',    // Lime Green
+  bmx: '#DC2626',         // Red
   other: '#9CA3AF',       // Gray
 }
 
@@ -109,6 +114,11 @@ export const sportIcons: Record<string, string> = {
   klettern: '🧗',      // Klettern
   padel: '🎾',         // Padel
   schach: '♟️',        // Chess
+  parkour: '🏃',        // Parkour
+  rugby: '🏉',          // Rugby
+  inliner: '🛼',        // Inline skates
+  discgolf: '🥏',       // Disc golf
+  bmx: '🚲',            // BMX
   other: '🏅',          // Other sport
 }
 

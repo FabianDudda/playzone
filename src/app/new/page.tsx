@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback, useMemo, Suspense } from 'react'
+import { ATTRIBUTE_DEFINITIONS, getRelevantAttributes } from '@/lib/attributes/definitions'
 import dynamic from 'next/dynamic'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/components/providers/auth-provider'
@@ -51,6 +52,13 @@ const SPORTS = [
   { id: 'padel', label: 'Padel' },
   { id: 'badminton', label: 'Badminton' },
   { id: 'hockey', label: 'Hockey' },
+  { id: 'schach', label: 'Schach' },
+  { id: 'parkour', label: 'Parkour' },
+  { id: 'rugby', label: 'Rugby' },
+  { id: 'inliner', label: 'Inliner' },
+  { id: 'discgolf', label: 'Discgolf' },
+  { id: 'bmx', label: 'BMX' },
+  { id: 'dirtbike', label: 'Dirtbike' },
 ] as const
 
 const SURFACE_TYPES = [
@@ -64,6 +72,7 @@ interface CourtDetails {
   surface: string
   notes: string
   customSportName?: string
+  attributes?: Record<string, boolean>
 }
 
 function AddPlacePage() {
@@ -116,6 +125,8 @@ function AddPlacePage() {
   const [contactWebsite, setContactWebsite] = useState('')
   const [phoneError, setPhoneError] = useState('')
   const [websiteError, setWebsiteError] = useState('')
+  const [placeAttributes, setPlaceAttributes] = useState<Record<string, boolean>>({})
+  const [courtAttributesBySport, setCourtAttributesBySport] = useState<Record<string, Record<string, boolean>[]>>({})
 
   const createCourtMutation = useMutation({
     mutationFn: async (placeData: {
@@ -134,6 +145,7 @@ function AddPlacePage() {
       contact_website?: string | null
       opening_hours?: OpeningHours | null
       all_images?: { path: string; url: string }[]
+      placeAttributes?: Record<string, boolean>
     }) => {
       const { data: place, error: placeError } = await database.courts.addCourt({
         name: placeData.name,
@@ -163,8 +175,9 @@ function AddPlacePage() {
       })
       if (placeError || !place) throw new Error(placeError?.message || 'Failed to create place')
 
+      const createdCourts: { id: string; sport: string }[] = []
       if (placeData.courts.length > 0) {
-        await Promise.all(placeData.courts.map(court =>
+        const results = await Promise.all(placeData.courts.map(court =>
           database.courtDetails.addCourt({
             place_id: place.id,
             sport: court.sport,
@@ -174,6 +187,23 @@ function AddPlacePage() {
             custom_sport_name: court.customSportName || null,
           })
         ))
+        for (const r of results) {
+          if (r.data) createdCourts.push({ id: r.data.id, sport: r.data.sport })
+        }
+      }
+
+      if (placeData.placeAttributes) {
+        await database.attributes.savePlaceAttributes(place.id, placeData.placeAttributes)
+      }
+
+      // Save per-court attributes (createdCourts[i] corresponds to courts[i])
+      if (createdCourts.length > 0) {
+        await Promise.all(
+          createdCourts.map((c, i) => {
+            const attrs = placeData.courts[i]?.attributes
+            if (attrs) return database.attributes.saveCourtAttributes([c.id], attrs)
+          }).filter(Boolean)
+        )
       }
 
       if (placeData.all_images && placeData.all_images.length > 0) {
@@ -217,16 +247,20 @@ function AddPlacePage() {
     setSelectedSports(prev => {
       if (prev.includes(sport)) {
         setCourtSurfaces(cur => { const u = { ...cur }; delete u[sport]; return u })
+        setCourtAttributesBySport(cur => { const u = { ...cur }; delete u[sport]; return u })
         return prev.filter(s => s !== sport)
       } else {
         setCourtSurfaces(cur => ({ ...cur, [sport]: [''] }))
+        setCourtAttributesBySport(cur => ({ ...cur, [sport]: [{}] }))
         return [...prev, sport]
       }
     })
   }
 
-  const addCourtForSport = (sport: string) =>
+  const addCourtForSport = (sport: string) => {
     setCourtSurfaces(prev => ({ ...prev, [sport]: [...(prev[sport] || []), ''] }))
+    setCourtAttributesBySport(prev => ({ ...prev, [sport]: [...(prev[sport] ?? []), {}] }))
+  }
 
   const updateCourtSurface = (sport: string, idx: number, surface: string) =>
     setCourtSurfaces(prev => {
@@ -245,6 +279,7 @@ function AddPlacePage() {
       }
     } else {
       setCourtSurfaces(prev => ({ ...prev, [sport]: surfaces.filter((_, i) => i !== idx) }))
+      setCourtAttributesBySport(prev => ({ ...prev, [sport]: (prev[sport] ?? []).filter((_, i) => i !== idx) }))
     }
   }
 
@@ -253,6 +288,7 @@ function AddPlacePage() {
     if (!name || customSports.includes(name)) return
     setCustomSports(prev => [...prev, name])
     setCourtSurfaces(prev => ({ ...prev, [name]: [''] }))
+    setCourtAttributesBySport(prev => ({ ...prev, [name]: [{}] }))
     setCustomSportInput('')
     setShowCustomSportInput(false)
   }
@@ -260,6 +296,7 @@ function AddPlacePage() {
   const handleCustomSportRemove = (name: string) => {
     setCustomSports(prev => prev.filter(s => s !== name))
     setCourtSurfaces(prev => { const u = { ...prev }; delete u[name]; return u })
+    setCourtAttributesBySport(prev => { const u = { ...prev }; delete u[name]; return u })
   }
 
   const updateAddressField = (field: keyof AddressComponents, value: string) => {
@@ -330,16 +367,16 @@ function AddPlacePage() {
       }
     }
 
+    // One record per UI row (quantity=1), with attributes embedded per court
     const courts: CourtDetails[] = [
       ...selectedSports.flatMap(sport => {
         const surfaces = (courtSurfaces[sport] || ['']).map(s => s || 'Unbekannt')
-        const counts = surfaces.reduce<Record<string, number>>((acc, s) => { acc[s] = (acc[s] || 0) + 1; return acc }, {})
-        return Object.entries(counts).map(([surface, quantity]) => ({ sport, quantity, surface, notes: '' }))
+        const attrsArr = courtAttributesBySport[sport] ?? []
+        return surfaces.map((surface, idx) => ({ sport, quantity: 1, surface, notes: '', attributes: attrsArr[idx] ?? {} }))
       }),
       ...customSports.flatMap(name => {
         const surfaces = (courtSurfaces[name] || ['']).map(s => s || 'Unbekannt')
-        const counts = surfaces.reduce<Record<string, number>>((acc, s) => { acc[s] = (acc[s] || 0) + 1; return acc }, {})
-        return Object.entries(counts).map(([surface, quantity]) => ({ sport: 'other' as SportType, quantity, surface, notes: '', customSportName: name }))
+        return surfaces.map((surface) => ({ sport: 'other' as SportType, quantity: 1, surface, notes: '', customSportName: name }))
       }),
     ]
 
@@ -364,7 +401,11 @@ function AddPlacePage() {
         const res = await fetch('/api/guest/submit-place', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...placePayload, all_images: allUploadedImages }),
+          body: JSON.stringify({
+            ...placePayload,
+            all_images: allUploadedImages,
+            placeAttributes,
+          }),
         })
         const json = await res.json()
         if (!res.ok) throw new Error(json.error || 'Fehler beim Einreichen')
@@ -381,6 +422,7 @@ function AddPlacePage() {
       ...placePayload,
       added_by_user: user!.id,
       all_images: allUploadedImages,
+      placeAttributes,
     })
   }
 
@@ -560,20 +602,55 @@ function AddPlacePage() {
               {selectedSports.map(sport => {
                 const surfaces = courtSurfaces[sport] || ['Unbekannt']
                 const sportLabel = sport.charAt(0).toUpperCase() + sport.slice(1)
+                const courtAttrs = getRelevantAttributes('court', [sport as SportType])
                 return (
                   <div key={sport} className="space-y-2">
                     {surfaces.map((surface, idx) => (
-                      <div key={idx} className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground min-w-[8rem]">{sportLabel} Platz {idx + 1}</span>
-                        <Select value={surface} onValueChange={val => updateCourtSurface(sport, idx, val)}>
-                          <SelectTrigger className="flex-1"><SelectValue placeholder="Belagstyp..." /></SelectTrigger>
-                          <SelectContent>
-                            {SURFACE_TYPES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
-                          </SelectContent>
-                        </Select>
-                        <Button type="button" variant="ghost" size="icon" onClick={() => removeCourtForSport(sport, idx)}>
-                          <X className="h-4 w-4" />
-                        </Button>
+                      <div key={idx} className="space-y-1.5">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-muted-foreground min-w-[8rem]">{sportLabel} Platz {idx + 1}</span>
+                          <Select value={surface} onValueChange={val => updateCourtSurface(sport, idx, val)}>
+                            <SelectTrigger className="flex-1"><SelectValue placeholder="Belagstyp..." /></SelectTrigger>
+                            <SelectContent>
+                              {SURFACE_TYPES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                            </SelectContent>
+                          </Select>
+                          <Button type="button" variant="ghost" size="icon" onClick={() => removeCourtForSport(sport, idx)}>
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        {courtAttrs.length > 0 && (
+                          <div className="flex flex-wrap gap-2">
+                            {courtAttrs.map(def => {
+                              const active = !!(courtAttributesBySport[sport]?.[idx]?.[def.key])
+                              return (
+                                <button
+                                  key={def.key}
+                                  type="button"
+                                  onClick={() => setCourtAttributesBySport(prev => {
+                                    const arr = [...(prev[sport] ?? [])]
+                                    while (arr.length <= idx) arr.push({})
+                                    arr[idx] = { ...arr[idx], [def.key]: !arr[idx][def.key] }
+                                    return { ...prev, [sport]: arr }
+                                  })}
+                                  className={cn(
+                                    'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs transition-all',
+                                    active
+                                      ? 'border-primary bg-primary/10 text-foreground'
+                                      : 'border-border text-muted-foreground hover:border-primary/40 hover:text-foreground'
+                                  )}
+                                >
+                                  <span className={cn('h-3.5 w-3.5 shrink-0 rounded border flex items-center justify-center',
+                                    active ? 'bg-primary border-primary' : 'border-muted-foreground/40'
+                                  )}>
+                                    {active && <span className="text-[9px] text-primary-foreground font-bold leading-none">✓</span>}
+                                  </span>
+                                  {def.label}
+                                </button>
+                              )
+                            })}
+                          </div>
+                        )}
                       </div>
                     ))}
                     <Button type="button" variant="outline" size="sm" onClick={() => addCourtForSport(sport)}>
@@ -609,7 +686,43 @@ function AddPlacePage() {
             </div>
           )}
 
-          {/* 5. Image */}
+          {/* 5. Place-level attributes (Anlage) */}
+          {(() => {
+            const placeLevel = ATTRIBUTE_DEFINITIONS.filter(d => d.scope === 'place')
+            if (placeLevel.length === 0) return null
+            return (
+              <div className="space-y-2">
+                <Label>Anlage</Label>
+                <div className="flex flex-wrap gap-2">
+                  {placeLevel.map(def => {
+                    const active = !!placeAttributes[def.key]
+                    return (
+                      <button
+                        key={def.key}
+                        type="button"
+                        onClick={() => setPlaceAttributes(prev => ({ ...prev, [def.key]: !prev[def.key] }))}
+                        className={cn(
+                          'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs transition-all',
+                          active
+                            ? 'border-primary bg-primary/10 text-foreground'
+                            : 'border-border text-muted-foreground hover:border-primary/40 hover:text-foreground'
+                        )}
+                      >
+                        <span className={cn('h-3.5 w-3.5 shrink-0 rounded border flex items-center justify-center',
+                          active ? 'bg-primary border-primary' : 'border-muted-foreground/40'
+                        )}>
+                          {active && <span className="text-[9px] text-primary-foreground font-bold leading-none">✓</span>}
+                        </span>
+                        {def.label}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            )
+          })()}
+
+          {/* 6. Image */}
           <div className="space-y-2">
             <Label>Platzbild (Optional)</Label>
 

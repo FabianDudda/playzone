@@ -4,12 +4,21 @@ import { ArrowLeft } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import Link from 'next/link'
 
-
 const CHANGELOG = [
+  {
+    version: '0.4.0-alpha',
+    date: '17.04.2026',
+    current: true,
+    items: [
+      'added place and court specific attribute system',
+      'added new sport types',
+      'rework admin dashboard',
+    ],
+  },
   {
     version: '0.3.6-alpha',
     date: '14.04.2026',
-    current: true,
+    current: false,
     items: [
       'make place pins smaller',
       'disable clustering place pins one zoom level earlier',

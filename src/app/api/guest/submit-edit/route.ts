@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  const { placeId, placeData, courts } = body
+  const { placeId, placeData, courts, placeAttributes } = body
 
   if (!placeId) {
     return Response.json({ error: 'Ort nicht gefunden.' }, { status: 400 })
@@ -68,15 +68,50 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: 'Ort nicht gefunden.' }, { status: 404 })
   }
 
-  // Create pending change record
+  // Snapshot current place attributes for the diff
+  const { data: currentPlaceAttrRows } = await supabase
+    .from('place_attributes')
+    .select('key, value')
+    .eq('place_id', placeId)
+
+  const currentCourtIds = (currentPlace.courts ?? []).map((c: any) => c.id)
+  const { data: currentCourtAttrRows } = currentCourtIds.length > 0
+    ? await supabase.from('court_attributes').select('court_id, key, value').in('court_id', currentCourtIds)
+    : { data: [] }
+
+  const currentPlaceAttrs = Object.fromEntries(
+    (currentPlaceAttrRows ?? []).filter((r: any) => r.value === 'true').map((r: any) => [r.key, true])
+  )
+  const currentCourtAttrsById: Record<string, Record<string, boolean>> = {}
+  for (const court of currentPlace.courts ?? []) {
+    const keys = (currentCourtAttrRows ?? [])
+      .filter((r: any) => r.court_id === court.id && r.value === 'true')
+      .map((r: any) => r.key)
+    if (keys.length > 0) {
+      const attrMap: Record<string, boolean> = {}
+      for (const k of keys) attrMap[k] = true
+      currentCourtAttrsById[court.id] = attrMap
+    }
+  }
+
+  // Create pending change record (courts include embedded attributes)
   const { data, error } = await supabase
     .from('pending_place_changes')
     .insert({
       place_id: placeId,
       submitted_by: null,
       change_type: 'update',
-      proposed_data: { place: placeData, courts },
-      current_data: { place: currentPlace, courts: currentPlace.courts },
+      proposed_data: {
+        place: placeData,
+        courts,
+        place_attributes: placeAttributes ?? {},
+      },
+      current_data: {
+        place: currentPlace,
+        courts: currentPlace.courts,
+        place_attributes: currentPlaceAttrs,
+        court_attrs_by_id: currentCourtAttrsById,
+      },
       status: 'pending',
       is_guest_submission: true,
       guest_ip: ip,

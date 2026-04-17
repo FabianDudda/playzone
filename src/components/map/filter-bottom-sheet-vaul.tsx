@@ -35,6 +35,12 @@ const SPORTS: SportType[] = [
   'padel',
   'badminton',
   'hockey',
+  'schach',
+  'parkour',
+  'rugby',
+  'inliner',
+  'discgolf',
+  'bmx',
 ]
 
 export default function FilterBottomSheetVaul({
@@ -84,7 +90,7 @@ export default function FilterBottomSheetVaul({
           </div>
         </DrawerHeader>
 
-        <div className="px-4 py-4 max-h-[70vh] overflow-y-auto space-y-4">
+        <div className="px-4 py-4 max-h-[80vh] overflow-y-auto space-y-4">
           {/* Place type filter */}
           <div className="space-y-2">
             <p className="text-sm font-medium text-muted-foreground">Art des Ortes</p>

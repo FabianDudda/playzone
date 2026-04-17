@@ -14,6 +14,58 @@ export type Database = {
   }
   public: {
     Tables: {
+      court_attributes: {
+        Row: {
+          court_id: string
+          key: string
+          value: string
+        }
+        Insert: {
+          court_id: string
+          key: string
+          value: string
+        }
+        Update: {
+          court_id?: string
+          key?: string
+          value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "court_attributes_court_id_fkey"
+            columns: ["court_id"]
+            isOneToOne: false
+            referencedRelation: "courts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      place_attributes: {
+        Row: {
+          place_id: string
+          key: string
+          value: string
+        }
+        Insert: {
+          place_id: string
+          key: string
+          value: string
+        }
+        Update: {
+          place_id?: string
+          key?: string
+          value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "place_attributes_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       courts: {
         Row: {
           created_at: string | null
@@ -595,6 +647,12 @@ export type Database = {
         | "klettern"
         | "padel"
         | "schach"
+        | "parkour"
+        | "rugby"
+        | "inliner"
+        | "discgolf"
+        | "bmx"
+        | "dirtbike"
         | "other"
     }
     CompositeTypes: {
@@ -747,6 +805,12 @@ export const Constants = {
         "klettern",
         "padel",
         "schach",
+        "parkour",
+        "rugby",
+        "inliner",
+        "discgolf",
+        "bmx",
+        "dirtbike",
       ],
     },
   },
@@ -761,6 +825,8 @@ export type MatchParticipant = Tables<'match_participants'>
 export type PendingPlaceChange = Tables<'pending_place_changes'>
 export type Event = Tables<'events'>
 export type EventParticipant = Tables<'event_participants'>
+export type PlaceAttribute = Tables<'place_attributes'>
+export type CourtAttribute = Tables<'court_attributes'>
 
 // Enum types
 export type SportType = Enums<'sport_type'>

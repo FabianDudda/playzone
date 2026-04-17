@@ -11,10 +11,12 @@ import {
   ChevronDown,
   ChevronUp,
   RefreshCw,
+  Plus,
 } from 'lucide-react'
 import {
   type ValidationResult,
   type ValidationCheckResult,
+  type ValidationMatch,
   computeOverallStatus,
 } from '@/lib/validation/place-validation'
 import type { PlaceWithCourts } from '@/lib/supabase/types'
@@ -22,11 +24,12 @@ import type { PlaceWithCourts } from '@/lib/supabase/types'
 interface ValidationBadgeProps {
   place: PlaceWithCourts
   initialResult?: ValidationResult
+  onAddSport?: (sport: string) => void
 }
 
 type Source = 'osm' | 'google'
 
-export default function ValidationBadge({ place, initialResult }: ValidationBadgeProps) {
+export default function ValidationBadge({ place, initialResult, onAddSport }: ValidationBadgeProps) {
   const [osmResult, setOsmResult] = useState<ValidationCheckResult | null>(
     initialResult?.osm ?? null
   )
@@ -146,10 +149,19 @@ export default function ValidationBadge({ place, initialResult }: ValidationBadg
           className="border rounded-lg p-2.5 bg-muted/30 space-y-2.5 text-xs w-72 max-w-xs"
           onClick={e => e.stopPropagation()}
         >
-          {osmResult && <SourceResults result={osmResult} label="OpenStreetMap" onRerun={(e) => runCheck('osm', e)} isLoading={isLoadingOsm} />}
+          {osmResult && (
+          <SourceResults
+            result={osmResult}
+            label="OpenStreetMap"
+            onRerun={(e) => runCheck('osm', e)}
+            isLoading={isLoadingOsm}
+            placeSports={(place.sports as string[]) ?? []}
+            onAddSport={onAddSport}
+          />
+        )}
           {googleResult && (
             <div className={osmResult ? 'border-t pt-2.5' : ''}>
-              <SourceResults result={googleResult} label="Google Maps" onRerun={(e) => runCheck('google', e)} isLoading={isLoadingGoogle} />
+              <SourceResults result={googleResult} label="Google Maps" onRerun={(e) => runCheck('google', e)} isLoading={isLoadingGoogle} placeSports={[]} />
             </div>
           )}
         </div>
@@ -212,11 +224,15 @@ function SourceResults({
   label,
   onRerun,
   isLoading,
+  placeSports,
+  onAddSport,
 }: {
   result: ValidationCheckResult
   label: string
   onRerun: (e: React.MouseEvent) => void
   isLoading: boolean
+  placeSports: string[]
+  onAddSport?: (sport: string) => void
 }) {
   if (result.status === 'unavailable') {
     return (
@@ -256,7 +272,7 @@ function SourceResults({
         <div className="space-y-1">
           {result.matches.map((m, i) => (
             <div
-              key={i}
+              key={m.osmId ?? i}
               className={`flex items-center justify-between gap-2 px-2 py-1 rounded text-xs ${
                 m.matchesDeclared
                   ? 'bg-green-50 text-green-900 border border-green-200'
@@ -278,6 +294,85 @@ function SourceResults({
           ))}
         </div>
       )}
+      {onAddSport && result.source === 'osm' && (
+        <OsmSportSuggestions
+          matches={result.matches}
+          placeSports={placeSports}
+          onAddSport={onAddSport}
+        />
+      )}
+    </div>
+  )
+}
+
+function OsmSportSuggestions({
+  matches,
+  placeSports,
+  onAddSport,
+}: {
+  matches: ValidationMatch[]
+  placeSports: string[]
+  onAddSport: (sport: string) => void
+}) {
+  // Optimistic local set of added sports — cleared on remount/re-validation
+  const [added, setAdded] = useState<Set<string>>(new Set())
+
+  const effectivePlaceSports = [...placeSports, ...added]
+
+  const actionableMatches = matches.filter(
+    m => m.appSports.some(s => !effectivePlaceSports.includes(s))
+  )
+
+  if (actionableMatches.length === 0) return null
+
+  const handleAdd = (sport: string) => {
+    setAdded(prev => new Set(prev).add(sport))
+    onAddSport(sport)
+  }
+
+  return (
+    <div className="mt-2 pt-2 border-t border-dashed border-gray-200">
+      <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
+        OSM suggestions
+      </div>
+      <div className="space-y-1.5">
+        {actionableMatches.map((m, i) => {
+          const newSports = m.appSports.filter(s => !effectivePlaceSports.includes(s))
+          return (
+            <div key={m.osmId ?? i} className="flex items-start gap-2">
+              <div className="flex-1 min-w-0">
+                <span className="text-[10px] text-muted-foreground truncate block" title={m.name}>
+                  {m.name} · {m.distance}m
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-1 shrink-0">
+                {m.appSports.map(sport => {
+                  const isAlready = effectivePlaceSports.includes(sport)
+                  if (isAlready) {
+                    return (
+                      <span key={sport} className="inline-flex items-center gap-0.5 text-[10px] text-green-600">
+                        <CheckCircle2 className="h-2.5 w-2.5" />
+                        {sport}
+                      </span>
+                    )
+                  }
+                  if (!newSports.includes(sport)) return null
+                  return (
+                    <button
+                      key={sport}
+                      onClick={(e) => { e.stopPropagation(); handleAdd(sport) }}
+                      className="inline-flex items-center gap-0.5 text-[10px] bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded px-1 py-0.5 transition-colors"
+                    >
+                      <Plus className="h-2.5 w-2.5" />
+                      {sport}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }

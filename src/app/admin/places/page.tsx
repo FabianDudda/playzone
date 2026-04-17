@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import React from 'react'
 import dynamic from 'next/dynamic'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -44,7 +44,9 @@ import {
 } from 'lucide-react'
 import ValidationBadge from '@/components/admin/validation-badge'
 import type { ValidationResult } from '@/lib/validation/place-validation'
-import { getSportBadgeClasses, sportNames, sportIcons, getPlaceTypeBadgeClasses, placeTypeLabels, placeTypeIcons, PlaceType } from '@/lib/utils/sport-utils'
+import { getSportBadgeClasses, sportNames, sportIcons, getPlaceTypeBadgeClasses, placeTypeLabels, placeTypeIcons, PlaceType, SPORT_ORDER } from '@/lib/utils/sport-utils'
+import { AttributeIconRow } from '@/components/attributes/attribute-icons'
+import { ATTRIBUTE_DEFINITIONS } from '@/lib/attributes/definitions'
 import Link from 'next/link'
 import {
   DropdownMenu,
@@ -82,6 +84,7 @@ interface CourtEditRow {
   quantity: string
   notes: string
   customSportName?: string
+  attributes: Record<string, boolean>
 }
 
 interface PlaceEditForm {
@@ -105,6 +108,7 @@ interface PlaceEditForm {
   contact_website: string
   opening_hours: OpeningHours | null
   image_url: string | null
+  placeAttributes: Record<string, boolean>
 }
 
 function getSourceLabel(source: string | null | undefined): string {
@@ -188,7 +192,58 @@ function ModerationStats() {
   )
 }
 
-function PlaceCard({
+function PlaceAttributesPanel({ place }: { place: PlaceWithCourts }) {
+  const courtIds = (place.courts ?? []).map(c => c.id)
+
+  const { data: placeAttrRows = [] } = useQuery({
+    queryKey: ['place-attributes', place.id],
+    queryFn: () => database.attributes.getPlaceAttributes(place.id),
+  })
+  const { data: courtAttrRows = [] } = useQuery({
+    queryKey: ['court-attributes', courtIds],
+    queryFn: () => database.attributes.getCourtAttributes(courtIds),
+    enabled: courtIds.length > 0,
+  })
+
+  const placeAttrKeys = placeAttrRows.filter(r => r.value === 'true').map(r => r.key)
+
+  // Group court attrs by sport (deduped)
+  const courtAttrBySport: Record<string, string[]> = {}
+  for (const court of place.courts ?? []) {
+    const keys = courtAttrRows
+      .filter(r => r.court_id === court.id && r.value === 'true')
+      .map(r => r.key)
+    if (keys.length > 0) {
+      const existing = courtAttrBySport[court.sport] ?? []
+      courtAttrBySport[court.sport] = [...new Set([...existing, ...keys])]
+    }
+  }
+
+  const hasAny = placeAttrKeys.length > 0 || Object.keys(courtAttrBySport).length > 0
+  if (!hasAny) return null
+
+  return (
+    <div className="space-y-1">
+      <Label className="text-xs font-medium text-muted-foreground">Ausstattung</Label>
+      <div className="space-y-1 mt-1">
+        {placeAttrKeys.length > 0 && (
+          <div className="text-xs bg-muted p-2 rounded">
+            <span className="text-muted-foreground mr-1">Anlage:</span>
+            <AttributeIconRow activeKeys={placeAttrKeys} size="xs" />
+          </div>
+        )}
+        {Object.entries(courtAttrBySport).map(([sport, keys]) => (
+          <div key={sport} className="text-xs bg-muted p-2 rounded flex items-center gap-2">
+            <span className="text-muted-foreground">{sportNames[sport] || sport}:</span>
+            <AttributeIconRow activeKeys={keys} size="xs" />
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+const PlaceCard = React.memo(function PlaceCard({
   place,
   onApprove,
   onReject,
@@ -198,6 +253,7 @@ function PlaceCard({
   onToggleSelection,
   forceExpanded = false,
   validationResult,
+  fullWidth = false,
 }: {
   place: PlaceWithCourts
   onApprove: (id: string) => void
@@ -208,6 +264,7 @@ function PlaceCard({
   onToggleSelection?: () => void
   forceExpanded?: boolean
   validationResult?: ValidationResult
+  fullWidth?: boolean
 }) {
   const [isExpanded, setIsExpanded] = useState(false)
   const expanded = forceExpanded || isExpanded
@@ -220,11 +277,26 @@ function PlaceCard({
     latitude: '', longitude: '', sports: [], courts: [],
     contact_phone: '', contact_email: '', contact_website: '',
     image_url: null,
+    placeAttributes: {},
   })
   const queryClient = useQueryClient()
   const { toast } = useToast()
 
   const hasCoords = place.latitude != null && place.longitude != null
+
+  const courtIds = (place.courts ?? []).map(c => c.id)
+  const { data: placeAttrRows = [] } = useQuery({
+    queryKey: ['place-attributes', place.id],
+    queryFn: () => database.attributes.getPlaceAttributes(place.id),
+    enabled: expanded,
+    staleTime: 5 * 60 * 1000,
+  })
+  const { data: courtAttrRows = [] } = useQuery({
+    queryKey: ['court-attributes', courtIds],
+    queryFn: () => database.attributes.getCourtAttributes(courtIds),
+    enabled: expanded && courtIds.length > 0,
+    staleTime: 5 * 60 * 1000,
+  })
 
   const { data: nearbyData } = useQuery({
     queryKey: ['nearby-places', place.id],
@@ -275,6 +347,11 @@ function PlaceCard({
   }
 
   const startEditing = () => {
+    // Build place attribute map from loaded rows
+    const placeAttrs: Record<string, boolean> = {}
+    for (const r of placeAttrRows) {
+      if (r.value === 'true') placeAttrs[r.key] = true
+    }
     setEditForm({
       name: place.name || '',
       description: place.description || '',
@@ -290,19 +367,28 @@ function PlaceCard({
       latitude: place.latitude?.toString() || '',
       longitude: place.longitude?.toString() || '',
       sports: (place.sports as string[]) || [],
-      courts: (place.courts || []).map(c => ({
-        id: c.id,
-        sport: c.sport,
-        surface: c.surface || '',
-        quantity: c.quantity?.toString() || '',
-        notes: c.notes || '',
-        customSportName: c.custom_sport_name || '',
-      })),
+      courts: (place.courts || []).flatMap(c => {
+        // Build per-court attribute map
+        const rows = courtAttrRows.filter(r => r.court_id === c.id && r.value === 'true')
+        const attrMap: Record<string, boolean> = {}
+        for (const r of rows) attrMap[r.key] = true
+        return Array.from({ length: Math.max(c.quantity || 1, 1) }, (_, idx) => ({
+          // Only the first expanded row keeps the original DB id; extra rows are new courts
+          id: idx === 0 ? c.id : undefined,
+          sport: c.sport,
+          surface: c.surface || '',
+          quantity: '1',
+          notes: c.notes || '',
+          customSportName: c.custom_sport_name || '',
+          attributes: { ...attrMap },
+        }))
+      }),
       contact_phone: place.contact_phone || '',
       contact_email: place.contact_email || '',
       contact_website: place.contact_website || '',
       opening_hours: (place.opening_hours as OpeningHours | null) ?? null,
       image_url: place.image_url || null,
+      placeAttributes: placeAttrs,
     })
     setIsEditing(true)
   }
@@ -332,20 +418,24 @@ function PlaceCard({
             ...(c.id ? { id: c.id } : {}),
             sport: c.sport,
             surface: c.surface || null,
-            quantity: c.quantity ? parseInt(c.quantity) : null,
+            quantity: 1,
             notes: c.notes || null,
             customSportName: c.customSportName || null,
+            attributes: c.attributes ?? {},
           })),
           contact_phone: editForm.contact_phone || null,
           contact_email: editForm.contact_email || null,
           contact_website: editForm.contact_website || null,
           opening_hours: (editForm.place_type === 'verein' || editForm.place_type === 'schule') ? editForm.opening_hours : null,
           image_url: editForm.image_url,
+          placeAttributes: editForm.placeAttributes,
         }),
       })
       if (!res.ok) throw new Error('Save failed')
       queryClient.invalidateQueries({ queryKey: ['places'] })
       queryClient.invalidateQueries({ queryKey: ['nearby-places', place.id] })
+      queryClient.invalidateQueries({ queryKey: ['place-attributes', place.id] })
+      queryClient.invalidateQueries({ queryKey: ['court-attributes', courtIds] })
       if (andApprove) {
         onApprove(place.id)
       } else {
@@ -379,6 +469,54 @@ function PlaceCard({
             : [...prev.courts, { sport, surface: '', quantity: '1', notes: '' }],
       }
     })
+  }
+
+  const handleAddSportFromOsm = (sport: string) => {
+    const currentSports = (place.sports as string[]) ?? []
+    if (currentSports.includes(sport)) return
+
+    if (isEditing) {
+      toggleSport(sport)
+      return
+    }
+
+    // Open edit mode with sport pre-added in one atomic setState
+    setEditForm({
+      name: place.name || '',
+      description: place.description || '',
+      place_type: place.place_type || '',
+      street: place.street || '',
+      house_number: place.house_number || '',
+      city: place.city || '',
+      postcode: place.postcode || '',
+      district: place.district || '',
+      county: place.county || '',
+      state: place.state || '',
+      country: place.country || '',
+      latitude: place.latitude?.toString() || '',
+      longitude: place.longitude?.toString() || '',
+      sports: [...currentSports, sport],
+      courts: [
+        ...(place.courts || []).flatMap(c =>
+          Array.from({ length: Math.max(c.quantity || 1, 1) }, () => ({
+            id: c.id,
+            sport: c.sport,
+            surface: c.surface || '',
+            quantity: '1',
+            notes: c.notes || '',
+            customSportName: c.custom_sport_name || '',
+          }))
+        ),
+        { sport, surface: '', quantity: '1', notes: '' },
+      ],
+      contact_phone: place.contact_phone || '',
+      contact_email: place.contact_email || '',
+      contact_website: place.contact_website || '',
+      opening_hours: (place.opening_hours as OpeningHours | null) ?? null,
+      image_url: place.image_url || null,
+    })
+    setIsEditing(true)
+    setIsExpanded(true)
   }
 
   return (
@@ -424,8 +562,8 @@ function PlaceCard({
                     <span className="ml-1 capitalize">{place.moderation_status}</span>
                   </Badge>
                 )}
-                {place.moderation_status === 'pending' && (
-                  <ValidationBadge place={place} initialResult={validationResult} />
+                {place.moderation_status === 'pending' && !fullWidth && (
+                  <ValidationBadge place={place} initialResult={validationResult} onAddSport={handleAddSportFromOsm} />
                 )}
               </div>
 
@@ -462,124 +600,185 @@ function PlaceCard({
       </CardHeader>
 
       {expanded && (
-        <CardContent className="space-y-4 pt-0">
-          {/* Actions */}
-          {isEditing && (
-            <div className="flex gap-2">
+        <CardContent className={fullWidth ? 'pt-0' : 'space-y-4 pt-0'}>
+          {fullWidth ? (
+            /* ── Full-width layout (pending tab) ── */
+            <div className="space-y-4">
+              {/* Validation */}
               {place.moderation_status === 'pending' && (
-                <Button
-                  onClick={() => handleSave(true)}
-                  disabled={isSaving || !editForm.name.trim()}
-                  className="flex-1"
-                >
-                  {isSaving
-                    ? <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    : <CheckCircle className="h-4 w-4 mr-2" />}
-                  Save & Approve
-                </Button>
-              )}
-              <Button
-                variant="outline"
-                onClick={() => handleSave(false)}
-                disabled={isSaving || !editForm.name.trim()}
-                className="flex-1"
-              >
-                {isSaving
-                  ? <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  : <Save className="h-4 w-4 mr-2" />}
-                Save draft
-              </Button>
-              <Button variant="ghost" onClick={() => setIsEditing(false)} disabled={isSaving}>
-                Cancel
-              </Button>
-            </div>
-          )}
-          {!isEditing && place.moderation_status === 'pending' && (
-            <div className="flex gap-2">
-              <Button onClick={() => onApprove(place.id)} className="flex-1">
-                <CheckCircle className="h-4 w-4 mr-2" />
-                Approve
-              </Button>
-
-              <Button variant="outline" onClick={startEditing} className="flex-1">
-                <Edit className="h-4 w-4 mr-2" />
-                Edit
-              </Button>
-
-              <Button variant="destructive" className="flex-1" onClick={() => onReject(place.id, '')}>
-                <XCircle className="h-4 w-4 mr-2" />
-                Reject
-              </Button>
-            </div>
-          )}
-
-          {/* Map */}
-          {hasCoords ? (
-            <AdminMiniMap
-              latitude={Number(place.latitude)}
-              longitude={Number(place.longitude)}
-              placeName={place.name}
-              sports={availableSports}
-              nearbyPlaces={nearbyPlaces}
-              onLocationSelect={isEditing ? (lat, lng) => setEditForm(prev => ({
-                ...prev,
-                latitude: lat.toFixed(7),
-                longitude: lng.toFixed(7),
-              })) : undefined}
-              height="440px"
-              className="w-full"
-            />
-          ) : (
-            <div className="flex items-center gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-800">
-              <AlertCircle className="h-4 w-4 shrink-0" />
-              No coordinates — map and duplicate check unavailable
-            </div>
-          )}
-
-          {/* Duplicate alert */}
-          {nearbyPlaces.length > 0 && (
-            <div className="p-3 bg-yellow-50 border border-yellow-200 rounded space-y-1">
-              <div className="flex items-center gap-2 text-sm font-medium text-yellow-800">
-                <AlertCircle className="h-4 w-4 shrink-0" />
-                {nearbyPlaces.length} nearby place{nearbyPlaces.length > 1 ? 's' : ''} within 500m
-              </div>
-              {nearbyPlaces.map(np => (
-                <div key={np.id} className="flex items-center justify-between text-xs text-yellow-700 pl-6">
-                  <Link
-                    href={`/places/${np.id}`}
-                    target="_blank"
-                    className="font-medium underline underline-offset-2 hover:text-yellow-900"
-                  >
-                    {np.name}
-                  </Link>
-                  <span className="text-yellow-600">{np.distance}m · {np.moderation_status}</span>
+                <div>
+                  <ValidationBadge place={place} initialResult={validationResult} onAddSport={handleAddSportFromOsm} />
                 </div>
-              ))}
-            </div>
-          )}
+              )}
 
-          {/* Google Maps iframe + Apple Maps button */}
-          {hasCoords && (
-            <div className="space-y-2">
-              <iframe
-                src={`https://www.google.com/maps?q=${place.latitude},${place.longitude}&t=k&output=embed`}
-                width="100%"
-                height="480"
-                className="rounded-lg border"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-              <a
-                href={`https://maps.apple.com/?ll=${place.latitude},${place.longitude}&q=${encodeURIComponent(place.name)}&t=k`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button variant="outline" size="sm" className="w-full h-7 text-xs gap-1.5">
-                  <MapIcon className="h-3 w-3" />
-                  Apple Maps
-                </Button>
-              </a>
+              {/* Duplicate alert */}
+              {nearbyPlaces.length > 0 && (
+                <div className="p-3 bg-yellow-50 border border-yellow-200 rounded space-y-1">
+                  <div className="flex items-center gap-2 text-sm font-medium text-yellow-800">
+                    <AlertCircle className="h-4 w-4 shrink-0" />
+                    {nearbyPlaces.length} nearby place{nearbyPlaces.length > 1 ? 's' : ''} within 500m
+                  </div>
+                  {nearbyPlaces.map(np => (
+                    <div key={np.id} className="flex items-center justify-between text-xs text-yellow-700 pl-6">
+                      <Link href={`/places/${np.id}`} target="_blank" className="font-medium underline underline-offset-2 hover:text-yellow-900">{np.name}</Link>
+                      <span className="text-yellow-600">{np.distance}m · {np.moderation_status}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Maps row — own map + Google satellite side by side */}
+              <div className="grid grid-cols-2 gap-4 items-start">
+                {hasCoords ? (
+                  <AdminMiniMap
+                    latitude={Number(place.latitude)}
+                    longitude={Number(place.longitude)}
+                    placeName={place.name}
+                    sports={availableSports}
+                    nearbyPlaces={nearbyPlaces}
+                    onLocationSelect={isEditing ? (lat, lng) => setEditForm(prev => ({
+                      ...prev,
+                      latitude: lat.toFixed(7),
+                      longitude: lng.toFixed(7),
+                    })) : undefined}
+                    height="360px"
+                    className="w-full"
+                  />
+                ) : (
+                  <div className="flex items-center gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-800 h-[360px]">
+                    <AlertCircle className="h-4 w-4 shrink-0" />
+                    No coordinates — map unavailable
+                  </div>
+                )}
+                {hasCoords ? (
+                  <iframe
+                    src={`https://www.google.com/maps?q=${place.latitude},${place.longitude}&t=k&z=18&output=embed`}
+                    width="100%"
+                    height="360"
+                    className="rounded-lg border"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                ) : (
+                  <div className="flex items-center justify-center h-[360px] rounded-lg border bg-muted text-sm text-muted-foreground">
+                    No coordinates
+                  </div>
+                )}
+              </div>
+
+              {/* Action buttons */}
+              {isEditing ? (
+                <div className="flex gap-2">
+                  {place.moderation_status === 'pending' && (
+                    <Button onClick={() => handleSave(true)} disabled={isSaving || !editForm.name.trim()} className="flex-1">
+                      {isSaving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <CheckCircle className="h-4 w-4 mr-2" />}
+                      Save & Approve
+                    </Button>
+                  )}
+                  <Button variant="outline" onClick={() => handleSave(false)} disabled={isSaving || !editForm.name.trim()} className="flex-1">
+                    {isSaving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
+                    Save draft
+                  </Button>
+                  <Button variant="ghost" onClick={() => setIsEditing(false)} disabled={isSaving}>Cancel</Button>
+                </div>
+              ) : place.moderation_status === 'pending' ? (
+                <div className="flex gap-2">
+                  <Button onClick={() => onApprove(place.id)} className="flex-1">
+                    <CheckCircle className="h-4 w-4 mr-2" />Approve
+                  </Button>
+                  <Button variant="outline" onClick={startEditing} className="flex-1">
+                    <Edit className="h-4 w-4 mr-2" />Edit
+                  </Button>
+                  <Button variant="destructive" className="flex-1" onClick={() => onReject(place.id, '')}>
+                    <XCircle className="h-4 w-4 mr-2" />Reject
+                  </Button>
+                </div>
+              ) : null}
             </div>
+          ) : (
+            /* ── Standard single-column layout (other tabs) ── */
+            <>
+              {/* Actions */}
+              {isEditing && (
+                <div className="flex gap-2">
+                  {place.moderation_status === 'pending' && (
+                    <Button onClick={() => handleSave(true)} disabled={isSaving || !editForm.name.trim()} className="flex-1">
+                      {isSaving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <CheckCircle className="h-4 w-4 mr-2" />}
+                      Save & Approve
+                    </Button>
+                  )}
+                  <Button variant="outline" onClick={() => handleSave(false)} disabled={isSaving || !editForm.name.trim()} className="flex-1">
+                    {isSaving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
+                    Save draft
+                  </Button>
+                  <Button variant="ghost" onClick={() => setIsEditing(false)} disabled={isSaving}>Cancel</Button>
+                </div>
+              )}
+              {!isEditing && place.moderation_status === 'pending' && (
+                <div className="flex gap-2">
+                  <Button onClick={() => onApprove(place.id)} className="flex-1">
+                    <CheckCircle className="h-4 w-4 mr-2" />Approve
+                  </Button>
+                  <Button variant="outline" onClick={startEditing} className="flex-1">
+                    <Edit className="h-4 w-4 mr-2" />Edit
+                  </Button>
+                  <Button variant="destructive" className="flex-1" onClick={() => onReject(place.id, '')}>
+                    <XCircle className="h-4 w-4 mr-2" />Reject
+                  </Button>
+                </div>
+              )}
+
+              {/* Map */}
+              {hasCoords ? (
+                <AdminMiniMap
+                  latitude={Number(place.latitude)}
+                  longitude={Number(place.longitude)}
+                  placeName={place.name}
+                  sports={availableSports}
+                  nearbyPlaces={nearbyPlaces}
+                  onLocationSelect={isEditing ? (lat, lng) => setEditForm(prev => ({
+                    ...prev,
+                    latitude: lat.toFixed(7),
+                    longitude: lng.toFixed(7),
+                  })) : undefined}
+                  height="440px"
+                  className="w-full"
+                />
+              ) : (
+                <div className="flex items-center gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-800">
+                  <AlertCircle className="h-4 w-4 shrink-0" />
+                  No coordinates — map and duplicate check unavailable
+                </div>
+              )}
+
+              {/* Duplicate alert */}
+              {nearbyPlaces.length > 0 && (
+                <div className="p-3 bg-yellow-50 border border-yellow-200 rounded space-y-1">
+                  <div className="flex items-center gap-2 text-sm font-medium text-yellow-800">
+                    <AlertCircle className="h-4 w-4 shrink-0" />
+                    {nearbyPlaces.length} nearby place{nearbyPlaces.length > 1 ? 's' : ''} within 500m
+                  </div>
+                  {nearbyPlaces.map(np => (
+                    <div key={np.id} className="flex items-center justify-between text-xs text-yellow-700 pl-6">
+                      <Link href={`/places/${np.id}`} target="_blank" className="font-medium underline underline-offset-2 hover:text-yellow-900">{np.name}</Link>
+                      <span className="text-yellow-600">{np.distance}m · {np.moderation_status}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Google Maps iframe */}
+              {hasCoords && (
+                <iframe
+                  src={`https://www.google.com/maps?q=${place.latitude},${place.longitude}&t=k&output=embed`}
+                  width="100%"
+                  height="480"
+                  className="rounded-lg border"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              )}
+            </>
           )}
 
           {!isEditing ? (
@@ -618,6 +817,9 @@ function PlaceCard({
                   </div>
                 </div>
               )}
+
+              {/* Attributes */}
+              <PlaceAttributesPanel place={place} />
 
               {/* Core Info */}
               <div className="space-y-3">
@@ -786,7 +988,7 @@ function PlaceCard({
               <div>
                 <Label className="text-xs">Sports</Label>
                 <div className="flex flex-wrap gap-2 mt-1">
-                  {Object.entries(sportNames).map(([key, label]) => (
+                  {SPORT_ORDER.map(key => [key, sportNames[key] ?? key] as [string, string]).map(([key, label]) => (
                     <button
                       key={key}
                       type="button"
@@ -803,7 +1005,7 @@ function PlaceCard({
                 </div>
               </div>
 
-              {/* Courts editor */}
+              {/* Courts editor — one row per physical court, surface per court */}
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <Label className="text-xs">Courts</Label>
@@ -814,7 +1016,7 @@ function PlaceCard({
                     className="h-6 text-xs"
                     onClick={() => setEditForm(prev => ({
                       ...prev,
-                      courts: [...prev.courts, { sport: '', surface: '', quantity: '', notes: '' }],
+                      courts: [...prev.courts, { sport: '', surface: 'Unbekannt', quantity: '1', notes: '' }],
                     }))}
                   >
                     + Add court
@@ -824,104 +1026,171 @@ function PlaceCard({
                   <p className="text-xs text-muted-foreground">No courts — click &quot;Add court&quot; to add one.</p>
                 ) : (
                   <div className="space-y-2">
-                    {editForm.courts.map((court, i) => (
-                      <div key={i} className="grid grid-cols-[1fr_1fr_60px_1fr_28px] gap-2 items-start bg-muted/50 p-2 rounded">
-                        <div>
-                          <Label className="text-xs text-muted-foreground">Sport</Label>
-                          <Select
-                            value={court.sport}
-                            onValueChange={val => setEditForm(prev => {
-                              const courts = [...prev.courts]
-                              courts[i] = { ...courts[i], sport: val, customSportName: val !== 'other' ? '' : courts[i].customSportName }
-                              return { ...prev, courts }
-                            })}
-                          >
-                            <SelectTrigger className="mt-0.5 h-7 text-xs">
-                              <SelectValue placeholder="Select…" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {Object.entries(sportNames).map(([key, label]) => (
-                                <SelectItem key={key} value={key} className="text-xs">
-                                  {sportIcons[key] || '📍'} {label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          {court.sport === 'other' && (
-                            <Input
-                              placeholder="Sport name…"
-                              value={court.customSportName || ''}
-                              onChange={e => setEditForm(prev => {
+                    {editForm.courts.map((court, i) => {
+                      const isLastOfSport = court.sport
+                        ? !editForm.courts.slice(i + 1).some(c => c.sport === court.sport)
+                        : false
+                      const courtIndex = editForm.courts.slice(0, i).filter(c => c.sport === court.sport).length
+                      const courtAttrdefs = court.sport
+                        ? ATTRIBUTE_DEFINITIONS.filter(d =>
+                            d.scope === 'court' && (!d.sports || d.sports.includes(court.sport))
+                          )
+                        : []
+                      return (
+                        <React.Fragment key={i}>
+                          <div className="grid grid-cols-[1fr_1fr_1fr_28px] gap-2 items-start bg-muted/50 p-2 rounded">
+                            <div>
+                              <Label className="text-xs text-muted-foreground">
+                                Sport{court.sport ? ` (Platz ${courtIndex + 1})` : ''}
+                              </Label>
+                              <Select
+                                value={court.sport}
+                                onValueChange={val => setEditForm(prev => {
+                                  const courts = [...prev.courts]
+                                  courts[i] = { ...courts[i], sport: val, customSportName: val !== 'other' ? '' : courts[i].customSportName }
+                                  return { ...prev, courts }
+                                })}
+                              >
+                                <SelectTrigger className="mt-0.5 h-7 text-xs">
+                                  <SelectValue placeholder="Select…" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {SPORT_ORDER.map(key => (
+                                    <SelectItem key={key} value={key} className="text-xs">
+                                      {sportIcons[key] || '📍'} {sportNames[key] ?? key}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              {court.sport === 'other' && (
+                                <Input
+                                  placeholder="Sport name…"
+                                  value={court.customSportName || ''}
+                                  onChange={e => setEditForm(prev => {
+                                    const courts = [...prev.courts]
+                                    courts[i] = { ...courts[i], customSportName: e.target.value }
+                                    return { ...prev, courts }
+                                  })}
+                                  className="mt-1 h-7 text-xs"
+                                />
+                              )}
+                            </div>
+                            <div>
+                              <Label className="text-xs text-muted-foreground">Surface</Label>
+                              <Select
+                                value={court.surface || 'Unbekannt'}
+                                onValueChange={val => setEditForm(prev => {
+                                  const courts = [...prev.courts]
+                                  courts[i] = { ...courts[i], surface: val }
+                                  return { ...prev, courts }
+                                })}
+                              >
+                                <SelectTrigger className="mt-0.5 h-7 text-xs">
+                                  <SelectValue placeholder="Select…" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {['Unbekannt', 'Rasen', 'Kunstrasen', 'Hartplatz', 'Asphalt', 'Kunststoffbelag', 'Asche', 'Sand', 'Sonstiges'].map(s => (
+                                    <SelectItem key={s} value={s} className="text-xs">{s}</SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div>
+                              <Label className="text-xs text-muted-foreground">Notes</Label>
+                              <Input
+                                value={court.notes}
+                                onChange={e => setEditForm(prev => {
+                                  const courts = [...prev.courts]
+                                  courts[i] = { ...courts[i], notes: e.target.value }
+                                  return { ...prev, courts }
+                                })}
+                                className="mt-0.5 h-7 text-xs"
+                                placeholder="Optional"
+                              />
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => setEditForm(prev => ({
+                                ...prev,
+                                courts: prev.courts.filter((_, idx) => idx !== i),
+                              }))}
+                              className="mt-5 text-muted-foreground hover:text-destructive transition-colors"
+                              aria-label="Remove court"
+                            >
+                              <XCircle className="h-4 w-4" />
+                            </button>
+                          </div>
+                          {courtAttrdefs.length > 0 && (
+                            <div className="flex flex-wrap gap-1.5 px-2 pb-1">
+                              {courtAttrdefs.map(def => {
+                                const active = !!(court.attributes?.[def.key])
+                                return (
+                                  <button
+                                    key={def.key}
+                                    type="button"
+                                    onClick={() => setEditForm(prev => {
+                                      const courts = [...prev.courts]
+                                      courts[i] = { ...courts[i], attributes: { ...(courts[i].attributes ?? {}), [def.key]: !courts[i].attributes?.[def.key] } }
+                                      return { ...prev, courts }
+                                    })}
+                                    className={`text-xs px-2 py-1 rounded border transition-colors ${
+                                      active ? 'border-primary bg-primary/10 text-foreground' : 'border-border text-muted-foreground hover:border-primary'
+                                    }`}
+                                  >
+                                    {active ? '✓ ' : ''}{def.label}
+                                  </button>
+                                )
+                              })}
+                            </div>
+                          )}
+                          {isLastOfSport && court.sport && (
+                            <button
+                              type="button"
+                              onClick={() => setEditForm(prev => {
+                                const idx = prev.courts.length - 1 - [...prev.courts].reverse().findIndex(c => c.sport === court.sport)
                                 const courts = [...prev.courts]
-                                courts[i] = { ...courts[i], customSportName: e.target.value }
+                                courts.splice(idx + 1, 0, { sport: court.sport, surface: 'Unbekannt', quantity: '1', notes: '', customSportName: court.customSportName, attributes: {} })
                                 return { ...prev, courts }
                               })}
-                              className="mt-1 h-7 text-xs"
-                            />
+                              className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 px-2 py-0.5"
+                            >
+                              + {sportNames[court.sport] ?? court.sport} Platz hinzufügen
+                            </button>
                           )}
-                        </div>
-                        <div>
-                          <Label className="text-xs text-muted-foreground">Surface</Label>
-                          <Select
-                            value={court.surface || ''}
-                            onValueChange={val => setEditForm(prev => {
-                              const courts = [...prev.courts]
-                              courts[i] = { ...courts[i], surface: val }
-                              return { ...prev, courts }
-                            })}
-                          >
-                            <SelectTrigger className="mt-0.5 h-7 text-xs">
-                              <SelectValue placeholder="Select…" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {['Unbekannt', 'Rasen', 'Kunstrasen', 'Hartplatz', 'Asphalt', 'Kunststoffbelag', 'Asche', 'Sand', 'Sonstiges'].map(s => (
-                                <SelectItem key={s} value={s} className="text-xs">{s}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div>
-                          <Label className="text-xs text-muted-foreground">Qty</Label>
-                          <Input
-                            type="number"
-                            min="1"
-                            value={court.quantity}
-                            onChange={e => setEditForm(prev => {
-                              const courts = [...prev.courts]
-                              courts[i] = { ...courts[i], quantity: e.target.value }
-                              return { ...prev, courts }
-                            })}
-                            className="mt-0.5 h-7 text-xs"
-                          />
-                        </div>
-                        <div>
-                          <Label className="text-xs text-muted-foreground">Notes</Label>
-                          <Input
-                            value={court.notes}
-                            onChange={e => setEditForm(prev => {
-                              const courts = [...prev.courts]
-                              courts[i] = { ...courts[i], notes: e.target.value }
-                              return { ...prev, courts }
-                            })}
-                            className="mt-0.5 h-7 text-xs"
-                            placeholder="Optional"
-                          />
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => setEditForm(prev => ({
-                            ...prev,
-                            courts: prev.courts.filter((_, idx) => idx !== i),
-                          }))}
-                          className="mt-5 text-muted-foreground hover:text-destructive transition-colors"
-                          aria-label="Remove court"
-                        >
-                          <XCircle className="h-4 w-4" />
-                        </button>
-                      </div>
-                    ))}
+                        </React.Fragment>
+                      )
+                    })}
                   </div>
                 )}
+
+                {/* Place-level attributes (Anlage) */}
+                {(() => {
+                  const defs = ATTRIBUTE_DEFINITIONS.filter(d => d.scope === 'place')
+                  if (defs.length === 0) return null
+                  return (
+                    <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                      <span className="text-[10px] text-muted-foreground">Anlage:</span>
+                      {defs.map(def => {
+                        const active = !!editForm.placeAttributes?.[def.key]
+                        return (
+                          <button
+                            key={def.key}
+                            type="button"
+                            onClick={() => setEditForm(prev => ({
+                              ...prev,
+                              placeAttributes: { ...prev.placeAttributes, [def.key]: !prev.placeAttributes[def.key] },
+                            }))}
+                            className={`text-xs px-2 py-1 rounded border transition-colors ${
+                              active ? 'border-primary bg-primary/10 text-foreground' : 'border-border text-muted-foreground hover:border-primary'
+                            }`}
+                          >
+                            {active ? '✓ ' : ''}{def.label}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  )
+                })()}
               </div>
 
               <div className="space-y-3">
@@ -937,19 +1206,26 @@ function PlaceCard({
 
                   <div className="col-span-2">
                     <Label className="text-xs">Place Type</Label>
-                    <Select
-                      value={editForm.place_type}
-                      onValueChange={val => setEditForm(prev => ({ ...prev, place_type: val }))}
-                    >
-                      <SelectTrigger className="mt-1">
-                        <SelectValue placeholder="Select type..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="öffentlich">🌳 Öffentlich</SelectItem>
-                        <SelectItem value="verein">👥 Verein</SelectItem>
-                        <SelectItem value="schule">🏫 Schule</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <div className="flex gap-2 mt-1">
+                      {[
+                        { value: 'öffentlich', label: '🌳 Öffentlich' },
+                        { value: 'verein', label: '👥 Verein' },
+                        { value: 'schule', label: '🏫 Schule' },
+                      ].map(({ value, label }) => (
+                        <button
+                          key={value}
+                          type="button"
+                          onClick={() => setEditForm(prev => ({ ...prev, place_type: value }))}
+                          className={`flex-1 text-xs px-3 py-1.5 rounded border transition-colors ${
+                            editForm.place_type === value
+                              ? 'border-primary bg-primary/10 text-foreground font-medium'
+                              : 'border-border text-muted-foreground hover:border-primary'
+                          }`}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
                   <div className="col-span-2">
@@ -1131,7 +1407,7 @@ function PlaceCard({
       )}
     </Card>
   )
-}
+})
 
 const PENDING_PAGE_SIZE = 50
 
@@ -1142,7 +1418,7 @@ const RADIUS_OPTIONS = [
   { label: '300m', value: 300 },
 ]
 
-function PlacesList({ status }: { status: ModerationStatus }) {
+function PlacesList({ status, fullWidth = false }: { status: ModerationStatus; fullWidth?: boolean }) {
   const { user } = useAuth()
   const { toast } = useToast()
   const queryClient = useQueryClient()
@@ -1176,10 +1452,10 @@ function PlacesList({ status }: { status: ModerationStatus }) {
   const [isolatedRadius, setIsolatedRadius] = useState(200)
   const [isolatedIncludePending, setIsolatedIncludePending] = useState(false)
 
-  const { data: places, isLoading } = useQuery({
-    queryKey: ['places', status],
-    queryFn: () => database.moderation.getPlacesByStatus(status),
-    refetchInterval: status === 'pending' ? 10000 : undefined, // Refresh pending more often
+  const { data: moderationMeta } = useQuery({
+    queryKey: ['moderation-meta', status],
+    queryFn: () => database.places.getModerationMeta(status),
+    staleTime: 60000,
   })
 
   const { data: isolatedIds, isLoading: isLoadingIsolated } = useQuery({
@@ -1189,21 +1465,64 @@ function PlacesList({ status }: { status: ModerationStatus }) {
     staleTime: 30000,
   })
 
+  // When isolatedOnly is active, pass the fetched IDs as a filter.
+  // Pass undefined while still loading (shows all places until IDs arrive).
+  // Pass an empty array when loaded but empty (returns 0 results — no isolated places exist).
+  const activeIsolatedIds =
+    status === 'pending' && isolatedOnly && !isLoadingIsolated
+      ? (isolatedIds ?? [])
+      : undefined
+
+  const { data: pagedResult, isLoading } = useQuery({
+    queryKey: [
+      'places-moderation', status, page,
+      countryFilter, cityFilter, districtFilter, sourceFilter, placeTypeFilter, sportFilter,
+      activeIsolatedIds,
+    ],
+    queryFn: () => database.places.getPlacesAdminPaged({
+      moderationStatus: status,
+      country: countryFilter !== 'all' ? countryFilter : undefined,
+      city: cityFilter !== 'all' ? cityFilter : undefined,
+      district: districtFilter !== 'all' ? districtFilter : undefined,
+      source: sourceFilter !== 'all' ? sourceFilter : undefined,
+      placeType: placeTypeFilter !== 'all' ? placeTypeFilter : undefined,
+      sport: sportFilter !== 'all' ? sportFilter : undefined,
+      ids: activeIsolatedIds,
+      page,
+      pageSize: PENDING_PAGE_SIZE,
+    }),
+    placeholderData: (prev) => prev,
+  })
+  const places = pagedResult?.data ?? []
+  const totalCount = pagedResult?.count ?? 0
+
+  // Helper: optimistically remove a place from all cached pages
+  const optimisticRemove = useCallback((placeId: string) => {
+    queryClient.setQueriesData<{ data: PlaceWithCourts[]; count: number }>(
+      { queryKey: ['places-moderation'], exact: false },
+      (old) => old ? { data: old.data.filter(p => p.id !== placeId), count: old.count - 1 } : old
+    )
+  }, [queryClient])
+
   const approveMutation = useMutation({
     mutationFn: (placeId: string) => database.moderation.approvePlace(placeId, user!.id),
-    onSuccess: (data) => {
-      // console.log('✅ Place approval successful:', data)
+    onMutate: (placeId) => {
+      optimisticRemove(placeId)
+    },
+    onSuccess: () => {
       toast({
         title: 'Place approved',
         description: 'The place has been approved and is now visible on the map.',
       })
-      // Invalidate all places queries (including those with status filters)
-      // console.log('🔄 Invalidating queries after place approval')
+      queryClient.invalidateQueries({ queryKey: ['places-moderation'], exact: false })
+      queryClient.invalidateQueries({ queryKey: ['moderation-meta'], exact: false })
       queryClient.invalidateQueries({ queryKey: ['places'], exact: false })
       queryClient.invalidateQueries({ queryKey: ['courts'] })
       queryClient.invalidateQueries({ queryKey: ['moderation-stats'] })
     },
-    onError: (error) => {
+    onError: (error, placeId) => {
+      // Restore on failure by refetching
+      queryClient.invalidateQueries({ queryKey: ['places-moderation'], exact: false })
       toast({
         title: 'Error approving place',
         description: error instanceof Error ? error.message : 'Failed to approve place',
@@ -1213,17 +1532,23 @@ function PlacesList({ status }: { status: ModerationStatus }) {
   })
 
   const rejectMutation = useMutation({
-    mutationFn: ({ placeId, reason }: { placeId: string; reason: string }) => 
+    mutationFn: ({ placeId, reason }: { placeId: string; reason: string }) =>
       database.moderation.rejectPlace(placeId, user!.id, reason),
+    onMutate: ({ placeId }) => {
+      optimisticRemove(placeId)
+    },
     onSuccess: () => {
       toast({
         title: 'Place rejected',
         description: 'The place has been rejected and the user will be notified.',
       })
+      queryClient.invalidateQueries({ queryKey: ['places-moderation'], exact: false })
+      queryClient.invalidateQueries({ queryKey: ['moderation-meta'], exact: false })
       queryClient.invalidateQueries({ queryKey: ['places'], exact: false })
       queryClient.invalidateQueries({ queryKey: ['moderation-stats'] })
     },
     onError: (error) => {
+      queryClient.invalidateQueries({ queryKey: ['places-moderation'], exact: false })
       toast({
         title: 'Error rejecting place',
         description: error instanceof Error ? error.message : 'Failed to reject place',
@@ -1255,6 +1580,8 @@ function PlacesList({ status }: { status: ModerationStatus }) {
       
       // Clear selection and invalidate queries
       setSelectedPlaces(new Set())
+      queryClient.invalidateQueries({ queryKey: ['places-moderation'], exact: false })
+      queryClient.invalidateQueries({ queryKey: ['moderation-meta'], exact: false })
       queryClient.invalidateQueries({ queryKey: ['places'], exact: false })
       queryClient.invalidateQueries({ queryKey: ['courts'] })
       queryClient.invalidateQueries({ queryKey: ['moderation-stats'] })
@@ -1281,6 +1608,8 @@ function PlacesList({ status }: { status: ModerationStatus }) {
         })
       }
       setSelectedPlaces(new Set())
+      queryClient.invalidateQueries({ queryKey: ['places-moderation'], exact: false })
+      queryClient.invalidateQueries({ queryKey: ['moderation-meta'], exact: false })
       queryClient.invalidateQueries({ queryKey: ['places'], exact: false })
       queryClient.invalidateQueries({ queryKey: ['moderation-stats'] })
     },
@@ -1342,56 +1671,22 @@ function PlacesList({ status }: { status: ModerationStatus }) {
     setIsBulkValidating(false)
   }
 
-  // Derive unique filter options from loaded data
-  const countryOptions = Array.from(new Set((places ?? []).map(p => (p as any).country).filter(Boolean))).sort()
-  const cityOptions = Array.from(
-    new Set(
-      (places ?? [])
-        .filter(p => countryFilter === 'all' || (p as any).country === countryFilter)
-        .map(p => (p as any).city)
-        .filter(Boolean)
-    )
-  ).sort()
-  const districtOptions = Array.from(
-    new Set(
-      (places ?? [])
-        .filter(p => countryFilter === 'all' || (p as any).country === countryFilter)
-        .filter(p => cityFilter === 'all' || (p as any).city === cityFilter)
-        .map(p => (p as any).district)
-        .filter(Boolean)
-    )
-  ).sort()
+  // Filter options come from the lightweight meta query (not the paged data)
+  const countryOptions = moderationMeta?.countries ?? []
+  const cityOptions = moderationMeta?.cities ?? []
+  const districtOptions = moderationMeta?.districts ?? []
+  const sourceOptions = moderationMeta?.sources ?? []
+  const placeTypeOptions = moderationMeta?.placeTypes ?? []
+  const sportOptions = moderationMeta?.sports ?? []
 
-  const sourceOptions = Array.from(new Set((places ?? []).map(p => (p as any).source ?? null).filter(Boolean))).sort()
-  const placeTypeOptions = Array.from(new Set((places ?? []).map(p => (p as any).place_type ?? null).filter(Boolean))).sort()
-  const sportOptions = Array.from(
-    new Set((places ?? []).flatMap(p => (p as any).sports ?? []).filter(Boolean))
-  ).sort()
-
-  // Filtered list: apply all filters, then isolated filter
-  const submitterFiltered = (places ?? []).filter(p => {
-    if (submitterFilter !== 'all') {
-      const role = p.profiles?.user_role
-      if (submitterFilter === 'admin' && role !== 'admin') return false
-      if (submitterFilter === 'user' && role === 'admin') return false
-    }
-    if (countryFilter !== 'all' && (p as any).country !== countryFilter) return false
-    if (cityFilter !== 'all' && (p as any).city !== cityFilter) return false
-    if (districtFilter !== 'all' && (p as any).district !== districtFilter) return false
-    if (sourceFilter !== 'all' && (p as any).source !== sourceFilter) return false
-    if (placeTypeFilter !== 'all' && (p as any).place_type !== placeTypeFilter) return false
-    if (sportFilter !== 'all' && !((p as any).sports ?? []).includes(sportFilter)) return false
-    return true
-  })
-  const filteredPlaces = (status === 'pending' && isolatedOnly && isolatedIds)
-    ? submitterFiltered.filter(p => isolatedIds.includes(p.id))
-    : submitterFiltered
-
-  // Clamp page when list shrinks after approvals/rejections or filter changes
-  useEffect(() => {
-    const maxPage = Math.max(0, Math.ceil(filteredPlaces.length / PENDING_PAGE_SIZE) - 1)
-    if (page > maxPage) setPage(maxPage)
-  }, [filteredPlaces.length, page])
+  // Server handles all filters except submitterRole (requires profile join filter not supported by PostgREST)
+  const paginatedPlaces = submitterFilter === 'all'
+    ? places
+    : places.filter(p => {
+        const role = p.profiles?.user_role
+        if (submitterFilter === 'admin') return role === 'admin'
+        return role !== 'admin'
+      })
 
   // Reset page and selection when filter toggles
   useEffect(() => {
@@ -1399,21 +1694,27 @@ function PlacesList({ status }: { status: ModerationStatus }) {
     setSelectedPlaces(new Set())
   }, [isolatedOnly, isolatedRadius, isolatedIncludePending, submitterFilter, countryFilter, cityFilter, districtFilter, sourceFilter, placeTypeFilter, sportFilter])
 
-  const totalPages = Math.ceil(filteredPlaces.length / PENDING_PAGE_SIZE)
-  const paginatedPlaces = status === 'pending'
-    ? filteredPlaces.slice(page * PENDING_PAGE_SIZE, (page + 1) * PENDING_PAGE_SIZE)
-    : filteredPlaces
+  const totalPages = Math.ceil(totalCount / PENDING_PAGE_SIZE)
+  const filteredPlaces = paginatedPlaces
+
+  // Stable callbacks for PlaceCard — avoids re-rendering all cards on unrelated state changes
+  const approveMutateRef = useRef(approveMutation.mutate)
+  approveMutateRef.current = approveMutation.mutate
+  const rejectMutateRef = useRef(rejectMutation.mutate)
+  rejectMutateRef.current = rejectMutation.mutate
+
+  const handleApprove = useCallback((id: string) => approveMutateRef.current(id), [])
+  const handleReject = useCallback((id: string, reason: string) => rejectMutateRef.current({ placeId: id, reason }), [])
 
   // Bulk selection helpers
-  const togglePlaceSelection = (placeId: string) => {
-    const newSelection = new Set(selectedPlaces)
-    if (newSelection.has(placeId)) {
-      newSelection.delete(placeId)
-    } else {
-      newSelection.add(placeId)
-    }
-    setSelectedPlaces(newSelection)
-  }
+  const togglePlaceSelection = useCallback((placeId: string) => {
+    setSelectedPlaces(prev => {
+      const next = new Set(prev)
+      if (next.has(placeId)) next.delete(placeId)
+      else next.add(placeId)
+      return next
+    })
+  }, [])
 
   const selectAllPlaces = () => {
     setSelectedPlaces(new Set(paginatedPlaces.map(place => place.id)))
@@ -1437,7 +1738,7 @@ function PlacesList({ status }: { status: ModerationStatus }) {
     return <div className="text-center py-8">Loading places...</div>
   }
 
-  if (!places || places.length === 0) {
+  if (!isLoading && totalCount === 0) {
     return (
       <div className="text-center py-8 text-muted-foreground">
         No {status} places found.
@@ -1448,7 +1749,7 @@ function PlacesList({ status }: { status: ModerationStatus }) {
   return (
     <div>
       {/* Bulk operations controls - only show for pending places */}
-      {status === 'pending' && (places?.length ?? 0) > 0 && (
+      {status === 'pending' && totalCount > 0 && (
         <div className="mb-4 p-4 bg-muted/50 rounded-lg border space-y-3">
           {/* Row 0: Submitter filter */}
           {status === 'pending' && (
@@ -1636,13 +1937,13 @@ function PlacesList({ status }: { status: ModerationStatus }) {
                 <span className="text-sm text-muted-foreground">
                   {isLoadingIsolated
                     ? 'Calculating…'
-                    : `${filteredPlaces.length} of ${places?.length ?? 0} pending places are isolated`}
+                    : `${isolatedIds?.length ?? 0} of ${totalCount} pending places are isolated`}
                 </span>
               )}
             </div>
 
             {/* Approve all isolated */}
-            {isolatedOnly && !isLoadingIsolated && filteredPlaces.length > 0 && (
+            {isolatedOnly && !isLoadingIsolated && (isolatedIds?.length ?? 0) > 0 && (
               <Button
                 size="sm"
                 onClick={handleApproveAllIsolated}
@@ -1650,7 +1951,7 @@ function PlacesList({ status }: { status: ModerationStatus }) {
                 className="bg-green-600 hover:bg-green-700"
               >
                 <CheckCircle className="h-4 w-4 mr-2" />
-                Approve all isolated ({filteredPlaces.length})
+                Approve all isolated ({isolatedIds?.length ?? 0})
               </Button>
             )}
           </div>
@@ -1757,16 +2058,15 @@ function PlacesList({ status }: { status: ModerationStatus }) {
         <PlaceCard
           key={place.id}
           place={place}
-          onApprove={(id) => {
-            approveMutation.mutate(id)
-          }}
-          onReject={(id, reason) => rejectMutation.mutate({ placeId: id, reason })}
+          onApprove={handleApprove}
+          onReject={handleReject}
           showStatus={false}
           isSelectable={isBulkMode}
           isSelected={selectedPlaces.has(place.id)}
           onToggleSelection={() => togglePlaceSelection(place.id)}
           forceExpanded={expandAll}
           validationResult={validationResults[place.id]}
+          fullWidth={fullWidth}
         />
       ))}
 
@@ -1774,7 +2074,7 @@ function PlacesList({ status }: { status: ModerationStatus }) {
       {status === 'pending' && totalPages > 1 && (
         <div className="flex items-center justify-between mt-6 pt-4 border-t">
           <span className="text-sm text-muted-foreground">
-            Showing {page * PENDING_PAGE_SIZE + 1}–{Math.min((page + 1) * PENDING_PAGE_SIZE, filteredPlaces.length)} of {filteredPlaces.length}
+            Showing {page * PENDING_PAGE_SIZE + 1}–{Math.min((page + 1) * PENDING_PAGE_SIZE, totalCount)} of {totalCount}
           </span>
           <div className="flex items-center gap-2">
             <Button
@@ -1921,6 +2221,38 @@ function CommunityEditCard({ edit, onApprove, onReject }: {
   const contactWebsiteChanged = proposedData?.place?.contact_website !== currentData?.place?.contact_website
   const contactChanged = contactPhoneChanged || contactEmailChanged || contactWebsiteChanged
 
+  const proposedPlaceAttrs: Record<string, boolean> = proposedData?.place_attributes ?? {}
+  const currentPlaceAttrs: Record<string, boolean> = currentData?.place_attributes ?? {}
+  const placeAttrsChanged = JSON.stringify(proposedPlaceAttrs) !== JSON.stringify(currentPlaceAttrs)
+
+  // Build proposed court attrs by sport from courts[i].attributes
+  const proposedCourtAttrsBySport: Record<string, Record<string, boolean>> = {}
+  for (const court of proposedCourts) {
+    if (!court.attributes) continue
+    const sport = court.sport
+    if (!proposedCourtAttrsBySport[sport]) proposedCourtAttrsBySport[sport] = {}
+    for (const [k, v] of Object.entries(court.attributes as Record<string, boolean>)) {
+      if (v) proposedCourtAttrsBySport[sport][k] = true
+    }
+  }
+
+  // Build current court attrs by sport from court_attrs_by_id keyed by court ID
+  const currentCourtAttrsBySport: Record<string, Record<string, boolean>> = {}
+  const currentCourtAttrsById: Record<string, Record<string, boolean>> = currentData?.court_attrs_by_id ?? {}
+  for (const court of currentCourts) {
+    const attrs = currentCourtAttrsById[court.id] ?? {}
+    for (const [k, v] of Object.entries(attrs)) {
+      if (v) {
+        if (!currentCourtAttrsBySport[court.sport]) currentCourtAttrsBySport[court.sport] = {}
+        currentCourtAttrsBySport[court.sport][k] = true
+      }
+    }
+  }
+
+  const courtAttrsChanged = JSON.stringify(proposedCourtAttrsBySport) !== JSON.stringify(currentCourtAttrsBySport)
+
+  const attrsChanged = placeAttrsChanged || courtAttrsChanged
+
   const changeSummary: string[] = isImageAdd
     ? ['Neues Foto']
     : [
@@ -1933,6 +2265,7 @@ function CommunityEditCard({ edit, onApprove, onReject }: {
         sportsChanged && 'Sports',
         courtsChanged && 'Courts',
         contactChanged && 'Kontakt',
+        attrsChanged && 'Ausstattung',
       ].filter(Boolean) as string[]
 
   // ── Map data ──
@@ -2286,6 +2619,64 @@ function CommunityEditCard({ edit, onApprove, onReject }: {
                     </div>
                   </div>
                 ))}
+              </div>
+            )}
+
+            {('place_attributes' in (proposedData ?? {}) || Object.keys(proposedCourtAttrsBySport).length > 0) && (
+              <div>
+                <p className="text-xs font-medium mb-1">Ausstattung</p>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div>
+                    <p className="text-[10px] text-muted-foreground mb-1">Vorgeschlagen</p>
+                    {/* Place-level */}
+                    {Object.keys(proposedPlaceAttrs).length > 0 && (
+                      <div className="mb-1">
+                        <AttributeIconRow
+                          activeKeys={ATTRIBUTE_DEFINITIONS.filter(d => d.scope === 'place' && proposedPlaceAttrs[d.key]).map(d => d.key)}
+                          size="xs"
+                        />
+                      </div>
+                    )}
+                    {/* Court-level by sport */}
+                    {Object.entries(proposedCourtAttrsBySport).map(([sport, attrs]) => {
+                      const keys = ATTRIBUTE_DEFINITIONS.filter(d => d.scope === 'court' && attrs[d.key]).map(d => d.key)
+                      if (keys.length === 0) return null
+                      return (
+                        <div key={sport} className="mb-1">
+                          <span className="text-[10px] text-muted-foreground">{sportNames[sport] || sport}: </span>
+                          <AttributeIconRow activeKeys={keys} size="xs" />
+                        </div>
+                      )
+                    })}
+                    {Object.keys(proposedPlaceAttrs).length === 0 && Object.keys(proposedCourtAttrsBySport).length === 0 && (
+                      <span className="text-muted-foreground">—</span>
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-muted-foreground mb-1">Aktuell</p>
+                    {Object.keys(currentPlaceAttrs).length > 0 && (
+                      <div className="mb-1">
+                        <AttributeIconRow
+                          activeKeys={ATTRIBUTE_DEFINITIONS.filter(d => d.scope === 'place' && currentPlaceAttrs[d.key]).map(d => d.key)}
+                          size="xs"
+                        />
+                      </div>
+                    )}
+                    {Object.entries(currentCourtAttrsBySport).map(([sport, attrs]) => {
+                      const keys = ATTRIBUTE_DEFINITIONS.filter(d => d.scope === 'court' && attrs[d.key]).map(d => d.key)
+                      if (keys.length === 0) return null
+                      return (
+                        <div key={sport} className="mb-1">
+                          <span className="text-[10px] text-muted-foreground">{sportNames[sport] || sport}: </span>
+                          <AttributeIconRow activeKeys={keys} size="xs" />
+                        </div>
+                      )
+                    })}
+                    {Object.keys(currentPlaceAttrs).length === 0 && Object.keys(currentCourtAttrsBySport).length === 0 && (
+                      <span className="text-muted-foreground">—</span>
+                    )}
+                  </div>
+                </div>
               </div>
             )}
 
@@ -3265,7 +3656,7 @@ function AdminPlacesPage() {
   const [activeTab, setActiveTab] = useState('pending')
 
   return (
-    <div className="container px-4 py-6 max-w-4xl mx-auto">
+    <div className="px-4 py-6" data-admin-places>
       <div className="mb-6">
         <h1 className="text-3xl font-bold">Place Moderation</h1>
         <p className="text-muted-foreground mt-2">
@@ -3285,20 +3676,16 @@ function AdminPlacesPage() {
         </TabsList>
 
         <TabsContent value="pending">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+          <div className="w-full max-w-none">
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold flex items-center gap-2">
                 <AlertCircle className="h-5 w-5 text-orange-600" />
                 Pending Places
-              </CardTitle>
-              <CardDescription>
-                Places waiting for your review. These are not visible to users yet.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <PlacesList status="pending" />
-            </CardContent>
-          </Card>
+              </h2>
+              <p className="text-sm text-muted-foreground">Places waiting for your review. These are not visible to users yet.</p>
+            </div>
+            <PlacesList status="pending" fullWidth />
+          </div>
         </TabsContent>
 
         <TabsContent value="community-edits">

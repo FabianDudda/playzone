@@ -9,6 +9,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { MapPin, Navigation, Share2, Heart, Pencil, X, Upload, Image, Loader2, Maximize2, Flag, Phone, Mail, Globe, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react'
 import { PlaceWithCourts, PlaceMarker, OpeningHours, PlaceImage } from '@/lib/supabase/types'
+import { rowsToAttributeMap, getActiveAttributeKeys, ATTRIBUTE_DEFINITIONS } from '@/lib/attributes/definitions'
+import { AttributeIconRow } from '@/components/attributes/attribute-icons'
 import { getOpeningStatus, getCurrentDayKey, DAY_ORDER, DAY_SHORT_DE } from '@/lib/utils/opening-hours'
 import { cn } from '@/lib/utils'
 import { sportNames, sportIcons, getPlaceTypeBadgeClasses, placeTypeLabels, placeTypeIcons, PlaceType } from '@/lib/utils/sport-utils'
@@ -53,6 +55,28 @@ export default function PlaceBottomSheetVaul({
     enabled: !!selectedCourt,
     staleTime: 5 * 60 * 1000,
   })
+
+  const { data: placeAttrRows = [] } = useQuery({
+    queryKey: ['place-attributes', selectedCourt?.id],
+    queryFn: () => database.attributes.getPlaceAttributes(selectedCourt!.id),
+    enabled: !!selectedCourt,
+    staleTime: 5 * 60 * 1000,
+  })
+  const placeAttrActiveKeys = getActiveAttributeKeys(rowsToAttributeMap(placeAttrRows))
+
+  const courtIds = (fullPlace?.courts ?? []).map(c => c.id)
+  const { data: courtAttrRows = [] } = useQuery({
+    queryKey: ['court-attributes', selectedCourt?.id],
+    queryFn: () => database.attributes.getCourtAttributes(courtIds),
+    enabled: !!selectedCourt && courtIds.length > 0,
+    staleTime: 5 * 60 * 1000,
+  })
+  // Build map: courtId → { key: boolean }
+  const courtAttrMap = courtAttrRows.reduce((acc, row) => {
+    if (!acc[row.court_id]) acc[row.court_id] = {} as Record<string, boolean>
+    if (row.value === 'true') acc[row.court_id][row.key] = true
+    return acc
+  }, {} as Record<string, Record<string, boolean>>)
 
   // Merge: use full data when available, fall back to lightweight marker data
   const place: PlaceWithCourts | null = fullPlace ?? (selectedCourt as PlaceWithCourts | null)
@@ -346,19 +370,17 @@ export default function PlaceBottomSheetVaul({
                   )}
 
 
-                  {/* Sports pills */}
+                  {/* Sports pills — quick overview, detail is in the Plätze section below */}
                   {(() => {
-                    const sportsWithCounts = (place?.courts?.length ?? 0) > 0
-                      ? place!.courts!.reduce((acc, c) => {
-                          const key = c.sport === 'other' ? ((c as any).custom_sport_name || 'other') : c.sport
-                          acc[key] = (acc[key] || 0) + (c.quantity || 1)
-                          return acc
-                        }, {} as Record<string, number>)
-                      : (place?.sports?.reduce((acc, sport) => ({ ...acc, [sport]: 1 }), {} as Record<string, number>) || {})
+                    const uniqueSports = (place?.courts?.length ?? 0) > 0
+                      ? [...new Set(place!.courts!.map(c =>
+                          c.sport === 'other' ? ((c as any).custom_sport_name || 'other') : c.sport
+                        ))]
+                      : (place?.sports ?? []).filter(s => s !== 'other')
 
-                    return Object.keys(sportsWithCounts).length > 0 && (
+                    return uniqueSports.length > 0 && (
                       <div className="flex flex-wrap gap-1.5">
-                        {Object.entries(sportsWithCounts).map(([sport, count]) => (
+                        {uniqueSports.map(sport => (
                           <div
                             key={sport}
                             className="flex items-center gap-1 border border-border rounded-full px-3 py-1.5 self-start"
@@ -471,6 +493,86 @@ export default function PlaceBottomSheetVaul({
                         })}
                       </div>
                     )}
+                  </div>
+                )
+              })()}
+
+              {!isLoadingPlace && placeAttrActiveKeys.length > 0 && (
+                <div className="flex flex-col gap-1.5">
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Ausstattung</p>
+                  <AttributeIconRow activeKeys={placeAttrActiveKeys} size="sm" />
+                </div>
+              )}
+
+              {!isLoadingPlace && (place?.courts?.length ?? 0) > 0 && (() => {
+                // Group courts by sport key, preserving order
+                const grouped = new Map<string, NonNullable<typeof place>['courts']>()
+                for (const court of place!.courts!) {
+                  const key = court.sport === 'other' ? (court.custom_sport_name || 'other') : court.sport
+                  if (!grouped.has(key)) grouped.set(key, [])
+                  grouped.get(key)!.push(court)
+                }
+                const attrLabel = (key: string) => ATTRIBUTE_DEFINITIONS.find(d => d.key === key)?.label ?? key
+                return (
+                  <div className="flex flex-col gap-2">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Plätze</p>
+                    <div className="flex flex-col gap-2.5">
+                      {[...grouped.entries()].map(([sportKey, courts]) => {
+                        const isSingle = courts!.length === 1
+                        if (isSingle) {
+                          const court = courts![0]
+                          const activeKeys = Object.entries(courtAttrMap[court.id] ?? {}).filter(([, v]) => v).map(([k]) => k)
+                          const surface = court.surface && court.surface !== 'Unbekannt' ? court.surface : null
+                          return (
+                            <div key={sportKey} className="flex items-center gap-2 flex-wrap">
+                              <span className="flex items-center gap-1.5 shrink-0">
+                                <span className="text-[15px] leading-none">{sportIcons[sportKey] || '🏅'}</span>
+                                <span className="text-sm font-medium">{sportNames[sportKey] || sportKey}</span>
+                              </span>
+                              {surface && (
+                                <span className="text-xs text-muted-foreground bg-muted rounded px-1.5 py-0.5">{surface}</span>
+                              )}
+                              {activeKeys.length > 0 && (
+                                <span className="text-xs text-muted-foreground">
+                                  {activeKeys.map((key, i) => (
+                                    <span key={key}>{i > 0 && ' · '}{attrLabel(key)}</span>
+                                  ))}
+                                </span>
+                              )}
+                            </div>
+                          )
+                        }
+                        return (
+                          <div key={sportKey} className="flex flex-col gap-1.5">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[15px] leading-none">{sportIcons[sportKey] || '🏅'}</span>
+                              <span className="text-sm font-medium">{sportNames[sportKey] || sportKey}</span>
+                            </div>
+                            {courts!.map((court, idx) => {
+                              const activeKeys = Object.entries(courtAttrMap[court.id] ?? {}).filter(([, v]) => v).map(([k]) => k)
+                              const surface = court.surface && court.surface !== 'Unbekannt' ? court.surface : null
+                              return (
+                                <div key={court.id} className="flex items-center gap-2 flex-wrap">
+                                  <span className="text-xs text-muted-foreground shrink-0">Platz {idx + 1}</span>
+                                  {surface ? (
+                                    <span className="text-xs text-muted-foreground bg-muted rounded px-1.5 py-0.5">{surface}</span>
+                                  ) : (
+                                    <span className="text-xs text-muted-foreground/40">–</span>
+                                  )}
+                                  {activeKeys.length > 0 && (
+                                    <span className="text-xs text-muted-foreground">
+                                      {activeKeys.map((key, i) => (
+                                        <span key={key}>{i > 0 && ' · '}{attrLabel(key)}</span>
+                                      ))}
+                                    </span>
+                                  )}
+                                </div>
+                              )
+                            })}
+                          </div>
+                        )
+                      })}
+                    </div>
                   </div>
                 )
               })()}

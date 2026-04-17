@@ -4,6 +4,8 @@ import { Badge } from '@/components/ui/badge'
 import { sportIcons, sportNames, getPlaceTypeBadgeClasses, placeTypeIcons, placeTypeLabels } from '@/lib/utils/sport-utils'
 import { PlaceType } from '@/lib/utils/sport-utils'
 import { PlaceListing } from '@/lib/supabase/seo-queries'
+import { rowsToAttributeMap, getActiveAttributeKeys } from '@/lib/attributes/definitions'
+import { AttributeBadge } from '@/components/attributes/attribute-icons'
 
 interface PlaceListCardProps {
   place: PlaceListing
@@ -22,7 +24,9 @@ export default function PlaceListCard({ place, primarySport }: PlaceListCardProp
     .filter(Boolean)
     .join(', ')
 
-  const topFeatures = (place.features ?? []).slice(0, 3)
+  const attrActiveKeys = getActiveAttributeKeys(
+    rowsToAttributeMap(place.place_attributes ?? [])
+  ).slice(0, 3)
 
   return (
     <Link
@@ -83,10 +87,8 @@ export default function PlaceListCard({ place, primarySport }: PlaceListCardProp
               {placeTypeLabels[place.place_type as PlaceType] ?? place.place_type}
             </Badge>
           )}
-          {topFeatures.map(f => (
-            <span key={f} className="text-[10px] text-muted-foreground border rounded px-1 py-0">
-              {f}
-            </span>
+          {attrActiveKeys.map(k => (
+            <AttributeBadge key={k} attributeKey={k} size="xs" showLabel />
           ))}
         </div>
       </div>

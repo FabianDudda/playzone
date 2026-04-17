@@ -20,8 +20,22 @@ export const sportColors: Record<string, string> = {
   padel: '#A3E635',        // Lime
   calisthenics: '#6366F1', // Indigo
   schach: '#6B21A8',       // Purple
+  parkour: '#F97316',      // Orange
+  rugby: '#15803D',        // Dark Green
+  inliner: '#0284C7',      // Blue
+  discgolf: '#65A30D',     // Olive Green
+  bmx: '#DC2626',          // Red
+  dirtbike: '#92400E',     // Brown
   other: '#9CA3AF',        // Gray
 }
+
+// Ordered list of sports for display in forms (priority sports first)
+export const SPORT_ORDER: string[] = [
+  'fußball', 'basketball', 'tischtennis', 'skatepark', 'beachvolleyball', 'volleyball',
+  'tennis', 'spikeball', 'badminton', 'squash', 'pickleball', 'hockey',
+  'boule', 'calisthenics', 'laufen', 'schwimmen', 'klettern', 'padel',
+  'schach', 'parkour', 'rugby', 'inliner', 'discgolf', 'bmx', 'dirtbike', 'other',
+]
 
 // Sport display names (for consistency)
 export const sportNames: Record<string, string> = {
@@ -46,6 +60,12 @@ export const sportNames: Record<string, string> = {
   klettern: 'Klettern',
   padel: 'Padel',
   schach: 'Schach',
+  parkour: 'Parkour',
+  rugby: 'Rugby',
+  inliner: 'Inliner',
+  discgolf: 'Discgolf',
+  bmx: 'BMX',
+  dirtbike: 'Dirtbike',
   other: 'Andere Sportart',
 }
 
@@ -72,6 +92,12 @@ export const sportBadgeStyles: Record<string, { bg: string, text: string }> = {
   padel: { bg: 'bg-lime-50', text: 'text-foreground' },
   calisthenics: { bg: 'bg-indigo-50', text: 'text-foreground' },
   schach: { bg: 'bg-purple-50', text: 'text-foreground' },
+  parkour: { bg: 'bg-orange-50', text: 'text-foreground' },
+  rugby: { bg: 'bg-green-50', text: 'text-foreground' },
+  inliner: { bg: 'bg-sky-50', text: 'text-foreground' },
+  discgolf: { bg: 'bg-lime-50', text: 'text-foreground' },
+  bmx: { bg: 'bg-red-50', text: 'text-foreground' },
+  dirtbike: { bg: 'bg-amber-50', text: 'text-foreground' },
   other: { bg: 'bg-gray-50', text: 'text-foreground' },
 }
 
@@ -98,6 +124,12 @@ export const sportIcons: Record<string, string> = {
   klettern: '🧗',      // Klettern
   padel: '🎾',         // Padel
   schach: '♟️',        // Chess
+  parkour: '🏃',        // Parkour
+  rugby: '🏉',          // Rugby ball
+  inliner: '🛼',        // Inline skates
+  discgolf: '🥏',       // Flying disc
+  bmx: '🚲',            // BMX bike
+  dirtbike: '🚲',       // Dirtbike
   other: '🏅',          // Other sport
 }
 

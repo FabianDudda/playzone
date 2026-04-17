@@ -15,6 +15,7 @@ interface CourtInput {
   quantity?: number | null
   notes?: string | null
   customSportName?: string | null
+  attributes?: Record<string, boolean>
 }
 
 export async function PATCH(
@@ -98,8 +99,16 @@ export async function PATCH(
           notes: c.notes ?? null,
           custom_sport_name: c.customSportName ?? null,
         }))
-        const { error } = await adminSupabase.from('courts').insert(rows)
+        const { data: inserted, error } = await adminSupabase.from('courts').insert(rows).select('id')
         if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+        // Save per-court attributes for newly inserted courts
+        const newAttrRows = (inserted ?? []).flatMap((c, idx) =>
+          Object.entries(newCourts[idx]?.attributes ?? {})
+            .filter(([, v]) => v)
+            .map(([key]) => ({ court_id: c.id, key, value: 'true' }))
+        )
+        if (newAttrRows.length > 0) await adminSupabase.from('court_attributes').insert(newAttrRows)
       }
 
       for (const c of existingCourts) {
@@ -114,8 +123,23 @@ export async function PATCH(
           })
           .eq('id', c.id!)
         if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+        // Replace attributes for this court
+        await adminSupabase.from('court_attributes').delete().eq('court_id', c.id!)
+        const attrRows = Object.entries(c.attributes ?? {})
+          .filter(([, v]) => v)
+          .map(([key]) => ({ court_id: c.id!, key, value: 'true' }))
+        if (attrRows.length > 0) await adminSupabase.from('court_attributes').insert(attrRows)
       }
     }
+  }
+
+  // Save place attributes
+  if ('placeAttributes' in body) {
+    const attrs: Record<string, boolean> = body.placeAttributes ?? {}
+    await adminSupabase.from('place_attributes').delete().eq('place_id', id)
+    const rows = Object.entries(attrs).filter(([, v]) => v).map(([key]) => ({ place_id: id, key, value: 'true' }))
+    if (rows.length > 0) await adminSupabase.from('place_attributes').insert(rows)
   }
 
   return NextResponse.json({ success: true })
