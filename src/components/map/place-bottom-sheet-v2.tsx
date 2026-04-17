@@ -352,6 +352,7 @@ export default function PlaceBottomSheetV2({
                           </div>
                           {courts!.map((court, idx) => {
                             const activeKeys = Object.entries(courtAttrMap[court.id] ?? {}).filter(([, v]) => v).map(([k]) => k)
+                              .sort((a, b) => ATTRIBUTE_DEFINITIONS.findIndex(d => d.key === a) - ATTRIBUTE_DEFINITIONS.findIndex(d => d.key === b))
                             const isUnknownSurface = !court.surface || court.surface.trim().toLowerCase() === 'unbekannt'
                             const surfaceLabel = isUnknownSurface ? 'Unbekannt' : court.surface!
                             return (
