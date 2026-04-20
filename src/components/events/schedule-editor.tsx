@@ -1,6 +1,6 @@
 'use client'
 
-import { Plus, Trash2 } from 'lucide-react'
+import { Plus, Trash2, Calendar, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -114,11 +114,15 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
               <div className="flex gap-2 items-end">
                 <div className="flex-1">
                   {i === 0 && <Label className="text-xs mb-1 block">Datum</Label>}
-                  <Input
-                    type="date"
-                    value={slot.date}
-                    onChange={e => updateDate(i, 'date', e.target.value)}
-                  />
+                  <div className="relative">
+                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                    <Input
+                      type="date"
+                      value={slot.date}
+                      onChange={e => updateDate(i, 'date', e.target.value)}
+                      className="pl-9"
+                    />
+                  </div>
                 </div>
                 {dates.length > 1 && (
                   <Button
@@ -134,22 +138,28 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
               <div className="flex gap-3 items-center">
                 <div>
                   {i === 0 && <Label className="text-xs mb-1 block">Startzeit</Label>}
-                  <Input
-                    type="time"
-                    value={slot.start_time}
-                    onChange={e => updateDate(i, 'start_time', e.target.value)}
-                    className="w-32"
-                  />
+                  <div className="relative">
+                    <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                    <Input
+                      type="time"
+                      value={slot.start_time}
+                      onChange={e => updateDate(i, 'start_time', e.target.value)}
+                      className="w-32 pl-9"
+                    />
+                  </div>
                 </div>
                 <span className="text-sm text-muted-foreground mt-5">–</span>
                 <div>
                   {i === 0 && <Label className="text-xs mb-1 block">Endzeit</Label>}
-                  <Input
-                    type="time"
-                    value={slot.end_time}
-                    onChange={e => updateDate(i, 'end_time', e.target.value)}
-                    className="w-32"
-                  />
+                  <div className="relative">
+                    <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                    <Input
+                      type="time"
+                      value={slot.end_time}
+                      onChange={e => updateDate(i, 'end_time', e.target.value)}
+                      className="w-32 pl-9"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -183,19 +193,25 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
                 </label>
                 {slot && (
                   <>
-                    <Input
-                      type="time"
-                      value={slot.start_time}
-                      onChange={e => updateDayTime(key, 'start_time', e.target.value)}
-                      className="w-32"
-                    />
+                    <div className="relative">
+                      <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                      <Input
+                        type="time"
+                        value={slot.start_time}
+                        onChange={e => updateDayTime(key, 'start_time', e.target.value)}
+                        className="w-32 pl-9"
+                      />
+                    </div>
                     <span className="text-sm text-muted-foreground">–</span>
-                    <Input
-                      type="time"
-                      value={slot.end_time}
-                      onChange={e => updateDayTime(key, 'end_time', e.target.value)}
-                      className="w-32"
-                    />
+                    <div className="relative">
+                      <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                      <Input
+                        type="time"
+                        value={slot.end_time}
+                        onChange={e => updateDayTime(key, 'end_time', e.target.value)}
+                        className="w-32 pl-9"
+                      />
+                    </div>
                   </>
                 )}
               </div>
