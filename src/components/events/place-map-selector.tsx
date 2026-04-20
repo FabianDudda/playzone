@@ -3,13 +3,13 @@
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { MapPin, X } from 'lucide-react'
-import { PlaceWithCourts } from '@/lib/supabase/types'
+import { PlaceWithCourts, SportType } from '@/lib/supabase/types'
+import { sportNames, sportIcons } from '@/lib/utils/sport-utils'
 import { useQuery } from '@tanstack/react-query'
 import { database } from '@/lib/supabase/database'
+import { getSportBadgeClasses } from '@/lib/utils/sport-utils'
 
-// Dynamic import to prevent SSR issues with Leaflet
 const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map'), {
   ssr: false,
   loading: () => (
@@ -25,6 +25,8 @@ const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map
 interface PlaceMapSelectorProps {
   selectedPlaceId: string
   onPlaceSelect: (placeId: string, place: PlaceWithCourts) => void
+  selectedSport?: SportType | ''
+  onSportSelect?: (sport: SportType) => void
   preSelectedPlaceId?: string
   className?: string
   height?: string
@@ -33,6 +35,8 @@ interface PlaceMapSelectorProps {
 export default function PlaceMapSelector({
   selectedPlaceId,
   onPlaceSelect,
+  selectedSport,
+  onSportSelect,
   preSelectedPlaceId,
   className = "",
   height = "300px"
@@ -40,23 +44,29 @@ export default function PlaceMapSelector({
   const [selectedPlace, setSelectedPlace] = useState<PlaceWithCourts | null>(null)
   const [mapCenter, setMapCenter] = useState<[number, number] | null>(null)
 
-  // Fetch all places
   const { data: places = [], isLoading } = useQuery({
     queryKey: ['places'],
     queryFn: () => database.courts.getAllCourts(),
   })
 
-  // Handle pre-selection from URL parameters or form state
   useEffect(() => {
     if (places.length > 0) {
       const placeToSelect = places.find(p => p.id === (selectedPlaceId || preSelectedPlaceId))
       if (placeToSelect) {
         setSelectedPlace(placeToSelect)
-        // Center map on pre-selected place
         setMapCenter([placeToSelect.latitude, placeToSelect.longitude])
       }
     }
   }, [places, selectedPlaceId, preSelectedPlaceId])
+
+  // Auto-select sport when place has exactly one sport type
+  useEffect(() => {
+    if (!selectedPlace || !onSportSelect) return
+    const sports = [...new Set((selectedPlace.courts || []).map(c => c.sport))] as SportType[]
+    if (sports.length === 1) {
+      onSportSelect(sports[0])
+    }
+  }, [selectedPlace]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handlePlaceSelect = (place: PlaceWithCourts) => {
     setSelectedPlace(place)
@@ -78,6 +88,10 @@ export default function PlaceMapSelector({
     )
   }
 
+  const availableSports = selectedPlace?.courts
+    ? ([...new Set(selectedPlace.courts.map(c => c.sport))] as SportType[])
+    : []
+
   return (
     <div className={`space-y-3 ${className}`}>
       {/* Selected Place Display */}
@@ -98,7 +112,6 @@ export default function PlaceMapSelector({
           </div>
           <Button
             variant="ghost"
-           
             onClick={handleClearSelection}
             className="text-blue-700 hover:text-blue-900 hover:bg-blue-100 flex-shrink-0"
           >
@@ -108,7 +121,7 @@ export default function PlaceMapSelector({
       ) : (
         <div className="p-3 bg-gray-50 border border-gray-200 rounded-lg text-center">
           <p className="text-sm text-muted-foreground">
-            Click on a location marker on the map to select it
+            Tippe auf einen Marker, um einen Ort auszuwählen
           </p>
         </div>
       )}
@@ -119,29 +132,38 @@ export default function PlaceMapSelector({
           courts={places}
           onCourtSelect={handlePlaceSelect}
           height="100%"
-          enableClustering={true} // Enable clustering for consistency and performance
-          selectedSport="all"
-          showAddCourtButton={false} // Hide add court button in selector mode
-          placesCount={0} // Hide places count in selector mode
+          enableClustering={true}
+          showAddCourtButton={false}
+          placesCount={0}
+          embedded={true}
+          showFilter={false}
+          showFavorite={false}
         />
       </div>
 
-      {/* Map Instructions */}
-      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-        <MapPin className="h-3 w-3" />
-        <span>Click on any marker to select that location for your event</span>
-      </div>
-
-      {/* Selected Place Sports Info */}
-      {selectedPlace && selectedPlace.courts && selectedPlace.courts.length > 0 && (
+      {/* Sport selector — shown only when a place is selected and has sports */}
+      {onSportSelect && availableSports.length > 0 && (
         <div className="space-y-2">
-          <p className="text-sm font-medium text-gray-700">Available sports at this location:</p>
-          <div className="flex flex-wrap gap-1">
-            {[...new Set(selectedPlace.courts.map(court => court.sport))].map(sport => (
-              <Badge key={sport} variant="outline" className="text-xs">
-                {sport}
-              </Badge>
-            ))}
+          <p className="text-sm font-medium">Sportart *</p>
+          <div className="flex flex-wrap gap-2">
+            {availableSports.map(sport => {
+              const isSelected = selectedSport === sport
+              return (
+                <button
+                  key={sport}
+                  type="button"
+                  onClick={() => onSportSelect(sport)}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+                    isSelected
+                      ? getSportBadgeClasses(sport) + ' border-transparent'
+                      : 'bg-background border-border text-foreground hover:bg-muted'
+                  }`}
+                >
+                  <span>{sportIcons[sport]}</span>
+                  <span>{sportNames[sport] ?? sport.charAt(0).toUpperCase() + sport.slice(1)}</span>
+                </button>
+              )
+            })}
           </div>
         </div>
       )}

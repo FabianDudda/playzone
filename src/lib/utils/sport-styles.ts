@@ -5,8 +5,8 @@ import L from 'leaflet'
 const iconCache = new Map<string, L.DivIcon>()
 
 // Helper function to generate cache key for sports array
-function getSportsCacheKey(sports: string[], isSelected: boolean): string {
-  return `${sports.sort().join(',')}-${isSelected}`
+function getSportsCacheKey(sports: string[], isSelected: boolean, hasEvents: boolean): string {
+  return `${sports.sort().join(',')}-${isSelected}-${hasEvents}`
 }
 
 // Export function to clear icon cache (useful for memory management)\nexport function clearIconCache(): void {\n  iconCache.clear()\n}\n\n// Export function to get cache size (for debugging)\nexport function getIconCacheSize(): number {\n  return iconCache.size\n}\n\n// Sport color mapping
@@ -411,24 +411,24 @@ function createSimpleSportIcon(sports: string[], baseSize: number, isSelected: b
 }
 
 // Create custom Leaflet icon for a sport
-export function createSportIcon(sports: string[], isSelected = false): L.DivIcon {
+export function createSportIcon(sports: string[], isSelected = false, hasEvents = false): L.DivIcon {
   // Ensure we have a valid sports array
   const validSports = Array.isArray(sports) ? sports.filter(Boolean) : []
-  
+
   // Generate cache key
-  const cacheKey = getSportsCacheKey(validSports, isSelected)
-  
+  const cacheKey = getSportsCacheKey(validSports, isSelected, hasEvents)
+
   // Check if icon is already cached
   const cachedIcon = iconCache.get(cacheKey)
   if (cachedIcon) {
     return cachedIcon
   }
-  
+
   // All pins now use consistent teardrop size
   const pinSize = 36
   const containerWidth = pinSize + 8
   const containerHeight = Math.round(pinSize * 1.3) + 8 // Account for teardrop height
-  
+
   const newIcon = L.divIcon({
     className: 'custom-sport-marker',
     html: `
@@ -438,6 +438,7 @@ export function createSportIcon(sports: string[], isSelected = false): L.DivIcon
         height: ${containerHeight}px;
       ">
         ${createSimpleSportIcon(validSports, pinSize, isSelected)}
+        ${hasEvents ? '<div class="event-pulse-dot"></div>' : ''}
       </div>
     `,
     iconSize: [containerWidth, containerHeight],

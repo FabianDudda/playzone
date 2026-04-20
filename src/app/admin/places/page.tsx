@@ -426,7 +426,7 @@ const PlaceCard = React.memo(function PlaceCard({
           contact_phone: editForm.contact_phone || null,
           contact_email: editForm.contact_email || null,
           contact_website: editForm.contact_website || null,
-          opening_hours: (editForm.place_type === 'verein' || editForm.place_type === 'schule') ? editForm.opening_hours : null,
+          opening_hours: editForm.opening_hours,
           image_url: editForm.image_url,
           placeAttributes: editForm.placeAttributes,
         }),
@@ -907,49 +907,39 @@ const PlaceCard = React.memo(function PlaceCard({
                 </p>
               </div>
 
-              {/* Verein/Schule contact */}
-              {(place.place_type === 'verein' || place.place_type === 'schule') && (
+              {/* Contact */}
+              {(place.contact_phone || place.contact_email || place.contact_website) && (
                 <div>
                   <Label className="text-xs font-medium text-muted-foreground">Kontakt</Label>
                   <div className="mt-1 text-sm space-y-0.5">
-                    {(place.contact_phone || place.contact_email || place.contact_website) ? (
-                      <>
-                        {place.contact_phone && <div>{place.contact_phone}</div>}
-                        {place.contact_email && <div>{place.contact_email}</div>}
-                        {place.contact_website && <div className="text-muted-foreground truncate">{place.contact_website}</div>}
-                      </>
-                    ) : (
-                      <span className="text-muted-foreground">—</span>
-                    )}
+                    {place.contact_phone && <div>{place.contact_phone}</div>}
+                    {place.contact_email && <div>{place.contact_email}</div>}
+                    {place.contact_website && <div className="text-muted-foreground truncate">{place.contact_website}</div>}
                   </div>
                 </div>
               )}
 
-              {/* Verein/Schule opening hours */}
-              {(place.place_type === 'verein' || place.place_type === 'schule') && (
+              {/* Opening hours */}
+              {place.opening_hours && (
                 <div>
                   <Label className="text-xs font-medium text-muted-foreground">Öffnungszeiten</Label>
                   <div className="mt-1 text-sm space-y-0.5">
-                    {place.opening_hours ? (
-                      (() => {
-                        const hours = place.opening_hours as OpeningHours
-                        return ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(key => {
-                          const dayLabels: Record<string, string> = { monday: 'Mo', tuesday: 'Di', wednesday: 'Mi', thursday: 'Do', friday: 'Fr', saturday: 'Sa', sunday: 'So' }
-                          const day = hours[key as keyof OpeningHours]
-                          return (
-                            <div key={key} className="flex gap-2">
-                              <span className="text-muted-foreground w-6">{dayLabels[key]}</span>
-                              {day && !day.closed && day.open && day.close
-                                ? <span>{day.open} – {day.close}</span>
-                                : <span className="text-muted-foreground">Geschlossen</span>
-                              }
-                            </div>
-                          )
-                        })
-                      })()
-                    ) : (
-                      <span className="text-muted-foreground">—</span>
-                    )}
+                    {(() => {
+                      const hours = place.opening_hours as OpeningHours
+                      const dayLabels: Record<string, string> = { monday: 'Mo', tuesday: 'Di', wednesday: 'Mi', thursday: 'Do', friday: 'Fr', saturday: 'Sa', sunday: 'So' }
+                      return ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(key => {
+                        const day = hours[key as keyof OpeningHours]
+                        return (
+                          <div key={key} className="flex gap-2">
+                            <span className="text-muted-foreground w-6">{dayLabels[key]}</span>
+                            {day && !day.closed && day.open && day.close
+                              ? <span>{day.open} – {day.close}</span>
+                              : <span className="text-muted-foreground">Geschlossen</span>
+                            }
+                          </div>
+                        )
+                      })
+                    })()}
                   </div>
                 </div>
               )}
@@ -1270,18 +1260,16 @@ const PlaceCard = React.memo(function PlaceCard({
                     </>
                   )}
 
-                  {(editForm.place_type === 'verein' || editForm.place_type === 'schule') && (
-                    <div className="col-span-2">
-                      <Label className="text-xs">Öffnungszeiten</Label>
-                      <div className="mt-2">
-                        <OpeningHoursEditor
-                          key={place.id}
-                          value={editForm.opening_hours}
-                          onChange={hours => setEditForm(prev => ({ ...prev, opening_hours: hours }))}
-                        />
-                      </div>
+                  <div className="col-span-2">
+                    <Label className="text-xs">Öffnungszeiten</Label>
+                    <div className="mt-2">
+                      <OpeningHoursEditor
+                        key={place.id}
+                        value={editForm.opening_hours}
+                        onChange={hours => setEditForm(prev => ({ ...prev, opening_hours: hours }))}
+                      />
                     </div>
-                  )}
+                  </div>
 
                   <div>
                     <Label className="text-xs">Street</Label>
@@ -2224,6 +2212,8 @@ function CommunityEditCard({ edit, onApprove, onReject }: {
   const proposedPlaceAttrs: Record<string, boolean> = proposedData?.place_attributes ?? {}
   const currentPlaceAttrs: Record<string, boolean> = currentData?.place_attributes ?? {}
   const placeAttrsChanged = JSON.stringify(proposedPlaceAttrs) !== JSON.stringify(currentPlaceAttrs)
+  const openingHoursChanged = JSON.stringify(proposedData?.place?.opening_hours ?? null)
+    !== JSON.stringify(currentData?.place?.opening_hours ?? null)
 
   // Build proposed court attrs by sport from courts[i].attributes
   const proposedCourtAttrsBySport: Record<string, Record<string, boolean>> = {}
@@ -2265,6 +2255,7 @@ function CommunityEditCard({ edit, onApprove, onReject }: {
         sportsChanged && 'Sports',
         courtsChanged && 'Courts',
         contactChanged && 'Kontakt',
+        openingHoursChanged && 'Öffnungszeiten',
         attrsChanged && 'Ausstattung',
       ].filter(Boolean) as string[]
 
@@ -2622,6 +2613,38 @@ function CommunityEditCard({ edit, onApprove, onReject }: {
               </div>
             )}
 
+            {openingHoursChanged && (
+              <div>
+                <p className="text-xs font-medium mb-1">Öffnungszeiten</p>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  {[
+                    { label: 'Vorgeschlagen', hours: proposedData?.place?.opening_hours as OpeningHours | null, cls: 'bg-green-100 text-green-800' },
+                    { label: 'Aktuell', hours: currentData?.place?.opening_hours as OpeningHours | null, cls: 'bg-red-100 text-red-800' },
+                  ].map(({ label, hours, cls }) => (
+                    <div key={label} className={`font-mono px-2 py-1 rounded ${cls}`}>
+                      <p className="font-medium mb-0.5">{label}</p>
+                      {hours
+                        ? (['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as const).map(key => {
+                            const dayLabels: Record<string, string> = { monday: 'Mo', tuesday: 'Di', wednesday: 'Mi', thursday: 'Do', friday: 'Fr', saturday: 'Sa', sunday: 'So' }
+                            const day = hours[key]
+                            return (
+                              <div key={key} className="flex gap-1.5">
+                                <span className="opacity-70 w-5">{dayLabels[key]}</span>
+                                {day && !day.closed && day.open && day.close
+                                  ? <span>{day.open}–{day.close}</span>
+                                  : <span className="opacity-50">Geschlossen</span>
+                                }
+                              </div>
+                            )
+                          })
+                        : <span className="opacity-50">—</span>
+                      }
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {('place_attributes' in (proposedData ?? {}) || Object.keys(proposedCourtAttrsBySport).length > 0) && (
               <div>
                 <p className="text-xs font-medium mb-1">Ausstattung</p>
@@ -2737,6 +2760,10 @@ function ReportedTab() {
   const queryClient = useQueryClient()
   const [deletingPlaceId, setDeletingPlaceId] = useState<string | null>(null)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [expandedPlaces, setExpandedPlaces] = useState<Set<string>>(new Set())
+
+  const toggleExpand = (id: string) =>
+    setExpandedPlaces(prev => { const s = new Set(prev); s.has(id) ? s.delete(id) : s.add(id); return s })
 
   const { data: reports, isLoading } = useQuery({
     queryKey: ['place-reports'],
@@ -2832,6 +2859,10 @@ function ReportedTab() {
             place.street,
             place.district || place.city,
           ].filter(Boolean).join(', ')
+          const isExpanded = expandedPlaces.has(place.id)
+          const courts: any[] = (place as any).courts ?? []
+          const openingHours = (place as any).opening_hours as OpeningHours | null
+          const dayLabels: Record<string, string> = { monday: 'Mo', tuesday: 'Di', wednesday: 'Mi', thursday: 'Do', friday: 'Fr', saturday: 'Sa', sunday: 'So' }
 
           return (
             <Card key={place.id} className="border-l-4 border-l-red-400">
@@ -2843,6 +2874,11 @@ function ReportedTab() {
                       <Badge className="bg-red-100 text-red-800 text-xs shrink-0">
                         {placeReports.length} {placeReports.length === 1 ? 'Meldung' : 'Meldungen'}
                       </Badge>
+                      {(place as any).place_type && (
+                        <Badge className={`text-xs ${getPlaceTypeBadgeClasses((place as any).place_type)}`}>
+                          {placeTypeIcons[(place as any).place_type as PlaceType] || ''} {placeTypeLabels[(place as any).place_type as PlaceType] || (place as any).place_type}
+                        </Badge>
+                      )}
                     </div>
                     {address && (
                       <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
@@ -2851,12 +2887,17 @@ function ReportedTab() {
                       </div>
                     )}
                   </div>
-                  <Button variant="ghost" size="sm" asChild>
-                    <Link href={`/map?place=${place.id}`} target="_blank">
-                      <Eye className="h-4 w-4 mr-1" />
-                      Ansehen
-                    </Link>
-                  </Button>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <Button variant="ghost" size="sm" asChild>
+                      <Link href={`/map?place=${place.id}`} target="_blank">
+                        <Eye className="h-4 w-4 mr-1" />
+                        Ansehen
+                      </Link>
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => toggleExpand(place.id)}>
+                      {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -2875,6 +2916,115 @@ function ReportedTab() {
                     </div>
                   ))}
                 </div>
+
+                {/* Collapsible place details */}
+                {isExpanded && (
+                  <div className="border-t pt-3 space-y-3">
+                    {/* Image */}
+                    {(place as any).image_url && (
+                      <img
+                        src={(place as any).image_url}
+                        alt={place.name}
+                        className="w-full h-36 object-cover rounded-lg"
+                      />
+                    )}
+
+                    {/* Sports */}
+                    {((place as any).sports?.length > 0) && (
+                      <div>
+                        <Label className="text-xs font-medium text-muted-foreground">Sports</Label>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {((place as any).sports as string[]).map((sport: string) => (
+                            <Badge key={sport} className={`text-xs ${getSportBadgeClasses(sport)}`}>
+                              {sportIcons[sport] || '📍'} {sportNames[sport] || sport}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Courts */}
+                    {courts.length > 0 && (
+                      <div>
+                        <Label className="text-xs font-medium text-muted-foreground">Courts</Label>
+                        <div className="space-y-1 mt-1">
+                          {courts.map((court: any) => (
+                            <div key={court.id} className="text-xs bg-muted p-2 rounded">
+                              <div className="flex justify-between">
+                                <span className="font-medium">
+                                  {court.sport === 'other' ? (court.custom_sport_name || 'Andere Sportart') : (sportNames[court.sport] || court.sport)}
+                                </span>
+                                <span>Qty: {court.quantity}</span>
+                              </div>
+                              {court.surface && <div className="text-muted-foreground">Surface: {court.surface}</div>}
+                              {court.notes && <div className="text-muted-foreground">Notes: {court.notes}</div>}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Description */}
+                    {(place as any).description && (
+                      <div>
+                        <Label className="text-xs font-medium text-muted-foreground">Beschreibung</Label>
+                        <p className="text-sm mt-0.5">{(place as any).description}</p>
+                      </div>
+                    )}
+
+                    {/* Full address */}
+                    {((place as any).postcode || (place as any).county || (place as any).state || (place as any).country) && (
+                      <div>
+                        <Label className="text-xs font-medium text-muted-foreground">Adresse</Label>
+                        <div className="mt-1 text-sm space-y-0.5">
+                          {((place as any).street || (place as any).house_number) && (
+                            <div>{[(place as any).street, (place as any).house_number].filter(Boolean).join(' ')}</div>
+                          )}
+                          {((place as any).postcode || (place as any).city) && (
+                            <div>{[(place as any).postcode, (place as any).city].filter(Boolean).join(' ')}</div>
+                          )}
+                          {(place as any).district && <div className="text-muted-foreground">{(place as any).district}</div>}
+                          {(place as any).county && <div className="text-muted-foreground">{(place as any).county}</div>}
+                          {(place as any).state && <div className="text-muted-foreground">{(place as any).state}</div>}
+                          {(place as any).country && <div className="text-muted-foreground">{(place as any).country}</div>}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Contact */}
+                    {((place as any).contact_phone || (place as any).contact_email || (place as any).contact_website) && (
+                      <div>
+                        <Label className="text-xs font-medium text-muted-foreground">Kontakt</Label>
+                        <div className="mt-1 text-sm space-y-0.5">
+                          {(place as any).contact_phone && <div>{(place as any).contact_phone}</div>}
+                          {(place as any).contact_email && <div>{(place as any).contact_email}</div>}
+                          {(place as any).contact_website && <div className="text-muted-foreground truncate">{(place as any).contact_website}</div>}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Opening hours */}
+                    {openingHours && (
+                      <div>
+                        <Label className="text-xs font-medium text-muted-foreground">Öffnungszeiten</Label>
+                        <div className="mt-1 text-sm space-y-0.5">
+                          {(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as const).map(key => {
+                            const day = openingHours[key]
+                            return (
+                              <div key={key} className="flex gap-2">
+                                <span className="text-muted-foreground w-6">{dayLabels[key]}</span>
+                                {day && !day.closed && day.open && day.close
+                                  ? <span>{day.open} – {day.close}</span>
+                                  : <span className="text-muted-foreground">Geschlossen</span>
+                                }
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 <div className="flex gap-2 pt-1">
                   <Button

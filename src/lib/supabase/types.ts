@@ -116,14 +116,12 @@ export type Database = {
           description: string | null
           place_id: string
           sport: Database["public"]["Enums"]["sport_type"]
-          event_date: string
-          event_time: string
-          min_players: number
-          max_players: number
-          skill_level: Database["public"]["Enums"]["skill_level"]
+          event_type: string
+          schedule: Json
+          contact: Json
+          image_url: string | null
           creator_id: string
-          status: Database["public"]["Enums"]["event_status"]
-          extra_participants_count: number
+          status: string
         }
         Insert: {
           created_at?: string
@@ -133,14 +131,12 @@ export type Database = {
           description?: string | null
           place_id: string
           sport: Database["public"]["Enums"]["sport_type"]
-          event_date: string
-          event_time: string
-          min_players?: number
-          max_players?: number
-          skill_level?: Database["public"]["Enums"]["skill_level"]
+          event_type?: string
+          schedule: Json
+          contact?: Json
+          image_url?: string | null
           creator_id: string
-          status?: Database["public"]["Enums"]["event_status"]
-          extra_participants_count?: number
+          status?: string
         }
         Update: {
           created_at?: string
@@ -150,14 +146,12 @@ export type Database = {
           description?: string | null
           place_id?: string
           sport?: Database["public"]["Enums"]["sport_type"]
-          event_date?: string
-          event_time?: string
-          min_players?: number
-          max_players?: number
-          skill_level?: Database["public"]["Enums"]["skill_level"]
+          event_type?: string
+          schedule?: Json
+          contact?: Json
+          image_url?: string | null
           creator_id?: string
-          status?: Database["public"]["Enums"]["event_status"]
-          extra_participants_count?: number
+          status?: string
         }
         Relationships: [
           {
@@ -170,6 +164,42 @@ export type Database = {
           {
             foreignKeyName: "events_creator_id_fkey"
             columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_bookmarks: {
+        Row: {
+          id: string
+          user_id: string
+          event_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          event_id: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          event_id?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_bookmarks_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_bookmarks_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -823,8 +853,7 @@ export type Court = Tables<'courts'>
 export type Match = Tables<'matches'>
 export type MatchParticipant = Tables<'match_participants'>
 export type PendingPlaceChange = Tables<'pending_place_changes'>
-export type Event = Tables<'events'>
-export type EventParticipant = Tables<'event_participants'>
+export type EventBookmark = Tables<'event_bookmarks'>
 export type PlaceAttribute = Tables<'place_attributes'>
 export type CourtAttribute = Tables<'court_attributes'>
 
@@ -833,8 +862,50 @@ export type SportType = Enums<'sport_type'>
 export type MatchResult = Enums<'match_result'>
 export type ModerationStatus = Enums<'moderation_status'>
 export type PlaceChangeType = Enums<'place_change_type'>
-export type EventStatus = Enums<'event_status'>
-export type SkillLevel = Enums<'skill_level'>
+
+// Event schedule types
+export type EventType = 'session' | 'pickup' | 'tournament'
+
+export interface ScheduleSlot {
+  date: string
+  start_time: string
+  end_time: string
+}
+
+export interface RecurringSlot {
+  day: 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday'
+  start_time: string
+  end_time: string
+}
+
+export type EventSchedule =
+  | { type: 'once'; dates: ScheduleSlot[] }
+  | { type: 'dates'; dates: ScheduleSlot[] }
+  | { type: 'recurring'; slots: RecurringSlot[] }
+
+export interface EventContact {
+  name?: string
+  email?: string
+  phone?: string
+  instagram?: string
+  website?: string
+}
+
+export interface Event {
+  id: string
+  created_at: string
+  updated_at: string
+  title: string
+  description: string | null
+  event_type: EventType
+  place_id: string
+  sport: SportType
+  schedule: EventSchedule
+  contact: EventContact
+  image_url: string | null
+  creator_id: string
+  status: 'active' | 'cancelled' | 'archived'
+}
 
 // Composite types
 
@@ -903,8 +974,6 @@ export interface Feedback {
 }
 
 export interface EventWithDetails extends Event {
-  participant_count: number
-  user_joined: boolean
   creator_name: string
   creator_avatar: string | null
   place_name: string
@@ -915,9 +984,7 @@ export interface EventWithDetails extends Event {
   place_city: string | null
   place_postcode: string | null
   place_district: string | null
-  participants?: EventParticipant[]
-  place?: PlaceWithCourts
-  creator?: Pick<Profile, 'name' | 'avatar'>
+  is_bookmarked: boolean
 }
 
 export interface Area {

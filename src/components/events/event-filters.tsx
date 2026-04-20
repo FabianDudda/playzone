@@ -1,62 +1,84 @@
 'use client'
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { SportType } from '@/lib/supabase/types'
+import { SportType, EventWithDetails } from '@/lib/supabase/types'
 import { sportNames, sportIcons } from '@/lib/utils/sport-utils'
 
 export interface EventFilters {
   sport: SportType | 'all'
+  city: string | 'all'
 }
 
 interface EventFiltersProps {
   filters: EventFilters
   onFiltersChange: (filters: EventFilters) => void
+  cities: string[]
   className?: string
 }
 
-export default function EventFiltersComponent({ 
-  filters, 
+const ALLOWED_SPORTS: SportType[] = [
+  'fußball', 'basketball', 'tischtennis', 'tennis', 'beachvolleyball',
+  'volleyball', 'skatepark', 'boule', 'badminton', 'calisthenics',
+  'laufen', 'klettern', 'padel', 'hockey',
+]
+
+export default function EventFiltersComponent({
+  filters,
   onFiltersChange,
-  className = ""
+  cities,
+  className = '',
 }: EventFiltersProps) {
-  const allowedSports: SportType[] = ['fußball', 'basketball', 'tischtennis', 'tennis', 'beachvolleyball', 'volleyball', 'skatepark', 'boule', 'hockey']
-
-  const updateFilter = (value: SportType | 'all') => {
-    onFiltersChange({ sport: value })
-  }
-
   return (
-    <div className={`w-full max-w-xs ${className}`}>
-      <Select 
-        value={filters.sport} 
-        onValueChange={updateFilter}
+    <div className={`flex gap-2 flex-wrap ${className}`}>
+      <Select
+        value={filters.sport}
+        onValueChange={(v) => onFiltersChange({ ...filters, sport: v as SportType | 'all' })}
       >
-        <SelectTrigger>
-          <SelectValue placeholder="All Sports" />
+        <SelectTrigger className="w-44">
+          <SelectValue placeholder="Alle Sportarten" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All Sports</SelectItem>
-          {allowedSports.map(sport => (
+          <SelectItem value="all">Alle Sportarten</SelectItem>
+          {ALLOWED_SPORTS.map(sport => (
             <SelectItem key={sport} value={sport}>
               {sportIcons[sport]} {sportNames[sport]}
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
+
+      {cities.length > 0 && (
+        <Select
+          value={filters.city}
+          onValueChange={(v) => onFiltersChange({ ...filters, city: v })}
+        >
+          <SelectTrigger className="w-44">
+            <SelectValue placeholder="Alle Städte" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Alle Städte</SelectItem>
+            {cities.map(city => (
+              <SelectItem key={city} value={city}>{city}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      )}
     </div>
   )
 }
 
-// Utility function to apply filters to events array
-export function applyEventFilters<T extends { 
-  sport: SportType; 
-}>(events: T[], filters: EventFilters): T[] {
+export function applyEventFilters(events: EventWithDetails[], filters: EventFilters): EventWithDetails[] {
   return events.filter(event => {
-    // Sport filter
-    if (filters.sport !== 'all' && event.sport !== filters.sport) {
-      return false
-    }
-
+    if (filters.sport !== 'all' && event.sport !== filters.sport) return false
+    if (filters.city !== 'all' && event.place_city !== filters.city) return false
     return true
   })
+}
+
+export function deriveCities(events: EventWithDetails[]): string[] {
+  const seen = new Set<string>()
+  return events
+    .map(e => e.place_city)
+    .filter((c): c is string => !!c && !seen.has(c) && !!seen.add(c))
+    .sort()
 }

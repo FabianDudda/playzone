@@ -12,9 +12,9 @@ import Link from 'next/link'
 const NAV_ITEMS = [
   { name: 'Profil bearbeiten', href: '/profile/edit', icon: Edit2, adminOnly: false },
   { name: 'Meine Beiträge', href: '/contributions', icon: Bell, adminOnly: false },
+  { name: 'Meine Events', href: '/events/mine', icon: Calendar, adminOnly: false },
   { name: 'Rangliste', href: '/rankings', icon: Trophy, adminOnly: true },
   { name: 'Spiel hinzufügen', href: '/matches/new', icon: Plus, adminOnly: true },
-  { name: 'Events', href: '/events', icon: Calendar, adminOnly: true },
   { name: 'Admin', href: '/admin/places', icon: Shield, adminOnly: true },
   { name: 'Meine Statistiken', href: '/profile/stats', icon: Trophy, adminOnly: true },
 ]
@@ -85,6 +85,16 @@ export default function ProfilePage() {
                   )}
                 </>
               )}
+              <Link href="/events/mine" className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left">
+                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <span>Meine Events</span>
+                <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
+              </Link>
+              <Link href="/events" className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left">
+                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <span>Events entdecken</span>
+                <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
+              </Link>
               <Link href="/blog" className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left">
                 <Rss className="h-4 w-4 text-muted-foreground" />
                 <span>Blog</span>
@@ -196,10 +206,15 @@ export default function ProfilePage() {
                   )}
                 </>
               )}
+              <Link href="/events" className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left">
+                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <span>Events entdecken</span>
+                <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
+              </Link>
               <Link href="/orte" className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left">
                 <MapPin className="h-4 w-4 text-muted-foreground" />
                 <span>Orte</span>
-                <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
+                <span className="ml-auto text-xs text-muted-foreground">[admin]</span>
               </Link>
               <Link href="/blog" className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left">
                 <Rss className="h-4 w-4 text-muted-foreground" />

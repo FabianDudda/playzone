@@ -16,6 +16,7 @@ interface MarkerClusterGroupProps {
   selectedCourt?: PlaceMarker | null
   selectedSports?: SportType[]
   selectedPlaceType?: PlaceType | null
+  placeIdsWithEvents?: Set<string>
 }
 
 function isMarkerVisible(court: PlaceMarker, selectedSports: SportType[], selectedPlaceType: PlaceType | null | undefined): boolean {
@@ -47,7 +48,7 @@ function createClusterIcon(cluster: L.MarkerCluster) {
   })
 }
 
-export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCourt, selectedSports = [], selectedPlaceType = null }: MarkerClusterGroupProps) {
+export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCourt, selectedSports = [], selectedPlaceType = null, placeIdsWithEvents = new Set() }: MarkerClusterGroupProps) {
   const map = useMap()
   const clusterGroupRef = useRef<L.MarkerClusterGroup | null>(null)
   // Stable maps: id → marker / court — rebuilt only when underlying data changes
@@ -56,11 +57,13 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
   const onCourtSelectRef = useRef(onCourtSelect)
   const selectedSportsRef = useRef(selectedSports)
   const selectedPlaceTypeRef = useRef(selectedPlaceType)
+  const placeIdsWithEventsRef = useRef(placeIdsWithEvents)
   const prevSelectedIdRef = useRef<string | null>(null)
 
   useEffect(() => { onCourtSelectRef.current = onCourtSelect }, [onCourtSelect])
   useEffect(() => { selectedSportsRef.current = selectedSports }, [selectedSports])
   useEffect(() => { selectedPlaceTypeRef.current = selectedPlaceType }, [selectedPlaceType])
+  useEffect(() => { placeIdsWithEventsRef.current = placeIdsWithEvents }, [placeIdsWithEvents])
 
   // Incrementally add new markers when courts array grows — avoids full cluster rebuild on each batch
   useEffect(() => {
@@ -86,7 +89,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
 
       const availableSports = court.sports || []
       const marker = L.marker([court.latitude, court.longitude], {
-        icon: createSportIcon(availableSports, false),
+        icon: createSportIcon(availableSports, false, placeIdsWithEventsRef.current.has(court.id)),
         zIndexOffset: availableSports.length > 1 ? 1000 : availableSports.length === 1 && availableSports[0] === 'tischtennis' ? -1000 : 0,
       } as any)
       ;(marker as any).options.placeData = court
@@ -134,7 +137,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
         const availableSports = court.sports || []
         const matchingSports = availableSports.filter(s => selectedSports.includes(s))
         const sportsForIcon = selectedSports.length === 0 ? availableSports : matchingSports.length > 0 ? matchingSports : availableSports
-        marker.setIcon(createSportIcon(sportsForIcon, false))
+        marker.setIcon(createSportIcon(sportsForIcon, false, placeIdsWithEventsRef.current.has(court.id)))
       }
     })
 
@@ -155,7 +158,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
       const prevMarker = markerMapRef.current.get(prevSelectedIdRef.current)
       const prevCourt = courtMapRef.current.get(prevSelectedIdRef.current)
       if (prevMarker && prevCourt) {
-        prevMarker.setIcon(createSportIcon(getSportsForIcon(prevCourt), false))
+        prevMarker.setIcon(createSportIcon(getSportsForIcon(prevCourt), false, placeIdsWithEventsRef.current.has(prevSelectedIdRef.current)))
       }
     }
 
@@ -164,12 +167,28 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
       const marker = markerMapRef.current.get(selectedCourt.id)
       const court = courtMapRef.current.get(selectedCourt.id)
       if (marker && court) {
-        marker.setIcon(createSportIcon(getSportsForIcon(court), true))
+        marker.setIcon(createSportIcon(getSportsForIcon(court), true, placeIdsWithEventsRef.current.has(selectedCourt.id)))
       }
     }
 
     prevSelectedIdRef.current = selectedCourt?.id ?? null
   }, [selectedCourt])
+
+  // Update icons when placeIdsWithEvents loads (async after initial render)
+  useEffect(() => {
+    const clusterGroup = clusterGroupRef.current
+    if (!clusterGroup || placeIdsWithEvents.size === 0) return
+
+    markerMapRef.current.forEach((marker, id) => {
+      const court = courtMapRef.current.get(id)
+      if (!court || !isMarkerVisible(court, selectedSportsRef.current, selectedPlaceTypeRef.current)) return
+      const availableSports = court.sports || []
+      const matchingSports = availableSports.filter(s => selectedSportsRef.current.includes(s))
+      const sportsForIcon = selectedSportsRef.current.length === 0 ? availableSports : matchingSports.length > 0 ? matchingSports : availableSports
+      const isSelected = prevSelectedIdRef.current === id
+      marker.setIcon(createSportIcon(sportsForIcon, isSelected, placeIdsWithEvents.has(id)))
+    })
+  }, [placeIdsWithEvents])
 
   // Handle court selection events from popups
   useEffect(() => {

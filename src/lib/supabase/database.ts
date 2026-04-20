@@ -1,5 +1,5 @@
 import { supabase } from './client'
-import { Profile, Place, Court, LegacyCourt, PlaceWithCourts, PlaceMarker, Match, MatchParticipant, SportType, MatchResult, LeaderboardEntry, ModerationStatus, PendingPlaceChange, PlaceChangeType, Event, EventParticipant, EventStatus, SkillLevel, EventWithDetails, UserFavorite, PlaceAttribute, CourtAttribute } from './types'
+import { Profile, Place, Court, LegacyCourt, PlaceWithCourts, PlaceMarker, Match, MatchParticipant, SportType, MatchResult, LeaderboardEntry, ModerationStatus, PendingPlaceChange, PlaceChangeType, Event, EventWithDetails, EventBookmark, EventSchedule, UserFavorite, PlaceAttribute, CourtAttribute } from './types'
 
 // Helper function to fetch all records with automatic pagination
 async function fetchAllRecords<T>(queryBuilder: any): Promise<T[]> {
@@ -31,6 +31,60 @@ async function fetchAllRecords<T>(queryBuilder: any): Promise<T[]> {
   
   // console.log(`📊 fetchAllRecords completed: fetched ${allRecords.length} total records`)
   return allRecords
+}
+
+function normalizeSchedule(schedule: any): any {
+  if (!schedule) return schedule
+  if (schedule.type === 'recurring' && Array.isArray(schedule.slots)) {
+    return {
+      ...schedule,
+      slots: schedule.slots.map((s: any) => ({
+        ...s,
+        start_time: s.start_time ?? s.time ?? '',
+        end_time: s.end_time ?? '',
+      })),
+    }
+  }
+  if (Array.isArray(schedule.dates)) {
+    return {
+      ...schedule,
+      dates: schedule.dates.map((d: any) => ({
+        ...d,
+        start_time: d.start_time ?? d.time ?? '',
+        end_time: d.end_time ?? '',
+      })),
+    }
+  }
+  return schedule
+}
+
+function mapToEventWithDetails(event: any, isBookmarked = false): EventWithDetails {
+  return {
+    id: event.id,
+    created_at: event.created_at,
+    updated_at: event.updated_at,
+    title: event.title,
+    description: event.description ?? null,
+    event_type: event.event_type || 'session',
+    place_id: event.place_id,
+    sport: event.sport,
+    schedule: normalizeSchedule(event.schedule),
+    contact: event.contact || {},
+    image_url: event.image_url ?? null,
+    creator_id: event.creator_id,
+    status: event.status || 'active',
+    creator_name: event.profiles?.name || '',
+    creator_avatar: event.profiles?.avatar || null,
+    place_name: event.places?.name || '',
+    place_latitude: event.places?.latitude || 0,
+    place_longitude: event.places?.longitude || 0,
+    place_street: event.places?.street || null,
+    place_house_number: event.places?.house_number || null,
+    place_city: event.places?.city || null,
+    place_postcode: event.places?.postcode || null,
+    place_district: event.places?.district || null,
+    is_bookmarked: isBookmarked,
+  }
 }
 
 export const database = {
@@ -805,58 +859,41 @@ export const database = {
     getAllEvents: async (userId?: string): Promise<EventWithDetails[]> => {
       try {
         const { data, error } = await supabase
-          .rpc('get_events_with_details', {
-            user_id_param: userId || null
-          })
-        
+          .from('events')
+          .select(`
+            *,
+            profiles:creator_id ( name, avatar ),
+            places:place_id ( name, latitude, longitude, street, house_number, city, postcode, district )
+          `)
+          .eq('status', 'active')
+          .order('created_at', { ascending: false })
+
         if (error) {
           console.error('Error fetching events:', error)
           return []
         }
-        return data || []
+
+        const now = new Date()
+        const active = ((data || []) as any[]).filter(event => {
+          const schedule = event.schedule as EventSchedule
+          if (!schedule || schedule.type === 'recurring') return true
+          return (schedule.dates || []).some((d: { date: string; start_time?: string }) =>
+            new Date(`${d.date}T${d.start_time || '23:59'}`) > now
+          )
+        })
+
+        let bookmarkedIds = new Set<string>()
+        if (userId) {
+          const { data: bk } = await (supabase as any)
+            .from('event_bookmarks')
+            .select('event_id')
+            .eq('user_id', userId)
+          bookmarkedIds = new Set(((bk || []) as any[]).map((b: any) => b.event_id))
+        }
+
+        return active.map((event: any) => mapToEventWithDetails(event, bookmarkedIds.has(event.id)))
       } catch (error) {
         console.error('Error fetching events:', error)
-        return []
-      }
-    },
-
-    getEventsBySport: async (sport: SportType, userId?: string): Promise<EventWithDetails[]> => {
-      try {
-        const { data, error } = await supabase
-          .rpc('get_events_with_details', {
-            user_id_param: userId || null
-          })
-          .eq('sport', sport)
-        
-        if (error) {
-          console.error('Error fetching events by sport:', error)
-          return []
-        }
-        return data || []
-      } catch (error) {
-        console.error('Error fetching events by sport:', error)
-        return []
-      }
-    },
-
-    getEventsByPlace: async (placeId: string, userId?: string): Promise<EventWithDetails[]> => {
-      try {
-        const { data, error } = await supabase
-          .rpc('get_events_with_details', {
-            user_id_param: userId || null
-          })
-          .eq('place_id', placeId)
-          .eq('status', 'active')
-          .order('event_date', { ascending: true })
-          .order('event_time', { ascending: true })
-        
-        if (error) {
-          console.error('Error fetching events by place:', error)
-          return []
-        }
-        return data || []
-      } catch (error) {
-        console.error('Error fetching events by place:', error)
         return []
       }
     },
@@ -864,99 +901,135 @@ export const database = {
     getEvent: async (eventId: string, userId?: string): Promise<EventWithDetails | null> => {
       try {
         const { data, error } = await supabase
-          .rpc('get_events_with_details', {
-            user_id_param: userId || null
-          })
+          .from('events')
+          .select(`
+            *,
+            profiles:creator_id ( name, avatar ),
+            places:place_id ( name, latitude, longitude, street, house_number, city, postcode, district )
+          `)
           .eq('id', eventId)
           .single()
-        
+
         if (error) {
           console.error('Error fetching event:', error)
           return null
         }
 
-        // Fetch participants separately to get detailed info
-        const { data: participants } = await supabase
-          .from('event_participants')
-          .select(`
-            *,
-            profiles (
-              name,
-              avatar
-            )
-          `)
-          .eq('event_id', eventId)
+        let isBookmarked = false
+        if (userId) {
+          const { data: bk } = await (supabase as any)
+            .from('event_bookmarks')
+            .select('id')
+            .eq('user_id', userId)
+            .eq('event_id', eventId)
+            .maybeSingle()
+          isBookmarked = !!bk
+        }
 
-        // Fetch place details separately for the place object
-        const { data: place } = await supabase
-          .from('places')
-          .select(`
-            *,
-            courts (*)
-          `)
-          .eq('id', data.place_id)
-          .single()
-
-        return {
-          ...data,
-          participants: participants || [],
-          place: place || null
-        } as EventWithDetails
+        return mapToEventWithDetails(data as any, isBookmarked)
       } catch (error) {
         console.error('Error fetching event:', error)
         return null
       }
     },
 
+    getEventsByPlace: async (placeId: string, userId?: string): Promise<EventWithDetails[]> => {
+      try {
+        const { data, error } = await supabase
+          .from('events')
+          .select(`
+            *,
+            profiles:creator_id ( name, avatar ),
+            places:place_id ( name, latitude, longitude, street, house_number, city, postcode, district )
+          `)
+          .eq('place_id', placeId)
+          .eq('status', 'active')
+          .order('created_at', { ascending: false })
+
+        if (error) {
+          console.error('Error fetching events by place:', error)
+          return []
+        }
+
+        const now = new Date()
+        const active = ((data || []) as any[]).filter(event => {
+          const schedule = event.schedule as EventSchedule
+          if (!schedule || schedule.type === 'recurring') return true
+          return (schedule.dates || []).some((d: { date: string; start_time?: string }) =>
+            new Date(`${d.date}T${d.start_time || '23:59'}`) > now
+          )
+        })
+
+        let bookmarkedIds = new Set<string>()
+        if (userId) {
+          const { data: bk } = await (supabase as any)
+            .from('event_bookmarks')
+            .select('event_id')
+            .eq('user_id', userId)
+          bookmarkedIds = new Set(((bk || []) as any[]).map((b: any) => b.event_id))
+        }
+
+        return active.map((event: any) => mapToEventWithDetails(event, bookmarkedIds.has(event.id)))
+      } catch (error) {
+        console.error('Error fetching events by place:', error)
+        return []
+      }
+    },
+
+    getPlaceIdsWithEvents: async (): Promise<string[]> => {
+      try {
+        const { data, error } = await supabase
+          .from('events')
+          .select('place_id')
+          .eq('status', 'active')
+
+        if (error) {
+          console.error('Error fetching place IDs with events:', error)
+          return []
+        }
+
+        return [...new Set(((data || []) as any[]).map((e: any) => e.place_id as string))]
+      } catch (error) {
+        console.error('Error fetching place IDs with events:', error)
+        return []
+      }
+    },
+
     getUserEvents: async (userId: string): Promise<EventWithDetails[]> => {
       try {
         const { data, error } = await supabase
-          .rpc('get_events_with_details', {
-            user_id_param: userId
-          })
-          .or(`creator_id.eq.${userId},user_joined.eq.true`)
-          .order('event_date', { ascending: true })
-          .order('event_time', { ascending: true })
-        
+          .from('events')
+          .select(`
+            *,
+            profiles:creator_id ( name, avatar ),
+            places:place_id ( name, latitude, longitude, street, house_number, city, postcode, district )
+          `)
+          .eq('creator_id', userId)
+          .order('created_at', { ascending: false })
+
         if (error) {
           console.error('Error fetching user events:', error)
           return []
         }
-        return data || []
+
+        return ((data || []) as any[]).map((event: any) => mapToEventWithDetails(event, false))
       } catch (error) {
         console.error('Error fetching user events:', error)
         return []
       }
     },
 
-    createEvent: async (event: Omit<Event, 'id' | 'created_at' | 'updated_at'> & { extra_players?: number }) => {
-      const { data, error } = await supabase.rpc('create_event_with_creator_participation', {
-        event_title: event.title,
-        event_description: event.description || '',
-        event_place_id: event.place_id,
-        event_sport: event.sport,
-        event_date: event.event_date,
-        event_time: event.event_time,
-        event_min_players: event.min_players,
-        event_max_players: event.max_players,
-        event_skill_level: event.skill_level,
-        event_creator_id: event.creator_id,
-        extra_players: event.extra_players || 0
-      })
-      
-      if (error) {
-        return { data: null, error }
-      }
-      
-      // Return the created event data
-      const eventData = {
-        id: data[0].event_id,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        ...event
-      }
-      
-      return { data: eventData, error: null }
+    createEvent: async (event: Omit<Event, 'id' | 'created_at' | 'updated_at'>) => {
+      const { data, error } = await supabase
+        .from('events')
+        .insert({
+          ...event,
+          updated_at: new Date().toISOString(),
+        })
+        .select()
+        .single()
+
+      return { data: data as Event | null, error }
     },
 
     updateEvent: async (eventId: string, updates: Partial<Event>) => {
@@ -964,13 +1037,13 @@ export const database = {
         .from('events')
         .update({
           ...updates,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
         .eq('id', eventId)
         .select()
         .single()
-      
-      return { data, error }
+
+      return { data: data as Event | null, error }
     },
 
     deleteEvent: async (eventId: string) => {
@@ -978,72 +1051,64 @@ export const database = {
         .from('events')
         .delete()
         .eq('id', eventId)
-      
+
       return { data, error }
     },
+  },
 
-    joinEvent: async (eventId: string, userId: string, extraParticipants: number = 0) => {
-      const { data, error } = await supabase
-        .from('event_participants')
-        .insert({
-          event_id: eventId,
-          user_id: userId,
-          extra_participants_count: extraParticipants
-        })
-        .select()
-        .single()
-      
-      return { data, error }
+  // Event bookmark operations
+  eventBookmarks: {
+    bookmarkEvent: async (userId: string, eventId: string): Promise<void> => {
+      await (supabase as any)
+        .from('event_bookmarks')
+        .insert({ user_id: userId, event_id: eventId })
     },
 
-    leaveEvent: async (eventId: string, userId: string) => {
-      const { data, error } = await supabase
-        .from('event_participants')
+    unbookmarkEvent: async (userId: string, eventId: string): Promise<void> => {
+      await (supabase as any)
+        .from('event_bookmarks')
         .delete()
-        .eq('event_id', eventId)
         .eq('user_id', userId)
-      
-      return { data, error }
+        .eq('event_id', eventId)
     },
 
-    getEventParticipants: async (eventId: string): Promise<EventParticipant[]> => {
-      const { data, error } = await supabase
-        .from('event_participants')
-        .select(`
-          *,
-          profiles (
-            name,
-            avatar
-          )
-        `)
-        .eq('event_id', eventId)
-      
-      if (error) {
-        console.error('Error fetching event participants:', error)
+    getUserBookmarks: async (userId: string): Promise<EventWithDetails[]> => {
+      try {
+        const { data: bookmarks } = await (supabase as any)
+          .from('event_bookmarks')
+          .select('event_id')
+          .eq('user_id', userId)
+
+        if (!bookmarks || bookmarks.length === 0) return []
+
+        const eventIds = (bookmarks as any[]).map((b: any) => b.event_id)
+
+        const { data, error } = await supabase
+          .from('events')
+          .select(`
+            *,
+            profiles:creator_id ( name, avatar ),
+            places:place_id ( name, latitude, longitude, street, house_number, city, postcode, district )
+          `)
+          .in('id', eventIds)
+
+        if (error || !data) return []
+
+        return (data as any[]).map((event: any) => mapToEventWithDetails(event, true))
+      } catch (error) {
+        console.error('Error fetching user bookmarks:', error)
         return []
       }
-      return data || []
     },
 
-    removeParticipant: async (eventId: string, userId: string, removedBy: string) => {
-      // Check if the person removing is the event creator
-      const { data: event } = await supabase
-        .from('events')
-        .select('creator_id')
-        .eq('id', eventId)
-        .single()
-      
-      if (event?.creator_id !== removedBy && removedBy !== userId) {
-        return { data: null, error: { message: 'Not authorized to remove participant' } }
-      }
-
-      const { data, error } = await supabase
-        .from('event_participants')
-        .delete()
-        .eq('event_id', eventId)
+    isBookmarked: async (userId: string, eventId: string): Promise<boolean> => {
+      const { data } = await (supabase as any)
+        .from('event_bookmarks')
+        .select('id')
         .eq('user_id', userId)
-      
-      return { data, error }
+        .eq('event_id', eventId)
+        .maybeSingle()
+      return !!data
     },
   },
 
@@ -1884,10 +1949,32 @@ export const database = {
           places (
             id,
             name,
-            city,
+            place_type,
+            description,
+            image_url,
+            latitude,
+            longitude,
             street,
             house_number,
-            district
+            city,
+            postcode,
+            district,
+            county,
+            state,
+            country,
+            contact_phone,
+            contact_email,
+            contact_website,
+            opening_hours,
+            sports,
+            courts (
+              id,
+              sport,
+              quantity,
+              surface,
+              notes,
+              custom_sport_name
+            )
           )
         `)
         .eq('status', 'open')

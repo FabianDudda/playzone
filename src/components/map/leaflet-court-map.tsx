@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useState, useRef, useMemo, useCallback } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { database } from '@/lib/supabase/database'
 import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet'
 import { Court, SportType, PlaceWithCourts, PlaceMarker, Area } from '@/lib/supabase/types'
 import { Button } from '@/components/ui/button'
@@ -559,6 +561,16 @@ export default function LeafletCourtMap({
   initialArea,
 }: LeafletCourtMapProps) {
   const { user, profile } = useAuth()
+
+  const { data: placeIdsWithEvents = new Set<string>() } = useQuery({
+    queryKey: ['place-ids-with-events'],
+    queryFn: async () => {
+      const ids = await database.events.getPlaceIdsWithEvents()
+      return new Set(ids)
+    },
+    staleTime: 5 * 60 * 1000,
+  })
+
   const [selectedCourt, setSelectedCourt] = useState<PlaceMarker | null>(null)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [flyToTarget, setFlyToTarget] = useState<{ lat: number; lng: number } | null>(null)
@@ -593,9 +605,9 @@ export default function LeafletCourtMap({
     if (isFilterSheetOpenRef.current) setIsFilterSheetOpen(false)
     if (isFavoritesOpenRef.current) setIsFavoritesOpen(false)
     setSelectedCourt(court)
-    if (!isBottomSheetOpenRef.current) setIsBottomSheetOpen(true)
+    if (!embedded && !isBottomSheetOpenRef.current) setIsBottomSheetOpen(true)
     onCourtSelect?.(court)
-  }, [onCourtSelect, disableMarkerClick])
+  }, [onCourtSelect, disableMarkerClick, embedded])
 
 
   const handleFavoriteSelect = useCallback((court: PlaceMarker) => {
@@ -705,6 +717,7 @@ export default function LeafletCourtMap({
                   selectedCourt={selectedCourt}
                   selectedSports={selectedSports}
                   selectedPlaceType={selectedPlaceType}
+                  placeIdsWithEvents={placeIdsWithEvents}
                 />
               )
             }
@@ -724,7 +737,7 @@ export default function LeafletCourtMap({
               <Marker
                 key={court.id}
                 position={[court.latitude, court.longitude]}
-                icon={createSportIcon(sportsForIcon, false)}
+                icon={createSportIcon(sportsForIcon, selectedCourt?.id === court.id, placeIdsWithEvents.has(court.id))}
                 eventHandlers={{
                   click: (e) => {
                     // console.log('📍 Regular marker clicked:', {
@@ -738,11 +751,37 @@ export default function LeafletCourtMap({
               />
             )
             })
-          }, [enableClustering, courts, selectedSports, selectedPlaceType, handleCourtSelect])}
+          }, [enableClustering, courts, selectedSports, selectedPlaceType, handleCourtSelect, placeIdsWithEvents, selectedCourt])}
           
+          {/* Selected court overlay marker — rendered outside MarkerClusterGroup so React owns the icon.
+              Only used in embedded mode: the full map's MarkerClusterGroup already handles selected state
+              imperatively via setIcon, so the overlay would stack two identical markers there. */}
+          {selectedCourt && embedded && enableClustering && courts.length > 10 && (
+            <Marker
+              key={`selected-overlay-${selectedCourt.id}`}
+              position={[selectedCourt.latitude, selectedCourt.longitude]}
+              icon={createSportIcon(
+                selectedSports.length === 0
+                  ? (selectedCourt.sports || [])
+                  : (selectedCourt.sports || []).filter(s => selectedSports.includes(s)).length > 0
+                    ? (selectedCourt.sports || []).filter(s => selectedSports.includes(s))
+                    : (selectedCourt.sports || []),
+                true,
+                placeIdsWithEvents.has(selectedCourt.id)
+              )}
+              zIndexOffset={2000}
+              eventHandlers={{
+                click: (e) => {
+                  e.originalEvent.stopPropagation()
+                  handleCourtSelect(selectedCourt)
+                }
+              }}
+            />
+          )}
+
           {/* User location marker */}
           {userLocation && (
-            <Marker 
+            <Marker
               position={[userLocation.lat, userLocation.lng]}
               icon={createUserLocationIcon()}
             />

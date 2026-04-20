@@ -1,296 +1,65 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { Calendar, Plus, Users, Clock, User } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { useAuth } from '@/components/providers/auth-provider'
+import { useQuery } from '@tanstack/react-query'
 import { database } from '@/lib/supabase/database'
-import { EventWithDetails } from '@/lib/supabase/types'
-import { getSportBadgeClasses, sportNames, sportIcons } from '@/lib/utils/sport-utils'
+import { sportIcons, sportNames } from '@/lib/utils/sport-utils'
+import ScheduleDisplay from '@/components/events/schedule-display'
+import BookmarkButton from '@/components/events/bookmark-button'
+import Link from 'next/link'
+import { ChevronRight } from 'lucide-react'
 
 interface PlaceEventsSectionProps {
   placeId: string
-  placeName: string
+  userId?: string
 }
 
-export default function PlaceEventsSection({ placeId, placeName }: PlaceEventsSectionProps) {
-  const { user } = useAuth()
-  const [events, setEvents] = useState<EventWithDetails[]>([])
-  const [loading, setLoading] = useState(true)
+export default function PlaceEventsSection({ placeId, userId }: PlaceEventsSectionProps) {
+  const { data: events = [] } = useQuery({
+    queryKey: ['place-events', placeId, userId],
+    queryFn: () => database.events.getEventsByPlace(placeId, userId),
+    staleTime: 2 * 60 * 1000,
+  })
 
-  useEffect(() => {
-    fetchPlaceEvents()
-  }, [placeId, user])
-
-  const fetchPlaceEvents = async () => {
-    try {
-      setLoading(true)
-      const eventsData = await database.events.getEventsByPlace(placeId, user?.id)
-      // Only show upcoming events, sorted by date
-      const upcomingEvents = eventsData
-        .filter(event => new Date(event.event_date) >= new Date())
-        .sort((a, b) => new Date(a.event_date).getTime() - new Date(b.event_date).getTime())
-      setEvents(upcomingEvents)
-    } catch (error) {
-      console.error('Error fetching place events:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleJoinEvent = async (eventId: string) => {
-    if (!user) return
-
-    try {
-      const { error } = await database.events.joinEvent(eventId, user.id)
-      if (error) {
-        console.error('Error joining event:', error)
-        return
-      }
-      
-      // Refresh events to show updated participant count
-      fetchPlaceEvents()
-    } catch (error) {
-      console.error('Error joining event:', error)
-    }
-  }
-
-  const handleLeaveEvent = async (eventId: string) => {
-    if (!user) return
-
-    try {
-      const { error } = await database.events.leaveEvent(eventId, user.id)
-      if (error) {
-        console.error('Error leaving event:', error)
-        return
-      }
-      
-      // Refresh events to show updated participant count
-      fetchPlaceEvents()
-    } catch (error) {
-      console.error('Error leaving event:', error)
-    }
-  }
-
-  const formatEventDateTime = (date: string, time: string) => {
-    const eventDate = new Date(date)
-    const [hours, minutes] = time.split(':')
-    eventDate.setHours(parseInt(hours), parseInt(minutes))
-    
-    const now = new Date()
-    const isToday = eventDate.toDateString() === now.toDateString()
-    const isTomorrow = eventDate.toDateString() === new Date(now.getTime() + 24 * 60 * 60 * 1000).toDateString()
-    
-    let dateStr = ''
-    if (isToday) {
-      dateStr = 'Heute'
-    } else if (isTomorrow) {
-      dateStr = 'Morgen'
-    } else {
-      dateStr = eventDate.toLocaleDateString('de-DE', {
-        weekday: 'short',
-        month: 'short',
-        day: 'numeric'
-      })
-    }
-
-    const timeStr = eventDate.toLocaleTimeString('de-DE', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: false
-    })
-    
-    return { dateStr, timeStr }
-  }
-
-  if (loading) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Bevorstehende Events</CardTitle>
-          <CardDescription>Spiele und Aktivitäten an diesem Ort</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex justify-center py-8">
-            <div className="text-muted-foreground">Events werden geladen...</div>
-          </div>
-        </CardContent>
-      </Card>
-    )
-  }
+  if (events.length === 0) return null
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle>Bevorstehende Events</CardTitle>
-            <CardDescription>Spiele und Aktivitäten an diesem Ort</CardDescription>
-          </div>
-          <Link href={`/events/new?place=${placeId}&name=${encodeURIComponent(placeName)}`}>
-            <Button>
-              <Plus className="h-4 w-4 mr-1" />
-              Event erstellen
-            </Button>
-          </Link>
-        </div>
-      </CardHeader>
-      
-      <CardContent>
-        {events.length === 0 ? (
-          <div className="text-center py-8">
-            <Calendar className="h-8 w-8 mx-auto mb-3 text-muted-foreground" />
-            <h3 className="font-medium mb-1">Keine bevorstehenden Events</h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              Sei der Erste, der ein Spiel an diesem Ort organisiert
-            </p>
-            <Link href={`/events/new?place=${placeId}&name=${encodeURIComponent(placeName)}`}>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                Erstes Event erstellen
-              </Button>
+    <div className="flex flex-col gap-2">
+      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Events hier</p>
+      <div className="flex flex-col gap-2">
+        {events.map(event => (
+          <div key={event.id} className="flex flex-col gap-1.5 border rounded-lg p-3">
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5 mb-0.5">
+                  <span className="text-sm leading-none">{sportIcons[event.sport] || '🏅'}</span>
+                  <span className="text-xs text-muted-foreground">{sportNames[event.sport] || event.sport}</span>
+                </div>
+                <p className="text-sm font-medium truncate">{event.title}</p>
+              </div>
+              <BookmarkButton
+                eventId={event.id}
+                isBookmarked={event.is_bookmarked}
+                userId={userId}
+                size="sm"
+              />
+            </div>
+            <ScheduleDisplay schedule={event.schedule} showNextOccurrence={false} />
+            <Link
+              href={`/events/${event.id}`}
+              className="text-xs text-primary hover:underline self-start"
+            >
+              Details ansehen
             </Link>
           </div>
-        ) : (
-          <div className="space-y-4">
-            {events.map(event => {
-              const { dateStr, timeStr } = formatEventDateTime(event.event_date, event.event_time)
-              const canJoin = user && !event.user_joined && event.status === 'active' && 
-                            event.creator_id !== user.id && event.participant_count < event.max_players
-              const isCreator = user && event.creator_id === user.id
-              const hasJoined = user && event.user_joined
-
-              return (
-                <div key={event.id} className="p-4 border rounded-lg space-y-3">
-                  {/* Event Header */}
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <Badge className={`text-xs ${getSportBadgeClasses(event.sport)}`}>
-                          {sportIcons[event.sport]} {sportNames[event.sport]}
-                        </Badge>
-                        <Badge variant={event.status === 'active' ? 'default' : 
-                                      event.status === 'full' ? 'secondary' : 'outline'}>
-                          {event.status === 'active' ? 'Offen' :
-                           event.status === 'full' ? 'Voll' :
-                           event.status}
-                        </Badge>
-                      </div>
-                      <h4 className="font-medium">{event.title}</h4>
-                      {event.description && (
-                        <p className="text-sm text-muted-foreground line-clamp-2">
-                          {event.description}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Event Details */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
-                    {/* Date & Time */}
-                    <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-muted-foreground" />
-                      <span>{dateStr}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-muted-foreground" />
-                      <span>{timeStr}</span>
-                    </div>
-                    
-                    {/* Participants */}
-                    <div className="flex items-center gap-2">
-                      <Users className="h-4 w-4 text-muted-foreground" />
-                      <span>{event.participant_count} / {event.max_players} Spieler</span>
-                    </div>
-                  </div>
-
-                  {/* Creator and Skill Level */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <User className="h-4 w-4 text-muted-foreground" />
-                      <Avatar className="h-5 w-5">
-                        <AvatarImage src={event.creator_avatar || ''} />
-                        <AvatarFallback className="text-xs">
-                          {event.creator_name.charAt(0).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span className="text-sm">
-                        {isCreator ? 'Du' : event.creator_name}
-                      </span>
-                    </div>
-                    
-                    {event.skill_level !== 'any' && (
-                      <Badge variant="outline" className="text-xs">
-                        {event.skill_level}
-                      </Badge>
-                    )}
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex gap-2 pt-2">
-                    <Link href={`/events/${event.id}`} className="flex-1">
-                      <Button variant="outline" className="w-full">
-                        Details ansehen
-                      </Button>
-                    </Link>
-                    
-                    {!user && (
-                      <Link href="/auth/signin" className="flex-1">
-                        <Button className="w-full">
-                          Anmelden um beizutreten
-                        </Button>
-                      </Link>
-                    )}
-                    
-                    {canJoin && (
-                      <Button 
-                        
-                        onClick={() => handleJoinEvent(event.id)}
-                        className="flex-1"
-                      >
-                        Beitreten
-                      </Button>
-                    )}
-                    
-                    {hasJoined && !isCreator && (
-                      <Button 
-                        variant="outline" 
-                        
-                        onClick={() => handleLeaveEvent(event.id)}
-                        className="flex-1"
-                      >
-                        Verlassen
-                      </Button>
-                    )}
-                    
-                    {isCreator && (
-                      <Link href={`/events/${event.id}`} className="flex-1">
-                        <Button variant="secondary" className="w-full">
-                          Verwalten
-                        </Button>
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              )
-            })}
-            
-            {events.length > 0 && (
-              <div className="text-center pt-4">
-                <Link href="/events">
-                  <Button variant="outline">
-                    Alle Events ansehen
-                  </Button>
-                </Link>
-              </div>
-            )}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+        ))}
+      </div>
+      <Link
+        href={`/events?place=${placeId}`}
+        className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+      >
+        Alle Events hier ansehen
+        <ChevronRight className="h-3 w-3" />
+      </Link>
+    </div>
   )
 }

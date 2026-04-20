@@ -1,194 +1,71 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { Suspense, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, MapPin, Calendar, Clock, Users, User, Edit, Trash2, Share2, Award, LandPlot, FileText } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { ArrowLeft, MapPin, Edit, Trash2, ExternalLink } from 'lucide-react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import React from 'react'
+import { useAuth } from '@/components/providers/auth-provider'
+import { database } from '@/lib/supabase/database'
+import { useToast } from '@/hooks/use-toast'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { useAuth } from '@/components/providers/auth-provider'
-import { database } from '@/lib/supabase/database'
-import { EventWithDetails } from '@/lib/supabase/types'
+import { Card, CardContent } from '@/components/ui/card'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { getSportBadgeClasses, sportNames, sportIcons } from '@/lib/utils/sport-utils'
-import JoinEventBottomSheet from '@/components/events/join-event-bottom-sheet'
-import EventLocationMap from '@/components/events/event-location-map'
+import ScheduleDisplay from '@/components/events/schedule-display'
+import ContactDisplay from '@/components/events/contact-display'
+import BookmarkButton from '@/components/events/bookmark-button'
+import dynamic from 'next/dynamic'
+
+const EventLocationMap = dynamic(
+  () => import('@/components/events/event-location-map'),
+  { ssr: false }
+)
 
 interface EventPageProps {
   params: Promise<{ id: string }>
 }
 
-export default function EventPage({ params }: EventPageProps) {
+function EventContent({ params }: EventPageProps) {
   const router = useRouter()
   const { user } = useAuth()
-  const [event, setEvent] = useState<EventWithDetails | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [actionLoading, setActionLoading] = useState(false)
-  const [eventId, setEventId] = useState<string>('')
-  const [joinBottomSheetOpen, setJoinBottomSheetOpen] = useState(false)
+  const { toast } = useToast()
+  const queryClient = useQueryClient()
+  const [eventId, setEventId] = useState('')
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
-  useEffect(() => {
-    params.then(({ id }) => {
-      setEventId(id)
-      fetchEvent(id)
-    })
+  React.useEffect(() => {
+    params.then(p => setEventId(p.id))
   }, [params])
 
-  const fetchEvent = async (id: string) => {
-    try {
-      setLoading(true)
-      const eventData = await database.events.getEvent(id, user?.id)
-      if (!eventData) {
-        router.push('/events')
-        return
-      }
-      setEvent(eventData)
-    } catch (error) {
-      console.error('Error fetching event:', error)
+  const { data: event, isLoading } = useQuery({
+    queryKey: ['event', eventId],
+    queryFn: () => database.events.getEvent(eventId, user?.id),
+    enabled: !!eventId,
+  })
+
+  const deleteMutation = useMutation({
+    mutationFn: () => database.events.deleteEvent(eventId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['events'] })
+      toast({ title: 'Event gelöscht' })
       router.push('/events')
-    } finally {
-      setLoading(false)
-    }
-  }
+    },
+    onError: () => {
+      toast({ title: 'Fehler beim Löschen', variant: 'destructive' })
+    },
+  })
 
-  const handleJoinEvent = async () => {
-    if (!user || !event) return
-
-    setJoinBottomSheetOpen(true)
-  }
-
-  const handleConfirmJoin = async (eventId: string, extraParticipants: number) => {
-    if (!user) return
-
-    setActionLoading(true)
-    try {
-      const { error } = await database.events.joinEvent(eventId, user.id, extraParticipants)
-      if (error) {
-        console.error('Error joining event:', error)
-        throw new Error('Failed to join event')
-      }
-      
-      // Refresh event data to show updated participant count
-      await fetchEvent(eventId)
-    } finally {
-      setActionLoading(false)
-    }
-  }
-
-  const handleCloseJoinBottomSheet = () => {
-    setJoinBottomSheetOpen(false)
-  }
-
-  const handleLeaveEvent = async () => {
-    if (!user || !event) return
-
-    setActionLoading(true)
-    try {
-      const { error } = await database.events.leaveEvent(event.id, user.id)
-      if (error) {
-        console.error('Error leaving event:', error)
-        return
-      }
-      
-      // Refresh event data to show updated participant count
-      await fetchEvent(eventId)
-    } catch (error) {
-      console.error('Error leaving event:', error)
-    } finally {
-      setActionLoading(false)
-    }
-  }
-
-  const handleDeleteEvent = async () => {
-    if (!user || !event || event.creator_id !== user.id) return
-
-    if (!confirm('Are you sure you want to delete this event? This action cannot be undone.')) {
-      return
-    }
-
-    setActionLoading(true)
-    try {
-      const { error } = await database.events.deleteEvent(event.id)
-      if (error) {
-        console.error('Error deleting event:', error)
-        return
-      }
-      
-      router.push('/events')
-    } catch (error) {
-      console.error('Error deleting event:', error)
-      setActionLoading(false)
-    }
-  }
-
-  const formatAddress = (event: EventWithDetails) => {
-    const parts = []
-    
-    // Build street address from street name and house number
-    const streetParts = []
-    if (event.place_street) {
-      streetParts.push(event.place_street)
-    }
-    if (event.place_house_number) {
-      streetParts.push(event.place_house_number)
-    }
-    if (streetParts.length > 0) {
-      parts.push(streetParts.join(' '))
-    }
-    
-    if (event.place_postcode) {
-      parts.push(event.place_postcode)
-    }
-    
-    if (event.place_city) {
-      parts.push(event.place_city)
-    }
-    
-    if (event.place_district) {
-      parts.push(event.place_district)
-    }
-    
-    return parts.join(', ')
-  }
-
-  const formatEventDateTime = (date: string, time: string) => {
-    const eventDate = new Date(date)
-    const [hours, minutes] = time.split(':')
-    eventDate.setHours(parseInt(hours), parseInt(minutes))
-    
-    const now = new Date()
-    const isToday = eventDate.toDateString() === now.toDateString()
-    const isTomorrow = eventDate.toDateString() === new Date(now.getTime() + 24 * 60 * 60 * 1000).toDateString()
-    
-    let dateStr = ''
-    if (isToday) {
-      dateStr = 'Today'
-    } else if (isTomorrow) {
-      dateStr = 'Tomorrow'
-    } else {
-      dateStr = eventDate.toLocaleDateString('en-US', { 
-        weekday: 'long', 
-        year: 'numeric',
-        month: 'long', 
-        day: 'numeric' 
-      })
-    }
-    
-    const timeStr = eventDate.toLocaleTimeString('en-US', { 
-      hour: 'numeric', 
-      minute: '2-digit',
-      hour12: true 
-    })
-    
-    return { dateStr, timeStr, fullDate: eventDate }
-  }
-
-  if (loading) {
+  if (isLoading || !eventId) {
     return (
-      <div className="container px-4 py-6 max-w-xl mx-auto">
-        <div className="flex justify-center items-center h-64">
-          <div className="text-lg">Loading event...</div>
+      <div className="container px-4 py-8 max-w-xl mx-auto">
+        <div className="space-y-4">
+          <div className="h-8 w-48 bg-muted animate-pulse rounded" />
+          <div className="h-48 bg-muted animate-pulse rounded-lg" />
+          <div className="h-24 bg-muted animate-pulse rounded-lg" />
         </div>
       </div>
     )
@@ -196,342 +73,181 @@ export default function EventPage({ params }: EventPageProps) {
 
   if (!event) {
     return (
-      <div className="container px-4 py-6 max-w-xl mx-auto">
-        <Card>
-          <CardContent className="p-8 text-center">
-            <h3 className="text-lg font-semibold mb-2">Event not found</h3>
-            <p className="text-muted-foreground mb-4">
-              The event you're looking for doesn't exist or has been removed.
-            </p>
-            <Link href="/events">
-              <Button>Back to Events</Button>
-            </Link>
-          </CardContent>
-        </Card>
+      <div className="container px-4 py-8 max-w-xl mx-auto text-center">
+        <h1 className="text-xl font-semibold mb-2">Event nicht gefunden</h1>
+        <Link href="/events"><Button variant="outline">Zurück zu Events</Button></Link>
       </div>
     )
   }
 
-  const { dateStr, timeStr, fullDate } = formatEventDateTime(event.event_date, event.event_time)
-  const isCreator = user && event.creator_id === user.id
-  const canJoin = user && !event.user_joined && event.status === 'active' && 
-                !isCreator && event.participant_count < event.max_players
-  const hasJoined = user && event.user_joined
-  const isPastEvent = fullDate < new Date()
+  const isCreator = user?.id === event.creator_id
+  const addressParts = [
+    event.place_street && event.place_house_number
+      ? `${event.place_street} ${event.place_house_number}`
+      : event.place_street,
+    event.place_postcode && event.place_city
+      ? `${event.place_postcode} ${event.place_city}`
+      : event.place_city,
+  ].filter(Boolean)
 
   return (
-    <div className="container px-4 py-6 max-w-xl mx-auto pb-20">
+    <div className="container px-4 py-4 max-w-xl mx-auto pb-24">
       {/* Header */}
-      <div className="flex items-center gap-2 mb-6">
-        <Link href="/events" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-          <ArrowLeft className="h-4 w-4" />
-          Back to Events
-        </Link>
+      <div className="flex items-center justify-between gap-2 mb-4">
+        <Button variant="ghost" size="icon" onClick={() => router.back()}>
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <div className="flex items-center gap-1">
+          <BookmarkButton
+            eventId={event.id}
+            isBookmarked={event.is_bookmarked}
+            userId={user?.id}
+          />
+          {isCreator && (
+            <>
+              <Button variant="ghost" size="icon" asChild>
+                <Link href={`/events/${event.id}/edit`}>
+                  <Edit className="h-4 w-4" />
+                </Link>
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowDeleteDialog(true)}
+                className="text-destructive hover:text-destructive"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </>
+          )}
+        </div>
       </div>
 
-      <div className="max-w-xl mx-auto space-y-6">
-          {/* Event Details */}
-          <Card>
-            <CardHeader className="pb-3">
-              <div className="flex justify-between items-center mb-2">
-                <h1 className="font-semibold line-clamp-1 text-lg">
-                  {event.title}
-                </h1>
-                <div className="flex items-center gap-2">
-                  <Badge className={`text-xs ${getSportBadgeClasses(event.sport)}`}>
-                    {sportIcons[event.sport]} {sportNames[event.sport]}
-                  </Badge>
-                  {event.status === 'full' && (
-                    <Badge variant="secondary">
-                      Full
-                    </Badge>
-                  )}
-                </div>
-              </div>
-              {isCreator && (
-                <div className="flex gap-2 mb-2">
-                  <Button variant="outline" asChild>
-                    <Link href={`/events/${event.id}/edit`}>
-                      <Edit className="h-4 w-4" />
-                    </Link>
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    
-                    onClick={handleDeleteEvent}
-                    disabled={actionLoading}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
+      {/* Cover image */}
+      {event.image_url && (
+        <div className="h-48 rounded-xl overflow-hidden mb-4">
+          <img src={event.image_url} alt={event.title} className="w-full h-full object-cover" />
+        </div>
+      )}
+
+      {/* Title & sport */}
+      <div className="mb-4">
+        <div className="flex items-start gap-2 mb-1">
+          <h1 className="text-2xl font-bold flex-1">{event.title}</h1>
+          <Badge className={`mt-1 flex-shrink-0 ${getSportBadgeClasses(event.sport)}`}>
+            {sportIcons[event.sport]} {sportNames[event.sport]}
+          </Badge>
+        </div>
+        {event.status === 'cancelled' && (
+          <Badge variant="destructive">Abgesagt</Badge>
+        )}
+      </div>
+
+      {/* Schedule */}
+      <Card className="mb-3">
+        <CardContent className="py-4">
+          <h2 className="text-sm font-semibold text-muted-foreground mb-2 uppercase tracking-wide">Termin</h2>
+          <ScheduleDisplay schedule={event.schedule} showNextOccurrence />
+        </CardContent>
+      </Card>
+
+      {/* Place */}
+      <Card className="mb-3">
+        <CardContent className="py-4">
+          <h2 className="text-sm font-semibold text-muted-foreground mb-2 uppercase tracking-wide">Ort</h2>
+          <div className="flex items-start gap-2 mb-3">
+            <MapPin className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="font-medium">{event.place_name}</p>
+              {addressParts.length > 0 && (
+                <p className="text-sm text-muted-foreground">{addressParts.join(', ')}</p>
               )}
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {/* Date & Time */}
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 flex-shrink-0" />
-                  <span>{dateStr}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 flex-shrink-0" />
-                  <span>{timeStr}</span>
-                </div>
-              </div>
-
-              {/* Skill Level */}
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Award className="h-4 w-4 flex-shrink-0" />
-                <span className="capitalize">
-                  {event.skill_level === 'any' ? 'Every Skill Level' : event.skill_level}
-                </span>
-              </div>
-
-              {/* Participants */}
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Users className="h-4 w-4 flex-shrink-0" />
-                <span>{event.participant_count} / {event.max_players} players</span>
-              </div>
-
-              {/* Description */}
-              {event.description && (
-                <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                  <FileText className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                  <p>{event.description}</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Participants */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Participants ({(() => {
-                // Count actual participants (creator + non-creator joiners)
-                const nonCreatorParticipants = event.participants?.filter((p: any) => p.user_id !== event.creator_id) || []
-                return nonCreatorParticipants.length + 1 // +1 for creator
-              })()})</CardTitle>
-              <CardDescription>
-                {(() => {
-                  const creatorExtraCount = event.extra_participants_count || 0
-                  // Only count extra players from non-creator participants to avoid double-counting
-                  const nonCreatorParticipants = event.participants?.filter((p: any) => p.user_id !== event.creator_id) || []
-                  const joinersExtraCount = nonCreatorParticipants.reduce((sum: number, p: any) => sum + (p.extra_participants_count || 0), 0)
-                  const totalExtraPlayers = creatorExtraCount + joinersExtraCount
-                  const individualCount = nonCreatorParticipants.length + 1 // +1 for creator
-                  const totalCount = individualCount + totalExtraPlayers
-                  
-                  if (totalExtraPlayers > 0) {
-                    return `${individualCount} individual participants bringing ${totalExtraPlayers} extra player${totalExtraPlayers !== 1 ? 's' : ''} (${totalCount} total)`
-                  } else {
-                    return 'Players participating in this event'
-                  }
-                })()}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {/* Event Creator */}
-                {(() => {
-                  const creatorExtraCount = event.extra_participants_count || 0
-                  const hasExtras = creatorExtraCount > 0
-                  const isCurrentUser = event.creator_id === user?.id
-                  const displayName = isCurrentUser ? 'You' : event.creator_name || 'Event Creator'
-                  
-                  return (
-                    <div className="flex items-center gap-3 p-2 rounded-lg border bg-blue-50/50">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={event.creator_avatar || ''} />
-                        <AvatarFallback className="text-sm">
-                          {event.creator_name?.charAt(0).toUpperCase() || 'C'}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium">{displayName}</span>
-                          <Badge variant="outline" className="text-xs">
-                            Creator
-                          </Badge>
-                          {hasExtras && (
-                            <Badge variant="secondary" className="text-xs">
-                              <Users className="h-3 w-3 mr-1" />
-                              +{creatorExtraCount} extra player{creatorExtraCount !== 1 ? 's' : ''}
-                            </Badge>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <span>Created {new Date(event.created_at).toLocaleDateString()}</span>
-                          {hasExtras && (
-                            <span>• {creatorExtraCount + 1} total player{creatorExtraCount + 1 !== 1 ? 's' : ''}</span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  )
-                })()}
-
-                {/* Other Participants */}
-                {event.participants && event.participants
-                  .filter((participant: any) => participant.user_id !== event.creator_id) // Filter out creator to avoid duplicate
-                  .map((participant: any) => {
-                  const extraCount = participant.extra_participants_count || 0
-                  const hasExtras = extraCount > 0
-                  const isCurrentUser = participant.user_id === user?.id
-                  const displayName = isCurrentUser ? 'You' : participant.profiles?.name || 'Anonymous'
-                  
-                  return (
-                    <div key={participant.id} className="flex items-center gap-3 p-2 rounded-lg border">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={participant.profiles?.avatar || ''} />
-                        <AvatarFallback className="text-sm">
-                          {participant.profiles?.name?.charAt(0).toUpperCase() || 'U'}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium">{displayName}</span>
-                          {hasExtras && (
-                            <Badge variant="secondary" className="text-xs">
-                              <Users className="h-3 w-3 mr-1" />
-                              +{extraCount} extra player{extraCount !== 1 ? 's' : ''}
-                            </Badge>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <span>Joined {new Date(participant.created_at).toLocaleDateString()}</span>
-                          {hasExtras && (
-                            <span>• {extraCount + 1} total player{extraCount + 1 !== 1 ? 's' : ''}</span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            </CardContent>
-          </Card>
-
-        {/* Location */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Location</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 pb-0">
-            {/* Place Name */}
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <LandPlot className="h-4 w-4 flex-shrink-0" />
-              <Link 
-                href={`/places/${event.place_id}`}
-                className="truncate hover:underline"
-              >
-                {event.place_name}
-              </Link>
             </div>
-            {/* Place Address */}
-            {formatAddress(event) && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <MapPin className="h-4 w-4 flex-shrink-0" />
-                <span className="truncate">{formatAddress(event)}</span>
-              </div>
-            )}
-          </CardContent>
-          <CardContent className="p-0 pt-3">
-            <EventLocationMap
-              latitude={event.place_latitude}
-              longitude={event.place_longitude}
-              placeName={event.place_name}
-              sport={event.sport}
-              height="200px"
-              className="rounded-b-lg overflow-hidden"
-            />
+          </div>
+          {event.place_latitude !== 0 && (
+            <div className="h-40 rounded-lg overflow-hidden">
+              <EventLocationMap
+                latitude={event.place_latitude}
+                longitude={event.place_longitude}
+                placeName={event.place_name}
+                sport={event.sport}
+                height="160px"
+              />
+            </div>
+          )}
+          <Link
+            href={`/?place=${event.place_id}`}
+            className="flex items-center gap-1 text-sm text-primary mt-2 hover:underline"
+          >
+            <ExternalLink className="h-3 w-3" />
+            Ort auf der Karte ansehen
+          </Link>
+        </CardContent>
+      </Card>
+
+      {/* Description */}
+      {event.description && (
+        <Card className="mb-3">
+          <CardContent className="py-4">
+            <h2 className="text-sm font-semibold text-muted-foreground mb-2 uppercase tracking-wide">Beschreibung</h2>
+            <p className="text-sm whitespace-pre-line">{event.description}</p>
           </CardContent>
         </Card>
+      )}
 
-        {/* Actions */}
-        {!isPastEvent && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {!user && (
-                <Link href="/auth/signin" className="block">
-                  <Button className="w-full">
-                    Sign In to Join
-                  </Button>
-                </Link>
-              )}
+      {/* Contact */}
+      {(event.contact?.name || event.contact?.email || event.contact?.phone || event.contact?.instagram || event.contact?.website) && (
+        <Card className="mb-3">
+          <CardContent className="py-4">
+            <h2 className="text-sm font-semibold text-muted-foreground mb-2 uppercase tracking-wide">Kontakt</h2>
+            <ContactDisplay contact={event.contact} />
+          </CardContent>
+        </Card>
+      )}
 
-              {canJoin && (
-                <Button 
-                  onClick={handleJoinEvent}
-                  disabled={actionLoading}
-                  className="w-full"
-                >
-                  {actionLoading ? 'Joining...' : 'Join Event'}
-                </Button>
-              )}
+      {/* Creator */}
+      <Card className="mb-3">
+        <CardContent className="py-4">
+          <h2 className="text-sm font-semibold text-muted-foreground mb-2 uppercase tracking-wide">Erstellt von</h2>
+          <div className="flex items-center gap-3">
+            <Avatar className="h-9 w-9">
+              <AvatarImage src={event.creator_avatar || ''} />
+              <AvatarFallback>{event.creator_name.charAt(0).toUpperCase()}</AvatarFallback>
+            </Avatar>
+            <span className="font-medium">{event.creator_name}</span>
+          </div>
+        </CardContent>
+      </Card>
 
-              {hasJoined && !isCreator && (
-                <Button 
-                  variant="outline"
-                  onClick={handleLeaveEvent}
-                  disabled={actionLoading}
-                  className="w-full"
-                >
-                  {actionLoading ? 'Leaving...' : 'Leave Event'}
-                </Button>
-              )}
-
-              {isCreator && (
-                <>
-                  <Button variant="secondary" asChild className="w-full">
-                    <Link href={`/events/${event.id}/edit`}>
-                      <Edit className="h-4 w-4 mr-2" />
-                      Edit Event
-                    </Link>
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    onClick={handleDeleteEvent}
-                    disabled={actionLoading}
-                    className="w-full"
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    {actionLoading ? 'Deleting...' : 'Delete Event'}
-                  </Button>
-                </>
-              )}
-
-              <Button variant="outline" className="w-full">
-                <Share2 className="h-4 w-4 mr-2" />
-                Share Event
-              </Button>
-            </CardContent>
-          </Card>
-        )}
-
-        {isPastEvent && (
-          <Card>
-            <CardContent className="p-4">
-              <div className="text-center text-muted-foreground">
-                <Calendar className="h-8 w-8 mx-auto mb-2" />
-                <p className="text-sm">This event has ended</p>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-      </div>
-
-      {/* Join Event Bottom Sheet */}
-      <JoinEventBottomSheet
-        isOpen={joinBottomSheetOpen}
-        onClose={setJoinBottomSheetOpen}
-        onExplicitClose={handleCloseJoinBottomSheet}
-        event={event}
-        onJoin={handleConfirmJoin}
-        isLoading={actionLoading}
-      />
+      {/* Delete dialog */}
+      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Event löschen?</DialogTitle>
+            <DialogDescription>
+              Möchtest du <strong>{event.title}</strong> dauerhaft löschen? Diese Aktion kann nicht rückgängig gemacht werden.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowDeleteDialog(false)}>Abbrechen</Button>
+            <Button
+              variant="destructive"
+              disabled={deleteMutation.isPending}
+              onClick={() => { setShowDeleteDialog(false); deleteMutation.mutate() }}
+            >
+              {deleteMutation.isPending ? 'Wird gelöscht…' : 'Endgültig löschen'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
+  )
+}
+
+export default function EventPage({ params }: EventPageProps) {
+  return (
+    <Suspense>
+      <EventContent params={params} />
+    </Suspense>
   )
 }

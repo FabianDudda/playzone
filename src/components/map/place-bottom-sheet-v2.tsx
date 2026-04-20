@@ -19,6 +19,7 @@ import { uploadCourtImage } from '@/lib/supabase/storage'
 import { database } from '@/lib/supabase/database'
 import { useToast } from '@/hooks/use-toast'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import PlaceEventsSection from '@/components/places/place-events-section'
 
 interface PlaceBottomSheetV2Props {
   isOpen: boolean
@@ -465,6 +466,11 @@ export default function PlaceBottomSheetV2({
                   </button>
                 </div>
               )} */}
+
+              {/* ── Events at this place ── */}
+              {selectedCourt && (
+                <PlaceEventsSection placeId={selectedCourt.id} userId={user?.id} />
+              )}
 
               {/* ── Action buttons ── */}
               <div className="flex gap-2">

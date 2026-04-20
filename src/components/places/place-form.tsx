@@ -477,7 +477,6 @@ export default function PlaceForm({
       {/* 2. Location + Address */}
       <div className="space-y-2">
         <Label>Standort *</Label>
-        <p className="text-xs text-muted-foreground">Tippe auf die Karte, um den genauen Standort zu setzen.</p>
         <div className="border rounded-lg overflow-hidden">
           <LeafletCourtMap
             courts={allPlaces.filter(p => p.id !== initialData?.id)}
