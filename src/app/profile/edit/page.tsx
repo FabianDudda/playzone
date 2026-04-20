@@ -93,7 +93,7 @@ export default function EditProfilePage() {
 
         {/* Member since */}
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="px-4 py-4">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Calendar className="h-4 w-4 shrink-0" />
               <span className="text-sm">Mitglied seit {new Date(profile.created_at).toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
@@ -103,7 +103,7 @@ export default function EditProfilePage() {
 
         {/* Account info */}
         <Card>
-          <CardContent className="p-6 space-y-4">
+          <CardContent className="px-4 py-4 space-y-4">
             <div>
               <Label>Anzeigename</Label>
               <Input
@@ -144,7 +144,7 @@ export default function EditProfilePage() {
 
         {/* Change password */}
         <Card>
-          <CardContent className="p-6 space-y-4">
+          <CardContent className="px-4 py-4 space-y-4">
             <div>
               <Label>Neues Passwort</Label>
               <Input

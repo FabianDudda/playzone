@@ -7,7 +7,7 @@ import 'leaflet.markercluster'
 import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 import { PlaceMarker, SportType } from '@/lib/supabase/types'
-import { createSportIcon } from '@/lib/utils/sport-styles'
+import { createSportIcon, createOrganizerIcon } from '@/lib/utils/sport-styles'
 import { PlaceType } from '@/lib/utils/sport-utils'
 
 interface MarkerClusterGroupProps {
@@ -17,6 +17,13 @@ interface MarkerClusterGroupProps {
   selectedSports?: SportType[]
   selectedPlaceType?: PlaceType | null
   placeIdsWithEvents?: Set<string>
+}
+
+function getPlaceIcon(court: PlaceMarker, sports: string[], isSelected: boolean, hasEvents: boolean): L.DivIcon {
+  if (court.organizer_id) {
+    return createOrganizerIcon(court.organizer?.color || '#6366F1', court.organizer?.logo_url, isSelected)
+  }
+  return createSportIcon(sports, isSelected, hasEvents)
 }
 
 function isMarkerVisible(court: PlaceMarker, selectedSports: SportType[], selectedPlaceType: PlaceType | null | undefined): boolean {
@@ -89,7 +96,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
 
       const availableSports = court.sports || []
       const marker = L.marker([court.latitude, court.longitude], {
-        icon: createSportIcon(availableSports, false, placeIdsWithEventsRef.current.has(court.id)),
+        icon: getPlaceIcon(court, availableSports, false, placeIdsWithEventsRef.current.has(court.id)),
         zIndexOffset: availableSports.length > 1 ? 1000 : availableSports.length === 1 && availableSports[0] === 'tischtennis' ? -1000 : 0,
       } as any)
       ;(marker as any).options.placeData = court
@@ -137,7 +144,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
         const availableSports = court.sports || []
         const matchingSports = availableSports.filter(s => selectedSports.includes(s))
         const sportsForIcon = selectedSports.length === 0 ? availableSports : matchingSports.length > 0 ? matchingSports : availableSports
-        marker.setIcon(createSportIcon(sportsForIcon, false, placeIdsWithEventsRef.current.has(court.id)))
+        marker.setIcon(getPlaceIcon(court, sportsForIcon, false, placeIdsWithEventsRef.current.has(court.id)))
       }
     })
 
@@ -158,7 +165,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
       const prevMarker = markerMapRef.current.get(prevSelectedIdRef.current)
       const prevCourt = courtMapRef.current.get(prevSelectedIdRef.current)
       if (prevMarker && prevCourt) {
-        prevMarker.setIcon(createSportIcon(getSportsForIcon(prevCourt), false, placeIdsWithEventsRef.current.has(prevSelectedIdRef.current)))
+        prevMarker.setIcon(getPlaceIcon(prevCourt, getSportsForIcon(prevCourt), false, placeIdsWithEventsRef.current.has(prevSelectedIdRef.current)))
       }
     }
 
@@ -167,7 +174,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
       const marker = markerMapRef.current.get(selectedCourt.id)
       const court = courtMapRef.current.get(selectedCourt.id)
       if (marker && court) {
-        marker.setIcon(createSportIcon(getSportsForIcon(court), true, placeIdsWithEventsRef.current.has(selectedCourt.id)))
+        marker.setIcon(getPlaceIcon(court, getSportsForIcon(court), true, placeIdsWithEventsRef.current.has(selectedCourt.id)))
       }
     }
 
@@ -186,7 +193,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
       const matchingSports = availableSports.filter(s => selectedSportsRef.current.includes(s))
       const sportsForIcon = selectedSportsRef.current.length === 0 ? availableSports : matchingSports.length > 0 ? matchingSports : availableSports
       const isSelected = prevSelectedIdRef.current === id
-      marker.setIcon(createSportIcon(sportsForIcon, isSelected, placeIdsWithEvents.has(id)))
+      marker.setIcon(getPlaceIcon(court, sportsForIcon, isSelected, placeIdsWithEvents.has(id)))
     })
   }, [placeIdsWithEvents])
 

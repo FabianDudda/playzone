@@ -43,7 +43,7 @@ export default function PlaceEventsSection({ placeId, userId }: PlaceEventsSecti
                 size="sm"
               />
             </div>
-            <ScheduleDisplay schedule={event.schedule} showNextOccurrence={false} />
+            <ScheduleDisplay schedule={event.schedule} />
             <Link
               href={`/events/${event.id}`}
               className="text-xs text-primary hover:underline self-start"

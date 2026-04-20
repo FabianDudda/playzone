@@ -11,7 +11,8 @@ import {
   Shield,
   ArrowLeft,
   MessageSquare,
-  QrCode
+  QrCode,
+  Building2,
 } from 'lucide-react'
 
 function AdminSidebar() {
@@ -41,6 +42,12 @@ function AdminSidebar() {
       href: '/admin/feedback',
       icon: MessageSquare,
       description: 'User feedback & bug reports'
+    },
+    {
+      label: 'Organizers',
+      href: '/admin/organizers',
+      icon: Building2,
+      description: 'Event organizers & venues'
     },
     {
       label: 'Areas',

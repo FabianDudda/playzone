@@ -1,5 +1,5 @@
 import { supabase } from './client'
-import { Profile, Place, Court, LegacyCourt, PlaceWithCourts, PlaceMarker, Match, MatchParticipant, SportType, MatchResult, LeaderboardEntry, ModerationStatus, PendingPlaceChange, PlaceChangeType, Event, EventWithDetails, EventBookmark, EventSchedule, UserFavorite, PlaceAttribute, CourtAttribute } from './types'
+import { Profile, Place, Court, LegacyCourt, PlaceWithCourts, PlaceMarker, Match, MatchParticipant, SportType, MatchResult, LeaderboardEntry, ModerationStatus, PendingPlaceChange, PlaceChangeType, Event, EventWithDetails, EventBookmark, EventSchedule, UserFavorite, PlaceAttribute, CourtAttribute, Organizer, TablesInsert, TablesUpdate } from './types'
 
 // Helper function to fetch all records with automatic pagination
 async function fetchAllRecords<T>(queryBuilder: any): Promise<T[]> {
@@ -73,6 +73,7 @@ function mapToEventWithDetails(event: any, isBookmarked = false): EventWithDetai
     image_url: event.image_url ?? null,
     creator_id: event.creator_id,
     status: event.status || 'active',
+    organizer_id: event.organizer_id ?? null,
     creator_name: event.profiles?.name || '',
     creator_avatar: event.profiles?.avatar || null,
     place_name: event.places?.name || '',
@@ -84,6 +85,12 @@ function mapToEventWithDetails(event: any, isBookmarked = false): EventWithDetai
     place_postcode: event.places?.postcode || null,
     place_district: event.places?.district || null,
     is_bookmarked: isBookmarked,
+    organizer_name: event.organizers?.name ?? null,
+    organizer_color: event.organizers?.color ?? null,
+    organizer_logo_url: event.organizers?.logo_url ?? null,
+    organizer_slug: event.organizers?.slug ?? null,
+    organizer_website: event.organizers?.website ?? null,
+    organizer_instagram: event.organizers?.instagram ?? null,
   }
 }
 
@@ -176,11 +183,10 @@ export const database = {
         const data = await fetchAllRecords<PlaceMarker>(
           supabase
             .from('places')
-            .select('id, name, latitude, longitude, sports, place_type')
+            .select('id, name, latitude, longitude, sports, place_type, organizer_id, organizers(name, color, logo_url, slug)')
             .eq('moderation_status', 'approved')
             .order('created_at', { ascending: false })
         )
-        // console.log(`📊 getAllPlacesLightweight returned ${data.length} places`)
         return data
       } catch (error) {
         console.error('Error fetching lightweight places:', error)
@@ -192,7 +198,7 @@ export const database = {
     getAllPlacesLightweightBatch: async (from: number, to: number): Promise<PlaceMarker[]> => {
       const { data, error } = await supabase
         .from('places')
-        .select('id, name, latitude, longitude, sports, place_type')
+        .select('id, name, latitude, longitude, sports, place_type, organizer_id, organizers(name, color, logo_url, slug)')
         .eq('moderation_status', 'approved')
         .order('created_at', { ascending: false })
         .range(from, to)
@@ -863,7 +869,8 @@ export const database = {
           .select(`
             *,
             profiles:creator_id ( name, avatar ),
-            places:place_id ( name, latitude, longitude, street, house_number, city, postcode, district )
+            places:place_id ( name, latitude, longitude, street, house_number, city, postcode, district ),
+            organizers:organizer_id ( name, color, logo_url, slug, website, instagram )
           `)
           .eq('status', 'active')
           .order('created_at', { ascending: false })
@@ -905,7 +912,8 @@ export const database = {
           .select(`
             *,
             profiles:creator_id ( name, avatar ),
-            places:place_id ( name, latitude, longitude, street, house_number, city, postcode, district )
+            places:place_id ( name, latitude, longitude, street, house_number, city, postcode, district ),
+            organizers:organizer_id ( name, color, logo_url, slug, website, instagram )
           `)
           .eq('id', eventId)
           .single()
@@ -940,7 +948,8 @@ export const database = {
           .select(`
             *,
             profiles:creator_id ( name, avatar ),
-            places:place_id ( name, latitude, longitude, street, house_number, city, postcode, district )
+            places:place_id ( name, latitude, longitude, street, house_number, city, postcode, district ),
+            organizers:organizer_id ( name, color, logo_url, slug, website, instagram )
           `)
           .eq('place_id', placeId)
           .eq('status', 'active')
@@ -1002,7 +1011,8 @@ export const database = {
           .select(`
             *,
             profiles:creator_id ( name, avatar ),
-            places:place_id ( name, latitude, longitude, street, house_number, city, postcode, district )
+            places:place_id ( name, latitude, longitude, street, house_number, city, postcode, district ),
+            organizers:organizer_id ( name, color, logo_url, slug, website, instagram )
           `)
           .eq('creator_id', userId)
           .order('created_at', { ascending: false })
@@ -1088,7 +1098,8 @@ export const database = {
           .select(`
             *,
             profiles:creator_id ( name, avatar ),
-            places:place_id ( name, latitude, longitude, street, house_number, city, postcode, district )
+            places:place_id ( name, latitude, longitude, street, house_number, city, postcode, district ),
+            organizers:organizer_id ( name, color, logo_url, slug, website, instagram )
           `)
           .in('id', eventIds)
 
@@ -2057,6 +2068,54 @@ export const database = {
       }
 
       return { storagePath: image.storage_path }
+    },
+  },
+
+  organizers: {
+    getAll: async (): Promise<Organizer[]> => {
+      const { data, error } = await supabase
+        .from('organizers')
+        .select('*')
+        .order('name', { ascending: true })
+      if (error) { console.error('Error fetching organizers:', error); return [] }
+      return data || []
+    },
+
+    getById: async (id: string): Promise<Organizer | null> => {
+      const { data, error } = await supabase
+        .from('organizers')
+        .select('*')
+        .eq('id', id)
+        .single()
+      if (error) return null
+      return data
+    },
+
+    create: async (organizer: TablesInsert<'organizers'>): Promise<{ data: Organizer | null; error: any }> => {
+      const { data, error } = await supabase
+        .from('organizers')
+        .insert(organizer)
+        .select()
+        .single()
+      return { data, error }
+    },
+
+    update: async (id: string, updates: TablesUpdate<'organizers'>): Promise<{ data: Organizer | null; error: any }> => {
+      const { data, error } = await supabase
+        .from('organizers')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single()
+      return { data, error }
+    },
+
+    delete: async (id: string): Promise<{ error: any }> => {
+      const { error } = await supabase
+        .from('organizers')
+        .delete()
+        .eq('id', id)
+      return { error }
     },
   },
 }

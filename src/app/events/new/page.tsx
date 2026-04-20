@@ -4,7 +4,7 @@ import { Suspense, useState, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, ImagePlus, X } from 'lucide-react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/components/providers/auth-provider'
 import { database } from '@/lib/supabase/database'
 import { uploadCourtImage } from '@/lib/supabase/storage'
@@ -55,6 +55,13 @@ function NewEventContent() {
 
   const [errors, setErrors] = useState<Partial<Record<keyof NewEventForm, string>>>({})
 
+  const { data: selectedPlace } = useQuery({
+    queryKey: ['place-for-event', form.placeId],
+    queryFn: () => database.community.getPlaceForEdit(form.placeId),
+    enabled: !!form.placeId,
+    staleTime: 60_000,
+  })
+
   const mutation = useMutation({
     mutationFn: async () => {
       const errs: typeof errors = {}
@@ -83,6 +90,7 @@ function NewEventContent() {
         image_url: form.imageUrl,
         creator_id: user!.id,
         status: 'active',
+        organizer_id: (selectedPlace as any)?.organizer_id ?? null,
       })
 
       if (error) throw new Error('Fehler beim Erstellen des Events')
@@ -217,7 +225,7 @@ function NewEventContent() {
               className="w-full h-32 border-2 border-dashed border-muted-foreground/30 rounded-lg flex flex-col items-center justify-center gap-2 hover:border-primary/50 transition-colors"
             >
               <ImagePlus className="h-6 w-6 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">Bild hochladen</span>
+              <span className="text-sm text-muted-foreground">Bild hochladen (Format 16:9)</span>
             </button>
           )}
           <input

@@ -74,6 +74,8 @@ function EditPlaceContent({ params }: EditPlacePageProps) {
         contact_email: formData.contactEmail || null,
         contact_website: formData.contactWebsite || null,
         opening_hours: formData.openingHours || null,
+        // Organizer (admin only)
+        organizer_id: isAdmin ? (formData.organizerId ?? null) : undefined,
       }
 
       const courts = formData.courts
@@ -297,6 +299,7 @@ function EditPlaceContent({ params }: EditPlacePageProps) {
         }
         submitButtonText={isAdmin ? "Änderungen speichern" : "Zur Überprüfung einreichen"}
         onDeleteImage={isAdmin ? (image) => deleteImageMutation.mutate(image) : undefined}
+        isAdmin={isAdmin}
       />
     </div>
   )

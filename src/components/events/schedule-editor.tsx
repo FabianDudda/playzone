@@ -110,58 +110,49 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
       {mode === 'dates' && (
         <div className="space-y-3">
           {dates.map((slot, i) => (
-            <div key={i} className="space-y-2">
-              <div className="flex gap-2 items-end">
-                <div className="flex-1">
-                  {i === 0 && <Label className="text-xs mb-1 block">Datum</Label>}
-                  <div className="relative">
-                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-                    <Input
-                      type="date"
-                      value={slot.date}
-                      onChange={e => updateDate(i, 'date', e.target.value)}
-                      className="pl-9"
-                    />
-                  </div>
-                </div>
-                {dates.length > 1 && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => removeDate(i)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
-              <div className="flex gap-3 items-center">
-                <div>
-                  {i === 0 && <Label className="text-xs mb-1 block">Startzeit</Label>}
-                  <div className="relative">
-                    <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-                    <Input
-                      type="time"
-                      value={slot.start_time}
-                      onChange={e => updateDate(i, 'start_time', e.target.value)}
-                      className="w-32 pl-9"
-                    />
-                  </div>
-                </div>
-                <span className="text-sm text-muted-foreground mt-5">–</span>
-                <div>
-                  {i === 0 && <Label className="text-xs mb-1 block">Endzeit</Label>}
-                  <div className="relative">
-                    <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-                    <Input
-                      type="time"
-                      value={slot.end_time}
-                      onChange={e => updateDate(i, 'end_time', e.target.value)}
-                      className="w-32 pl-9"
-                    />
-                  </div>
+            <div key={i} className="flex gap-2 items-end">
+              <div className="flex-1 min-w-0 max-w-[132px]">
+                {i === 0 && <Label className="text-xs mb-1 block">Datum</Label>}
+                <div className="relative">
+                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                  <Input
+                    type="date"
+                    value={slot.date}
+                    onChange={e => updateDate(i, 'date', e.target.value)}
+                    className="pl-9"
+                  />
                 </div>
               </div>
+              <div>
+                {i === 0 && <Label className="text-xs mb-1 block">Startzeit</Label>}
+                <div className="relative">
+                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                  <Input
+                    type="time"
+                    value={slot.start_time}
+                    onChange={e => updateDate(i, 'start_time', e.target.value)}
+                    className="w-[90px] pl-9"
+                  />
+                </div>
+              </div>
+           
+              <div>
+                {i === 0 && <Label className="text-xs mb-1 block">Endzeit</Label>}
+                <div className="relative">
+                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                  <Input
+                    type="time"
+                    value={slot.end_time}
+                    onChange={e => updateDate(i, 'end_time', e.target.value)}
+                    className="w-[90px] pl-9"
+                  />
+                </div>
+              </div>
+              {dates.length > 1 && (
+                <Button type="button" variant="ghost" size="icon" onClick={() => removeDate(i)}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              )}
             </div>
           ))}
           {mode === 'dates' && (
@@ -176,50 +167,66 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
       {/* Recurring */}
       {mode === 'recurring' && (
         <div className="space-y-3">
-          {WEEKDAYS.map(({ key, label }) => {
-            const slot = getDaySlot(key)
-            return (
-              <div key={key} className="flex items-center gap-3">
-                <Checkbox
-                  id={`day-${key}`}
-                  checked={isDayChecked(key)}
-                  onCheckedChange={(checked) => toggleDay(key, !!checked)}
-                />
-                <label
-                  htmlFor={`day-${key}`}
-                  className="w-8 text-sm font-medium cursor-pointer select-none"
+          {/* Day picker bar */}
+          <div className="flex gap-1.5">
+            {WEEKDAYS.map(({ key, label }) => {
+              const active = isDayChecked(key)
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => toggleDay(key, !active)}
+                  className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    active
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                  }`}
                 >
                   {label}
-                </label>
-                {slot && (
-                  <>
-                    <div className="relative">
-                      <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-                      <Input
-                        type="time"
-                        value={slot.start_time}
-                        onChange={e => updateDayTime(key, 'start_time', e.target.value)}
-                        className="w-32 pl-9"
-                      />
-                    </div>
-                    <span className="text-sm text-muted-foreground">–</span>
-                    <div className="relative">
-                      <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-                      <Input
-                        type="time"
-                        value={slot.end_time}
-                        onChange={e => updateDayTime(key, 'end_time', e.target.value)}
-                        className="w-32 pl-9"
-                      />
-                    </div>
-                  </>
-                )}
-              </div>
-            )
-          })}
+                </button>
+              )
+            })}
+          </div>
+
+          {/* Time rows for selected days */}
           {slots.length === 0 && (
             <p className="text-xs text-muted-foreground">Wähle mindestens einen Wochentag aus.</p>
           )}
+          {slots.length > 0 && (
+            <div className="flex gap-2 items-center">
+              <span className="w-7 flex-shrink-0" />
+              <Label className="text-xs w-24 block">Startzeit</Label>
+              <span className="text-xs invisible">–</span>
+              <Label className="text-xs w-24 block">Endzeit</Label>
+            </div>
+          )}
+          {WEEKDAYS.filter(({ key }) => isDayChecked(key)).map(({ key, label }) => {
+            const slot = getDaySlot(key)!
+            return (
+              <div key={key} className="flex gap-2 items-center">
+                <span className="w-7 text-sm font-medium flex-shrink-0">{label}</span>
+                <div className="relative">
+                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                  <Input
+                    type="time"
+                    value={slot.start_time}
+                    onChange={e => updateDayTime(key, 'start_time', e.target.value)}
+                    className="w-24 pl-9"
+                  />
+                </div>
+    
+                <div className="relative">
+                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                  <Input
+                    type="time"
+                    value={slot.end_time}
+                    onChange={e => updateDayTime(key, 'end_time', e.target.value)}
+                    className="w-24 pl-9"
+                  />
+                </div>
+              </div>
+            )
+          })}
         </div>
       )}
     </div>

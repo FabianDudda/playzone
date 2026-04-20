@@ -16,7 +16,7 @@ import FilterBottomSheetVaul from './filter-bottom-sheet-vaul'
 import PlaceBottomSheetVaul from './place-bottom-sheet-v2'
 import FavoritesBottomSheetVaul from './favorites-bottom-sheet-vaul'
 import { sportNames, getSportBadgeClasses, sportIcons, PlaceType } from '@/lib/utils/sport-utils'
-import { createSportIcon, createUserLocationIcon, createSelectedLocationIcon } from '@/lib/utils/sport-styles'
+import { createSportIcon, createUserLocationIcon, createSelectedLocationIcon, createOrganizerIcon } from '@/lib/utils/sport-styles'
 import { MAP_LAYERS, DEFAULT_LAYER_ID, createTileLayer, getSavedLayerPreference, saveLayerPreference } from '@/lib/utils/map-layers'
 import { getDistanceText } from '@/lib/utils/distance'
 import L from 'leaflet'
@@ -733,11 +733,20 @@ export default function LeafletCourtMap({
               const matchingSports = allSports.filter(s => selectedSports.includes(s))
               const sportsForIcon = selectedSports.length === 0 ? allSports : matchingSports.length > 0 ? matchingSports : allSports
 
+              const isSelected = selectedCourt?.id === court.id
+              const icon = court.organizer_id
+                ? createOrganizerIcon(
+                    (court as any).organizer?.color || '#6366F1',
+                    (court as any).organizer?.logo_url,
+                    isSelected
+                  )
+                : createSportIcon(sportsForIcon, isSelected, placeIdsWithEvents.has(court.id))
+
               return (
               <Marker
                 key={court.id}
                 position={[court.latitude, court.longitude]}
-                icon={createSportIcon(sportsForIcon, selectedCourt?.id === court.id, placeIdsWithEvents.has(court.id))}
+                icon={icon}
                 eventHandlers={{
                   click: (e) => {
                     // console.log('📍 Regular marker clicked:', {
@@ -760,15 +769,17 @@ export default function LeafletCourtMap({
             <Marker
               key={`selected-overlay-${selectedCourt.id}`}
               position={[selectedCourt.latitude, selectedCourt.longitude]}
-              icon={createSportIcon(
-                selectedSports.length === 0
-                  ? (selectedCourt.sports || [])
-                  : (selectedCourt.sports || []).filter(s => selectedSports.includes(s)).length > 0
-                    ? (selectedCourt.sports || []).filter(s => selectedSports.includes(s))
-                    : (selectedCourt.sports || []),
-                true,
-                placeIdsWithEvents.has(selectedCourt.id)
-              )}
+              icon={selectedCourt.organizer_id
+                ? createOrganizerIcon((selectedCourt as any).organizer?.color || '#6366F1', (selectedCourt as any).organizer?.logo_url, true)
+                : createSportIcon(
+                    selectedSports.length === 0
+                      ? (selectedCourt.sports || [])
+                      : (selectedCourt.sports || []).filter(s => selectedSports.includes(s)).length > 0
+                        ? (selectedCourt.sports || []).filter(s => selectedSports.includes(s))
+                        : (selectedCourt.sports || []),
+                    true,
+                    placeIdsWithEvents.has(selectedCourt.id)
+                  )}
               zIndexOffset={2000}
               eventHandlers={{
                 click: (e) => {

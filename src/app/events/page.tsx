@@ -10,7 +10,7 @@ import { EventWithDetails, EventSchedule, RecurringSlot } from '@/lib/supabase/t
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import EventCard from '@/components/events/event-card'
-import EventFiltersComponent, { EventFilters, applyEventFilters, deriveCities } from '@/components/events/event-filters'
+import EventFiltersComponent, { EventFilters, applyEventFilters, deriveCities, deriveSports } from '@/components/events/event-filters'
 
 const DAY_ORDER: RecurringSlot['day'][] = [
   'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
@@ -57,6 +57,7 @@ export default function EventsPage() {
     queryFn: () => database.events.getAllEvents(user?.id),
   })
 
+  const sports = deriveSports(events)
   const cities = deriveCities(events)
   const filtered = applyEventFilters(events, filters).sort(
     (a, b) => getNextOccurrence(a).getTime() - getNextOccurrence(b).getTime()
@@ -68,12 +69,12 @@ export default function EventsPage() {
         <div>
           <h1 className="text-3xl font-bold">Events</h1>
           <p className="text-muted-foreground text-sm mt-0.5">
-            Trainingsgruppen &amp; Spielrunden in deiner Nähe
+            Kostenlose Angebote in deiner Nähe
           </p>
         </div>
         {user && (
           <Link href="/events/new">
-            <Button size="sm">
+            <Button size="sm" className="pr-4">
               <Plus className="h-4 w-4 mr-1" />
               Erstellen
             </Button>
@@ -84,6 +85,7 @@ export default function EventsPage() {
       <EventFiltersComponent
         filters={filters}
         onFiltersChange={setFilters}
+        sports={sports}
         cities={cities}
         className="mb-5"
       />
@@ -121,7 +123,7 @@ export default function EventsPage() {
       ) : (
         <div className="space-y-4">
           {filtered.map(event => (
-            <EventCard key={event.id} event={event} currentUserId={user?.id} />
+            <EventCard key={event.id} event={event} />
           ))}
         </div>
       )}

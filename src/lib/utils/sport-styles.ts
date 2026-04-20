@@ -452,6 +452,62 @@ export function createSportIcon(sports: string[], isSelected = false, hasEvents 
   return newIcon
 }
 
+// Create a distinct diamond/star marker for organizer places
+export function createOrganizerIcon(color: string, logoUrl?: string | null, isSelected = false): L.DivIcon {
+  const cacheKey = `org-${color}-${logoUrl ?? ''}-${isSelected}`
+  const cached = iconCache.get(cacheKey)
+  if (cached) return cached
+
+  const pinSize = 36
+  const containerWidth = pinSize + 8
+  const containerHeight = Math.round(pinSize * 1.3) + 8
+
+  const bgColor = isSelected ? 'hsl(var(--primary))' : color
+  const borderColor = isSelected ? 'hsl(var(--primary-foreground))' : '#FFFFFF'
+
+  const iconContent = logoUrl
+    ? `<img src="${logoUrl}" alt="" style="width:${Math.round(pinSize * 0.55)}px;height:${Math.round(pinSize * 0.55)}px;object-fit:contain;border-radius:2px;" />`
+    : `<span style="font-size:${Math.round(pinSize * 0.4)}px;line-height:1;">🏢</span>`
+
+  const html = `
+    <div style="position:relative;width:${containerWidth}px;height:${containerHeight}px;">
+      <!-- Diamond shape: square rotated 45° -->
+      <div style="
+        position:absolute;
+        top:0;left:4px;
+        width:${pinSize}px;height:${pinSize}px;
+        background-color:${bgColor};
+        border:2px solid ${borderColor};
+        border-radius:4px;
+        transform:rotate(45deg);
+        transform-origin:center center;
+        box-shadow:0 3px 8px rgba(0,0,0,0.3);
+        z-index:10;
+      "></div>
+      <!-- Icon centered on the diamond -->
+      <div style="
+        position:absolute;
+        top:${Math.round(pinSize * 0.23)}px;
+        left:${Math.round(containerWidth / 2 - pinSize * 0.275)}px;
+        width:${Math.round(pinSize * 0.55)}px;
+        height:${Math.round(pinSize * 0.55)}px;
+        display:flex;align-items:center;justify-content:center;
+        z-index:11;
+      ">${iconContent}</div>
+    </div>
+  `
+
+  const icon = L.divIcon({
+    className: 'custom-organizer-marker',
+    html,
+    iconSize: [containerWidth, containerHeight],
+    iconAnchor: [containerWidth / 2, containerHeight - 4],
+    popupAnchor: [0, -(containerHeight - 8)],
+  })
+  iconCache.set(cacheKey, icon)
+  return icon
+}
+
 // Create icon for user location
 export function createUserLocationIcon(): L.DivIcon {
   return L.divIcon({

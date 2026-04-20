@@ -1,6 +1,5 @@
 'use client'
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { SportType, EventWithDetails } from '@/lib/supabase/types'
 import { sportNames, sportIcons } from '@/lib/utils/sport-utils'
 
@@ -12,56 +11,76 @@ export interface EventFilters {
 interface EventFiltersProps {
   filters: EventFilters
   onFiltersChange: (filters: EventFilters) => void
+  sports: SportType[]
   cities: string[]
   className?: string
 }
 
-const ALLOWED_SPORTS: SportType[] = [
-  'fußball', 'basketball', 'tischtennis', 'tennis', 'beachvolleyball',
-  'volleyball', 'skatepark', 'boule', 'badminton', 'calisthenics',
-  'laufen', 'klettern', 'padel', 'hockey',
-]
+function Chip({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean
+  onClick: () => void
+  children: React.ReactNode
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex-shrink-0 inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-medium border transition-colors ${
+        active
+          ? 'bg-primary text-primary-foreground border-primary'
+          : 'bg-background text-foreground border-border hover:bg-muted'
+      }`}
+    >
+      {children}
+    </button>
+  )
+}
 
 export default function EventFiltersComponent({
   filters,
   onFiltersChange,
+  sports,
   cities,
   className = '',
 }: EventFiltersProps) {
   return (
-    <div className={`flex gap-2 flex-wrap ${className}`}>
-      <Select
-        value={filters.sport}
-        onValueChange={(v) => onFiltersChange({ ...filters, sport: v as SportType | 'all' })}
-      >
-        <SelectTrigger className="w-44">
-          <SelectValue placeholder="Alle Sportarten" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">Alle Sportarten</SelectItem>
-          {ALLOWED_SPORTS.map(sport => (
-            <SelectItem key={sport} value={sport}>
-              {sportIcons[sport]} {sportNames[sport]}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+    <div className={`space-y-2 ${className}`}>
+      {/* Sport chips */}
+      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+        <Chip active={filters.sport === 'all'} onClick={() => onFiltersChange({ ...filters, sport: 'all' })}>
+          Alle
+        </Chip>
+        {sports.map(sport => (
+          <Chip
+            key={sport}
+            active={filters.sport === sport}
+            onClick={() => onFiltersChange({ ...filters, sport })}
+          >
+            {sportIcons[sport]} {sportNames[sport]}
+          </Chip>
+        ))}
+      </div>
 
+      {/* City chips */}
       {cities.length > 0 && (
-        <Select
-          value={filters.city}
-          onValueChange={(v) => onFiltersChange({ ...filters, city: v })}
-        >
-          <SelectTrigger className="w-44">
-            <SelectValue placeholder="Alle Städte" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Alle Städte</SelectItem>
-            {cities.map(city => (
-              <SelectItem key={city} value={city}>{city}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+          <Chip active={filters.city === 'all'} onClick={() => onFiltersChange({ ...filters, city: 'all' })}>
+            Alle Städte
+          </Chip>
+          {cities.map(city => (
+            <Chip
+              key={city}
+              active={filters.city === city}
+              onClick={() => onFiltersChange({ ...filters, city })}
+            >
+              {city}
+            </Chip>
+          ))}
+        </div>
       )}
     </div>
   )
@@ -73,6 +92,14 @@ export function applyEventFilters(events: EventWithDetails[], filters: EventFilt
     if (filters.city !== 'all' && event.place_city !== filters.city) return false
     return true
   })
+}
+
+export function deriveSports(events: EventWithDetails[]): SportType[] {
+  const seen = new Set<SportType>()
+  return events
+    .map(e => e.sport)
+    .filter((s): s is SportType => !!s && !seen.has(s) && !!seen.add(s))
+    .sort((a, b) => (sportNames[a] ?? a).localeCompare(sportNames[b] ?? b, 'de'))
 }
 
 export function deriveCities(events: EventWithDetails[]): string[] {

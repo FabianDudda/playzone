@@ -66,6 +66,53 @@ export type Database = {
           },
         ]
       }
+      organizers: {
+        Row: {
+          id: string
+          name: string
+          slug: string
+          description: string | null
+          logo_url: string | null
+          color: string | null
+          website: string | null
+          instagram: string | null
+          created_by: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          slug: string
+          description?: string | null
+          logo_url?: string | null
+          color?: string | null
+          website?: string | null
+          instagram?: string | null
+          created_by?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          slug?: string
+          description?: string | null
+          logo_url?: string | null
+          color?: string | null
+          website?: string | null
+          instagram?: string | null
+          created_by?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organizers_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       courts: {
         Row: {
           created_at: string | null
@@ -122,6 +169,7 @@ export type Database = {
           image_url: string | null
           creator_id: string
           status: string
+          organizer_id: string | null
         }
         Insert: {
           created_at?: string
@@ -137,6 +185,7 @@ export type Database = {
           image_url?: string | null
           creator_id: string
           status?: string
+          organizer_id?: string | null
         }
         Update: {
           created_at?: string
@@ -152,6 +201,7 @@ export type Database = {
           image_url?: string | null
           creator_id?: string
           status?: string
+          organizer_id?: string | null
         }
         Relationships: [
           {
@@ -166,6 +216,13 @@ export type Database = {
             columns: ["creator_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "events_organizer_id_fkey"
+            columns: ["organizer_id"]
+            isOneToOne: false
+            referencedRelation: "organizers"
             referencedColumns: ["id"]
           },
         ]
@@ -452,6 +509,7 @@ export type Database = {
           state: string | null
           street: string | null
           updated_at: string | null
+          organizer_id: string | null
         }
         Insert: {
           added_by_user?: string | null
@@ -487,6 +545,7 @@ export type Database = {
           state?: string | null
           street?: string | null
           updated_at?: string | null
+          organizer_id?: string | null
         }
         Update: {
           added_by_user?: string
@@ -522,6 +581,7 @@ export type Database = {
           state?: string | null
           street?: string | null
           updated_at?: string | null
+          organizer_id?: string | null
         }
         Relationships: [
           {
@@ -529,6 +589,13 @@ export type Database = {
             columns: ["added_by_user"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "places_organizer_id_fkey"
+            columns: ["organizer_id"]
+            isOneToOne: false
+            referencedRelation: "organizers"
             referencedColumns: ["id"]
           },
           {
@@ -856,6 +923,7 @@ export type PendingPlaceChange = Tables<'pending_place_changes'>
 export type EventBookmark = Tables<'event_bookmarks'>
 export type PlaceAttribute = Tables<'place_attributes'>
 export type CourtAttribute = Tables<'court_attributes'>
+export type Organizer = Tables<'organizers'>
 
 // Enum types
 export type SportType = Enums<'sport_type'>
@@ -905,6 +973,7 @@ export interface Event {
   image_url: string | null
   creator_id: string
   status: 'active' | 'cancelled' | 'archived'
+  organizer_id: string | null
 }
 
 // Composite types
@@ -917,6 +986,8 @@ export interface PlaceMarker {
   longitude: number
   sports: string[] | null
   place_type?: string | null
+  organizer_id?: string | null
+  organizer?: Pick<Organizer, 'name' | 'color' | 'logo_url' | 'slug'> | null
 }
 
 export interface PlaceWithCourts extends Place {
@@ -985,6 +1056,12 @@ export interface EventWithDetails extends Event {
   place_postcode: string | null
   place_district: string | null
   is_bookmarked: boolean
+  organizer_name: string | null
+  organizer_color: string | null
+  organizer_logo_url: string | null
+  organizer_slug: string | null
+  organizer_website: string | null
+  organizer_instagram: string | null
 }
 
 export interface Area {

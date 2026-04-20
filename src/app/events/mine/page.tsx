@@ -126,7 +126,7 @@ export default function MyEventsPage() {
       ) : (
         <div className="space-y-4">
           {events.map(event => (
-            <EventCard key={event.id} event={event} currentUserId={user.id} />
+            <EventCard key={event.id} event={event} />
           ))}
         </div>
       )}

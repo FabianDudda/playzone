@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/hooks/use-toast'
-import { SportType, PlaceWithCourts, PlaceImage, OpeningHours } from '@/lib/supabase/types'
+import { SportType, PlaceWithCourts, PlaceImage, OpeningHours, Organizer } from '@/lib/supabase/types'
 import { PlaceType, placeTypeLabels, placeTypeIcons } from '@/lib/utils/sport-utils'
 import { ATTRIBUTE_DEFINITIONS, getRelevantAttributes, rowsToAttributeMap } from '@/lib/attributes/definitions'
 import { reverseGeocode, AddressComponents } from '@/lib/geocoding'
@@ -89,6 +89,7 @@ export interface PlaceFormData {
   contactWebsite: string
   openingHours: OpeningHours | null
   placeAttributes: Record<string, boolean>
+  organizerId: string | null
 }
 
 interface PlaceFormProps {
@@ -101,6 +102,7 @@ interface PlaceFormProps {
   title: string
   description: string
   onDeleteImage?: (image: PlaceImage) => void
+  isAdmin?: boolean
 }
 
 export default function PlaceForm({
@@ -111,6 +113,7 @@ export default function PlaceForm({
   isLoading,
   submitButtonText,
   onDeleteImage,
+  isAdmin = false,
 }: PlaceFormProps) {
   const { toast } = useToast()
   const { user } = useAuth()
@@ -136,6 +139,13 @@ export default function PlaceForm({
   const [name, setName] = useState(initialData?.name || '')
   const [description, setDescription] = useState(initialData?.description || '')
   const [placeType, setPlaceType] = useState<PlaceType>((initialData?.place_type as PlaceType) || 'öffentlich')
+  const [organizerId, setOrganizerId] = useState<string | null>((initialData as any)?.organizer_id ?? null)
+
+  const { data: organizers = [] } = useQuery<Organizer[]>({
+    queryKey: ['organizers'],
+    queryFn: () => database.organizers.getAll(),
+    enabled: isAdmin,
+  })
 
   const [selectedSports, setSelectedSports] = useState<SportType[]>(() => {
     if (initialData?.courts?.length) {
@@ -453,6 +463,7 @@ export default function PlaceForm({
       placeType,
       selectedSports,
       customSports,
+      organizerId,
       courts,
       location,
       address: Object.values(address).some(v => v) ? address : {},
@@ -543,6 +554,37 @@ export default function PlaceForm({
           ))}
         </div>
       </div>
+
+      {/* 3b. Organizer (admin only) */}
+      {isAdmin && (
+        <div className="space-y-2">
+          <Label>Organizer <span className="text-muted-foreground text-xs">(Admin)</span></Label>
+          <Select value={organizerId ?? 'none'} onValueChange={v => setOrganizerId(v === 'none' ? null : v)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Kein Organizer" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Kein Organizer</SelectItem>
+              {organizers.map(org => (
+                <SelectItem key={org.id} value={org.id}>
+                  <span className="flex items-center gap-2">
+                    <span
+                      className="inline-block h-3 w-3 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: org.color || '#6366F1' }}
+                    />
+                    {org.name}
+                  </span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {organizerId && (
+            <p className="text-xs text-muted-foreground">
+              This place will appear on the map with the organizer's color and icon.
+            </p>
+          )}
+        </div>
+      )}
 
       {/* 4. Sports */}
       <div className="space-y-2">
