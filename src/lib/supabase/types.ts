@@ -113,6 +113,38 @@ export type Database = {
           },
         ]
       }
+      organizer_images: {
+        Row: {
+          id: string
+          organizer_id: string
+          url: string
+          storage_path: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          organizer_id: string
+          url: string
+          storage_path?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          organizer_id?: string
+          url?: string
+          storage_path?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organizer_images_organizer_id_fkey"
+            columns: ["organizer_id"]
+            isOneToOne: false
+            referencedRelation: "organizers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       courts: {
         Row: {
           created_at: string | null
@@ -161,15 +193,26 @@ export type Database = {
           id: string
           title: string
           description: string | null
-          place_id: string
-          sport: Database["public"]["Enums"]["sport_type"]
+          place_id: string | null
+          sports: Database["public"]["Enums"]["sport_type"][]
           event_type: string
           schedule: Json
           contact: Json
           image_url: string | null
-          creator_id: string
+          creator_id: string | null
           status: string
           organizer_id: string | null
+          organizer_ids: string[]
+          moderation_status: 'pending' | 'approved' | 'rejected'
+          moderated_by: string | null
+          moderated_at: string | null
+          rejection_reason: string | null
+          is_guest_submission: boolean
+          guest_ip: string | null
+          inline_location: Json | null
+          location_type: string | null
+          age_restriction: Json | null
+          gender_restriction: string | null
         }
         Insert: {
           created_at?: string
@@ -177,15 +220,26 @@ export type Database = {
           id?: string
           title: string
           description?: string | null
-          place_id: string
-          sport: Database["public"]["Enums"]["sport_type"]
+          place_id?: string | null
+          sports: Database["public"]["Enums"]["sport_type"][]
           event_type?: string
           schedule: Json
           contact?: Json
           image_url?: string | null
-          creator_id: string
+          creator_id?: string | null
           status?: string
           organizer_id?: string | null
+          organizer_ids?: string[]
+          moderation_status?: 'pending' | 'approved' | 'rejected'
+          moderated_by?: string | null
+          moderated_at?: string | null
+          rejection_reason?: string | null
+          is_guest_submission?: boolean
+          guest_ip?: string | null
+          inline_location?: Json | null
+          location_type?: string | null
+          age_restriction?: Json | null
+          gender_restriction?: string | null
         }
         Update: {
           created_at?: string
@@ -193,15 +247,26 @@ export type Database = {
           id?: string
           title?: string
           description?: string | null
-          place_id?: string
-          sport?: Database["public"]["Enums"]["sport_type"]
+          place_id?: string | null
+          sports?: Database["public"]["Enums"]["sport_type"][]
           event_type?: string
           schedule?: Json
           contact?: Json
           image_url?: string | null
-          creator_id?: string
+          creator_id?: string | null
           status?: string
           organizer_id?: string | null
+          organizer_ids?: string[]
+          moderation_status?: 'pending' | 'approved' | 'rejected'
+          moderated_by?: string | null
+          moderated_at?: string | null
+          rejection_reason?: string | null
+          is_guest_submission?: boolean
+          guest_ip?: string | null
+          inline_location?: Json | null
+          location_type?: string | null
+          age_restriction?: Json | null
+          gender_restriction?: string | null
         }
         Relationships: [
           {
@@ -510,6 +575,7 @@ export type Database = {
           street: string | null
           updated_at: string | null
           organizer_id: string | null
+          is_event_only: boolean
         }
         Insert: {
           added_by_user?: string | null
@@ -546,6 +612,7 @@ export type Database = {
           street?: string | null
           updated_at?: string | null
           organizer_id?: string | null
+          is_event_only?: boolean
         }
         Update: {
           added_by_user?: string
@@ -582,6 +649,7 @@ export type Database = {
           street?: string | null
           updated_at?: string | null
           organizer_id?: string | null
+          is_event_only?: boolean
         }
         Relationships: [
           {
@@ -959,6 +1027,28 @@ export interface EventContact {
   website?: string
 }
 
+export type LocationType = 'indoor' | 'outdoor' | 'both'
+export type GenderRestriction = 'all' | 'male' | 'female'
+export interface AgeRestriction {
+  type: 'all' | 'min' | 'range'
+  min?: number
+  max?: number
+}
+
+export interface InlineLocation {
+  name: string
+  latitude: number
+  longitude: number
+  street?: string | null
+  house_number?: string | null
+  postcode?: string | null
+  city?: string | null
+  district?: string | null
+  county?: string | null
+  state?: string | null
+  country?: string | null
+}
+
 export interface Event {
   id: string
   created_at: string
@@ -966,14 +1056,25 @@ export interface Event {
   title: string
   description: string | null
   event_type: EventType
-  place_id: string
-  sport: SportType
+  place_id: string | null
+  sports: SportType[]
   schedule: EventSchedule
   contact: EventContact
   image_url: string | null
-  creator_id: string
+  creator_id: string | null
   status: 'active' | 'cancelled' | 'archived'
   organizer_id: string | null
+  organizer_ids?: string[]
+  inline_location?: InlineLocation | null
+  location_type?: LocationType | null
+  age_restriction?: AgeRestriction | null
+  gender_restriction?: GenderRestriction | null
+  is_guest_submission?: boolean
+  guest_ip?: string | null
+  moderation_status?: 'pending' | 'approved' | 'rejected'
+  moderated_by?: string | null
+  moderated_at?: string | null
+  rejection_reason?: string | null
 }
 
 // Composite types
@@ -988,6 +1089,7 @@ export interface PlaceMarker {
   place_type?: string | null
   organizer_id?: string | null
   organizer?: Pick<Organizer, 'name' | 'color' | 'logo_url' | 'slug'> | null
+  is_event_only?: boolean
 }
 
 export interface PlaceWithCourts extends Place {
@@ -1044,6 +1146,21 @@ export interface Feedback {
   email: string | null
 }
 
+export interface OrganizerSummary {
+  id: string
+  name: string
+  color: string | null
+  logo_url: string | null
+}
+
+export interface OrganizerImage {
+  id: string
+  organizer_id: string
+  url: string
+  storage_path: string | null
+  created_at: string
+}
+
 export interface EventWithDetails extends Event {
   creator_name: string
   creator_avatar: string | null
@@ -1055,13 +1172,26 @@ export interface EventWithDetails extends Event {
   place_city: string | null
   place_postcode: string | null
   place_district: string | null
+  inline_location: InlineLocation | null
+  location_type: LocationType | null
+  age_restriction: AgeRestriction | null
+  gender_restriction: GenderRestriction | null
   is_bookmarked: boolean
+  organizer_ids: string[]
   organizer_name: string | null
   organizer_color: string | null
   organizer_logo_url: string | null
   organizer_slug: string | null
   organizer_website: string | null
   organizer_instagram: string | null
+  place_is_event_only: boolean
+  creator_email: string | null
+  event_organizers: OrganizerSummary[]
+  // Moderation fields guaranteed to be present when reading from DB
+  moderation_status: 'pending' | 'approved' | 'rejected'
+  moderated_by: string | null
+  moderated_at: string | null
+  rejection_reason: string | null
 }
 
 export interface Area {

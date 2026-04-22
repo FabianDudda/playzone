@@ -5,10 +5,9 @@ import dynamic from 'next/dynamic'
 import { Button } from '@/components/ui/button'
 import { MapPin, X } from 'lucide-react'
 import { PlaceWithCourts, SportType } from '@/lib/supabase/types'
-import { sportNames, sportIcons } from '@/lib/utils/sport-utils'
+import { sportNames, sportIcons, getSportBadgeClasses } from '@/lib/utils/sport-utils'
 import { useQuery } from '@tanstack/react-query'
 import { database } from '@/lib/supabase/database'
-import { getSportBadgeClasses } from '@/lib/utils/sport-utils'
 
 const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map'), {
   ssr: false,
@@ -25,8 +24,8 @@ const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map
 interface PlaceMapSelectorProps {
   selectedPlaceId: string
   onPlaceSelect: (placeId: string, place: PlaceWithCourts) => void
-  selectedSport?: SportType | ''
-  onSportSelect?: (sport: SportType) => void
+  selectedSports?: SportType[]
+  onSportsChange?: (sports: SportType[]) => void
   preSelectedPlaceId?: string
   className?: string
   height?: string
@@ -35,8 +34,8 @@ interface PlaceMapSelectorProps {
 export default function PlaceMapSelector({
   selectedPlaceId,
   onPlaceSelect,
-  selectedSport,
-  onSportSelect,
+  selectedSports = [],
+  onSportsChange,
   preSelectedPlaceId,
   className = "",
   height = "300px"
@@ -59,12 +58,12 @@ export default function PlaceMapSelector({
     }
   }, [places, selectedPlaceId, preSelectedPlaceId])
 
-  // Auto-select sport when place has exactly one sport type
+  // Auto-select all sports when place has exactly one sport type
   useEffect(() => {
-    if (!selectedPlace || !onSportSelect) return
+    if (!selectedPlace || !onSportsChange) return
     const sports = [...new Set((selectedPlace.courts || []).map(c => c.sport))] as SportType[]
     if (sports.length === 1) {
-      onSportSelect(sports[0])
+      onSportsChange(sports)
     }
   }, [selectedPlace]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -77,6 +76,15 @@ export default function PlaceMapSelector({
     setSelectedPlace(null)
     onPlaceSelect('', {} as PlaceWithCourts)
     setMapCenter(null)
+  }
+
+  const toggleSport = (sport: SportType) => {
+    if (!onSportsChange) return
+    if (selectedSports.includes(sport)) {
+      onSportsChange(selectedSports.filter(s => s !== sport))
+    } else {
+      onSportsChange([...selectedSports, sport])
+    }
   }
 
   if (isLoading) {
@@ -94,7 +102,6 @@ export default function PlaceMapSelector({
 
   return (
     <div className={`space-y-3 ${className}`}>
-      {/* Selected Place Display */}
       {selectedPlace ? (
         <div className="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg">
           <div className="flex items-center gap-2 min-w-0 flex-1">
@@ -126,7 +133,6 @@ export default function PlaceMapSelector({
         </div>
       )}
 
-      {/* Map Container */}
       <div className="border border-gray-200 rounded-lg overflow-hidden" style={{ height }}>
         <LeafletCourtMap
           courts={places}
@@ -141,22 +147,21 @@ export default function PlaceMapSelector({
         />
       </div>
 
-      {/* Sport selector — shown only when a place is selected and has sports */}
-      {onSportSelect && availableSports.length > 0 && (
+      {onSportsChange && availableSports.length > 0 && (
         <div className="space-y-2">
           <p className="text-sm font-medium">Sportart *</p>
           <div className="flex flex-wrap gap-2">
             {availableSports.map(sport => {
-              const isSelected = selectedSport === sport
+              const isSelected = selectedSports.includes(sport)
               return (
                 <button
                   key={sport}
                   type="button"
-                  onClick={() => onSportSelect(sport)}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+                  onClick={() => toggleSport(sport)}
+                  className={`inline-flex items-center gap-1 pl-3 pr-3.5 h-9 rounded-full text-sm font-medium border transition-colors ${
                     isSelected
-                      ? getSportBadgeClasses(sport) + ' border-transparent'
-                      : 'bg-background border-border text-foreground hover:bg-muted'
+                      ? 'border-primary bg-primary/5 text-primary'
+                      : 'bg-background border-border text-muted-foreground hover:border-primary/50'
                   }`}
                 >
                   <span>{sportIcons[sport]}</span>

@@ -7,7 +7,7 @@ import 'leaflet.markercluster'
 import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 import { PlaceMarker, SportType } from '@/lib/supabase/types'
-import { createSportIcon, createOrganizerIcon } from '@/lib/utils/sport-styles'
+import { createSportIcon, createEventOnlyIcon } from '@/lib/utils/sport-styles'
 import { PlaceType } from '@/lib/utils/sport-utils'
 
 interface MarkerClusterGroupProps {
@@ -20,8 +20,8 @@ interface MarkerClusterGroupProps {
 }
 
 function getPlaceIcon(court: PlaceMarker, sports: string[], isSelected: boolean, hasEvents: boolean): L.DivIcon {
-  if (court.organizer_id) {
-    return createOrganizerIcon(court.organizer?.color || '#6366F1', court.organizer?.logo_url, isSelected)
+  if (court.is_event_only) {
+    return createEventOnlyIcon(sports, isSelected)
   }
   return createSportIcon(sports, isSelected, hasEvents)
 }

@@ -3,7 +3,6 @@
 import dynamic from 'next/dynamic'
 import { SportType } from '@/lib/supabase/types'
 
-// Dynamic import to prevent SSR issues with Leaflet
 const SimpleLocationMap = dynamic(() => import('./simple-location-map'), {
   ssr: false,
   loading: () => (
@@ -20,7 +19,7 @@ interface EventLocationMapProps {
   latitude: number
   longitude: number
   placeName: string
-  sport: SportType
+  sports: SportType[]
   height?: string
   className?: string
 }
@@ -29,7 +28,7 @@ export default function EventLocationMap({
   latitude,
   longitude,
   placeName,
-  sport,
+  sports,
   height = '200px',
   className = ''
 }: EventLocationMapProps) {
@@ -38,7 +37,7 @@ export default function EventLocationMap({
       latitude={latitude}
       longitude={longitude}
       placeName={placeName}
-      sports={[sport]}
+      sports={sports}
       height={height}
       className={className}
     />

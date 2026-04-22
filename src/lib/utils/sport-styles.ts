@@ -438,7 +438,7 @@ export function createSportIcon(sports: string[], isSelected = false, hasEvents 
         height: ${containerHeight}px;
       ">
         ${createSimpleSportIcon(validSports, pinSize, isSelected)}
-        ${hasEvents ? '<div class="event-pulse-dot"></div>' : ''}
+        ${hasEvents ? '<div class="event-diamond-badge"></div>' : ''}
       </div>
     `,
     iconSize: [containerWidth, containerHeight],
@@ -499,6 +499,83 @@ export function createOrganizerIcon(color: string, logoUrl?: string | null, isSe
 
   const icon = L.divIcon({
     className: 'custom-organizer-marker',
+    html,
+    iconSize: [containerWidth, containerHeight],
+    iconAnchor: [containerWidth / 2, containerHeight - 4],
+    popupAnchor: [0, -(containerHeight - 8)],
+  })
+  iconCache.set(cacheKey, icon)
+  return icon
+}
+
+// Create event-only place marker: neutral indigo diamond with sport icons upright inside
+export function createEventOnlyIcon(sports: string[], isSelected = false): L.DivIcon {
+  const validSports = Array.isArray(sports) ? sports.filter(Boolean) : []
+  const cacheKey = `event-only-${getSportsCacheKey(validSports, isSelected, false)}`
+  const cached = iconCache.get(cacheKey)
+  if (cached) return cached
+
+  const pinSize = 36
+  const containerWidth = pinSize + 8
+  const containerHeight = Math.round(pinSize * 1.3) + 8
+
+  const bgColor = isSelected ? 'hsl(var(--primary))' : '#6366F1'
+  const borderColor = '#FFFFFF'
+
+  // Sport icons rendered upright inside the rotated diamond via counter-rotation
+  const iconAreaSize = Math.round(pinSize * 0.65)
+  const iconAreaOffset = Math.round((pinSize - iconAreaSize) / 2)
+
+  // Build sport icon HTML (reuse same logic as teardrop: 1–3 icons)
+  const iconsToShow = validSports.slice(0, 3)
+  const iconSize = iconsToShow.length === 1 ? Math.round(iconAreaSize * 0.55) : Math.round(iconAreaSize * 0.42)
+  const fontSize = Math.max(8, Math.round(iconSize * 0.8))
+  const gap = Math.round(iconSize * 0.15)
+
+  let iconHtml = ''
+  if (iconsToShow.length === 0) {
+    iconHtml = `<span style="font-size:${fontSize}px;color:white;font-weight:bold;">?</span>`
+  } else if (iconsToShow.length === 1) {
+    iconHtml = renderIconHtml(sportIcons[iconsToShow[0]] || '📍', fontSize)
+  } else if (iconsToShow.length === 2) {
+    iconHtml = iconsToShow.map(s => renderIconHtml(sportIcons[s] || '📍', fontSize)).join(`<span style="display:inline-block;width:${gap}px;"></span>`)
+  } else {
+    const top = iconsToShow.slice(0, 2).map(s => renderIconHtml(sportIcons[s] || '📍', fontSize)).join(`<span style="display:inline-block;width:${gap}px;"></span>`)
+    const bot = renderIconHtml(sportIcons[iconsToShow[2]] || '📍', fontSize)
+    iconHtml = `<div style="display:flex;justify-content:center;">${top}</div><div style="display:flex;justify-content:center;margin-top:${gap}px;">${bot}</div>`
+  }
+
+  const html = `
+    <div style="position:relative;width:${containerWidth}px;height:${containerHeight}px;">
+      <div style="
+        position:absolute;
+        top:0;left:4px;
+        width:${pinSize}px;height:${pinSize}px;
+        background-color:${bgColor};
+        border:2px solid ${borderColor};
+        border-radius:4px;
+        transform:rotate(45deg);
+        transform-origin:center center;
+        box-shadow:0 3px 8px rgba(0,0,0,0.3);
+        z-index:10;
+      "></div>
+      <div style="
+        position:absolute;
+        top:${iconAreaOffset}px;
+        left:${iconAreaOffset + 4}px;
+        width:${iconAreaSize}px;
+        height:${iconAreaSize}px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        flex-direction:column;
+        z-index:11;
+      ">${iconHtml}</div>
+    </div>
+  `
+
+  const icon = L.divIcon({
+    className: 'custom-event-only-marker',
     html,
     iconSize: [containerWidth, containerHeight],
     iconAnchor: [containerWidth / 2, containerHeight - 4],

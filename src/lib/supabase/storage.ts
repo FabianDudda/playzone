@@ -185,6 +185,91 @@ export async function uploadPlaceImageScoped(
   }
 }
 
+const ORGANIZERS_BUCKET = 'organizers'
+
+/**
+ * Upload an organizer logo. Uses a predictable path so re-uploads overwrite.
+ */
+export async function uploadOrganizerLogo(organizerId: string, file: File): Promise<UploadResult> {
+  if (!file.type.startsWith('image/')) {
+    throw new Error('File must be an image')
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    throw new Error('File size must be less than 5MB')
+  }
+
+  let fileToUpload = file
+  if (file.size > 500 * 1024) {
+    fileToUpload = await compressImage(file, 400, 0.9)
+  }
+
+  const filePath = `${organizerId}/logo`
+
+  const { data, error } = await supabase.storage
+    .from(ORGANIZERS_BUCKET)
+    .upload(filePath, fileToUpload, {
+      cacheControl: '3600',
+      upsert: true,
+      contentType: file.type,
+    })
+
+  if (error) throw new Error(`Upload failed: ${error.message}`)
+
+  const { data: { publicUrl } } = supabase.storage
+    .from(ORGANIZERS_BUCKET)
+    .getPublicUrl(data.path)
+
+  return { url: publicUrl, path: data.path }
+}
+
+/**
+ * Upload a cover/title image for an organizer. Each upload gets a unique path.
+ */
+export async function uploadOrganizerCover(organizerId: string, file: File): Promise<UploadResult> {
+  if (!file.type.startsWith('image/')) {
+    throw new Error('File must be an image')
+  }
+  if (file.size > 10 * 1024 * 1024) {
+    throw new Error('File size must be less than 10MB')
+  }
+
+  let fileToUpload = file
+  if (file.size > 2 * 1024 * 1024) {
+    fileToUpload = await compressImage(file, 1200, 0.85)
+  }
+
+  const timestamp = Date.now()
+  const random = Math.random().toString(36).substring(2, 10)
+  const ext = file.name.split('.').pop()
+  const filePath = `${organizerId}/covers/${timestamp}_${random}.${ext}`
+
+  const { data, error } = await supabase.storage
+    .from(ORGANIZERS_BUCKET)
+    .upload(filePath, fileToUpload, {
+      cacheControl: '3600',
+      upsert: false,
+      contentType: file.type,
+    })
+
+  if (error) throw new Error(`Upload failed: ${error.message}`)
+
+  const { data: { publicUrl } } = supabase.storage
+    .from(ORGANIZERS_BUCKET)
+    .getPublicUrl(data.path)
+
+  return { url: publicUrl, path: data.path }
+}
+
+/**
+ * Delete a file from the organizers bucket
+ */
+export async function deleteOrganizerFile(storagePath: string): Promise<void> {
+  const { error } = await supabase.storage
+    .from(ORGANIZERS_BUCKET)
+    .remove([storagePath])
+  if (error) throw new Error(`Delete failed: ${error.message}`)
+}
+
 /**
  * Check if storage bucket exists and is accessible
  */

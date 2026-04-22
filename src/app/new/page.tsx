@@ -128,14 +128,6 @@ function AddPlacePage() {
   const [websiteError, setWebsiteError] = useState('')
   const [placeAttributes, setPlaceAttributes] = useState<Record<string, boolean>>({})
   const [courtAttributesBySport, setCourtAttributesBySport] = useState<Record<string, Record<string, boolean>[]>>({})
-  const [organizerId, setOrganizerId] = useState<string | null>(null)
-
-  const { data: organizers = [] } = useQuery({
-    queryKey: ['organizers'],
-    queryFn: () => database.organizers.getAll(),
-    enabled: isAdmin,
-  })
-
   const createCourtMutation = useMutation({
     mutationFn: async (placeData: {
       name: string
@@ -154,7 +146,6 @@ function AddPlacePage() {
       opening_hours?: OpeningHours | null
       all_images?: { path: string; url: string }[]
       placeAttributes?: Record<string, boolean>
-      organizer_id?: string | null
     }) => {
       const { data: place, error: placeError } = await database.courts.addCourt({
         name: placeData.name,
@@ -181,7 +172,6 @@ function AddPlacePage() {
         contact_email: placeData.contact_email || null,
         contact_website: placeData.contact_website || null,
         opening_hours: placeData.opening_hours ?? null,
-        organizer_id: placeData.organizer_id ?? null,
       })
       if (placeError || !place) throw new Error(placeError?.message || 'Failed to create place')
 
@@ -404,7 +394,6 @@ function AddPlacePage() {
       contact_email: contactEmail.trim() || null,
       contact_website: contactWebsite.trim() || null,
       opening_hours: openingHours,
-      organizer_id: isAdmin ? organizerId : null,
     }
 
     if (isGuestMode) {
@@ -538,25 +527,6 @@ function AddPlacePage() {
             </div>
           </div>
 
-          {/* 3b. Organizer (admin only) */}
-          {isAdmin && organizers.length > 0 && (
-            <div className="space-y-2">
-              <Label>Organizer <span className="text-muted-foreground text-xs">(Admin)</span></Label>
-              <Select value={organizerId ?? 'none'} onValueChange={v => setOrganizerId(v === 'none' ? null : v)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Kein Organizer" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">Kein Organizer</SelectItem>
-                  {organizers.map((org: any) => (
-                    <SelectItem key={org.id} value={org.id}>
-                      {org.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
 
           {/* 4. Sports */}
           <div className="space-y-2">

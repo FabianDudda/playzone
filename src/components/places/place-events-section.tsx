@@ -30,9 +30,13 @@ export default function PlaceEventsSection({ placeId, userId }: PlaceEventsSecti
           <div key={event.id} className="flex flex-col gap-1.5 border rounded-lg p-3">
             <div className="flex items-start justify-between gap-2">
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1.5 mb-0.5">
-                  <span className="text-sm leading-none">{sportIcons[event.sport] || '🏅'}</span>
-                  <span className="text-xs text-muted-foreground">{sportNames[event.sport] || event.sport}</span>
+                <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
+                  {event.sports.map(sport => (
+                    <span key={sport} className="flex items-center gap-0.5 text-xs text-muted-foreground">
+                      <span className="text-sm leading-none">{sportIcons[sport] || '🏅'}</span>
+                      {sportNames[sport] || sport}
+                    </span>
+                  ))}
                 </div>
                 <p className="text-sm font-medium truncate">{event.title}</p>
               </div>

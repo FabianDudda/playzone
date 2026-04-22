@@ -1,5 +1,5 @@
 import { supabase } from './client'
-import { Profile, Place, Court, LegacyCourt, PlaceWithCourts, PlaceMarker, Match, MatchParticipant, SportType, MatchResult, LeaderboardEntry, ModerationStatus, PendingPlaceChange, PlaceChangeType, Event, EventWithDetails, EventBookmark, EventSchedule, UserFavorite, PlaceAttribute, CourtAttribute, Organizer, TablesInsert, TablesUpdate } from './types'
+import { Profile, Place, Court, LegacyCourt, PlaceWithCourts, PlaceMarker, Match, MatchParticipant, SportType, MatchResult, LeaderboardEntry, ModerationStatus, PendingPlaceChange, PlaceChangeType, Event, EventWithDetails, EventBookmark, EventSchedule, UserFavorite, PlaceAttribute, CourtAttribute, Organizer, OrganizerImage, TablesInsert, TablesUpdate, InlineLocation, LocationType, AgeRestriction, GenderRestriction, OrganizerSummary } from './types'
 
 // Helper function to fetch all records with automatic pagination
 async function fetchAllRecords<T>(queryBuilder: any): Promise<T[]> {
@@ -58,6 +58,25 @@ function normalizeSchedule(schedule: any): any {
   return schedule
 }
 
+async function enrichEventsWithOrganizers(events: EventWithDetails[]): Promise<EventWithDetails[]> {
+  const allIds = [...new Set(events.flatMap(e => e.organizer_ids).filter(Boolean))]
+  if (allIds.length === 0) return events.map(e => ({ ...e, event_organizers: [] }))
+
+  const { data: orgs } = await supabase
+    .from('organizers')
+    .select('id, name, color, logo_url')
+    .in('id', allIds)
+
+  const orgMap = new Map((orgs || []).map((o: OrganizerSummary) => [o.id, o]))
+
+  return events.map(e => ({
+    ...e,
+    event_organizers: e.organizer_ids
+      .map(id => orgMap.get(id))
+      .filter((o): o is OrganizerSummary => !!o),
+  }))
+}
+
 function mapToEventWithDetails(event: any, isBookmarked = false): EventWithDetails {
   return {
     id: event.id,
@@ -67,15 +86,20 @@ function mapToEventWithDetails(event: any, isBookmarked = false): EventWithDetai
     description: event.description ?? null,
     event_type: event.event_type || 'session',
     place_id: event.place_id,
-    sport: event.sport,
+    sports: event.sports ?? [],
     schedule: normalizeSchedule(event.schedule),
     contact: event.contact || {},
     image_url: event.image_url ?? null,
     creator_id: event.creator_id,
     status: event.status || 'active',
     organizer_id: event.organizer_id ?? null,
+    moderation_status: event.moderation_status || 'pending',
+    moderated_by: event.moderated_by ?? null,
+    moderated_at: event.moderated_at ?? null,
+    rejection_reason: event.rejection_reason ?? null,
     creator_name: event.profiles?.name || '',
     creator_avatar: event.profiles?.avatar || null,
+    creator_email: null,
     place_name: event.places?.name || '',
     place_latitude: event.places?.latitude || 0,
     place_longitude: event.places?.longitude || 0,
@@ -85,12 +109,19 @@ function mapToEventWithDetails(event: any, isBookmarked = false): EventWithDetai
     place_postcode: event.places?.postcode || null,
     place_district: event.places?.district || null,
     is_bookmarked: isBookmarked,
+    organizer_ids: event.organizer_ids ?? [],
     organizer_name: event.organizers?.name ?? null,
     organizer_color: event.organizers?.color ?? null,
     organizer_logo_url: event.organizers?.logo_url ?? null,
     organizer_slug: event.organizers?.slug ?? null,
     organizer_website: event.organizers?.website ?? null,
     organizer_instagram: event.organizers?.instagram ?? null,
+    place_is_event_only: event.places?.is_event_only ?? false,
+    inline_location: (event.inline_location as InlineLocation) ?? null,
+    location_type: (event.location_type as LocationType) ?? null,
+    age_restriction: (event.age_restriction as AgeRestriction) ?? null,
+    gender_restriction: (event.gender_restriction as GenderRestriction) ?? null,
+    event_organizers: [],
   }
 }
 
@@ -183,7 +214,7 @@ export const database = {
         const data = await fetchAllRecords<PlaceMarker>(
           supabase
             .from('places')
-            .select('id, name, latitude, longitude, sports, place_type, organizer_id, organizers(name, color, logo_url, slug)')
+            .select('id, name, latitude, longitude, sports, place_type, organizer_id, is_event_only, organizers(name, color, logo_url, slug)')
             .eq('moderation_status', 'approved')
             .order('created_at', { ascending: false })
         )
@@ -198,7 +229,7 @@ export const database = {
     getAllPlacesLightweightBatch: async (from: number, to: number): Promise<PlaceMarker[]> => {
       const { data, error } = await supabase
         .from('places')
-        .select('id, name, latitude, longitude, sports, place_type, organizer_id, organizers(name, color, logo_url, slug)')
+        .select('id, name, latitude, longitude, sports, place_type, organizer_id, is_event_only, organizers(name, color, logo_url, slug)')
         .eq('moderation_status', 'approved')
         .order('created_at', { ascending: false })
         .range(from, to)
@@ -869,10 +900,11 @@ export const database = {
           .select(`
             *,
             profiles:creator_id ( name, avatar ),
-            places:place_id ( name, latitude, longitude, street, house_number, city, postcode, district ),
+            places:place_id ( name, latitude, longitude, street, house_number, city, postcode, district, is_event_only ),
             organizers:organizer_id ( name, color, logo_url, slug, website, instagram )
           `)
           .eq('status', 'active')
+          .eq('moderation_status', 'approved')
           .order('created_at', { ascending: false })
 
         if (error) {
@@ -898,7 +930,7 @@ export const database = {
           bookmarkedIds = new Set(((bk || []) as any[]).map((b: any) => b.event_id))
         }
 
-        return active.map((event: any) => mapToEventWithDetails(event, bookmarkedIds.has(event.id)))
+        return enrichEventsWithOrganizers(active.map((event: any) => mapToEventWithDetails(event, bookmarkedIds.has(event.id))))
       } catch (error) {
         console.error('Error fetching events:', error)
         return []
@@ -934,7 +966,8 @@ export const database = {
           isBookmarked = !!bk
         }
 
-        return mapToEventWithDetails(data as any, isBookmarked)
+        const events = await enrichEventsWithOrganizers([mapToEventWithDetails(data as any, isBookmarked)])
+        return events[0] ?? null
       } catch (error) {
         console.error('Error fetching event:', error)
         return null
@@ -948,11 +981,12 @@ export const database = {
           .select(`
             *,
             profiles:creator_id ( name, avatar ),
-            places:place_id ( name, latitude, longitude, street, house_number, city, postcode, district ),
+            places:place_id ( name, latitude, longitude, street, house_number, city, postcode, district, is_event_only ),
             organizers:organizer_id ( name, color, logo_url, slug, website, instagram )
           `)
           .eq('place_id', placeId)
           .eq('status', 'active')
+          .eq('moderation_status', 'approved')
           .order('created_at', { ascending: false })
 
         if (error) {
@@ -978,7 +1012,7 @@ export const database = {
           bookmarkedIds = new Set(((bk || []) as any[]).map((b: any) => b.event_id))
         }
 
-        return active.map((event: any) => mapToEventWithDetails(event, bookmarkedIds.has(event.id)))
+        return enrichEventsWithOrganizers(active.map((event: any) => mapToEventWithDetails(event, bookmarkedIds.has(event.id))))
       } catch (error) {
         console.error('Error fetching events by place:', error)
         return []
@@ -991,13 +1025,14 @@ export const database = {
           .from('events')
           .select('place_id')
           .eq('status', 'active')
+          .eq('moderation_status', 'approved')
 
         if (error) {
           console.error('Error fetching place IDs with events:', error)
           return []
         }
 
-        return [...new Set(((data || []) as any[]).map((e: any) => e.place_id as string))]
+        return [...new Set(((data || []) as any[]).filter((e: any) => e.place_id).map((e: any) => e.place_id as string))]
       } catch (error) {
         console.error('Error fetching place IDs with events:', error)
         return []
@@ -1022,7 +1057,7 @@ export const database = {
           return []
         }
 
-        return ((data || []) as any[]).map((event: any) => mapToEventWithDetails(event, false))
+        return enrichEventsWithOrganizers(((data || []) as any[]).map((event: any) => mapToEventWithDetails(event, false)))
       } catch (error) {
         console.error('Error fetching user events:', error)
         return []
@@ -1035,7 +1070,7 @@ export const database = {
         .insert({
           ...event,
           updated_at: new Date().toISOString(),
-        })
+        } as any)
         .select()
         .single()
 
@@ -1048,7 +1083,7 @@ export const database = {
         .update({
           ...updates,
           updated_at: new Date().toISOString(),
-        })
+        } as any)
         .eq('id', eventId)
         .select()
         .single()
@@ -1063,6 +1098,55 @@ export const database = {
         .eq('id', eventId)
 
       return { data, error }
+    },
+
+    // Admin: fetch events by moderation status
+    getForAdmin: async (moderationStatus?: 'pending' | 'approved' | 'rejected'): Promise<EventWithDetails[]> => {
+      try {
+        let query = supabase
+          .from('events')
+          .select(`
+            *,
+            profiles:creator_id ( name, avatar ),
+            places:place_id ( name, latitude, longitude, street, house_number, city, postcode, district, is_event_only ),
+            organizers:organizer_id ( name, color, logo_url, slug, website, instagram )
+          `)
+          .order('created_at', { ascending: false })
+
+        if (moderationStatus) {
+          query = query.eq('moderation_status', moderationStatus)
+        }
+
+        const { data, error } = await query
+        if (error) {
+          console.error('Error fetching events for admin:', error)
+          return []
+        }
+        return enrichEventsWithOrganizers(((data || []) as any[]).map((e: any) => mapToEventWithDetails(e, false)))
+      } catch (error) {
+        console.error('Error fetching events for admin (catch):', error)
+        return []
+      }
+    },
+
+    // Admin: approve or reject an event
+    moderate: async (
+      eventId: string,
+      status: 'approved' | 'rejected',
+      moderatedBy: string,
+      rejectionReason?: string
+    ) => {
+      const { error } = await supabase
+        .from('events')
+        .update({
+          moderation_status: status,
+          moderated_by: moderatedBy,
+          moderated_at: new Date().toISOString(),
+          rejection_reason: rejectionReason ?? null,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', eventId)
+      return { data: null, error }
     },
   },
 
@@ -1105,7 +1189,7 @@ export const database = {
 
         if (error || !data) return []
 
-        return (data as any[]).map((event: any) => mapToEventWithDetails(event, true))
+        return enrichEventsWithOrganizers((data as any[]).map((event: any) => mapToEventWithDetails(event, true)))
       } catch (error) {
         console.error('Error fetching user bookmarks:', error)
         return []
@@ -2115,6 +2199,44 @@ export const database = {
         .from('organizers')
         .delete()
         .eq('id', id)
+      return { error }
+    },
+
+    getImages: async (organizerId: string): Promise<OrganizerImage[]> => {
+      const { data, error } = await supabase
+        .from('organizer_images')
+        .select('*')
+        .eq('organizer_id', organizerId)
+        .order('created_at', { ascending: true })
+      if (error) { console.error('Error fetching organizer images:', error); return [] }
+      return data || []
+    },
+
+    getImagesForMany: async (organizerIds: string[]): Promise<OrganizerImage[]> => {
+      if (!organizerIds.length) return []
+      const { data, error } = await supabase
+        .from('organizer_images')
+        .select('*')
+        .in('organizer_id', organizerIds)
+        .order('created_at', { ascending: true })
+      if (error) { console.error('Error fetching organizer images:', error); return [] }
+      return data || []
+    },
+
+    addImage: async (organizerId: string, url: string, storagePath?: string): Promise<{ data: OrganizerImage | null; error: any }> => {
+      const { data, error } = await supabase
+        .from('organizer_images')
+        .insert({ organizer_id: organizerId, url, storage_path: storagePath ?? null })
+        .select()
+        .single()
+      return { data, error }
+    },
+
+    deleteImage: async (imageId: string): Promise<{ error: any }> => {
+      const { error } = await supabase
+        .from('organizer_images')
+        .delete()
+        .eq('id', imageId)
       return { error }
     },
   },

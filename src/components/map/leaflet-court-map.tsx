@@ -16,7 +16,7 @@ import FilterBottomSheetVaul from './filter-bottom-sheet-vaul'
 import PlaceBottomSheetVaul from './place-bottom-sheet-v2'
 import FavoritesBottomSheetVaul from './favorites-bottom-sheet-vaul'
 import { sportNames, getSportBadgeClasses, sportIcons, PlaceType } from '@/lib/utils/sport-utils'
-import { createSportIcon, createUserLocationIcon, createSelectedLocationIcon, createOrganizerIcon } from '@/lib/utils/sport-styles'
+import { createSportIcon, createEventOnlyIcon, createUserLocationIcon, createSelectedLocationIcon } from '@/lib/utils/sport-styles'
 import { MAP_LAYERS, DEFAULT_LAYER_ID, createTileLayer, getSavedLayerPreference, saveLayerPreference } from '@/lib/utils/map-layers'
 import { getDistanceText } from '@/lib/utils/distance'
 import L from 'leaflet'
@@ -248,6 +248,7 @@ function UserLocationHandler({
       (position) => {
         const { latitude: lat, longitude: lng, accuracy } = position.coords
         callbackRef.current(lat, lng)
+        if (!map) return
         map.setView([lat, lng], 14)
         try { localStorage.setItem('user-location-cache', JSON.stringify({ lat, lng })) } catch {}
         if (!accuracyCircleRef.current) {
@@ -734,12 +735,8 @@ export default function LeafletCourtMap({
               const sportsForIcon = selectedSports.length === 0 ? allSports : matchingSports.length > 0 ? matchingSports : allSports
 
               const isSelected = selectedCourt?.id === court.id
-              const icon = court.organizer_id
-                ? createOrganizerIcon(
-                    (court as any).organizer?.color || '#6366F1',
-                    (court as any).organizer?.logo_url,
-                    isSelected
-                  )
+              const icon = (court as any).is_event_only
+                ? createEventOnlyIcon(sportsForIcon, isSelected)
                 : createSportIcon(sportsForIcon, isSelected, placeIdsWithEvents.has(court.id))
 
               return (
@@ -769,8 +766,15 @@ export default function LeafletCourtMap({
             <Marker
               key={`selected-overlay-${selectedCourt.id}`}
               position={[selectedCourt.latitude, selectedCourt.longitude]}
-              icon={selectedCourt.organizer_id
-                ? createOrganizerIcon((selectedCourt as any).organizer?.color || '#6366F1', (selectedCourt as any).organizer?.logo_url, true)
+              icon={(selectedCourt as any).is_event_only
+                ? createEventOnlyIcon(
+                    selectedSports.length === 0
+                      ? (selectedCourt.sports || [])
+                      : (selectedCourt.sports || []).filter(s => selectedSports.includes(s)).length > 0
+                        ? (selectedCourt.sports || []).filter(s => selectedSports.includes(s))
+                        : (selectedCourt.sports || []),
+                    true
+                  )
                 : createSportIcon(
                     selectedSports.length === 0
                       ? (selectedCourt.sports || [])

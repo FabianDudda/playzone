@@ -49,7 +49,7 @@ function getNextOccurrence(event: EventWithDetails): Date {
 }
 
 export default function EventsPage() {
-  const { user } = useAuth()
+  const { user, isAdmin } = useAuth()
   const [filters, setFilters] = useState<EventFilters>({ sport: 'all', city: 'all' })
 
   const { data: events = [], isLoading } = useQuery({
@@ -72,11 +72,11 @@ export default function EventsPage() {
             Kostenlose Angebote in deiner Nähe
           </p>
         </div>
-        {user && (
+        {isAdmin && (
           <Link href="/events/new">
             <Button size="sm" className="pr-4">
               <Plus className="h-4 w-4 mr-1" />
-              Erstellen
+              Erstellen <span className="ml-1 text-xs opacity-60">(Admin)</span>
             </Button>
           </Link>
         )}
@@ -104,18 +104,14 @@ export default function EventsPage() {
             <p className="text-sm text-muted-foreground mb-4">
               {filters.sport !== 'all' || filters.city !== 'all'
                 ? 'Versuche die Filter anzupassen.'
-                : 'Sei der Erste, der ein Event in deiner Gegend erstellt!'}
+                : 'Noch keine Events in deiner Gegend.'}
             </p>
-            {user ? (
+            {isAdmin && (
               <Link href="/events/new">
                 <Button size="sm">
                   <Plus className="h-4 w-4 mr-1" />
                   Event erstellen
                 </Button>
-              </Link>
-            ) : (
-              <Link href="/auth/signin">
-                <Button size="sm" variant="outline">Anmelden und Event erstellen</Button>
               </Link>
             )}
           </CardContent>

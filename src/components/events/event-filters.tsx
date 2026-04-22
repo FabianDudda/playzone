@@ -88,7 +88,7 @@ export default function EventFiltersComponent({
 
 export function applyEventFilters(events: EventWithDetails[], filters: EventFilters): EventWithDetails[] {
   return events.filter(event => {
-    if (filters.sport !== 'all' && event.sport !== filters.sport) return false
+    if (filters.sport !== 'all' && !event.sports.includes(filters.sport)) return false
     if (filters.city !== 'all' && event.place_city !== filters.city) return false
     return true
   })
@@ -97,7 +97,7 @@ export function applyEventFilters(events: EventWithDetails[], filters: EventFilt
 export function deriveSports(events: EventWithDetails[]): SportType[] {
   const seen = new Set<SportType>()
   return events
-    .map(e => e.sport)
+    .flatMap(e => e.sports)
     .filter((s): s is SportType => !!s && !seen.has(s) && !!seen.add(s))
     .sort((a, b) => (sportNames[a] ?? a).localeCompare(sportNames[b] ?? b, 'de'))
 }

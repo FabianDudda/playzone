@@ -1,20 +1,20 @@
-/* Event pulse dot on map markers */
-.event-pulse-dot {
+/* Event diamond badge on always-open place markers */
+.event-diamond-badge {
   position: absolute;
   top: 1px;
   right: 7px;
   width: 9px;
   height: 9px;
-  background-color: #22c55e;
-  border-radius: 50%;
+  background-color: #7c3aed;
   border: 1.5px solid white;
   z-index: 20;
-  animation: event-dot-pulse 2s ease-in-out infinite;
+  transform: rotate(45deg);
+  animation: event-diamond-pulse 2s ease-in-out infinite;
 }
 
-@keyframes event-dot-pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.4); opacity: 0.7; }
+@keyframes event-diamond-pulse {
+  0%, 100% { transform: rotate(45deg) scale(1); opacity: 1; }
+  50% { transform: rotate(45deg) scale(1.4); opacity: 0.7; }
 }
 
 /* Custom cluster icon styles */

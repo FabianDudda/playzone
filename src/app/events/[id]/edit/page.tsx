@@ -3,7 +3,6 @@
 import { Suspense, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, ImagePlus, X } from 'lucide-react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import React from 'react'
 import { useAuth } from '@/components/providers/auth-provider'
@@ -11,17 +10,8 @@ import { database } from '@/lib/supabase/database'
 import { uploadCourtImage } from '@/lib/supabase/storage'
 import { useToast } from '@/hooks/use-toast'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { SportType, EventSchedule, EventContact } from '@/lib/supabase/types'
-import { SPORT_ORDER, sportNames, sportIcons } from '@/lib/utils/sport-utils'
-import ScheduleEditor from '@/components/events/schedule-editor'
-import ContactEditor from '@/components/events/contact-editor'
-import PlaceMapSelector from '@/components/events/place-map-selector'
-
-const AVAILABLE_SPORTS = SPORT_ORDER.filter(s => s !== 'other') as SportType[]
+import { LocationType, AgeRestriction, GenderRestriction, Organizer } from '@/lib/supabase/types'
+import EventForm, { EventFormState, EventFormErrors } from '@/components/events/event-form'
 
 interface EventPageProps {
   params: Promise<{ id: string }>
@@ -29,7 +19,7 @@ interface EventPageProps {
 
 function EditEventContent({ params }: EventPageProps) {
   const router = useRouter()
-  const { user } = useAuth()
+  const { user, isAdmin } = useAuth()
   const { toast } = useToast()
   const queryClient = useQueryClient()
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -38,65 +28,92 @@ function EditEventContent({ params }: EventPageProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [formReady, setFormReady] = useState(false)
 
-  const [form, setForm] = useState<{
-    title: string
-    sport: SportType | ''
-    placeId: string
-    schedule: EventSchedule
-    description: string
-    contact: EventContact
-    imageUrl: string | null
-  }>({
+  const [form, setForm] = useState<EventFormState>({
     title: '',
-    sport: '',
+    sports: [],
+    locationMode: 'existing',
     placeId: '',
-    schedule: { type: 'once', dates: [{ date: '', time: '' }] },
+    inlineLocationName: '',
+    inlineLocationAddress: {},
+    inlineLocationCoords: null,
+    schedule: { type: 'dates', dates: [{ date: '', start_time: '', end_time: '' }] },
     description: '',
     contact: {},
     imageUrl: null,
+    locationType: null,
+    ageRestriction: { type: 'all' },
+    genderRestriction: 'all',
+    organizerIds: [],
   })
 
-  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [errors, setErrors] = useState<EventFormErrors>({})
 
   React.useEffect(() => {
     params.then(p => setEventId(p.id))
   }, [params])
 
-  const { isLoading } = useQuery({
+  const { data: event, isLoading } = useQuery({
     queryKey: ['event', eventId],
     queryFn: () => database.events.getEvent(eventId, user?.id),
     enabled: !!eventId,
     staleTime: 0,
-    select: (data) => {
-      if (data && !formReady) {
-        setForm({
-          title: data.title,
-          sport: data.sport,
-          placeId: data.place_id,
-          schedule: data.schedule,
-          description: data.description || '',
-          contact: data.contact || {},
-          imageUrl: data.image_url,
-        })
-        if (data.image_url) setImagePreview(data.image_url)
-        setFormReady(true)
-      }
-      return data
-    },
   })
 
-  const { data: event } = useQuery({
-    queryKey: ['event', eventId],
-    queryFn: () => database.events.getEvent(eventId, user?.id),
-    enabled: !!eventId,
+  React.useEffect(() => {
+    if (event && !formReady) {
+      const hasInline = !event.place_id && !!event.inline_location
+      setForm({
+        title: event.title,
+        sports: event.sports ?? [],
+        locationMode: hasInline ? 'inline' : 'existing',
+        placeId: event.place_id ?? '',
+        inlineLocationName: event.inline_location?.name ?? '',
+        inlineLocationAddress: {
+          street: event.inline_location?.street ?? undefined,
+          house_number: event.inline_location?.house_number ?? undefined,
+          postcode: event.inline_location?.postcode ?? undefined,
+          city: event.inline_location?.city ?? undefined,
+          district: event.inline_location?.district ?? undefined,
+          county: event.inline_location?.county ?? undefined,
+          state: event.inline_location?.state ?? undefined,
+          country: event.inline_location?.country ?? undefined,
+        },
+        inlineLocationCoords: hasInline
+          ? { lat: event.inline_location!.latitude, lng: event.inline_location!.longitude }
+          : null,
+        schedule: event.schedule,
+        description: event.description ?? '',
+        contact: event.contact ?? {},
+        imageUrl: event.image_url,
+        locationType: (event.location_type as LocationType) ?? null,
+        ageRestriction: (event.age_restriction as AgeRestriction) ?? { type: 'all' },
+        genderRestriction: (event.gender_restriction as GenderRestriction) ?? 'all',
+        organizerIds: event.organizer_ids ?? [],
+      })
+      if (event.image_url) setImagePreview(event.image_url)
+      setFormReady(true)
+    }
+  }, [event, formReady])
+
+  const { data: organizers = [] } = useQuery<Organizer[]>({
+    queryKey: ['organizers'],
+    queryFn: () => database.organizers.getAll(),
+    enabled: isAdmin,
+    staleTime: 60_000,
   })
 
   const mutation = useMutation({
     mutationFn: async () => {
-      const errs: Record<string, string> = {}
+      const errs: EventFormErrors = {}
       if (!form.title.trim()) errs.title = 'Titel ist erforderlich'
-      if (!form.sport) errs.sport = 'Sportart ist erforderlich'
-      if (!form.placeId) errs.placeId = 'Bitte wähle einen Ort aus'
+      if (form.sports.length === 0) errs.sports = 'Sportart ist erforderlich'
+      if (form.locationMode === 'existing' && !form.placeId) {
+        errs.placeId = 'Bitte wähle einen Ort aus'
+      }
+      if (form.locationMode === 'inline') {
+        if (!form.inlineLocationName.trim()) errs.placeId = 'Bitte gib einen Ortsnamen ein'
+        if (!form.inlineLocationCoords) errs.placeId = 'Bitte markiere den Ort auf der Karte'
+      }
       if (form.schedule.type !== 'recurring' && form.schedule.dates.some(d => !d.date || !d.start_time || !d.end_time)) {
         errs.schedule = 'Bitte alle Datum- und Zeitfelder ausfüllen'
       }
@@ -108,14 +125,30 @@ function EditEventContent({ params }: EventPageProps) {
         throw new Error('Bitte fülle alle Pflichtfelder aus')
       }
 
+      const placeId = form.locationMode === 'existing' ? (form.placeId || null) : null
+      const inlineLocation = form.locationMode === 'inline' && form.inlineLocationCoords
+        ? {
+            name: form.inlineLocationName.trim(),
+            latitude: form.inlineLocationCoords.lat,
+            longitude: form.inlineLocationCoords.lng,
+            ...form.inlineLocationAddress,
+          }
+        : null
+
       const { error } = await database.events.updateEvent(eventId, {
         title: form.title.trim(),
         description: form.description.trim() || null,
-        place_id: form.placeId,
-        sport: form.sport as SportType,
+        sports: form.sports,
+        place_id: placeId,
+        inline_location: inlineLocation,
         schedule: form.schedule,
         contact: form.contact,
         image_url: form.imageUrl,
+        location_type: form.locationType,
+        age_restriction: form.ageRestriction,
+        gender_restriction: form.genderRestriction,
+        organizer_id: form.organizerIds[0] ?? null,
+        organizer_ids: form.organizerIds,
       })
 
       if (error) throw new Error('Fehler beim Speichern')
@@ -174,7 +207,7 @@ function EditEventContent({ params }: EventPageProps) {
     )
   }
 
-  if (event && event.creator_id !== user.id) {
+  if (event && event.creator_id !== user.id && !isAdmin) {
     return (
       <div className="container px-4 py-8 max-w-xl mx-auto text-center">
         <h1 className="text-xl font-semibold mb-2">Keine Berechtigung</h1>
@@ -185,124 +218,27 @@ function EditEventContent({ params }: EventPageProps) {
   }
 
   return (
-    <div className="container px-4 py-4 max-w-xl mx-auto pb-24">
-      <div className="flex items-center gap-3 mb-6">
-        <Button variant="ghost" size="icon" onClick={() => router.back()}>
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
-        <h1 className="text-2xl font-bold">Event bearbeiten</h1>
-      </div>
-
-      <div className="space-y-6">
-        {/* Title */}
-        <div>
-          <Label htmlFor="title" className="text-sm font-medium">Titel *</Label>
-          <Input
-            id="title"
-            value={form.title}
-            onChange={e => { setForm(f => ({ ...f, title: e.target.value })); setErrors(e => ({ ...e, title: '' })) }}
-            className="mt-1"
-          />
-          {errors.title && <p className="text-xs text-destructive mt-1">{errors.title}</p>}
-        </div>
-
-        {/* Place + Sport */}
-        <div>
-          <Label className="text-sm font-medium">Ort *</Label>
-          <PlaceMapSelector
-            selectedPlaceId={form.placeId}
-            preSelectedPlaceId={form.placeId}
-            onPlaceSelect={(id) => { setForm(f => ({ ...f, placeId: id })); setErrors(e => ({ ...e, placeId: '' })) }}
-            selectedSport={form.sport}
-            onSportSelect={(sport) => { setForm(f => ({ ...f, sport })); setErrors(e => ({ ...e, sport: '' })) }}
-            height="280px"
-          />
-          {errors.placeId && <p className="text-xs text-destructive mt-1">{errors.placeId}</p>}
-          {errors.sport && <p className="text-xs text-destructive mt-1">{errors.sport}</p>}
-        </div>
-
-        {/* Schedule */}
-        <div>
-          <Label className="text-sm font-medium">Datum & Uhrzeit *</Label>
-          <div className="mt-2">
-            <ScheduleEditor
-              value={form.schedule}
-              onChange={s => { setForm(f => ({ ...f, schedule: s })); setErrors(e => ({ ...e, schedule: '' })) }}
-            />
-          </div>
-          {errors.schedule && <p className="text-xs text-destructive mt-1">{errors.schedule}</p>}
-        </div>
-
-        {/* Contact */}
-        <div>
-          <Label className="text-sm font-medium mb-2 block">Kontaktdaten</Label>
-          <ContactEditor
-            value={form.contact}
-            onChange={c => setForm(f => ({ ...f, contact: c }))}
-          />
-        </div>
-
-        {/* Cover image */}
-        <div>
-          <Label className="text-sm font-medium mb-2 block">Titelbild (optional)</Label>
-          {imagePreview ? (
-            <div className="relative h-40 rounded-lg overflow-hidden">
-              <img src={imagePreview} alt="" className="w-full h-full object-cover" />
-              <Button
-                type="button"
-                variant="destructive"
-                size="icon"
-                onClick={removeImage}
-                className="absolute top-2 right-2 h-7 w-7"
-              >
-                <X className="h-3 w-3" />
-              </Button>
-              {imageUploading && (
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                  <div className="animate-spin h-6 w-6 border-2 border-white border-t-transparent rounded-full" />
-                </div>
-              )}
-            </div>
-          ) : (
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="w-full h-32 border-2 border-dashed border-muted-foreground/30 rounded-lg flex flex-col items-center justify-center gap-2 hover:border-primary/50 transition-colors"
-            >
-              <ImagePlus className="h-6 w-6 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">Bild hochladen</span>
-            </button>
-          )}
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleImageChange}
-          />
-        </div>
-
-        {/* Description */}
-        <div>
-          <Label htmlFor="description" className="text-sm font-medium">Beschreibung (optional)</Label>
-          <Textarea
-            id="description"
-            value={form.description}
-            onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-            rows={4}
-            className="mt-1"
-          />
-        </div>
-
-        <Button
-          className="w-full"
-          onClick={() => mutation.mutate()}
-          disabled={mutation.isPending || imageUploading}
-        >
-          {mutation.isPending ? 'Wird gespeichert…' : 'Änderungen speichern'}
-        </Button>
-      </div>
-    </div>
+    <EventForm
+      form={form}
+      setForm={setForm}
+      errors={errors}
+      setErrors={setErrors}
+      imagePreview={imagePreview}
+      imageUploading={imageUploading}
+      fileInputRef={fileInputRef}
+      onImageChange={handleImageChange}
+      onRemoveImage={removeImage}
+      onSelectImageUrl={(url) => { setImagePreview(url); setForm(f => ({ ...f, imageUrl: url })) }}
+      organizers={organizers}
+      isAdmin={isAdmin}
+      onSubmit={() => mutation.mutate()}
+      isPending={mutation.isPending}
+      pageTitle="Event bearbeiten"
+      submitLabel="Änderungen speichern"
+      pendingLabel="Wird gespeichert…"
+      preselectedPlaceId={form.placeId}
+      initialCenter={form.inlineLocationCoords ?? undefined}
+    />
   )
 }
 

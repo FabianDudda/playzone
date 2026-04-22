@@ -13,6 +13,7 @@ import {
   MessageSquare,
   QrCode,
   Building2,
+  CalendarDays,
 } from 'lucide-react'
 
 function AdminSidebar() {
@@ -24,6 +25,12 @@ function AdminSidebar() {
       href: '/admin/places',
       icon: MapPin,
       description: 'Moderate user-submitted places'
+    },
+    {
+      label: 'Events',
+      href: '/admin/events',
+      icon: CalendarDays,
+      description: 'Moderate user-submitted events'
     },
     {
       label: 'Users',

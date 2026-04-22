@@ -12,7 +12,7 @@ import Link from 'next/link'
 const NAV_ITEMS = [
   { name: 'Profil bearbeiten', href: '/profile/edit', icon: Edit2, adminOnly: false },
   { name: 'Meine Beiträge', href: '/contributions', icon: Bell, adminOnly: false },
-  { name: 'Meine Events', href: '/events/mine', icon: Calendar, adminOnly: false },
+  { name: 'Meine Events', href: '/events/mine', icon: Calendar, adminOnly: false, loggedInOnly: true },
   { name: 'Rangliste', href: '/rankings', icon: Trophy, adminOnly: true },
   { name: 'Spiel hinzufügen', href: '/matches/new', icon: Plus, adminOnly: true },
   { name: 'Admin', href: '/admin/places', icon: Shield, adminOnly: true },
@@ -85,11 +85,6 @@ export default function ProfilePage() {
                   )}
                 </>
               )}
-              <Link href="/events/mine" className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left">
-                <Calendar className="h-4 w-4 text-muted-foreground" />
-                <span>Meine Events</span>
-                <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
-              </Link>
               <Link href="/events" className="flex items-center gap-3 px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors text-left">
                 <Calendar className="h-4 w-4 text-muted-foreground" />
                 <span>Events entdecken</span>
@@ -136,7 +131,7 @@ export default function ProfilePage() {
     )
   }
 
-  const visibleNavItems = NAV_ITEMS.filter(item => !(item.adminOnly && !isAdmin))
+  const visibleNavItems = NAV_ITEMS.filter(item => !(item.adminOnly && !isAdmin) && !(item.loggedInOnly && !user))
 
   return (
     <div className="container px-4 py-4 overflow-x-hidden">

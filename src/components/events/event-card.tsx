@@ -21,33 +21,47 @@ export default function EventCard({ event }: EventCardProps) {
             <div className="min-w-0">
               <h3 className="font-semibold text-base line-clamp-2">{event.title}</h3>
             </div>
-            <div className="flex-shrink-0">
-              <Badge className={`text-xs pl-1.5 ${getSportBadgeClasses(event.sport)}`}>
-                {sportIcons[event.sport]} {sportNames[event.sport]}
-              </Badge>
+            <div className="flex-shrink-0 flex flex-wrap gap-1 justify-end">
+              {event.sports.map(sport => (
+                <Badge key={sport} variant="secondary" className="text-xs pl-1.5">
+                  {sportIcons[sport]} {sportNames[sport]}
+                </Badge>
+              ))}
             </div>
           </div>
         </CardHeader>
 
         <CardContent className="pt-0 px-4 pb-4 space-y-2">
-          {event.organizer_name && (
-            <div className="flex items-center gap-1.5">
-              <span
-                className="inline-block h-2.5 w-2.5 rounded-full flex-shrink-0"
-                style={{ backgroundColor: event.organizer_color || '#6366F1' }}
-              />
-              <span className="text-xs font-medium" style={{ color: event.organizer_color || '#6366F1' }}>
-                {event.organizer_name}
-              </span>
-            </div>
-          )}
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <MapPin className="h-4 w-4 flex-shrink-0" />
             <span className="truncate">
-              {[event.place_city, event.place_street].filter(Boolean).join(', ')}
+              {event.place_id
+                ? [event.place_city, event.place_street].filter(Boolean).join(', ')
+                : [event.inline_location?.city, event.inline_location?.street].filter(Boolean).join(', ') || event.inline_location?.name || ''}
             </span>
           </div>
           <ScheduleDisplay schedule={event.schedule} />
+          {event.event_organizers.length > 0 && (
+            <div className="pt-1">
+              <p className="text-xs text-muted-foreground mb-1.5">Organisiert von</p>
+              <div className="flex flex-col gap-1.5">
+                {event.event_organizers.map(org => (
+                  <div key={org.id} className="flex items-center gap-2">
+                    <span
+                      className="inline-flex h-8 w-8 rounded-full flex-shrink-0 items-center justify-center overflow-hidden text-white"
+                      style={{ backgroundColor: org.color || '#6366F1' }}
+                    >
+                      {org.logo_url
+                        ? <img src={org.logo_url} alt={org.name} className="h-8 w-8 object-contain" />
+                        : <span className="text-xs font-bold leading-none">{org.name.charAt(0).toUpperCase()}</span>
+                      }
+                    </span>
+                    <span className="text-xs font-medium text-muted-foreground">{org.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     </Link>

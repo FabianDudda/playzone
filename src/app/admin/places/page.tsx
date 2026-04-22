@@ -1079,7 +1079,7 @@ const PlaceCard = React.memo(function PlaceCard({
                                   <SelectValue placeholder="Select…" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  {['Unbekannt', 'Rasen', 'Kunstrasen', 'Hartplatz', 'Asphalt', 'Kunststoffbelag', 'Asche', 'Sand', 'Sonstiges'].map(s => (
+                                  {['Unbekannt', 'Rasen', 'Kunstrasen', 'Hartplatz', 'Asphalt', 'Kunststoffbelag', 'Asche', 'Sand', 'Stein', 'Holzschnitzel', 'Sonstiges'].map(s => (
                                     <SelectItem key={s} value={s} className="text-xs">{s}</SelectItem>
                                   ))}
                                 </SelectContent>
