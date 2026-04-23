@@ -50,7 +50,7 @@ export default function EventFiltersComponent({
   return (
     <div className={`space-y-2 ${className}`}>
       {/* Sport chips */}
-      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+      <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
         <Chip active={filters.sport === 'all'} onClick={() => onFiltersChange({ ...filters, sport: 'all' })}>
           Alle
         </Chip>
@@ -67,7 +67,7 @@ export default function EventFiltersComponent({
 
       {/* City chips */}
       {cities.length > 0 && (
-        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+        <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
           <Chip active={filters.city === 'all'} onClick={() => onFiltersChange({ ...filters, city: 'all' })}>
             Alle Städte
           </Chip>

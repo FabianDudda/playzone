@@ -205,208 +205,80 @@ function renderIconHtml(icon: string, fontSize: number): string {
   return `<span style="font-size: ${fontSize}px; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">${icon}</span>`
 }
 
-// Create horizontal sport icons layout within pin
-function createSimpleSportIcon(sports: string[], baseSize: number, isSelected: boolean = false): string {
-  const borderWidth = isSelected ? 3 : 2
-  const borderColor = '#FFFFFF'
-  const primaryColor = sportColors[sports[0]] || '#6B7280'
-  
-  // Determine how many icons to show and if we need +X indicator
+// Builds absolutely-positioned icon elements for a pinSize×pinSize area (no background)
+function buildIconElements(sports: string[], pinSize: number): string {
   const maxDisplayIcons = 3
   const sportsToShow = sports.slice(0, Math.min(maxDisplayIcons, sports.length))
   const showOverflow = sports.length > maxDisplayIcons
-  
-  // If we have overflow, show first 2 icons + "+X" indicator (replaces 3rd position)
   const iconsToShow = showOverflow ? sportsToShow.slice(0, 2) : sportsToShow
-  // Calculate remaining count based on actual icons shown (2 when overflow, otherwise all)
   const remainingCount = showOverflow ? Math.max(0, sports.length - 2) : 0
-  
-  // All pins use consistent size - unified width
-  const pinSize = 36
-  
-  // Dynamic icon sizing based on number of sports
+
   let iconSizeRatio
   if (sports.length === 0) {
-    iconSizeRatio = 0.5 // Large for question mark
+    iconSizeRatio = 0.5
   } else if (sports.length === 1) {
-    iconSizeRatio = 0.425 // Large icon for single sport
+    iconSizeRatio = 0.425
   } else if (iconsToShow.length === 2 && !showOverflow) {
-    iconSizeRatio = 0.375 // Medium icons for 2 sports
+    iconSizeRatio = 0.375
   } else {
-    // For 3 sports OR 4+ sports with overflow (triangular layout)
-    iconSizeRatio = 0.35 // Icons for triangular layout
+    iconSizeRatio = 0.35
   }
-  
-  // const iconSize = Math.round(pinSize * iconSizeRatio)
+
   const iconSize = Math.round(pinSize * iconSizeRatio)
   const fontSize = Math.max(8, Math.round(iconSize * 0.8))
-  const verticalSpacing = Math.round(iconSize * 0.1) // Spacing between rows
-  const horizontalSpacing = Math.round(iconSize * 0.2) // Spacing between top icons
-  
-  // Calculate positions for layout - icons positioned in circular head
-  const topRowY = Math.round(pinSize * 0.2) // Top row position in circular head
-  const bottomRowY = topRowY + iconSize + Math.round(verticalSpacing * 0.7) // Bottom row position
-  
-  // Generate all icon elements based on sport count
-  let iconElements = ''
-  
+  const verticalSpacing = Math.round(iconSize * 0.1)
+  const horizontalSpacing = Math.round(iconSize * 0.2)
+  const topRowY = Math.round(pinSize * 0.2)
+  const bottomRowY = topRowY + iconSize + Math.round(verticalSpacing * 0.7)
+
   if (sports.length === 0) {
-    // Question mark for no sports - centered
-    const centerX = (pinSize - iconSize) / 2
-    const centerY = (pinSize - iconSize) / 2
-    iconElements = `
-      <div style="
-        position: absolute;
-        top: ${centerY}px;
-        left: ${centerX}px;
-        width: ${iconSize}px;
-        height: ${iconSize}px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: ${fontSize}px;
-        color: #6B7280;
-        font-weight: bold;
-        z-index: 11;
-      ">
-        ?
-      </div>
-    `
-  } else if (sports.length === 1) {
-    // Single centered icon
-    const icon = sportIcons[sports[0]] || '📍'
-    const centerX = (pinSize - iconSize) / 2
-    const centerY = (pinSize - iconSize) / 2
-    iconElements = `
-      <div style="
-        position: absolute;
-        top: ${centerY}px;
-        left: ${centerX}px;
-        width: ${iconSize}px;
-        height: ${iconSize}px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 11;
-      ">
-        ${renderIconHtml(icon, fontSize)}
-      </div>
-    `
-  } else if (iconsToShow.length === 2 && !showOverflow) {
-    // Two sports side by side - vertically centered
-    const totalTopWidth = 2 * iconSize + horizontalSpacing
-    const topRowStartX = (pinSize - totalTopWidth) / 2
-    const centerY = (pinSize - iconSize) / 2 // Vertically center the row
-    
-    iconElements = iconsToShow.map((sport, index) => {
-      const icon = sportIcons[sport] || '📍'
-      const left = topRowStartX + index * (iconSize + horizontalSpacing)
-      
-      return `
-        <div style="
-          position: absolute;
-          left: ${left}px;
-          top: ${centerY}px;
-          width: ${iconSize}px;
-          height: ${iconSize}px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 11;
-        ">
-          ${renderIconHtml(icon, fontSize)}
-        </div>
-      `
-    }).join('')
-  } else {
-    // Triangular layout for 3+ sports
-    const totalTopWidth = 2 * iconSize + horizontalSpacing
-    const topRowStartX = (pinSize - totalTopWidth) / 2
-    const bottomIconX = (pinSize - iconSize) / 2
-    
-    // Top row icons (first 2)
-    const topIconElements = iconsToShow.slice(0, 2).map((sport, index) => {
-      const icon = sportIcons[sport] || '📍'
-      const left = topRowStartX + index * (iconSize + horizontalSpacing)
-      
-      return `
-        <div style="
-          position: absolute;
-          left: ${left}px;
-          top: ${topRowY}px;
-          width: ${iconSize}px;
-          height: ${iconSize}px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 11;
-        ">
-          ${renderIconHtml(icon, fontSize)}
-        </div>
-      `
-    }).join('')
-    
-    // Bottom element: either 3rd sport icon OR "+X" indicator
-    const bottomElement = showOverflow ? `
-      <div style="
-        position: absolute;
-        left: ${bottomIconX}px;
-        top: ${bottomRowY}px;
-        width: ${iconSize}px;
-        height: ${iconSize}px;
-        background-color: rgba(255, 255, 255, 0.9);
-        border: 1px solid rgba(0, 0, 0, 0.2);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: ${Math.max(6, fontSize - 2)}px;
-        font-weight: bold;
-        color: #374151;
-        z-index: 12;
-      ">
-        +${remainingCount}
-      </div>
-    ` : `
-      <div style="
-        position: absolute;
-        left: ${bottomIconX}px;
-        top: ${bottomRowY}px;
-        width: ${iconSize}px;
-        height: ${iconSize}px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 11;
-      ">
-        ${renderIconHtml(sportIcons[iconsToShow[2]] || '📍', fontSize)}
-      </div>
-    `
-    
-    iconElements = topIconElements + bottomElement
+    const cx = (pinSize - iconSize) / 2
+    const cy = (pinSize - iconSize) / 2
+    return `<div style="position:absolute;top:${cy}px;left:${cx}px;width:${iconSize}px;height:${iconSize}px;display:flex;align-items:center;justify-content:center;font-size:${fontSize}px;color:#6B7280;font-weight:bold;z-index:11;">?</div>`
   }
-  
-  // Single unified teardrop background for ALL cases
-  const bgColor = isSelected ? 'hsl(var(--primary))' : 'white'
-  const boxShadow = '0 3px 8px rgba(0,0,0,0.3)'
+
+  if (sports.length === 1) {
+    const icon = sportIcons[sports[0]] || '📍'
+    const cx = (pinSize - iconSize) / 2
+    const cy = (pinSize - iconSize) / 2
+    return `<div style="position:absolute;top:${cy}px;left:${cx}px;width:${iconSize}px;height:${iconSize}px;display:flex;align-items:center;justify-content:center;z-index:11;">${renderIconHtml(icon, fontSize)}</div>`
+  }
+
+  if (iconsToShow.length === 2 && !showOverflow) {
+    const totalW = 2 * iconSize + horizontalSpacing
+    const startX = (pinSize - totalW) / 2
+    const cy = (pinSize - iconSize) / 2
+    return iconsToShow.map((sport, i) => {
+      const left = startX + i * (iconSize + horizontalSpacing)
+      return `<div style="position:absolute;left:${left}px;top:${cy}px;width:${iconSize}px;height:${iconSize}px;display:flex;align-items:center;justify-content:center;z-index:11;">${renderIconHtml(sportIcons[sport] || '📍', fontSize)}</div>`
+    }).join('')
+  }
+
+  // Triangular layout for 3+ sports
+  const totalW = 2 * iconSize + horizontalSpacing
+  const startX = (pinSize - totalW) / 2
+  const bottomX = (pinSize - iconSize) / 2
+
+  const topRow = iconsToShow.slice(0, 2).map((sport, i) => {
+    const left = startX + i * (iconSize + horizontalSpacing)
+    return `<div style="position:absolute;left:${left}px;top:${topRowY}px;width:${iconSize}px;height:${iconSize}px;display:flex;align-items:center;justify-content:center;z-index:11;">${renderIconHtml(sportIcons[sport] || '📍', fontSize)}</div>`
+  }).join('')
+
+  const bottom = showOverflow
+    ? `<div style="position:absolute;left:${bottomX}px;top:${bottomRowY}px;width:${iconSize}px;height:${iconSize}px;background-color:rgba(255,255,255,0.9);border:1px solid rgba(0,0,0,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:${Math.max(6, fontSize - 2)}px;font-weight:bold;color:#374151;z-index:12;">+${remainingCount}</div>`
+    : `<div style="position:absolute;left:${bottomX}px;top:${bottomRowY}px;width:${iconSize}px;height:${iconSize}px;display:flex;align-items:center;justify-content:center;z-index:11;">${renderIconHtml(sportIcons[iconsToShow[2]] || '📍', fontSize)}</div>`
+
+  return topRow + bottom
+}
+
+// Create horizontal sport icons layout within pin
+function createSimpleSportIcon(sports: string[], baseSize: number, isSelected: boolean = false, hasEvents: boolean = false): string {
+  const pinSize = 36
+  const bgColor = isSelected ? 'hsl(var(--primary))' : hasEvents ? '#6366F1' : 'white'
 
   return `
-    <!-- Unified teardrop pin background -->
-    <div style="
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: ${pinSize}px;
-      height: ${Math.round(pinSize)}px;
-      background-color: ${bgColor};
-      border-radius: 50% 50% 50% 0;
-      transform: rotate(-45deg);
-      transform-origin: center center;
-      box-shadow: ${boxShadow};
-      z-index: 10;
-    "></div>
-
-    ${iconElements}
+    <div style="position:absolute;top:0;left:0;width:${pinSize}px;height:${pinSize}px;background-color:${bgColor};border-radius:50% 50% 50% 0;transform:rotate(-45deg);transform-origin:center center;box-shadow:0 3px 8px rgba(0,0,0,0.3);z-index:10;"></div>
+    ${buildIconElements(sports, pinSize)}
   `
 }
 
@@ -437,8 +309,7 @@ export function createSportIcon(sports: string[], isSelected = false, hasEvents 
         width: ${containerWidth}px;
         height: ${containerHeight}px;
       ">
-        ${createSimpleSportIcon(validSports, pinSize, isSelected)}
-        ${hasEvents ? '<div class="event-diamond-badge"></div>' : ''}
+        ${createSimpleSportIcon(validSports, pinSize, isSelected, hasEvents)}
       </div>
     `,
     iconSize: [containerWidth, containerHeight],
@@ -508,7 +379,7 @@ export function createOrganizerIcon(color: string, logoUrl?: string | null, isSe
   return icon
 }
 
-// Create event-only place marker: neutral indigo diamond with sport icons upright inside
+// Create event-only place marker: indigo diamond with sport icons using same layout as place pins
 export function createEventOnlyIcon(sports: string[], isSelected = false): L.DivIcon {
   const validSports = Array.isArray(sports) ? sports.filter(Boolean) : []
   const cacheKey = `event-only-${getSportsCacheKey(validSports, isSelected, false)}`
@@ -518,59 +389,14 @@ export function createEventOnlyIcon(sports: string[], isSelected = false): L.Div
   const pinSize = 36
   const containerWidth = pinSize + 8
   const containerHeight = Math.round(pinSize * 1.3) + 8
-
   const bgColor = isSelected ? 'hsl(var(--primary))' : '#6366F1'
-  const borderColor = '#FFFFFF'
-
-  // Sport icons rendered upright inside the rotated diamond via counter-rotation
-  const iconAreaSize = Math.round(pinSize * 0.65)
-  const iconAreaOffset = Math.round((pinSize - iconAreaSize) / 2)
-
-  // Build sport icon HTML (reuse same logic as teardrop: 1–3 icons)
-  const iconsToShow = validSports.slice(0, 3)
-  const iconSize = iconsToShow.length === 1 ? Math.round(iconAreaSize * 0.55) : Math.round(iconAreaSize * 0.42)
-  const fontSize = Math.max(8, Math.round(iconSize * 0.8))
-  const gap = Math.round(iconSize * 0.15)
-
-  let iconHtml = ''
-  if (iconsToShow.length === 0) {
-    iconHtml = `<span style="font-size:${fontSize}px;color:white;font-weight:bold;">?</span>`
-  } else if (iconsToShow.length === 1) {
-    iconHtml = renderIconHtml(sportIcons[iconsToShow[0]] || '📍', fontSize)
-  } else if (iconsToShow.length === 2) {
-    iconHtml = iconsToShow.map(s => renderIconHtml(sportIcons[s] || '📍', fontSize)).join(`<span style="display:inline-block;width:${gap}px;"></span>`)
-  } else {
-    const top = iconsToShow.slice(0, 2).map(s => renderIconHtml(sportIcons[s] || '📍', fontSize)).join(`<span style="display:inline-block;width:${gap}px;"></span>`)
-    const bot = renderIconHtml(sportIcons[iconsToShow[2]] || '📍', fontSize)
-    iconHtml = `<div style="display:flex;justify-content:center;">${top}</div><div style="display:flex;justify-content:center;margin-top:${gap}px;">${bot}</div>`
-  }
 
   const html = `
     <div style="position:relative;width:${containerWidth}px;height:${containerHeight}px;">
-      <div style="
-        position:absolute;
-        top:0;left:4px;
-        width:${pinSize}px;height:${pinSize}px;
-        background-color:${bgColor};
-        border:2px solid ${borderColor};
-        border-radius:4px;
-        transform:rotate(45deg);
-        transform-origin:center center;
-        box-shadow:0 3px 8px rgba(0,0,0,0.3);
-        z-index:10;
-      "></div>
-      <div style="
-        position:absolute;
-        top:${iconAreaOffset}px;
-        left:${iconAreaOffset + 4}px;
-        width:${iconAreaSize}px;
-        height:${iconAreaSize}px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        flex-direction:column;
-        z-index:11;
-      ">${iconHtml}</div>
+      <div style="position:absolute;top:0;left:4px;width:${pinSize}px;height:${pinSize}px;background-color:${bgColor};border-radius:4px;transform:rotate(45deg);transform-origin:center center;box-shadow:0 3px 8px rgba(0,0,0,0.3);z-index:10;"></div>
+      <div style="position:absolute;top:0;left:4px;width:${pinSize}px;height:${pinSize}px;">
+        ${buildIconElements(validSports, pinSize)}
+      </div>
     </div>
   `
 

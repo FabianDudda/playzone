@@ -27,6 +27,8 @@ interface OrganizerForm {
   logo_url: string
   website: string
   instagram: string
+  email: string
+  phone: string
 }
 
 interface PendingCover {
@@ -42,6 +44,8 @@ const emptyForm: OrganizerForm = {
   logo_url: '',
   website: '',
   instagram: '',
+  email: '',
+  phone: '',
 }
 
 function slugify(name: string): string {
@@ -163,6 +167,8 @@ export default function OrganizersAdminPage() {
       logo_url: org.logo_url || '',
       website: org.website || '',
       instagram: org.instagram || '',
+      email: org.email || '',
+      phone: org.phone || '',
     })
     setPendingCovers([])
     setDialogOpen(true)
@@ -257,7 +263,9 @@ export default function OrganizersAdminPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-3">
+        <div className="space-y-6">
+          {/* All organizers */}
+          <div className="grid gap-3">
           {organizers.map((org) => (
             <Card key={org.id}>
               <CardContent className="py-4 px-5 flex items-center gap-4">
@@ -270,7 +278,9 @@ export default function OrganizersAdminPage() {
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium">{org.name}</div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-medium">{org.name}</span>
+                  </div>
                   <div className="text-xs text-muted-foreground">/{org.slug}</div>
                   {org.description && (
                     <div className="text-sm text-muted-foreground mt-0.5 truncate">{org.description}</div>
@@ -287,6 +297,7 @@ export default function OrganizersAdminPage() {
               </CardContent>
             </Card>
           ))}
+          </div>
         </div>
       )}
 
@@ -425,6 +436,26 @@ export default function OrganizersAdminPage() {
                   value={form.instagram}
                   onChange={(e) => setForm(f => ({ ...f, instagram: e.target.value }))}
                   placeholder="@handle"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label>E-Mail</Label>
+                <Input
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => setForm(f => ({ ...f, email: e.target.value }))}
+                  placeholder="info@example.com"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Telefon</Label>
+                <Input
+                  type="tel"
+                  value={form.phone}
+                  onChange={(e) => setForm(f => ({ ...f, phone: e.target.value }))}
+                  placeholder="+49 123 456789"
                 />
               </div>
             </div>

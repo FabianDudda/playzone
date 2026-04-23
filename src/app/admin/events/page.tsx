@@ -20,7 +20,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { useToast } from '@/hooks/use-toast'
-import { CheckCircle, XCircle, Calendar, MapPin, User, Clock } from 'lucide-react'
+import { CheckCircle, XCircle, Calendar, MapPin, User, Clock, ChevronRight } from 'lucide-react'
 import { sportNames, sportIcons } from '@/lib/utils/sport-utils'
 import Link from 'next/link'
 
@@ -142,6 +142,130 @@ function EventCard({
   )
 }
 
+const FIELD_LABELS: Record<string, string> = {
+  title: 'Titel',
+  description: 'Beschreibung',
+  sports: 'Sportarten',
+  place_id: 'Ort',
+  inline_location: 'Ort (manuell)',
+  schedule: 'Termine',
+  contact: 'Kontakt',
+  image_url: 'Titelbild',
+  location_type: 'Hallentyp',
+  age_restriction: 'Altersgruppe',
+  gender_restriction: 'Zielgruppe',
+  organizer_ids: 'Veranstalter',
+}
+
+function renderValue(key: string, value: any): string {
+  if (value === null || value === undefined) return '–'
+  if (key === 'sports' && Array.isArray(value)) return value.map((s: string) => sportNames[s] || s).join(', ')
+  if (key === 'schedule') {
+    const s = value as any
+    if (s.type === 'recurring') return `Wiederkehrend (${s.slots?.length ?? 0} Slot(s))`
+    return `${s.dates?.length ?? 0} Datum/Termine`
+  }
+  if (key === 'inline_location' && typeof value === 'object') return value.name || JSON.stringify(value)
+  if (key === 'contact' && typeof value === 'object') return Object.values(value).filter(Boolean).join(', ') || '–'
+  if (key === 'image_url') return value ? 'Bild gesetzt' : '–'
+  if (typeof value === 'object') return JSON.stringify(value)
+  return String(value)
+}
+
+function UpdateCard({
+  event,
+  onApply,
+  onReject,
+  isPending,
+}: {
+  event: EventWithDetails
+  onApply: (id: string) => void
+  onReject: (id: string) => void
+  isPending: boolean
+}) {
+  const changes = (event as any).pending_changes as Record<string, any> | null
+  if (!changes) return null
+
+  const changedKeys = Object.keys(changes).filter(k => FIELD_LABELS[k])
+
+  return (
+    <Card className="mb-3">
+      <CardContent className="pt-4 pb-3">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-2 flex-wrap">
+              <span className="text-base font-semibold truncate">{event.title}</span>
+              <Badge variant="outline" className="text-xs shrink-0 text-amber-600 border-amber-400">
+                Aktualisierung ausstehend
+              </Badge>
+            </div>
+
+            <div className="space-y-0.5 text-xs text-muted-foreground mb-3">
+              <div className="flex items-center gap-1.5">
+                <User className="h-3 w-3 shrink-0" />
+                <span>{event.creator_name || '–'}</span>
+                {event.creator_email && <span className="text-muted-foreground/70">({event.creator_email})</span>}
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Clock className="h-3 w-3 shrink-0" />
+                <span>Eingereicht: {new Date(event.updated_at).toLocaleDateString('de-DE')}</span>
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-border bg-muted/30 divide-y divide-border text-xs">
+              {changedKeys.map(key => (
+                <div key={key} className="px-3 py-2">
+                  <span className="font-medium text-foreground">{FIELD_LABELS[key]}</span>
+                  <div className="mt-1 flex items-start gap-2">
+                    <span className="text-muted-foreground line-through shrink-0 min-w-0 break-words">
+                      {renderValue(key, (event as any)[key])}
+                    </span>
+                    <ChevronRight className="h-3 w-3 shrink-0 mt-0.5 text-muted-foreground" />
+                    <span className="text-foreground font-medium break-words">
+                      {renderValue(key, changes[key])}
+                    </span>
+                  </div>
+                </div>
+              ))}
+              {changedKeys.length === 0 && (
+                <div className="px-3 py-2 text-muted-foreground">Keine erkannten Felder geändert</div>
+              )}
+            </div>
+
+            <div className="mt-2">
+              <Link href={`/events/${event.id}`} target="_blank" className="text-xs text-primary hover:underline">
+                Event ansehen →
+              </Link>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-1.5 shrink-0">
+            <Button
+              size="sm"
+              className="h-8 px-3 text-xs"
+              onClick={() => onApply(event.id)}
+              disabled={isPending}
+            >
+              <CheckCircle className="h-3.5 w-3.5 mr-1" />
+              Übernehmen
+            </Button>
+            <Button
+              size="sm"
+              variant="destructive"
+              className="h-8 px-3 text-xs"
+              onClick={() => onReject(event.id)}
+              disabled={isPending}
+            >
+              <XCircle className="h-3.5 w-3.5 mr-1" />
+              Ablehnen
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
 export default function AdminEventsPage() {
   const { user } = useAuth()
   const { toast } = useToast()
@@ -165,8 +289,13 @@ export default function AdminEventsPage() {
     queryFn: () => database.events.getForAdmin('rejected'),
   })
 
+  const { data: pendingUpdateEvents = [], isLoading: loadingUpdates } = useQuery({
+    queryKey: ['admin-events', 'pending-updates'],
+    queryFn: () => database.events.getWithPendingChanges(),
+  })
+
   const moderateMutation = useMutation({
-    mutationFn: ({
+    mutationFn: async ({
       eventId,
       status,
       reason,
@@ -174,7 +303,17 @@ export default function AdminEventsPage() {
       eventId: string
       status: 'approved' | 'rejected'
       reason?: string
-    }) => database.events.moderate(eventId, status, user!.id, reason),
+    }) => {
+      const res = await fetch(`/api/admin/events/${eventId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ moderation_status: status, rejection_reason: reason ?? null }),
+      })
+      if (!res.ok) {
+        const json = await res.json()
+        throw new Error(json.error || 'Fehler bei der Moderation')
+      }
+    },
     onSuccess: (_, vars) => {
       queryClient.invalidateQueries({ queryKey: ['admin-events'] })
       queryClient.invalidateQueries({ queryKey: ['events'] })
@@ -183,6 +322,28 @@ export default function AdminEventsPage() {
       })
       setRejectTarget(null)
       setRejectionReason('')
+    },
+    onError: () => {
+      toast({ title: 'Fehler', description: 'Aktion konnte nicht ausgeführt werden.', variant: 'destructive' })
+    },
+  })
+
+  const updateMutation = useMutation({
+    mutationFn: async ({ eventId, action }: { eventId: string; action: 'apply_update' | 'reject_update' }) => {
+      const res = await fetch(`/api/admin/events/${eventId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action }),
+      })
+      if (!res.ok) {
+        const json = await res.json()
+        throw new Error(json.error || 'Fehler')
+      }
+    },
+    onSuccess: (_, vars) => {
+      queryClient.invalidateQueries({ queryKey: ['admin-events'] })
+      queryClient.invalidateQueries({ queryKey: ['events'] })
+      toast({ title: vars.action === 'apply_update' ? 'Änderungen übernommen' : 'Änderungen abgelehnt' })
     },
     onError: () => {
       toast({ title: 'Fehler', description: 'Aktion konnte nicht ausgeführt werden.', variant: 'destructive' })
@@ -219,6 +380,14 @@ export default function AdminEventsPage() {
               </Badge>
             )}
           </TabsTrigger>
+          <TabsTrigger value="updates">
+            Aktualisierungen
+            {pendingUpdateEvents.length > 0 && (
+              <Badge variant="destructive" className="ml-1.5 px-1.5 py-0 text-xs">
+                {pendingUpdateEvents.length}
+              </Badge>
+            )}
+          </TabsTrigger>
           <TabsTrigger value="approved">Freigegeben</TabsTrigger>
           <TabsTrigger value="rejected">Abgelehnt</TabsTrigger>
         </TabsList>
@@ -231,6 +400,24 @@ export default function AdminEventsPage() {
           ) : (
             pendingEvents.map(e => (
               <EventCard key={e.id} event={e} onApprove={handleApprove} onReject={setRejectTarget} />
+            ))
+          )}
+        </TabsContent>
+
+        <TabsContent value="updates">
+          {loadingUpdates ? (
+            <p className="text-sm text-muted-foreground">Wird geladen…</p>
+          ) : pendingUpdateEvents.length === 0 ? (
+            <Card><CardContent className="py-8 text-center text-muted-foreground text-sm">Keine ausstehenden Aktualisierungen</CardContent></Card>
+          ) : (
+            pendingUpdateEvents.map(event => (
+              <UpdateCard
+                key={event.id}
+                event={event}
+                onApply={id => updateMutation.mutate({ eventId: id, action: 'apply_update' })}
+                onReject={id => updateMutation.mutate({ eventId: id, action: 'reject_update' })}
+                isPending={updateMutation.isPending}
+              />
             ))
           )}
         </TabsContent>

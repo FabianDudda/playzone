@@ -1,9 +1,8 @@
 'use client'
 
-import { Plus, Trash2, Calendar, Clock } from 'lucide-react'
+import { Plus, Trash2, Calendar, Clock, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { EventSchedule, ScheduleSlot, RecurringSlot } from '@/lib/supabase/types'
 
@@ -24,7 +23,7 @@ const WEEKDAYS: { key: RecurringSlot['day']; label: string }[] = [
 
 type ScheduleMode = 'dates' | 'recurring'
 
-const emptyDateSlot = (): ScheduleSlot => ({ date: '', start_time: '', end_time: '' })
+const emptyDateSlot = (): ScheduleSlot => ({ date: '', start_time: '', end_time: null })
 
 function emptySchedule(mode: ScheduleMode): EventSchedule {
   if (mode === 'recurring') return { type: 'recurring', slots: [] }
@@ -42,7 +41,7 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
   // --- dates helpers ---
   const dates = value.type !== 'recurring' ? value.dates : []
 
-  const updateDate = (i: number, field: keyof ScheduleSlot, val: string) => {
+  const updateDate = (i: number, field: keyof ScheduleSlot, val: string | null) => {
     if (value.type === 'recurring') return
     const next = [...value.dates]
     next[i] = { ...next[i], [field]: val }
@@ -72,13 +71,13 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
   const toggleDay = (day: RecurringSlot['day'], checked: boolean) => {
     if (value.type !== 'recurring') return
     if (checked) {
-      onChange({ ...value, slots: [...value.slots, { day, start_time: '18:00', end_time: '20:00' }] })
+      onChange({ ...value, slots: [...value.slots, { day, start_time: '18:00', end_time: null }] })
     } else {
       onChange({ ...value, slots: value.slots.filter(s => s.day !== day) })
     }
   }
 
-  const updateDayTime = (day: RecurringSlot['day'], field: 'start_time' | 'end_time', val: string) => {
+  const updateDayTime = (day: RecurringSlot['day'], field: 'start_time' | 'end_time', val: string | null) => {
     if (value.type !== 'recurring') return
     onChange({
       ...value,
@@ -135,17 +134,27 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
                   />
                 </div>
               </div>
-           
               <div>
-                {i === 0 && <Label className="text-xs mb-1 block">Endzeit</Label>}
-                <div className="relative">
-                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-                  <Input
-                    type="time"
-                    value={slot.end_time}
-                    onChange={e => updateDate(i, 'end_time', e.target.value)}
-                    className="w-[90px] pl-9"
-                  />
+                {i === 0 && (
+                  <Label className="text-xs mb-1 block">
+                    Endzeit <span className="text-muted-foreground font-normal">(optional)</span>
+                  </Label>
+                )}
+                <div className="flex items-center gap-1">
+                  <div className="relative">
+                    <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                    <Input
+                      type="time"
+                      value={slot.end_time ?? ''}
+                      onChange={e => updateDate(i, 'end_time', e.target.value || null)}
+                      className="w-[90px] pl-9"
+                    />
+                  </div>
+                  {slot.end_time && (
+                    <button type="button" onClick={() => updateDate(i, 'end_time', null)} className="text-muted-foreground hover:text-foreground transition-colors">
+                      <X className="h-4 w-4" />
+                    </button>
+                  )}
                 </div>
               </div>
               {dates.length > 1 && (
@@ -155,19 +164,16 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
               )}
             </div>
           ))}
-          {mode === 'dates' && (
-            <Button type="button" variant="outline" size="sm" onClick={addDate} className="w-full">
-              <Plus className="h-4 w-4 mr-1" />
-              Termin hinzufügen
-            </Button>
-          )}
+          <Button type="button" variant="outline" size="sm" onClick={addDate} className="w-full">
+            <Plus className="h-4 w-4 mr-1" />
+            Termin hinzufügen
+          </Button>
         </div>
       )}
 
       {/* Recurring */}
       {mode === 'recurring' && (
         <div className="space-y-3">
-          {/* Day picker bar */}
           <div className="flex gap-1.5">
             {WEEKDAYS.map(({ key, label }) => {
               const active = isDayChecked(key)
@@ -188,7 +194,6 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
             })}
           </div>
 
-          {/* Time rows for selected days */}
           {slots.length === 0 && (
             <p className="text-xs text-muted-foreground">Wähle mindestens einen Wochentag aus.</p>
           )}
@@ -196,8 +201,9 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
             <div className="flex gap-2 items-center">
               <span className="w-7 flex-shrink-0" />
               <Label className="text-xs w-24 block">Startzeit</Label>
-              <span className="text-xs invisible">–</span>
-              <Label className="text-xs w-24 block">Endzeit</Label>
+              <Label className="text-xs block">
+                Endzeit <span className="text-muted-foreground font-normal">(optional)</span>
+              </Label>
             </div>
           )}
           {WEEKDAYS.filter(({ key }) => isDayChecked(key)).map(({ key, label }) => {
@@ -214,15 +220,21 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
                     className="w-24 pl-9"
                   />
                 </div>
-    
-                <div className="relative">
-                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-                  <Input
-                    type="time"
-                    value={slot.end_time}
-                    onChange={e => updateDayTime(key, 'end_time', e.target.value)}
-                    className="w-24 pl-9"
-                  />
+                <div className="flex items-center gap-1">
+                  <div className="relative">
+                    <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                    <Input
+                      type="time"
+                      value={slot.end_time ?? ''}
+                      onChange={e => updateDayTime(key, 'end_time', e.target.value || null)}
+                      className="w-24 pl-9"
+                    />
+                  </div>
+                  {slot.end_time && (
+                    <button type="button" onClick={() => updateDayTime(key, 'end_time', null)} className="text-muted-foreground hover:text-foreground transition-colors">
+                      <X className="h-4 w-4" />
+                    </button>
+                  )}
                 </div>
               </div>
             )

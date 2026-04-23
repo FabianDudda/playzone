@@ -76,6 +76,10 @@ export type Database = {
           color: string | null
           website: string | null
           instagram: string | null
+          email: string | null
+          phone: string | null
+          owner_id: string | null
+          verified: boolean
           created_by: string | null
           created_at: string
         }
@@ -88,6 +92,10 @@ export type Database = {
           color?: string | null
           website?: string | null
           instagram?: string | null
+          email?: string | null
+          phone?: string | null
+          owner_id?: string | null
+          verified?: boolean
           created_by?: string | null
           created_at?: string
         }
@@ -100,6 +108,10 @@ export type Database = {
           color?: string | null
           website?: string | null
           instagram?: string | null
+          email?: string | null
+          phone?: string | null
+          owner_id?: string | null
+          verified?: boolean
           created_by?: string | null
           created_at?: string
         }
@@ -1005,13 +1017,13 @@ export type EventType = 'session' | 'pickup' | 'tournament'
 export interface ScheduleSlot {
   date: string
   start_time: string
-  end_time: string
+  end_time?: string | null
 }
 
 export interface RecurringSlot {
   day: 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday'
   start_time: string
-  end_time: string
+  end_time?: string | null
 }
 
 export type EventSchedule =
@@ -1151,6 +1163,10 @@ export interface OrganizerSummary {
   name: string
   color: string | null
   logo_url: string | null
+  website: string | null
+  instagram: string | null
+  email: string | null
+  phone: string | null
 }
 
 export interface OrganizerImage {
@@ -1192,6 +1208,7 @@ export interface EventWithDetails extends Event {
   moderated_by: string | null
   moderated_at: string | null
   rejection_reason: string | null
+  pending_changes: Record<string, any> | null
 }
 
 export interface Area {

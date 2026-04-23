@@ -15,7 +15,6 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { getSportBadgeClasses, sportNames, sportIcons } from '@/lib/utils/sport-utils'
 import ScheduleDisplay from '@/components/events/schedule-display'
-import ContactDisplay from '@/components/events/contact-display'
 import BookmarkButton from '@/components/events/bookmark-button'
 import dynamic from 'next/dynamic'
 
@@ -148,35 +147,11 @@ function EventContent({ params }: EventPageProps) {
 
       <Card className="mb-3">
         <CardContent className="px-4 py-4 space-y-4">
-          {/* Title & sport */}
+          {/* Title */}
           <div>
-            <div className="flex items-start gap-2 mb-1">
-              <h1 className="text-2xl font-bold flex-1">{event.title}</h1>
-              <div className="flex flex-wrap gap-1 mt-1 flex-shrink-0">
-                {event.sports.map(sport => (
-                  <Badge key={sport} variant="secondary">
-                    {sportIcons[sport]} {sportNames[sport]}
-                  </Badge>
-                ))}
-              </div>
-            </div>
+            <h1 className="text-2xl font-bold">{event.title}</h1>
             {event.status === 'cancelled' && (
-              <Badge variant="destructive">Abgesagt</Badge>
-            )}
-            {(event.location_type || event.gender_restriction || event.age_restriction) && (
-              <div className="flex flex-wrap gap-1.5 mt-2">
-                {event.location_type === 'indoor' && <Badge variant="secondary">🏠 Indoor</Badge>}
-                {event.location_type === 'outdoor' && <Badge variant="secondary">☀️ Outdoor</Badge>}
-                {event.location_type === 'both' && <Badge variant="secondary">↔️ Indoor & Outdoor</Badge>}
-                {event.gender_restriction === 'male' && <Badge variant="secondary">♂ Nur Männer</Badge>}
-                {event.gender_restriction === 'female' && <Badge variant="secondary">♀ Nur Frauen</Badge>}
-                {event.age_restriction?.type === 'min' && event.age_restriction.min && (
-                  <Badge variant="secondary">👤 Ab {event.age_restriction.min} Jahren</Badge>
-                )}
-                {event.age_restriction?.type === 'range' && event.age_restriction.min && event.age_restriction.max && (
-                  <Badge variant="secondary">👤 {event.age_restriction.min}–{event.age_restriction.max} Jahre</Badge>
-                )}
-              </div>
+              <Badge variant="destructive" className="mt-1">Abgesagt</Badge>
             )}
           </div>
 
@@ -186,6 +161,26 @@ function EventContent({ params }: EventPageProps) {
               <img src={event.image_url} alt={event.title} className="w-full h-full object-cover" />
             </div>
           )}
+
+          {/* Attribute pills */}
+          <div className="flex flex-wrap gap-1.5">
+            {event.sports.map(sport => (
+              <Badge key={sport} variant="secondary">
+                {sportIcons[sport]} {sportNames[sport]}
+              </Badge>
+            ))}
+            {event.location_type === 'indoor' && <Badge variant="secondary">🏠 Indoor</Badge>}
+            {event.location_type === 'outdoor' && <Badge variant="secondary">☀️ Outdoor</Badge>}
+            {event.location_type === 'both' && <Badge variant="secondary">↔️ Indoor & Outdoor</Badge>}
+            {event.gender_restriction === 'male' && <Badge variant="secondary">♂ Nur Männer</Badge>}
+            {event.gender_restriction === 'female' && <Badge variant="secondary">♀ Nur Frauen</Badge>}
+            {event.age_restriction?.type === 'min' && event.age_restriction.min && (
+              <Badge variant="secondary">👤 Ab {event.age_restriction.min} Jahren</Badge>
+            )}
+            {event.age_restriction?.type === 'range' && event.age_restriction.min && event.age_restriction.max && (
+              <Badge variant="secondary">👤 {event.age_restriction.min}–{event.age_restriction.max} Jahre</Badge>
+            )}
+          </div>
 
           {/* Schedule */}
           <div>
@@ -208,16 +203,14 @@ function EventContent({ params }: EventPageProps) {
               <div className="space-y-3">
                 {eventOrganizers.map(org => (
                   <div key={org.id} className="flex items-center gap-3">
-                    <div
-                      className="h-10 w-10 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold text-sm"
-                      style={{ backgroundColor: org.color || '#6366F1' }}
-                    >
-                      {org.logo_url
-                        // eslint-disable-next-line @next/next/no-img-element
-                        ? <img src={org.logo_url} alt={org.name} className="h-10 w-10 rounded-full object-contain" />
-                        : org.name.charAt(0).toUpperCase()
-                      }
-                    </div>
+                    {org.logo_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={org.logo_url} alt={org.name} className="h-10 w-10 rounded-full object-contain flex-shrink-0" />
+                    ) : (
+                      <div className="h-10 w-10 rounded-full flex-shrink-0 flex items-center justify-center bg-muted text-muted-foreground font-bold text-sm">
+                        {org.name.charAt(0).toUpperCase()}
+                      </div>
+                    )}
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-sm">{org.name}</p>
                       <div className="flex items-center gap-3 mt-0.5 flex-wrap">
@@ -231,6 +224,16 @@ function EventContent({ params }: EventPageProps) {
                             {org.instagram.startsWith('@') ? org.instagram : `@${org.instagram}`}
                           </a>
                         )}
+                        {org.email && (
+                          <a href={`mailto:${org.email}`} className="text-xs text-primary hover:underline">
+                            {org.email}
+                          </a>
+                        )}
+                        {org.phone && (
+                          <a href={`tel:${org.phone}`} className="text-xs text-primary hover:underline">
+                            {org.phone}
+                          </a>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -239,13 +242,6 @@ function EventContent({ params }: EventPageProps) {
             </div>
           )}
 
-          {/* Contact */}
-          {(event.contact?.name || event.contact?.email || event.contact?.phone || event.contact?.instagram || event.contact?.website) && (
-            <div>
-              <h2 className="text-sm font-semibold text-muted-foreground mb-2">Kontakt</h2>
-              <ContactDisplay contact={event.contact} />
-            </div>
-          )}
         </CardContent>
       </Card>
 

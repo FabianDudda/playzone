@@ -102,6 +102,13 @@ function EditEventContent({ params }: EventPageProps) {
     staleTime: 60_000,
   })
 
+  const { data: userOrganizer = null } = useQuery({
+    queryKey: ['my-organizer', user?.id],
+    queryFn: () => database.organizers.getByOwner(user!.id),
+    enabled: !!user && !isAdmin,
+    staleTime: 60_000,
+  })
+
   const mutation = useMutation({
     mutationFn: async () => {
       const errs: EventFormErrors = {}
@@ -114,7 +121,7 @@ function EditEventContent({ params }: EventPageProps) {
         if (!form.inlineLocationName.trim()) errs.placeId = 'Bitte gib einen Ortsnamen ein'
         if (!form.inlineLocationCoords) errs.placeId = 'Bitte markiere den Ort auf der Karte'
       }
-      if (form.schedule.type !== 'recurring' && form.schedule.dates.some(d => !d.date || !d.start_time || !d.end_time)) {
+      if (form.schedule.type !== 'recurring' && form.schedule.dates.some(d => !d.date || !d.start_time)) {
         errs.schedule = 'Bitte alle Datum- und Zeitfelder ausfüllen'
       }
       if (form.schedule.type === 'recurring' && form.schedule.slots.length === 0) {
@@ -135,28 +142,38 @@ function EditEventContent({ params }: EventPageProps) {
           }
         : null
 
-      const { error } = await database.events.updateEvent(eventId, {
+      const payload = {
         title: form.title.trim(),
         description: form.description.trim() || null,
         sports: form.sports,
         place_id: placeId,
         inline_location: inlineLocation,
         schedule: form.schedule,
-        contact: form.contact,
+        contact: {},
         image_url: form.imageUrl,
         location_type: form.locationType,
         age_restriction: form.ageRestriction,
         gender_restriction: form.genderRestriction,
         organizer_id: form.organizerIds[0] ?? null,
         organizer_ids: form.organizerIds,
-      })
+      }
 
-      if (error) throw new Error('Fehler beim Speichern')
+      if (isAdmin) {
+        const { error } = await database.events.updateEvent(eventId, payload)
+        if (error) throw new Error('Fehler beim Speichern')
+      } else {
+        const { error } = await database.events.submitUpdate(eventId, payload)
+        if (error) throw new Error('Fehler beim Einreichen')
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['events'] })
       queryClient.invalidateQueries({ queryKey: ['event', eventId] })
-      toast({ title: 'Event gespeichert!' })
+      if (isAdmin) {
+        toast({ title: 'Event gespeichert!' })
+      } else {
+        toast({ title: 'Änderungen eingereicht', description: 'Deine Änderungen werden geprüft und bald übernommen.' })
+      }
       router.push(`/events/${eventId}`)
     },
     onError: (err: Error) => {
@@ -230,6 +247,7 @@ function EditEventContent({ params }: EventPageProps) {
       onRemoveImage={removeImage}
       onSelectImageUrl={(url) => { setImagePreview(url); setForm(f => ({ ...f, imageUrl: url })) }}
       organizers={organizers}
+      userOrganizer={userOrganizer}
       isAdmin={isAdmin}
       onSubmit={() => mutation.mutate()}
       isPending={mutation.isPending}

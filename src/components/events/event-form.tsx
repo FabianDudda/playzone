@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { ArrowLeft, ImagePlus, X, MapPin, Loader2, Info } from 'lucide-react'
@@ -14,7 +14,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import ScheduleEditor from '@/components/events/schedule-editor'
-import ContactEditor from '@/components/events/contact-editor'
 import PlaceMapSelector from '@/components/events/place-map-selector'
 import dynamic from 'next/dynamic'
 
@@ -86,6 +85,7 @@ interface EventFormProps {
   onSelectImageUrl: (url: string) => void
 
   organizers: Organizer[]
+  userOrganizer: Organizer | null
   isAdmin: boolean
 
   onSubmit: () => void
@@ -106,13 +106,19 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 export default function EventForm({
   form, setForm, errors, setErrors,
   imagePreview, imageUploading, fileInputRef, onImageChange, onRemoveImage, onSelectImageUrl,
-  organizers, isAdmin,
+  organizers, userOrganizer, isAdmin,
   onSubmit, isPending,
   pageTitle, submitLabel, pendingLabel,
   preselectedPlaceId, initialCenter,
 }: EventFormProps) {
   const router = useRouter()
   const [isDetectingAddress, setIsDetectingAddress] = useState(false)
+
+  useEffect(() => {
+    if (userOrganizer && !isAdmin && !form.organizerIds.includes(userOrganizer.id)) {
+      setForm(f => ({ ...f, organizerIds: [userOrganizer.id] }))
+    }
+  }, [userOrganizer?.id]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const { data: organizerImages = [] } = useQuery({
     queryKey: ['organizer-images-for-event', form.organizerIds],
@@ -132,9 +138,84 @@ export default function EventForm({
 
       <div className="space-y-8">
 
-        {/* ── Grundinfo ── */}
+        {/* ── Veranstalter ── */}
+        {(userOrganizer || (isAdmin && organizers.length > 0)) && (
+          <div className="space-y-4">
+            <SectionHeading>Veranstalter</SectionHeading>
+
+            {userOrganizer && !isAdmin && (
+              <div className="flex items-center gap-3 rounded-lg border border-primary bg-primary/5 px-3 py-2.5">
+                {userOrganizer.logo_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={userOrganizer.logo_url} alt={userOrganizer.name} className="h-8 w-8 rounded-full object-contain flex-shrink-0" />
+                ) : (
+                  <div className="h-8 w-8 rounded-full flex-shrink-0 flex items-center justify-center bg-muted text-muted-foreground text-xs font-bold">
+                    {userOrganizer.name.charAt(0).toUpperCase()}
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium">{userOrganizer.name}</p>
+                  <p className="text-xs text-muted-foreground">Veranstalter</p>
+                </div>
+              </div>
+            )}
+
+            {isAdmin && (
+              <>
+                <select
+                  value=""
+                  onChange={e => {
+                    const id = e.target.value
+                    if (id && !form.organizerIds.includes(id))
+                      setForm(f => ({ ...f, organizerIds: [...f.organizerIds, id] }))
+                  }}
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring"
+                >
+                  <option value="">Veranstalter hinzufügen…</option>
+                  {organizers.filter(o => !form.organizerIds.includes(o.id)).map(o => (
+                    <option key={o.id} value={o.id}>{o.name}</option>
+                  ))}
+                </select>
+                {form.organizerIds.length > 0 && (
+                  <div className="space-y-1.5">
+                    {form.organizerIds.map(id => {
+                      const o = organizers.find(o => o.id === id)
+                      if (!o) return null
+                      return (
+                        <div key={id} className="flex items-center gap-3 rounded-lg border px-3 py-2">
+                          {o.logo_url ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={o.logo_url} alt={o.name} className="h-7 w-7 rounded-full object-contain flex-shrink-0" />
+                          ) : (
+                            <div className="h-7 w-7 rounded-full flex-shrink-0 flex items-center justify-center bg-muted text-muted-foreground text-xs font-bold">
+                              {o.name.charAt(0).toUpperCase()}
+                            </div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium truncate">{o.name}</p>
+                            {o.website && <p className="text-xs text-muted-foreground truncate">{o.website}</p>}
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setForm(f => ({ ...f, organizerIds: f.organizerIds.filter(i => i !== id) }))}
+                            className="text-muted-foreground hover:text-destructive transition-colors"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        )}
+
+
+        {/* ── Allgemeine Informationen ── */}
         <div className="space-y-4">
-          <SectionHeading>Grundinfo</SectionHeading>
+          <SectionHeading>Allgemeine Informationen</SectionHeading>
 
           <div>
             <Label htmlFor="title" className="text-sm font-medium">Titel *</Label>
@@ -163,7 +244,7 @@ export default function EventForm({
           <div>
             <Label className="text-sm font-medium mb-2 block">Titelbild (optional)</Label>
             {imagePreview ? (
-              <div className="relative h-40 rounded-lg overflow-hidden">
+              <div className="relative -mx-4 aspect-video overflow-hidden">
                 <img src={imagePreview} alt="" className="w-full h-full object-cover" />
                 <Button
                   type="button"
@@ -233,7 +314,6 @@ export default function EventForm({
           </div>
         </div>
 
-        <hr className="border-border" />
 
         {/* ── Sport & Ort ── */}
         <div className="space-y-4">
@@ -416,7 +496,6 @@ export default function EventForm({
           </div>
         </div>
 
-        <hr className="border-border" />
 
         {/* ── Wann ── */}
         <div className="space-y-4">
@@ -428,7 +507,6 @@ export default function EventForm({
           {errors.schedule && <p className="text-xs text-destructive">{errors.schedule}</p>}
         </div>
 
-        <hr className="border-border" />
 
         {/* ── Teilnehmer ── */}
         <div className="space-y-4">
@@ -515,70 +593,6 @@ export default function EventForm({
           </div>
         </div>
 
-        <hr className="border-border" />
-
-        {/* ── Kontakt ── */}
-        <div className="space-y-4">
-          <SectionHeading>Kontakt</SectionHeading>
-
-          <ContactEditor
-            value={form.contact}
-            onChange={c => setForm(f => ({ ...f, contact: c }))}
-          />
-
-          {isAdmin && (
-            <div>
-              <Label className="text-sm font-medium mb-2 block">
-                Veranstalter <span className="text-xs opacity-60">(Admin)</span>
-              </Label>
-              <select
-                value=""
-                onChange={e => {
-                  const id = e.target.value
-                  if (id && !form.organizerIds.includes(id))
-                    setForm(f => ({ ...f, organizerIds: [...f.organizerIds, id] }))
-                }}
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring"
-              >
-                <option value="">Veranstalter hinzufügen…</option>
-                {organizers.filter(o => !form.organizerIds.includes(o.id)).map(o => (
-                  <option key={o.id} value={o.id}>{o.name}</option>
-                ))}
-              </select>
-              {form.organizerIds.length > 0 && (
-                <div className="mt-2 space-y-1.5">
-                  {form.organizerIds.map(id => {
-                    const o = organizers.find(o => o.id === id)
-                    if (!o) return null
-                    return (
-                      <div key={id} className="flex items-center gap-3 rounded-lg border px-3 py-2">
-                        <div
-                          className="h-7 w-7 rounded-full flex-shrink-0 flex items-center justify-center text-white text-xs font-bold"
-                          style={{ backgroundColor: o.color || '#6366F1' }}
-                        >
-                          {o.logo_url
-                            ? <img src={o.logo_url} alt={o.name} className="h-7 w-7 rounded-full object-contain" />
-                            : o.name.charAt(0).toUpperCase()}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate">{o.name}</p>
-                          {o.website && <p className="text-xs text-muted-foreground truncate">{o.website}</p>}
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => setForm(f => ({ ...f, organizerIds: f.organizerIds.filter(i => i !== id) }))}
-                          className="text-muted-foreground hover:text-destructive transition-colors"
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
-                      </div>
-                    )
-                  })}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
 
         <Button
           className="w-full"

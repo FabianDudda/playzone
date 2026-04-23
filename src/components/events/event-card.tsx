@@ -47,15 +47,14 @@ export default function EventCard({ event }: EventCardProps) {
               <div className="flex flex-col gap-1.5">
                 {event.event_organizers.map(org => (
                   <div key={org.id} className="flex items-center gap-2">
-                    <span
-                      className="inline-flex h-8 w-8 rounded-full flex-shrink-0 items-center justify-center overflow-hidden text-white"
-                      style={{ backgroundColor: org.color || '#6366F1' }}
-                    >
-                      {org.logo_url
-                        ? <img src={org.logo_url} alt={org.name} className="h-8 w-8 object-contain" />
-                        : <span className="text-xs font-bold leading-none">{org.name.charAt(0).toUpperCase()}</span>
-                      }
-                    </span>
+                    {org.logo_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={org.logo_url} alt={org.name} className="h-8 w-8 rounded-full object-contain flex-shrink-0" />
+                    ) : (
+                      <span className="inline-flex h-8 w-8 rounded-full flex-shrink-0 items-center justify-center bg-muted text-muted-foreground text-xs font-bold">
+                        {org.name.charAt(0).toUpperCase()}
+                      </span>
+                    )}
                     <span className="text-xs font-medium text-muted-foreground">{org.name}</span>
                   </div>
                 ))}

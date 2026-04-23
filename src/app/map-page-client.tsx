@@ -3,8 +3,10 @@
 import { useState, useMemo, Suspense, useTransition, useDeferredValue, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@/components/providers/auth-provider'
 import { useProgressivePlaces } from '@/hooks/use-progressive-places'
+import { database } from '@/lib/supabase/database'
 import { SportType, PlaceMarker, Area } from '@/lib/supabase/types'
 import { PlaceType } from '@/lib/utils/sport-utils'
 import InstallBanner from '@/components/install/install-banner'
@@ -41,9 +43,11 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
 
   const handleCourtSelect = (court: PlaceMarker) => {
     setSelectedPlace(court)
-    startTransition(() => {
-      router.replace(`/?place=${court.id}`, { scroll: false })
-    })
+    if (!court.is_event_only) {
+      startTransition(() => {
+        router.replace(`/?place=${court.id}`, { scroll: false })
+      })
+    }
   }
 
   const handleSheetClose = () => {
@@ -56,24 +60,33 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
 
   const { places, isInitialLoading, isLoadingMore } = useProgressivePlaces(!loading)
 
+  const { data: inlineEvents = [] } = useQuery({
+    queryKey: ['inline-location-events'],
+    queryFn: () => database.events.getInlineLocationEvents(),
+    staleTime: 5 * 60 * 1000,
+    enabled: !loading,
+  })
+
+  const allMarkers = useMemo(() => [...places, ...inlineEvents], [places, inlineEvents])
+
   const deferredSports = useDeferredValue(selectedSports)
   const deferredPlaceType = useDeferredValue(selectedPlaceType)
 
   // Only used for the pin count display — filtering is handled inside MarkerClusterGroup
   const visibleCount = useMemo(() => {
-    return places.filter((place) => {
-      if (deferredSports.length > 0 && !deferredSports.some(sport => place.sports?.includes(sport))) return false
-      if (deferredPlaceType !== null && (place.place_type || 'öffentlich') !== deferredPlaceType) return false
+    return allMarkers.filter((marker) => {
+      if (deferredSports.length > 0 && !deferredSports.some(sport => marker.sports?.includes(sport))) return false
+      if (!marker.is_event_only && deferredPlaceType !== null && (marker.place_type || 'öffentlich') !== deferredPlaceType) return false
       return true
     }).length
-  }, [places, deferredSports, deferredPlaceType])
+  }, [allMarkers, deferredSports, deferredPlaceType])
 
   return (
     <div className="relative">
       <h1 className="sr-only">Kostenlose Sportplätze in deiner Nähe finden</h1>
       <h2 className="sr-only">Interaktive Karte mit über 13.000 Sportplätzen in Deutschland</h2>
       <LeafletCourtMap
-        courts={places}
+        courts={allMarkers}
         onCourtSelect={handleCourtSelect}
         height="100dvh"
         selectedSports={selectedSports}

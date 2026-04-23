@@ -72,11 +72,11 @@ export default function EventsPage() {
             Kostenlose Angebote in deiner Nähe
           </p>
         </div>
-        {isAdmin && (
+        {user && (
           <Link href="/events/new">
             <Button size="sm" className="pr-4">
               <Plus className="h-4 w-4 mr-1" />
-              Erstellen <span className="ml-1 text-xs opacity-60">(Admin)</span>
+              Erstellen
             </Button>
           </Link>
         )}
@@ -106,7 +106,7 @@ export default function EventsPage() {
                 ? 'Versuche die Filter anzupassen.'
                 : 'Noch keine Events in deiner Gegend.'}
             </p>
-            {isAdmin && (
+            {user && (
               <Link href="/events/new">
                 <Button size="sm">
                   <Plus className="h-4 w-4 mr-1" />

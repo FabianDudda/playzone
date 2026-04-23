@@ -28,7 +28,7 @@ function getPlaceIcon(court: PlaceMarker, sports: string[], isSelected: boolean,
 
 function isMarkerVisible(court: PlaceMarker, selectedSports: SportType[], selectedPlaceType: PlaceType | null | undefined): boolean {
   if (selectedSports.length > 0 && !selectedSports.some(s => court.sports?.includes(s))) return false
-  if (selectedPlaceType != null && (court.place_type || 'öffentlich') !== selectedPlaceType) return false
+  if (!court.is_event_only && selectedPlaceType != null && (court.place_type || 'öffentlich') !== selectedPlaceType) return false
   return true
 }
 

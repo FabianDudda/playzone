@@ -23,11 +23,12 @@ const DAY_ORDER: RecurringSlot['day'][] = [
   'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
 ]
 
-function formatTimeRange(start: string, end: string): string {
+function formatTimeRange(start: string, end?: string | null): string {
+  if (!end) return `${start} Uhr`
   return `${start} – ${end} Uhr`
 }
 
-function formatDate(dateStr: string, startTime: string, endTime: string): string {
+function formatDate(dateStr: string, startTime: string, endTime?: string | null): string {
   try {
     const d = new Date(`${dateStr}T${startTime || '00:00'}`)
     const formatted = d.toLocaleDateString('de-DE', {

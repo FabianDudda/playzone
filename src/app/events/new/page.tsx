@@ -2,14 +2,17 @@
 
 import { Suspense, useState, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
 import { useAuth } from '@/components/providers/auth-provider'
 import { database } from '@/lib/supabase/database'
 import { uploadCourtImage } from '@/lib/supabase/storage'
 import { useToast } from '@/hooks/use-toast'
 import { Organizer } from '@/lib/supabase/types'
 import EventForm, { EventFormState, EventFormErrors } from '@/components/events/event-form'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Handshake } from 'lucide-react'
+import Link from 'next/link'
 
 function NewEventContent() {
   const router = useRouter()
@@ -53,6 +56,13 @@ function NewEventContent() {
     staleTime: 60_000,
   })
 
+  const { data: userOrganizer = null, isLoading: isLoadingOrganizer } = useQuery({
+    queryKey: ['my-organizer', user?.id],
+    queryFn: () => database.organizers.getByOwner(user!.id),
+    enabled: !!user && !isAdmin,
+    staleTime: 60_000,
+  })
+
   const mutation = useMutation({
     mutationFn: async () => {
       const errs: EventFormErrors = {}
@@ -65,7 +75,7 @@ function NewEventContent() {
         if (!form.inlineLocationName.trim()) errs.placeId = 'Bitte gib einen Ortsnamen ein'
         if (!form.inlineLocationCoords) errs.placeId = 'Bitte markiere den Ort auf der Karte'
       }
-      if (form.schedule.type !== 'recurring' && form.schedule.dates.some(d => !d.date || !d.start_time || !d.end_time)) {
+      if (form.schedule.type !== 'recurring' && form.schedule.dates.some(d => !d.date || !d.start_time)) {
         errs.schedule = 'Bitte alle Datum- und Zeitfelder ausfüllen'
       }
       if (form.schedule.type === 'recurring' && form.schedule.slots.length === 0) {
@@ -98,7 +108,7 @@ function NewEventContent() {
             place_id: placeId,
             sports: form.sports,
             schedule: form.schedule,
-            contact: form.contact,
+            contact: {},
             image_url: form.imageUrl,
             inline_location: inlineLocation,
             location_type: form.locationType,
@@ -121,7 +131,7 @@ function NewEventContent() {
         place_id: placeId,
         sports: form.sports,
         schedule: form.schedule,
-        contact: form.contact,
+        contact: {},
         image_url: form.imageUrl,
         creator_id: user.id,
         status: 'active',
@@ -169,6 +179,27 @@ function NewEventContent() {
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
+  if (user && !isAdmin && !isLoadingOrganizer && userOrganizer === null) {
+    return (
+      <div className="container px-4 py-8 max-w-xl mx-auto">
+        <Card>
+          <CardContent className="py-12 text-center space-y-4">
+            <Handshake className="h-10 w-10 mx-auto text-muted-foreground" />
+            <div>
+              <h3 className="font-semibold mb-1">Veranstalter-Profil erforderlich</h3>
+              <p className="text-sm text-muted-foreground">
+                Richte zuerst dein Veranstalter-Profil ein, bevor du Events erstellen kannst.
+              </p>
+            </div>
+            <Button asChild>
+              <Link href="/events/mine">Zum Veranstalter-Profil</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
   return (
     <EventForm
       form={form}
@@ -182,6 +213,7 @@ function NewEventContent() {
       onRemoveImage={removeImage}
       onSelectImageUrl={(url) => { setImagePreview(url); setForm(f => ({ ...f, imageUrl: url })) }}
       organizers={organizers}
+      userOrganizer={userOrganizer}
       isAdmin={isAdmin}
       onSubmit={() => mutation.mutate()}
       isPending={mutation.isPending}

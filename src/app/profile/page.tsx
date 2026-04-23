@@ -5,7 +5,7 @@ import { useAuth } from '@/components/providers/auth-provider'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { User, Mail, Trophy, Calendar, Edit2, Plus, Shield, LogOut, ChevronRight, MessageSquare, Info, Bell, Instagram, BookOpen, Sparkles, Download, Handshake, Rss, Share, MapPin } from 'lucide-react'
+import { User, Mail, Trophy, Calendar, Edit2, Plus, Shield, LogOut, ChevronRight, MessageSquare, Info, Bell, Instagram, BookOpen, Sparkles, Download, Rss, Share, MapPin, Handshake } from 'lucide-react'
 import { useInstallPrompt } from '@/hooks/use-install-prompt'
 import Link from 'next/link'
 

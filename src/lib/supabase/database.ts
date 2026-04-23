@@ -64,7 +64,7 @@ async function enrichEventsWithOrganizers(events: EventWithDetails[]): Promise<E
 
   const { data: orgs } = await supabase
     .from('organizers')
-    .select('id, name, color, logo_url')
+    .select('id, name, color, logo_url, website, instagram, email, phone')
     .in('id', allIds)
 
   const orgMap = new Map((orgs || []).map((o: OrganizerSummary) => [o.id, o]))
@@ -97,6 +97,7 @@ function mapToEventWithDetails(event: any, isBookmarked = false): EventWithDetai
     moderated_by: event.moderated_by ?? null,
     moderated_at: event.moderated_at ?? null,
     rejection_reason: event.rejection_reason ?? null,
+    pending_changes: event.pending_changes ?? null,
     creator_name: event.profiles?.name || '',
     creator_avatar: event.profiles?.avatar || null,
     creator_email: null,
@@ -1039,6 +1040,33 @@ export const database = {
       }
     },
 
+    getInlineLocationEvents: async (): Promise<PlaceMarker[]> => {
+      try {
+        const { data, error } = await supabase
+          .from('events')
+          .select('id, title, sports, inline_location')
+          .eq('status', 'active')
+          .eq('moderation_status', 'approved')
+          .is('place_id', null)
+          .not('inline_location', 'is', null)
+
+        if (error) return []
+
+        return ((data || []) as any[])
+          .filter((e: any) => e.inline_location?.latitude && e.inline_location?.longitude)
+          .map((e: any) => ({
+            id: e.id,
+            name: e.title,
+            latitude: e.inline_location.latitude,
+            longitude: e.inline_location.longitude,
+            sports: e.sports ?? [],
+            is_event_only: true,
+          }))
+      } catch {
+        return []
+      }
+    },
+
     getUserEvents: async (userId: string): Promise<EventWithDetails[]> => {
       try {
         const { data, error } = await supabase
@@ -1089,6 +1117,31 @@ export const database = {
         .single()
 
       return { data: data as Event | null, error }
+    },
+
+    submitUpdate: async (eventId: string, changes: Record<string, any>) => {
+      const { error } = await supabase
+        .from('events')
+        .update({ pending_changes: changes, updated_at: new Date().toISOString() } as any)
+        .eq('id', eventId)
+      return { error }
+    },
+
+    getWithPendingChanges: async (): Promise<EventWithDetails[]> => {
+      try {
+        const { data, error } = await supabase
+          .from('events')
+          .select(`
+            *,
+            profiles:creator_id ( name, avatar ),
+            places:place_id ( name, latitude, longitude, street, house_number, city, postcode, district, is_event_only ),
+            organizers:organizer_id ( name, color, logo_url, slug, website, instagram )
+          `)
+          .not('pending_changes', 'is', null)
+          .order('updated_at', { ascending: false })
+        if (error) { console.error('Error fetching events with pending changes:', error); return [] }
+        return enrichEventsWithOrganizers(((data || []) as any[]).map((e: any) => mapToEventWithDetails(e, false)))
+      } catch { return [] }
     },
 
     deleteEvent: async (eventId: string) => {
@@ -2175,6 +2228,16 @@ export const database = {
       return data
     },
 
+    getByOwner: async (userId: string): Promise<Organizer | null> => {
+      const { data, error } = await supabase
+        .from('organizers')
+        .select('*')
+        .eq('owner_id', userId)
+        .maybeSingle()
+      if (error) { console.error('Error fetching organizer by owner:', error); return null }
+      return data
+    },
+
     create: async (organizer: TablesInsert<'organizers'>): Promise<{ data: Organizer | null; error: any }> => {
       const { data, error } = await supabase
         .from('organizers')
@@ -2195,6 +2258,7 @@ export const database = {
     },
 
     delete: async (id: string): Promise<{ error: any }> => {
+      await supabase.from('events').update({ organizer_id: null }).eq('organizer_id', id)
       const { error } = await supabase
         .from('organizers')
         .delete()

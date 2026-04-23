@@ -8,6 +8,78 @@ const adminSupabase = createClient<Database>(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const serverClient = await createServerClient()
+  const { data: { user }, error: authError } = await serverClient.auth.getUser()
+  if (authError || !user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  const { data: profile } = await serverClient
+    .from('profiles')
+    .select('user_role')
+    .eq('id', user.id)
+    .single()
+  if (!profile || profile.user_role !== 'admin') {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
+  const { id } = await params
+  const body = await request.json()
+  const { moderation_status, rejection_reason, action } = body
+
+  // Apply or reject a pending_changes update
+  if (action === 'apply_update') {
+    const { data: event } = await adminSupabase
+      .from('events')
+      .select('pending_changes')
+      .eq('id', id)
+      .single()
+
+    if (!event?.pending_changes) {
+      return NextResponse.json({ error: 'No pending changes found' }, { status: 400 })
+    }
+
+    const { error } = await adminSupabase
+      .from('events')
+      .update({
+        ...event.pending_changes,
+        pending_changes: null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', id)
+
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ success: true })
+  }
+
+  if (action === 'reject_update') {
+    const { error } = await adminSupabase
+      .from('events')
+      .update({ pending_changes: null, updated_at: new Date().toISOString() })
+      .eq('id', id)
+
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ success: true })
+  }
+
+  // Standard moderation (approve/reject new event)
+  const { error } = await adminSupabase
+    .from('events')
+    .update({
+      moderation_status,
+      moderated_by: user.id,
+      moderated_at: new Date().toISOString(),
+      rejection_reason: rejection_reason ?? null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', id)
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  return NextResponse.json({ success: true })
+}
+
 export async function DELETE(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
