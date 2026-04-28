@@ -14,6 +14,7 @@ export interface NearbyPlace {
   latitude: number
   longitude: number
   distance: number
+  sports?: string[]
 }
 
 export interface ProposedLocation {

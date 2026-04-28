@@ -1,0 +1,33 @@
+Free Sport Events on rausgegangen.de (sorted by city)
+Source: https://rausgegangen.de/[city]/kategorie/sport/
+Generated: 2026-04-23 (re-fetched, filtered: May 2026 only)
+=====================================================================
+
+BONN
+----
+https://rausgegangen.de/events/mikkeller-running-club-bonn-run-an-easy-5k-and-get-a-free-cr-3/
+  → Mikkeller Running Club Bonn - Run an easy 5k and get a free craft beer! | Sa, 02. Mai
+
+FRANKFURT
+---------
+https://rausgegangen.de/events/zumba-party-zur-eroffnung-der-outdoor-saison-0/
+  → Zumba-Party zur Eröffnung der Outdoor-Saison | Fr, 08. Mai
+https://rausgegangen.de/events/globetrotter-van-life-tage-0/
+  → Globetrotter Van Life Tage | Fr, 15. Mai
+
+HAMBURG
+-------
+https://rausgegangen.de/events/sunday-running-club-x-hamburg-1/
+  → Sunday Running Club x Hamburg | So, 03. Mai
+https://rausgegangen.de/events/johnny-urban-bunker-run-0/
+  → Johnny Urban BUNKER RUN | So, 03. Mai
+
+LEIPZIG
+-------
+https://rausgegangen.de/events/socialrun-thesundayrunningclub-7shotscoffee-8/
+  → Socialrun TheSundayRunningClub @ 7shotscoffee | Fr, 01. Mai
+https://rausgegangen.de/events/socialrun-thesundayrunningclub-soulmate-cafe-18/
+  → Socialrun TheSundayRunningClub @Soulmate Café | Di, 05. Mai
+
+=====================================================================
+Cities with no May events: Berlin, Bremen, Cologne, Dortmund, Essen, Hannover, München, Stuttgart

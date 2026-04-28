@@ -1024,7 +1024,7 @@ export const database = {
       try {
         const { data, error } = await supabase
           .from('events')
-          .select('place_id')
+          .select('place_id, schedule')
           .eq('status', 'active')
           .eq('moderation_status', 'approved')
 
@@ -1033,7 +1033,17 @@ export const database = {
           return []
         }
 
-        return [...new Set(((data || []) as any[]).filter((e: any) => e.place_id).map((e: any) => e.place_id as string))]
+        const now = new Date()
+        const active = ((data || []) as any[]).filter((e: any) => {
+          if (!e.place_id) return false
+          const schedule = e.schedule as EventSchedule
+          if (!schedule || schedule.type === 'recurring') return true
+          return (schedule.dates || []).some((d: { date: string; start_time?: string }) =>
+            new Date(`${d.date}T${d.start_time || '23:59'}`) > now
+          )
+        })
+
+        return [...new Set(active.map((e: any) => e.place_id as string))]
       } catch (error) {
         console.error('Error fetching place IDs with events:', error)
         return []

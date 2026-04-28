@@ -101,7 +101,7 @@ export default function OrganizersAdminPage() {
     },
   })
 
-  const createMutation = useMutation({
+const createMutation = useMutation({
     mutationFn: async (data: OrganizerForm) => {
       const result = await database.organizers.create({ id: pendingId, ...data, created_by: user?.id })
       if (result.error) throw result.error

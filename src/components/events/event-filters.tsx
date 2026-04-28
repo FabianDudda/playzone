@@ -86,10 +86,14 @@ export default function EventFiltersComponent({
   )
 }
 
+function eventCity(event: EventWithDetails): string | null {
+  return event.place_city ?? event.inline_location?.city ?? null
+}
+
 export function applyEventFilters(events: EventWithDetails[], filters: EventFilters): EventWithDetails[] {
   return events.filter(event => {
     if (filters.sport !== 'all' && !event.sports.includes(filters.sport)) return false
-    if (filters.city !== 'all' && event.place_city !== filters.city) return false
+    if (filters.city !== 'all' && eventCity(event) !== filters.city) return false
     return true
   })
 }
@@ -105,7 +109,7 @@ export function deriveSports(events: EventWithDetails[]): SportType[] {
 export function deriveCities(events: EventWithDetails[]): string[] {
   const seen = new Set<string>()
   return events
-    .map(e => e.place_city)
+    .map(e => eventCity(e))
     .filter((c): c is string => !!c && !seen.has(c) && !!seen.add(c))
     .sort()
 }

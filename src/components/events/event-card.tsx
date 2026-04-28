@@ -17,18 +17,22 @@ export default function EventCard({ event }: EventCardProps) {
     <Link href={`/events/${event.id}`} className="block">
       <Card className="hover:shadow-md transition-shadow cursor-pointer">
         <CardHeader className="pb-1 pt-4 px-4">
-          <div className="flex justify-between items-center gap-2">
-            <div className="min-w-0">
-              <h3 className="font-semibold text-base line-clamp-2">{event.title}</h3>
-            </div>
-            <div className="flex-shrink-0 flex flex-wrap gap-1 justify-end">
-              {event.sports.map(sport => (
-                <Badge key={sport} variant="secondary" className="text-xs pl-1.5">
-                  {sportIcons[sport]} {sportNames[sport]}
-                </Badge>
-              ))}
-            </div>
+          <div className="flex flex-wrap gap-1">
+            {event.sports.map(sport => (
+              <Badge key={sport} variant="secondary" className="text-xs pl-1.5">
+                {sportIcons[sport]} {sportNames[sport]}
+              </Badge>
+            ))}
+            {event.gender_restriction === 'male' && <Badge variant="secondary" className="text-xs">♂ Nur Männer</Badge>}
+            {event.gender_restriction === 'female' && <Badge variant="secondary" className="text-xs">♀ Nur Frauen</Badge>}
+            {event.age_restriction?.type === 'min' && event.age_restriction.min && (
+              <Badge variant="secondary" className="text-xs">👤 Ab {event.age_restriction.min} Jahren</Badge>
+            )}
+            {event.age_restriction?.type === 'range' && event.age_restriction.min && event.age_restriction.max && (
+              <Badge variant="secondary" className="text-xs">👤 {event.age_restriction.min}–{event.age_restriction.max} Jahre</Badge>
+            )}
           </div>
+          <h3 className="font-semibold text-base line-clamp-2">{event.title}</h3>
         </CardHeader>
 
         <CardContent className="pt-0 px-4 pb-4 space-y-2">

@@ -309,8 +309,20 @@ const PlaceCard = React.memo(function PlaceCard({
     enabled: expanded && hasCoords,
     staleTime: 60000,
   })
-  const nearbyPlaces: { id: string; name: string; moderation_status: string; distance: number }[] =
+  const nearbyPlaces: { id: string; name: string; moderation_status: string; distance: number; sports: string[]; latitude: number; longitude: number }[] =
     nearbyData?.places || []
+
+  const deleteNearbyMutation = useMutation({
+    mutationFn: (placeId: string) => database.moderation.bulkDeletePlaces([placeId]),
+    onSuccess: (_, placeId) => {
+      queryClient.invalidateQueries({ queryKey: ['nearby-places', place.id] })
+      queryClient.invalidateQueries({ queryKey: ['admin-places'] })
+      toast({ title: 'Deleted', description: `Place deleted.` })
+    },
+    onError: () => {
+      toast({ title: 'Delete failed', variant: 'destructive' })
+    },
+  })
 
   const availableSports = place.courts?.length > 0
     ? [...new Set(place.courts.map(court => court.sport))]
@@ -619,9 +631,26 @@ const PlaceCard = React.memo(function PlaceCard({
                     {nearbyPlaces.length} nearby place{nearbyPlaces.length > 1 ? 's' : ''} within 500m
                   </div>
                   {nearbyPlaces.map(np => (
-                    <div key={np.id} className="flex items-center justify-between text-xs text-yellow-700 pl-6">
-                      <Link href={`/places/${np.id}`} target="_blank" className="font-medium underline underline-offset-2 hover:text-yellow-900">{np.name}</Link>
-                      <span className="text-yellow-600">{np.distance}m · {np.moderation_status}</span>
+                    <div key={np.id} className="flex items-center justify-between gap-2 text-xs text-yellow-700 pl-6">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <Link href={`/places/${np.id}`} target="_blank" className="font-medium underline underline-offset-2 hover:text-yellow-900 shrink-0">{np.name}</Link>
+                        <div className="flex flex-wrap gap-1">
+                          {(np.sports ?? []).map(sport => (
+                            <Badge key={sport} className={`text-[10px] px-1 py-0 ${getSportBadgeClasses(sport)}`}>{sportNames[sport] ?? sport}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="text-yellow-600">{np.distance}m · {np.moderation_status}</span>
+                        <button
+                          onClick={() => deleteNearbyMutation.mutate(np.id)}
+                          disabled={deleteNearbyMutation.isPending}
+                          className="text-yellow-500 hover:text-red-600 transition-colors disabled:opacity-50"
+                          title="Delete place"
+                        >
+                          {deleteNearbyMutation.isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Trash2 className="h-3 w-3" />}
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -759,9 +788,26 @@ const PlaceCard = React.memo(function PlaceCard({
                     {nearbyPlaces.length} nearby place{nearbyPlaces.length > 1 ? 's' : ''} within 500m
                   </div>
                   {nearbyPlaces.map(np => (
-                    <div key={np.id} className="flex items-center justify-between text-xs text-yellow-700 pl-6">
-                      <Link href={`/places/${np.id}`} target="_blank" className="font-medium underline underline-offset-2 hover:text-yellow-900">{np.name}</Link>
-                      <span className="text-yellow-600">{np.distance}m · {np.moderation_status}</span>
+                    <div key={np.id} className="flex items-center justify-between gap-2 text-xs text-yellow-700 pl-6">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <Link href={`/places/${np.id}`} target="_blank" className="font-medium underline underline-offset-2 hover:text-yellow-900 shrink-0">{np.name}</Link>
+                        <div className="flex flex-wrap gap-1">
+                          {(np.sports ?? []).map(sport => (
+                            <Badge key={sport} className={`text-[10px] px-1 py-0 ${getSportBadgeClasses(sport)}`}>{sportNames[sport] ?? sport}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="text-yellow-600">{np.distance}m · {np.moderation_status}</span>
+                        <button
+                          onClick={() => deleteNearbyMutation.mutate(np.id)}
+                          disabled={deleteNearbyMutation.isPending}
+                          className="text-yellow-500 hover:text-red-600 transition-colors disabled:opacity-50"
+                          title="Delete place"
+                        >
+                          {deleteNearbyMutation.isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Trash2 className="h-3 w-3" />}
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>

@@ -24,7 +24,7 @@ const organizationJsonLd = {
   '@type': 'WebSite',
   name: 'OpenSportMap',
   url: 'https://opensportmap.de',
-  description: 'Kostenlose Sportplätze in deiner Nähe finden – über 13.000 Plätze in Deutschland.',
+  description: 'Kostenlose Sportplätze in deiner Nähe finden – über 20.000 Plätze in Deutschland, Österreich und der Schweiz',
   inLanguage: 'de',
   potentialAction: {
     '@type': 'SearchAction',
@@ -35,7 +35,7 @@ const organizationJsonLd = {
 
 export const metadata: Metadata = {
   title: "Kostenlose Sportplätze finden | OpenSportMap",
-  description: "Über 13.000 kostenlose Sportplätze in Deutschland auf einer interaktiven Karte. Basketball, Fußball, Tennis, Skateparks & mehr – jetzt entdecken.",
+  description: "Über 20.000 kostenlose Sportplätze in Deutschland, Österreich und der Schweiz auf einer interaktiven Karte. Basketball, Fußball, Calisthenics, Skateparks, Tischtennis & mehr – jetzt entdecken.",
   metadataBase: new URL("https://opensportmap.de"),
   openGraph: {
     type: "website",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     url: "https://opensportmap.de",
     siteName: "OpenSportMap",
     title: "Kostenlose Sportplätze finden | OpenSportMap",
-    description: "Über 13.000 kostenlose Sportplätze in Deutschland auf einer interaktiven Karte. Basketball, Fußball, Tennis, Skateparks & mehr.",
+    description: "Über 20.000 kostenlose Sportplätze in Deutschland, Österreich und der Schweiz auf einer interaktiven Karte. Basketball, Fußball, Calisthenics, Skateparks, Tischtennis & mehr – jetzt entdecken.",
   },
   twitter: {
     card: "summary_large_image",

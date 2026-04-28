@@ -48,7 +48,7 @@ export async function GET(request: Request) {
 
   let query = adminSupabase
     .from('places')
-    .select('id, name, moderation_status, latitude, longitude')
+    .select('id, name, moderation_status, latitude, longitude, sports, courts(sport)')
     .gte('latitude', lat - latDelta)
     .lte('latitude', lat + latDelta)
     .gte('longitude', lng - lngDelta)
@@ -60,10 +60,19 @@ export async function GET(request: Request) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   const nearby = (data || [])
-    .map(place => ({
-      ...place,
-      distance: Math.round(haversineDistance(lat, lng, place.latitude, place.longitude)),
-    }))
+    .map(place => {
+      const courtSports = (place.courts ?? []).map((c: { sport: string }) => c.sport)
+      const sports = [...new Set([...(place.sports ?? []), ...courtSports])]
+      return {
+        id: place.id,
+        name: place.name,
+        moderation_status: place.moderation_status,
+        latitude: place.latitude,
+        longitude: place.longitude,
+        sports,
+        distance: Math.round(haversineDistance(lat, lng, place.latitude, place.longitude)),
+      }
+    })
     .filter(place => place.distance <= radius)
     .sort((a, b) => a.distance - b.distance)
 
