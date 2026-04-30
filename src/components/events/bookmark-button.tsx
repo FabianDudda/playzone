@@ -1,6 +1,6 @@
 'use client'
 
-import { Bookmark } from 'lucide-react'
+import { Heart } from 'lucide-react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
@@ -52,15 +52,15 @@ export default function BookmarkButton({
 
   return (
     <Button
-      variant="ghost"
+      variant="secondary"
       size="icon"
       onClick={() => mutation.mutate()}
       disabled={mutation.isPending}
-      aria-label={isBookmarked ? 'Lesezeichen entfernen' : 'Speichern'}
-      className={size === 'sm' ? 'h-8 w-8' : undefined}
+      aria-label={isBookmarked ? 'Gespeichert' : 'Speichern'}
+      className={`rounded-full${size === 'sm' ? ' h-8 w-8' : ''}`}
     >
-      <Bookmark
-        className={`h-4 w-4 transition-colors ${isBookmarked ? 'fill-primary text-primary' : 'text-muted-foreground'}`}
+      <Heart
+        className={`h-[18px] w-[18px] transition-colors ${isBookmarked ? 'fill-primary text-primary' : ''}`}
       />
     </Button>
   )

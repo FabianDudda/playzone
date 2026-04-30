@@ -3,7 +3,8 @@
 import { Suspense, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, MapPin, Edit, Trash2, ExternalLink } from 'lucide-react'
+import { MapPin, Pencil, Trash2, ExternalLink, Share2 } from 'lucide-react'
+import BackButton from '@/components/places/back-button'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import React from 'react'
 import { useAuth } from '@/components/providers/auth-provider'
@@ -13,7 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { getSportBadgeClasses, sportNames, sportIcons } from '@/lib/utils/sport-utils'
+import { sportNames, sportIcons } from '@/lib/utils/sport-utils'
 import ScheduleDisplay from '@/components/events/schedule-display'
 import BookmarkButton from '@/components/events/bookmark-button'
 import dynamic from 'next/dynamic'
@@ -75,21 +76,28 @@ function EventContent({ params }: EventPageProps) {
 
   if (isLoading || !eventId) {
     return (
-      <div className="container px-4 py-8 max-w-xl mx-auto">
+      <div className="container px-4 overflow-x-hidden">
+      <div className="max-w-xl mx-auto py-4 pb-24">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="h-9 w-9 bg-muted animate-pulse rounded" />
+          <div className="h-6 w-48 bg-muted animate-pulse rounded" />
+        </div>
         <div className="space-y-4">
-          <div className="h-8 w-48 bg-muted animate-pulse rounded" />
           <div className="h-48 bg-muted animate-pulse rounded-lg" />
           <div className="h-24 bg-muted animate-pulse rounded-lg" />
         </div>
+      </div>
       </div>
     )
   }
 
   if (!event) {
     return (
-      <div className="container px-4 py-8 max-w-xl mx-auto text-center">
+      <div className="container px-4 overflow-x-hidden">
+      <div className="max-w-xl mx-auto py-8 text-center">
         <h1 className="text-xl font-semibold mb-2">Event nicht gefunden</h1>
         <Link href="/events"><Button variant="outline">Zurück zu Events</Button></Link>
+      </div>
       </div>
     )
   }
@@ -112,48 +120,60 @@ function EventContent({ params }: EventPageProps) {
     ? `${postcode} ${city}`
     : city || null
 
+  const handleShare = () => {
+    const shareUrl = `${window.location.origin}/events/${event.id}`
+    if (navigator.share) {
+      navigator.share({ title: event.title, url: shareUrl }).catch(() => {})
+    } else {
+      navigator.clipboard.writeText(shareUrl)
+        .then(() => toast({ title: 'Link kopiert!' }))
+        .catch(() => toast({ title: 'Link konnte nicht kopiert werden', variant: 'destructive' }))
+    }
+  }
+
   return (
-    <div className="container px-4 py-4 max-w-xl mx-auto pb-24">
+    <div className="container px-4 overflow-x-hidden">
+    <div className="max-w-xl mx-auto py-4 pb-24">
       {/* Header */}
-      <div className="flex items-center justify-between gap-2 mb-4">
-        <Button variant="ghost" size="icon" asChild>
-          <Link href="/events"><ArrowLeft className="h-5 w-5" /></Link>
-        </Button>
-        <div className="flex items-center gap-1">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+          <BackButton />
+          <h1 className="text-xl font-semibold truncate">{event.title}</h1>
+        </div>
+        <div className="flex items-center gap-3">
+          {isCreator && (
+            <>
+              <Button
+                variant="secondary"
+                size="icon"
+                className="rounded-full text-destructive hover:text-destructive"
+                onClick={() => setShowDeleteDialog(true)}
+              >
+                <Trash2 className="h-[18px] w-[18px]" />
+              </Button>
+              <Button variant="secondary" size="icon" className="rounded-full" asChild>
+                <Link href={`/events/${event.id}/edit`}>
+                  <Pencil className="h-[18px] w-[18px]" />
+                </Link>
+              </Button>
+            </>
+          )}
           <BookmarkButton
             eventId={event.id}
             isBookmarked={event.is_bookmarked}
             userId={user?.id}
           />
-          {isCreator && (
-            <>
-              <Button variant="ghost" size="icon" asChild>
-                <Link href={`/events/${event.id}/edit`}>
-                  <Edit className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowDeleteDialog(true)}
-                className="text-destructive hover:text-destructive"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </>
-          )}
+          <Button variant="secondary" size="icon" className="rounded-full" onClick={handleShare} title="Teilen">
+            <Share2 className="h-[18px] w-[18px]" />
+          </Button>
         </div>
       </div>
 
       <Card className="mb-3">
         <CardContent className="px-4 py-4 space-y-4">
-          {/* Title */}
-          <div>
-            <h1 className="text-2xl font-bold">{event.title}</h1>
-            {event.status === 'cancelled' && (
-              <Badge variant="destructive" className="mt-1">Abgesagt</Badge>
-            )}
-          </div>
+          {event.status === 'cancelled' && (
+            <Badge variant="destructive">Abgesagt</Badge>
+          )}
 
           {/* Cover image */}
           {event.image_url && (
@@ -301,6 +321,7 @@ function EventContent({ params }: EventPageProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </div>
     </div>
   )
 }

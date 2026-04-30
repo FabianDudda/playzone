@@ -64,7 +64,8 @@ export default function EventsPage() {
   )
 
   return (
-    <div className="container px-4 py-6 max-w-xl mx-auto pb-24">
+    <div className="container px-4 overflow-x-hidden">
+      <div className="max-w-xl mx-auto py-6 pb-24">
       <div className="flex justify-between items-center mb-5">
         <div>
           <h1 className="text-3xl font-bold">Events</h1>
@@ -123,6 +124,7 @@ export default function EventsPage() {
           ))}
         </div>
       )}
+    </div>
     </div>
   )
 }

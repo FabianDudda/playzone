@@ -37,6 +37,18 @@ export default function PlaceEventsSection({ placeId, userId }: PlaceEventsSecti
                       {sportNames[sport] || sport}
                     </span>
                   ))}
+                  {event.gender_restriction === 'male' && (
+                    <span className="text-xs text-muted-foreground">♂ Nur Männer</span>
+                  )}
+                  {event.gender_restriction === 'female' && (
+                    <span className="text-xs text-muted-foreground">♀ Nur Frauen</span>
+                  )}
+                  {event.age_restriction?.type === 'min' && event.age_restriction.min && (
+                    <span className="text-xs text-muted-foreground">👤 Ab {event.age_restriction.min} Jahren</span>
+                  )}
+                  {event.age_restriction?.type === 'range' && event.age_restriction.min && event.age_restriction.max && (
+                    <span className="text-xs text-muted-foreground">👤 {event.age_restriction.min}–{event.age_restriction.max} Jahre</span>
+                  )}
                 </div>
                 <p className="text-sm font-medium truncate">{event.title}</p>
               </div>

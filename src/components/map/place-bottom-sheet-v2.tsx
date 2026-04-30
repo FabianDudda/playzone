@@ -24,6 +24,9 @@ import ScheduleDisplay from '@/components/events/schedule-display'
 import Link from 'next/link'
 
 function EventOnlyContent({ eventId, userLocation, onClose }: { eventId: string; userLocation: { lat: number; lng: number } | null; onClose: () => void }) {
+  const { toast } = useToast()
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
+
   const { data: event, isLoading } = useQuery({
     queryKey: ['event', eventId],
     queryFn: () => database.events.getEvent(eventId, undefined),
@@ -42,15 +45,34 @@ function EventOnlyContent({ eventId, userLocation, onClose }: { eventId: string;
     <>
       <DrawerHeader>
         <div className="flex items-center justify-between overflow-hidden gap-3">
-          <div className="min-w-0 text-left flex items-center gap-2">
-            <span className="text-lg shrink-0">🔷</span>
+          <div className="min-w-0 text-left">
             <DrawerTitle className="text-[18px] text-left truncate">
               {isLoading ? <span className="h-5 w-40 bg-muted animate-pulse rounded inline-block" /> : event?.title}
             </DrawerTitle>
           </div>
-          <Button variant="secondary" size="icon" className="rounded-full h-10 w-10 shrink-0" onClick={onClose}>
-            <X className="h-4 w-4" />
-          </Button>
+          <div className="flex items-center gap-2 shrink-0">
+            <Button
+              variant="secondary"
+              size="icon"
+              className="rounded-full h-10 w-10"
+              onClick={() => {
+                const shareUrl = `${window.location.origin}/?place=${eventId}`
+                if (navigator.share) {
+                  navigator.share({ title: event?.title ?? '', url: shareUrl }).catch(() => {})
+                } else {
+                  navigator.clipboard.writeText(shareUrl)
+                    .then(() => toast({ title: 'Link kopiert!' }))
+                    .catch(() => toast({ title: 'Link konnte nicht kopiert werden', variant: 'destructive' }))
+                }
+              }}
+              title="Teilen"
+            >
+              <Share2 className="h-4 w-4" />
+            </Button>
+            <Button variant="secondary" size="icon" className="rounded-full h-10 w-10" onClick={onClose}>
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </DrawerHeader>
 
@@ -64,9 +86,9 @@ function EventOnlyContent({ eventId, userLocation, onClose }: { eventId: string;
           <>
             {/* Cover image */}
             {event.image_url && (
-              <div className="-mx-4 -mt-4 aspect-video overflow-hidden">
+              <div className="-mx-4 overflow-hidden shrink-0">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={event.image_url} alt={event.title} className="w-full h-full object-cover" />
+                <img src={event.image_url} alt={event.title} className="w-full max-h-[260px] object-contain block" />
               </div>
             )}
 
@@ -83,6 +105,9 @@ function EventOnlyContent({ eventId, userLocation, onClose }: { eventId: string;
               {event.gender_restriction === 'female' && <Badge variant="secondary">♀ Nur Frauen</Badge>}
               {event.age_restriction?.type === 'min' && event.age_restriction.min && (
                 <Badge variant="secondary">👤 Ab {event.age_restriction.min} Jahren</Badge>
+              )}
+              {event.age_restriction?.type === 'range' && event.age_restriction.min && event.age_restriction.max && (
+                <Badge variant="secondary">👤 {event.age_restriction.min}–{event.age_restriction.max} Jahre</Badge>
               )}
             </div>
 
@@ -120,9 +145,27 @@ function EventOnlyContent({ eventId, userLocation, onClose }: { eventId: string;
 
             {/* Description */}
             {event.description && (
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-2">
                 <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Beschreibung</p>
-                <p className="text-sm text-muted-foreground whitespace-pre-line">{event.description}</p>
+                <div className="relative">
+                  <p className={`text-sm text-muted-foreground whitespace-pre-line${isDescriptionExpanded ? '' : ' line-clamp-4'}`}>
+                    {event.description}
+                  </p>
+                  {!isDescriptionExpanded && event.description.length > 200 && (
+                    <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+                  )}
+                </div>
+                {event.description.length > 200 && (
+                  <div>
+                    <button
+                      onClick={() => setIsDescriptionExpanded(prev => !prev)}
+                      className="flex items-center gap-1 text-xs border rounded-full px-3 py-1 text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      <ChevronDown className={`h-3 w-3 transition-transform duration-300 ${isDescriptionExpanded ? 'rotate-180' : ''}`} />
+                      {isDescriptionExpanded ? 'Weniger' : 'Mehr lesen'}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
 
@@ -378,7 +421,7 @@ export default function PlaceBottomSheetV2({
     )}
 
     <Drawer open={isOpen} onOpenChange={onOpenChange} modal={false} shouldScaleBackground={false}>
-      <DrawerContent hideOverlay className="max-h-[92dvh] max-w-2xl mx-auto">
+      <DrawerContent hideOverlay className="max-h-[92dvh] max-w-2xl mx-auto border-x-0">
         {selectedCourt && selectedCourt.is_event_only ? (
           <EventOnlyContent
             eventId={selectedCourt.id}

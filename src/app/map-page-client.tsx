@@ -43,11 +43,9 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
 
   const handleCourtSelect = (court: PlaceMarker) => {
     setSelectedPlace(court)
-    if (!court.is_event_only) {
-      startTransition(() => {
-        router.replace(`/?place=${court.id}`, { scroll: false })
-      })
-    }
+    startTransition(() => {
+      router.replace(`/?place=${court.id}`, { scroll: false })
+    })
   }
 
   const handleSheetClose = () => {
