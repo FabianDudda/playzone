@@ -1,7 +1,7 @@
 /* Map Control System Variables */
 :root {
   --map-control-margin: 16px;
-  --map-control-size: 48px;
+  --map-control-size: 44px;
   --map-control-gap: 8px;
   --map-control-z-index: 1000;
   --map-control-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
@@ -63,7 +63,8 @@
 
 .map-control-bottom-right-stack {
   position: absolute;
-  bottom: calc(var(--map-control-margin) + 4rem);
+  /* Clears bottom bar (68px) + margin */
+  bottom: calc(var(--map-control-margin) + 4.5rem);
   right: var(--map-control-margin);
   z-index: var(--map-control-z-index);
   display: flex;
@@ -84,7 +85,8 @@
 
 .map-control-bottom-left-stack {
   position: absolute;
-  bottom: calc(var(--map-control-margin) + 4rem);
+  /* Clears search bar top edge (~68px) */
+  bottom: calc(var(--map-control-margin) + 4.5rem);
   left: var(--map-control-margin);
   z-index: var(--map-control-z-index);
   display: flex;

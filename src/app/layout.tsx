@@ -6,7 +6,6 @@ import "./globals.css"
 import { Analytics } from "@vercel/analytics/next"
 import QueryProvider from "@/components/providers/query-provider"
 import AuthProvider from "@/components/providers/auth-provider"
-import BottomNav from "@/components/layout/bottom-nav"
 import { Toaster } from "@/components/ui/toaster"
 
 const geistSans = Geist({
@@ -93,8 +92,7 @@ export default function RootLayout({
         <QueryProvider>
           <AuthProvider>
             <div className="relative flex min-h-screen flex-col">
-              <main className="flex-1 pb-16">{children}</main>
-<Suspense><BottomNav /></Suspense>
+              <main className="flex-1">{children}</main>
             </div>
             <Toaster />
             <Analytics />

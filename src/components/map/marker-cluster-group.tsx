@@ -15,7 +15,7 @@ interface MarkerClusterGroupProps {
   onCourtSelect?: (court: PlaceMarker) => void
   selectedCourt?: PlaceMarker | null
   selectedSports?: SportType[]
-  selectedPlaceType?: PlaceType | null
+  selectedPlaceType?: PlaceType[]
   placeIdsWithEvents?: Set<string>
 }
 
@@ -26,9 +26,9 @@ function getPlaceIcon(court: PlaceMarker, sports: string[], isSelected: boolean,
   return createSportIcon(sports, isSelected, hasEvents)
 }
 
-function isMarkerVisible(court: PlaceMarker, selectedSports: SportType[], selectedPlaceType: PlaceType | null | undefined): boolean {
+function isMarkerVisible(court: PlaceMarker, selectedSports: SportType[], selectedPlaceType: PlaceType[] | undefined): boolean {
   if (selectedSports.length > 0 && !selectedSports.some(s => court.sports?.includes(s))) return false
-  if (!court.is_event_only && selectedPlaceType != null && (court.place_type || 'öffentlich') !== selectedPlaceType) return false
+  if (!court.is_event_only && selectedPlaceType && selectedPlaceType.length > 0 && !selectedPlaceType.includes((court.place_type || 'öffentlich') as PlaceType)) return false
   return true
 }
 
@@ -55,7 +55,7 @@ function createClusterIcon(cluster: L.MarkerCluster) {
   })
 }
 
-export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCourt, selectedSports = [], selectedPlaceType = null, placeIdsWithEvents = new Set() }: MarkerClusterGroupProps) {
+export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCourt, selectedSports = [], selectedPlaceType = [], placeIdsWithEvents = new Set() }: MarkerClusterGroupProps) {
   const map = useMap()
   const clusterGroupRef = useRef<L.MarkerClusterGroup | null>(null)
   // Stable maps: id → marker / court — rebuilt only when underlying data changes

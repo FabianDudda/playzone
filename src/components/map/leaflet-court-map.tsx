@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { Plus, MapPin, Navigation, Share2, Search, Filter, Edit, Pencil, X, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { useAuth } from '@/components/providers/auth-provider'
-import FilterBottomSheetVaul from './filter-bottom-sheet-vaul'
+import SearchFilterSheet from './search-filter-sheet'
 import PlaceBottomSheetVaul from './place-bottom-sheet-v2'
 import FavoritesBottomSheetVaul from './favorites-bottom-sheet-vaul'
 import { sportNames, getSportBadgeClasses, sportIcons, PlaceType } from '@/lib/utils/sport-utils'
@@ -37,10 +37,9 @@ interface LeafletCourtMapProps {
   selectedLocation?: { lat: number; lng: number } | null
   enableClustering?: boolean
   selectedSports?: SportType[]
-  selectedPlaceType?: PlaceType | null
-  // Filter props
+  selectedPlaceType?: PlaceType[]
   onSportsChange?: (sports: SportType[]) => void
-  onPlaceTypeChange?: (type: PlaceType | null) => void
+  onPlaceTypeChange?: (types: PlaceType[]) => void
   placesCount?: number
   showAddCourtButton?: boolean
   onAddCourtClick?: () => void
@@ -57,6 +56,9 @@ interface LeafletCourtMapProps {
   embedded?: boolean
   isLoading?: boolean
   initialArea?: Area
+  // External filter control — when provided, filter sheet is fully controlled from outside
+  externalFilterOpen?: boolean
+  onExternalFilterOpenChange?: (open: boolean) => void
 }
 
 // Attach a wheel listener that stops both propagation and default scroll/zoom.
@@ -541,7 +543,7 @@ export default function LeafletCourtMap({
   selectedLocation = null,
   enableClustering = true,
   selectedSports = [],
-  selectedPlaceType = null,
+  selectedPlaceType = [],
   onSportsChange,
   onPlaceTypeChange,
   placesCount = 0,
@@ -560,6 +562,8 @@ export default function LeafletCourtMap({
   embedded = false,
   isLoading = false,
   initialArea,
+  externalFilterOpen,
+  onExternalFilterOpenChange,
 }: LeafletCourtMapProps) {
   const { user, profile } = useAuth()
 
@@ -577,13 +581,20 @@ export default function LeafletCourtMap({
   const [flyToTarget, setFlyToTarget] = useState<{ lat: number; lng: number } | null>(null)
   const [currentLayerId, setCurrentLayerId] = useState<string>(() => getSavedLayerPreference())
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
-  const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false)
+  const [localFilterOpen, setLocalFilterOpen] = useState(false)
   const [isFavoritesOpen, setIsFavoritesOpen] = useState(defaultFavoritesOpen)
   const isClosingExplicitly = useRef(false)
   const isClosingFilterExplicitly = useRef(false)
   const isBottomSheetOpenRef = useRef(false)
   const isFilterSheetOpenRef = useRef(false)
   const isFavoritesOpenRef = useRef(false)
+
+  // Filter open state: controlled externally when externalFilterOpen prop is provided
+  const isFilterSheetOpen = externalFilterOpen !== undefined ? externalFilterOpen : localFilterOpen
+  const setIsFilterSheetOpen = useCallback((open: boolean) => {
+    setLocalFilterOpen(open)
+    onExternalFilterOpenChange?.(open)
+  }, [onExternalFilterOpenChange])
 
   // Keep refs in sync so stable callbacks can read current values
   isBottomSheetOpenRef.current = isBottomSheetOpen
@@ -649,17 +660,6 @@ export default function LeafletCourtMap({
     saveLayerPreference(layerId)
   }, [])
 
-  const handleFilterClick = useCallback(() => {
-    if (isFavoritesOpenRef.current) setIsFavoritesOpen(false)
-    setIsFilterSheetOpen(true)
-    window.dispatchEvent(new CustomEvent('filter-opened'))
-  }, [])
-
-  const handleFavoritesClick = useCallback(() => {
-    if (isFilterSheetOpenRef.current) setIsFilterSheetOpen(false)
-    setIsFavoritesOpen(true)
-    window.dispatchEvent(new CustomEvent('favorites-opened'))
-  }, [])
 
 
   // Default center (Germany) — prefer explicit prop, then localStorage cache, then country default
@@ -726,7 +726,7 @@ export default function LeafletCourtMap({
             // Individual markers when not clustering — filter inline (few markers, trivial cost)
             const visibleCourts = courts.filter(c => {
               if (selectedSports.length > 0 && !selectedSports.some(s => c.sports?.includes(s))) return false
-              if (selectedPlaceType !== null && (c.place_type || 'öffentlich') !== selectedPlaceType) return false
+              if (selectedPlaceType.length > 0 && !selectedPlaceType.includes((c.place_type || 'öffentlich') as PlaceType)) return false
               return true
             })
             return visibleCourts.map((court) => {
@@ -827,22 +827,11 @@ export default function LeafletCourtMap({
           {/* Fly to target when selected from favorites */}
           {flyToTarget && <FlyToHandler target={flyToTarget} onDone={() => setFlyToTarget(null)} />}
           
-          {/* Filter button */}
-          {showFilter && <FilterButtonHandler onFilterClick={handleFilterClick} isFilterActive={selectedSports.length > 0 || selectedPlaceType !== null} />}
-
-          {/* Favorites button */}
-          {showFavorite && <FavoritesButtonHandler onClick={handleFavoritesClick} />}
-
           {/* Custom attribution control */}
           <AttributionControlHandler attribution={currentLayer.attribution} />
-          
+
           {/* Layer toggle button */}
           <LayerToggleHandler currentLayerId={currentLayerId} onLayerChange={handleLayerChange} />
-          
-          {/* Add court button */}
-          {showAddCourtButton && onAddCourtClick && (
-            <AddCourtButtonHandler onAddCourtClick={onAddCourtClick} user={user} />
-          )}
         </MapContainer>
       
       {/* Area banner — shown when map was opened via ?area= QR link */}
@@ -877,15 +866,19 @@ export default function LeafletCourtMap({
         showFavorite={showFavorite}
       />
 
-      {/* Filter Bottom Sheet — vaul Drawer */}
-      <FilterBottomSheetVaul
-        isOpen={isFilterSheetOpen}
-        onClose={setIsFilterSheetOpen}
-        onExplicitClose={handleExplicitFilterClose}
+      {/* Filter + Search Sheet */}
+      <SearchFilterSheet
+        open={isFilterSheetOpen}
+        onClose={() => setIsFilterSheetOpen(false)}
+        onReopen={() => setIsFilterSheetOpen(true)}
         selectedSports={selectedSports}
         onSportsChange={onSportsChange ?? (() => {})}
         selectedPlaceType={selectedPlaceType}
         onPlaceTypeChange={onPlaceTypeChange ?? (() => {})}
+        places={courts}
+        userLocation={userLocation}
+        onPlaceSelect={handleCourtSelect}
+        onOpenFavorites={() => setIsFavoritesOpen(true)}
       />
 
       {/* Favorites Bottom Sheet — vaul Drawer */}
@@ -894,6 +887,10 @@ export default function LeafletCourtMap({
         onOpenChange={(open) => {
           setIsFavoritesOpen(open)
           if (!open) onFavoritesClose?.()
+        }}
+        onBack={() => {
+          setIsFavoritesOpen(false)
+          setIsFilterSheetOpen(true)
         }}
         user={user}
         userLocation={userLocation}

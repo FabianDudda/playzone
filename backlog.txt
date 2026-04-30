@@ -6,3 +6,40 @@
 -  Alt text on map markers 
 - URL slugs for places  
 
+########################################
+
+search sheet: replace "filter section" (Sportart) with add favorites section there? (think about empty state favorites) (with tabs witch all/places/events)
+
+when user clicks on filter icon in searchsheet, the filter options should open in an own filter sheet with back and/or close buttons. also think about a save / reset button. should match with ios26 ux. give me a concept for this.
+
+#####
+
+  ┌─────┬───────────────────────────────────────────────┬────────┬────────┐
+  │  #  │                     Step                      │ Effort │  Risk  │
+  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
+  │ 1   │ Remove bottom nav, fix layout shell           │ XS     │ Low    │
+  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
+  │ 2   │ Map overlay container in map-page-client      │ S      │ Low    │
+  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
+  │ 3   │ Bottom search bar (tap to open, no input)     │ S      │ Low    │
+  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
+  │ 4   │ Map controls (locate + layers, repositioned)  │ S      │ Low    │
+  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
+  │ 5   │ FAB (add place)                               │ S      │ Low    │
+  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
+  │ 6   │ Quick chips + active filter chips             │ S      │ Low    │
+  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
+  │ 7   │ Search + filter sheet (new unified component) │ L      │ Medium │
+  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
+  │ 8   │ Place detail sheet polish                     │ M      │ Low    │
+  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
+  │ 9   │ Add place overlay                             │ S      │ Low    │
+  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
+  │ 10  │ Menu/profile sheet (replaces header drawer)   │ M      │ Medium │
+  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
+  │ 11  │ Favorites sheet update                        │ S      │ Low    │
+  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
+  │ 12  │ Profile page cleanup                          │ XS     │ Low    │
+  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
+  │ 13  │ Dark mode wiring                              │ S      │ Low    │
+  └─────┴───────────────────────────────────────────────┴────────┴────────┘

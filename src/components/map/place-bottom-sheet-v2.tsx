@@ -467,15 +467,6 @@ export default function PlaceBottomSheetV2({
                   >
                     <Share2 className="h-4 w-4" />
                   </Button>
-                  <Button
-                    variant="secondary"
-                    size="icon"
-                    className="rounded-full h-10 w-10"
-                    onClick={() => onOpenChange(false)}
-                    title="Schließen"
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
                 </div>
               </div>
             </DrawerHeader>

@@ -10,6 +10,8 @@ import { database } from '@/lib/supabase/database'
 import { SportType, PlaceMarker, Area } from '@/lib/supabase/types'
 import { PlaceType } from '@/lib/utils/sport-utils'
 import InstallBanner from '@/components/install/install-banner'
+import BottomSearchBar from '@/components/map/bottom-search-bar'
+import MenuSheet from '@/components/layout/menu-sheet'
 
 const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map'), {
   ssr: false,
@@ -36,10 +38,31 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
   const searchParams = useSearchParams()
   const [, startTransition] = useTransition()
   const [selectedSports, setSelectedSports] = useState<SportType[]>([])
-  const [selectedPlaceType, setSelectedPlaceType] = useState<PlaceType | null>(null)
+  const [selectedPlaceType, setSelectedPlaceType] = useState<PlaceType[]>([])
   const [selectedPlace, setSelectedPlace] = useState<PlaceMarker | null>(null)
+  const [filterOpen, setFilterOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
   const defaultFavoritesOpen = searchParams.get('favorites') === '1'
   const initialPlaceId = searchParams.get('place')
+
+  // Restore pointer-events when menu sheet is open (vaul/radix sets pointer-events:none on body)
+  useEffect(() => {
+    if (!menuOpen) return
+    const raf = requestAnimationFrame(() => { document.body.style.pointerEvents = 'auto' })
+    return () => cancelAnimationFrame(raf)
+  }, [menuOpen])
+
+  const handleAddPlace = () => {
+    try {
+      const stored = sessionStorage.getItem('map-position')
+      if (stored) {
+        const { lat, lng, zoom } = JSON.parse(stored)
+        router.push(`/new?lat=${lat}&lng=${lng}&zoom=${zoom}`)
+        return
+      }
+    } catch {}
+    router.push('/new')
+  }
 
   const handleCourtSelect = (court: PlaceMarker) => {
     setSelectedPlace(court)
@@ -74,44 +97,57 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
   const visibleCount = useMemo(() => {
     return allMarkers.filter((marker) => {
       if (deferredSports.length > 0 && !deferredSports.some(sport => marker.sports?.includes(sport))) return false
-      if (!marker.is_event_only && deferredPlaceType !== null && (marker.place_type || 'öffentlich') !== deferredPlaceType) return false
+      if (!marker.is_event_only && deferredPlaceType.length > 0 && !deferredPlaceType.includes((marker.place_type || 'öffentlich') as PlaceType)) return false
       return true
     }).length
   }, [allMarkers, deferredSports, deferredPlaceType])
 
   return (
-    <div className="relative">
-      <h1 className="sr-only">Kostenlose Sportplätze in deiner Nähe finden</h1>
-      <h2 className="sr-only">Interaktive Karte mit über 13.000 Sportplätzen in Deutschland</h2>
-      <LeafletCourtMap
-        courts={allMarkers}
-        onCourtSelect={handleCourtSelect}
-        height="100dvh"
-        selectedSports={selectedSports}
-        onSportsChange={setSelectedSports}
-        selectedPlaceType={selectedPlaceType}
-        onPlaceTypeChange={setSelectedPlaceType}
-        placesCount={visibleCount}
-        defaultFavoritesOpen={defaultFavoritesOpen}
-        onFavoritesClose={() => router.replace('/')}
-        onSheetClose={handleSheetClose}
-        initialCenter={savedPosition ? { lat: savedPosition.lat, lng: savedPosition.lng } : undefined}
-        initialZoom={savedPosition?.zoom}
-        initialPlaceId={initialPlaceId}
-        initialArea={initialArea ?? undefined}
-        trackPosition={true}
-        isLoading={isInitialLoading}
-      />
-      <InstallBanner />
-      {isLoadingMore && (
-        <div className="pointer-events-none absolute bottom-16 left-1/2 z-[1000] -translate-x-1/2">
-          <div className="flex items-center gap-2 rounded-full bg-background/80 px-3 py-1.5 text-xs font-medium text-foreground shadow backdrop-blur-sm">
-            <div className="h-3 w-3 animate-spin rounded-full border border-foreground border-t-transparent" />
-            Weitere Orte werden geladen…
+    <>
+      <div className="relative h-[100dvh] overflow-hidden">
+        <h1 className="sr-only">Kostenlose Sportplätze in deiner Nähe finden</h1>
+        <h2 className="sr-only">Interaktive Karte mit über 13.000 Sportplätzen in Deutschland</h2>
+        <LeafletCourtMap
+          courts={allMarkers}
+          onCourtSelect={handleCourtSelect}
+          height="100%"
+          selectedSports={selectedSports}
+          onSportsChange={setSelectedSports}
+          selectedPlaceType={selectedPlaceType}
+          onPlaceTypeChange={setSelectedPlaceType}
+          placesCount={visibleCount}
+          defaultFavoritesOpen={defaultFavoritesOpen}
+          onFavoritesClose={() => router.replace('/')}
+          onSheetClose={handleSheetClose}
+          initialCenter={savedPosition ? { lat: savedPosition.lat, lng: savedPosition.lng } : undefined}
+          initialZoom={savedPosition?.zoom}
+          initialPlaceId={initialPlaceId}
+          initialArea={initialArea ?? undefined}
+          trackPosition={true}
+          isLoading={isInitialLoading}
+          externalFilterOpen={filterOpen}
+          onExternalFilterOpenChange={setFilterOpen}
+        />
+        <InstallBanner />
+        {isLoadingMore && (
+          <div className="pointer-events-none absolute left-1/2 z-[1000] -translate-x-1/2" style={{ bottom: 'calc(80px + env(safe-area-inset-bottom, 0px))' }}>
+            <div className="flex items-center gap-2 rounded-full bg-background/80 px-3 py-1.5 text-xs font-medium text-foreground shadow backdrop-blur-sm">
+              <div className="h-3 w-3 animate-spin rounded-full border border-foreground border-t-transparent" />
+              Weitere Orte werden geladen…
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+
+      <BottomSearchBar
+        onSearchTap={() => setFilterOpen(true)}
+        onAddTap={handleAddPlace}
+        onMenuTap={() => setMenuOpen(true)}
+        filterActive={selectedSports.length > 0 || selectedPlaceType.length > 0}
+        filterOpen={filterOpen}
+      />
+      <MenuSheet open={menuOpen} onClose={() => setMenuOpen(false)} />
+    </>
   )
 }
 

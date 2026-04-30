@@ -215,7 +215,7 @@ export const database = {
         const data = await fetchAllRecords<PlaceMarker>(
           supabase
             .from('places')
-            .select('id, name, latitude, longitude, sports, place_type, organizer_id, is_event_only, organizers(name, color, logo_url, slug)')
+            .select('id, name, latitude, longitude, sports, place_type, city, organizer_id, is_event_only, organizers(name, color, logo_url, slug)')
             .eq('moderation_status', 'approved')
             .order('created_at', { ascending: false })
         )
@@ -230,7 +230,7 @@ export const database = {
     getAllPlacesLightweightBatch: async (from: number, to: number): Promise<PlaceMarker[]> => {
       const { data, error } = await supabase
         .from('places')
-        .select('id, name, latitude, longitude, sports, place_type, organizer_id, is_event_only, organizers(name, color, logo_url, slug)')
+        .select('id, name, latitude, longitude, sports, place_type, city, organizer_id, is_event_only, organizers(name, color, logo_url, slug)')
         .eq('moderation_status', 'approved')
         .order('created_at', { ascending: false })
         .range(from, to)

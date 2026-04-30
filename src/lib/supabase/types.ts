@@ -1099,6 +1099,7 @@ export interface PlaceMarker {
   longitude: number
   sports: string[] | null
   place_type?: string | null
+  city?: string | null
   organizer_id?: string | null
   organizer?: Pick<Organizer, 'name' | 'color' | 'logo_url' | 'slug'> | null
   is_event_only?: boolean
