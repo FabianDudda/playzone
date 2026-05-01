@@ -8,6 +8,7 @@
 
 ########################################
 
+use same glass design on all sheets/components
 
 #####
 

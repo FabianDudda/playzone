@@ -137,10 +137,10 @@
   align-items: center;
   width: 44px;
   border-radius: 100px;
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(20px) saturate(1.8);
-  -webkit-backdrop-filter: blur(20px) saturate(1.8);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(24px) saturate(1.8);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8);
+  border: 0.5px solid rgba(0, 0, 0, 0.06);
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.8);
   overflow: hidden;
 }
@@ -175,6 +175,24 @@
   flex-shrink: 0;
 }
 
+.dark .map-control-pill {
+  background: rgba(28, 28, 30, 0.78);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.dark .pill-btn {
+  color: #e5e7eb;
+}
+
+.dark .pill-btn-layer:active {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.dark .pill-divider {
+  background: rgba(255, 255, 255, 0.10);
+}
+
 .pill-btn-locate--follow {
   background: #007AFF;
   color: white;
@@ -199,10 +217,10 @@
   white-space: nowrap;
 }
 
-/* Attribution pinned to viewport bottom-left — fixed so it's unaffected by container height or transforms */
+/* Attribution pinned above the mini search bar */
 .map-attribution-corner {
   position: fixed;
-  bottom: 16px;
+  bottom: calc(80px + env(safe-area-inset-bottom, 0px));
   left: 16px;
   z-index: 500;
   margin: 0 !important;

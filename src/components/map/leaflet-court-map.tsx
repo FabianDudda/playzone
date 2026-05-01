@@ -353,12 +353,12 @@ function MapControlPill({
 
     map.on('dragstart', exitFollow)
 
-    let bottomRightStack = map.getContainer().querySelector('.map-control-bottom-right-stack') as HTMLElement
-    if (!bottomRightStack) {
-      bottomRightStack = L.DomUtil.create('div', 'map-control-bottom-right-stack')
-      map.getContainer().appendChild(bottomRightStack)
+    let topRightStack = map.getContainer().querySelector('.map-control-top-right-stack') as HTMLElement
+    if (!topRightStack) {
+      topRightStack = L.DomUtil.create('div', 'map-control-top-right-stack')
+      map.getContainer().appendChild(topRightStack)
     }
-    blockWheelOnStack(bottomRightStack)
+    blockWheelOnStack(topRightStack)
 
     const pillWrapper = L.DomUtil.create('div', 'leaflet-control-pill-wrapper')
     const pill = L.DomUtil.create('div', 'map-control-pill', pillWrapper)
@@ -390,7 +390,7 @@ function MapControlPill({
     L.DomEvent.on(locateBtn, 'click', handleLocateClick)
     L.DomEvent.disableClickPropagation(pillWrapper)
     L.DomEvent.disableScrollPropagation(pillWrapper)
-    bottomRightStack.appendChild(pillWrapper)
+    topRightStack.appendChild(pillWrapper)
 
     return () => {
       map.off('dragstart', exitFollow)

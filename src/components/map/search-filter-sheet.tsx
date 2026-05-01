@@ -16,8 +16,6 @@ import { cn } from '@/lib/utils'
 import { useAuth } from '@/components/providers/auth-provider'
 import { database } from '@/lib/supabase/database'
 
-const VISIBLE_SPORTS_COUNT = 8
-const PLACE_TYPES: PlaceType[] = ['öffentlich', 'verein', 'schule']
 const MAX_RESULTS = 50
 
 
@@ -133,7 +131,6 @@ export default function SearchFilterSheet({
   const hasActiveFilter = selectedSports.length > 0 || selectedPlaceType.length > 0
   const activeFilterCount = selectedSports.length + selectedPlaceType.length
 
-
   const filteredPlaces = useMemo(() => {
     let result = places.filter(p => !p.is_event_only)
     if (selectedSports.length > 0) result = result.filter(p => selectedSports.some(s => p.sports?.includes(s)))
@@ -153,7 +150,7 @@ export default function SearchFilterSheet({
 
   const filteredEvents = useMemo(() => {
     let result = events
-    if (selectedSports.length > 0) result = result.filter(e => selectedSports.some(s => e.sports?.includes(s as any)))
+    if (selectedSports.length > 0) result = result.filter(e => selectedSports.some(s => e.sports?.includes(s as SportType)))
     if (query.trim()) {
       const q = query.toLowerCase()
       result = result.filter(e =>
@@ -184,97 +181,148 @@ export default function SearchFilterSheet({
     setShowEvents(true)
   }
 
+  const miniBarBase = "fixed inset-x-0 z-[200] rounded-t-[22px] border-t border-black/[.04] dark:border-white/[.08] bg-white/[.86] dark:bg-[#1C1C1E]/[.78] backdrop-blur-[24px] backdrop-saturate-[180%] shadow-[0_-8px_30px_rgba(0,0,0,0.18)]"
+
   return (
     <>
-    <Drawer open={open} onOpenChange={(o) => !o && onClose()} modal={false} shouldScaleBackground={false}>
-      <DrawerContent hideOverlay className="max-h-[92dvh] flex flex-col focus:outline-none">
-        <VisuallyHidden><DrawerTitle>Suche & Filter</DrawerTitle></VisuallyHidden>
-        {/* Fixed header */}
-        <div className="px-4 pt-2 pb-3 shrink-0 space-y-3">
-          {/* Search input + filter toggle */}
-          <div className="flex items-center gap-2">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-[18px] w-[18px] text-muted-foreground pointer-events-none" />
-              <input
-                ref={inputRef}
-                value={query}
-                onChange={e => setQuery(e.target.value)}
-                placeholder="Sportplätze, Events, Stadt…"
-                className="w-full h-11 pl-10 pr-10 rounded-xl bg-[rgba(118,118,128,0.12)] dark:bg-white/[.08] text-[16px] outline-none focus:ring-2 focus:ring-primary/20 placeholder:text-muted-foreground border-0"
-              />
-              {query && (
+      {/* Persistent mini bar — always visible, z-[200] */}
+      <div
+        className={miniBarBase}
+        style={{ bottom: 0, paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+      >
+        <div className="flex justify-center pt-2 pb-1">
+          <div className="h-1 w-[38px] rounded-full bg-black/[.18] dark:bg-white/[.18]" />
+        </div>
+        <div className="px-4 pb-3 flex items-center gap-2">
+          <button
+            onClick={() => onReopen?.()}
+            className="relative flex-1 h-11 flex items-center gap-2.5 pl-3 pr-3 rounded-xl bg-[rgba(118,118,128,0.12)] dark:bg-white/[.08] text-left active:opacity-70 transition-opacity"
+            aria-label="Suche öffnen"
+          >
+            <Search className="h-[18px] w-[18px] text-muted-foreground shrink-0" />
+            <span className="text-[16px] text-muted-foreground flex-1 truncate">Sportplätze, Events, Stadt…</span>
+            {hasActiveFilter && (
+              <span className="shrink-0 h-2 w-2 rounded-full bg-primary" />
+            )}
+          </button>
+          <button
+            onClick={() => { onClose(); setFilterSheetOpen(true) }}
+            className={cn(
+              'relative h-11 w-11 rounded-xl flex items-center justify-center shrink-0 transition-colors',
+              hasActiveFilter
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-[rgba(118,118,128,0.12)] dark:bg-white/[.08] text-muted-foreground'
+            )}
+            aria-label="Filter"
+          >
+            <SlidersHorizontal className="h-[18px] w-[18px]" />
+            {activeFilterCount > 0 && (
+              <span className="absolute -top-1 -right-1 h-4 min-w-4 px-1 rounded-full bg-primary-foreground text-primary text-[10px] font-bold flex items-center justify-center leading-none">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
+          {onOpenFavorites && (
+            <button
+              onClick={() => { onClose(); onOpenFavorites() }}
+              className="h-11 w-11 rounded-xl bg-[rgba(118,118,128,0.12)] dark:bg-white/[.08] flex items-center justify-center shrink-0 transition-colors text-muted-foreground active:opacity-70"
+              aria-label="Gespeicherte Orte"
+            >
+              <Heart className="h-[18px] w-[18px]" />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Full Vaul drawer — only when open */}
+      <Drawer open={open} onOpenChange={(o) => !o && onClose()} modal={false} shouldScaleBackground={false}>
+        <DrawerContent hideOverlay className="max-h-[92dvh] flex flex-col focus:outline-none">
+          <VisuallyHidden><DrawerTitle>Suche & Filter</DrawerTitle></VisuallyHidden>
+          {/* Fixed header */}
+          <div className="px-4 pt-2 pb-3 shrink-0 space-y-3">
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-[18px] w-[18px] text-muted-foreground pointer-events-none" />
+                <input
+                  ref={inputRef}
+                  value={query}
+                  onChange={e => setQuery(e.target.value)}
+                  placeholder="Sportplätze, Events, Stadt…"
+                  className="w-full h-11 pl-10 pr-10 rounded-xl bg-[rgba(118,118,128,0.12)] dark:bg-white/[.08] text-[16px] outline-none focus:ring-2 focus:ring-primary/20 placeholder:text-muted-foreground border-0"
+                />
+                {query && (
+                  <button
+                    onClick={() => setQuery('')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-muted-foreground/30 flex items-center justify-center"
+                    aria-label="Suche löschen"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                )}
+              </div>
+              <button
+                onClick={() => { onClose(); setFilterSheetOpen(true) }}
+                className={cn(
+                  'relative h-11 w-11 rounded-xl flex items-center justify-center shrink-0 transition-colors',
+                  hasActiveFilter
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-[rgba(118,118,128,0.12)] dark:bg-white/[.08] text-muted-foreground'
+                )}
+                aria-label="Filter"
+              >
+                <SlidersHorizontal className="h-[18px] w-[18px]" />
+                {activeFilterCount > 0 && (
+                  <span className="absolute -top-1 -right-1 h-4 min-w-4 px-1 rounded-full bg-primary-foreground text-primary text-[10px] font-bold flex items-center justify-center leading-none">
+                    {activeFilterCount}
+                  </span>
+                )}
+              </button>
+              {onOpenFavorites && (
                 <button
-                  onClick={() => setQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-muted-foreground/30 flex items-center justify-center"
-                  aria-label="Suche löschen"
+                  onClick={() => { onClose(); onOpenFavorites() }}
+                  className="h-11 w-11 rounded-xl bg-[rgba(118,118,128,0.12)] dark:bg-white/[.08] flex items-center justify-center shrink-0 transition-colors text-muted-foreground"
+                  aria-label="Gespeicherte Orte"
                 >
-                  <X className="h-3 w-3" />
+                  <Heart className="h-[18px] w-[18px]" />
                 </button>
               )}
             </div>
-            <button
-              onClick={() => { onClose(); setFilterSheetOpen(true) }}
-              className={cn(
-                'relative h-11 w-11 rounded-xl flex items-center justify-center shrink-0 transition-colors',
-                hasActiveFilter
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-[rgba(118,118,128,0.12)] dark:bg-white/[.08] text-muted-foreground'
-              )}
-              aria-label="Filter"
-            >
-              <SlidersHorizontal className="h-[18px] w-[18px]" />
-              {activeFilterCount > 0 && (
-                <span className="absolute -top-1 -right-1 h-4 min-w-4 px-1 rounded-full bg-primary-foreground text-primary text-[10px] font-bold flex items-center justify-center leading-none">
-                  {activeFilterCount}
-                </span>
-              )}
-            </button>
-            {onOpenFavorites && (
-              <button
-                onClick={() => { onClose(); onOpenFavorites() }}
-                className="h-11 w-11 rounded-xl bg-[rgba(118,118,128,0.12)] dark:bg-white/[.08] flex items-center justify-center shrink-0 transition-colors text-muted-foreground"
-                aria-label="Gespeicherte Orte"
-              >
-                <Heart className="h-[18px] w-[18px]" />
-              </button>
+          </div>
+
+          {/* Scrollable results */}
+          <div className="flex-1 overflow-y-auto">
+            {showOrte && filteredPlaces.map(place => (
+              <PlaceRow
+                key={place.id}
+                place={place}
+                userLocation={userLocation}
+                isFavorite={favoriteIds.has(place.id)}
+                onSelect={() => { onPlaceSelect(place); onClose() }}
+              />
+            ))}
+            {showEvents && filteredEvents.map(event => (
+              <EventRow key={event.id} event={event} isBookmarked={event.is_bookmarked} onClose={onClose} />
+            ))}
+            {(showOrte ? filteredPlaces.length : 0) + (showEvents ? filteredEvents.length : 0) === 0 && (
+              <EmptyState text="Keine Ergebnisse gefunden." />
             )}
           </div>
-        </div>
+        </DrawerContent>
+      </Drawer>
 
-        {/* Scrollable results */}
-        <div className="flex-1 overflow-y-auto">
-
-          {showOrte && filteredPlaces.map(place => (
-            <PlaceRow
-              key={place.id}
-              place={place}
-              userLocation={userLocation}
-              isFavorite={favoriteIds.has(place.id)}
-              onSelect={() => { onPlaceSelect(place); onClose() }}
-            />
-          ))}
-          {showEvents && filteredEvents.map(event => (
-            <EventRow key={event.id} event={event} isBookmarked={event.is_bookmarked} onClose={onClose} />
-          ))}
-          {(showOrte ? filteredPlaces.length : 0) + (showEvents ? filteredEvents.length : 0) === 0 && (
-            <EmptyState text="Keine Ergebnisse gefunden." />
-          )}
-        </div>
-      </DrawerContent>
-    </Drawer>
-    <FilterSheet
-      open={filterSheetOpen}
-      onBack={() => { setFilterSheetOpen(false); onReopen?.() }}
-      onClose={() => setFilterSheetOpen(false)}
-      selectedSports={selectedSports}
-      onSportsChange={onSportsChange}
-      selectedPlaceType={selectedPlaceType}
-      onPlaceTypeChange={onPlaceTypeChange}
-      showOrte={showOrte}
-      showEvents={showEvents}
-      onToggleContentType={toggleContentType}
-      onReset={handleFilterReset}
-    />
+      <FilterSheet
+        open={filterSheetOpen}
+        onBack={() => { setFilterSheetOpen(false); onReopen?.() }}
+        onClose={() => setFilterSheetOpen(false)}
+        selectedSports={selectedSports}
+        onSportsChange={onSportsChange}
+        selectedPlaceType={selectedPlaceType}
+        onPlaceTypeChange={onPlaceTypeChange}
+        showOrte={showOrte}
+        showEvents={showEvents}
+        onToggleContentType={toggleContentType}
+        onReset={handleFilterReset}
+      />
     </>
   )
 }

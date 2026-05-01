@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, Suspense, useTransition, useDeferredValue, useEffect } from 'react'
+import { useState, Suspense, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
@@ -9,10 +9,12 @@ import { useProgressivePlaces } from '@/hooks/use-progressive-places'
 import { database } from '@/lib/supabase/database'
 import { SportType, PlaceMarker, Area } from '@/lib/supabase/types'
 import { PlaceType } from '@/lib/utils/sport-utils'
+import Image from 'next/image'
+import Link from 'next/link'
+import { Plus, User, MapPin, Calendar, Sun, Moon } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import InstallBanner from '@/components/install/install-banner'
-import BottomSearchBar from '@/components/map/bottom-search-bar'
 import MenuSheet from '@/components/layout/menu-sheet'
-import AddActionSheet from '@/components/map/add-action-sheet'
 
 const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map'), {
   ssr: false,
@@ -24,6 +26,11 @@ const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map
   ),
 })
 
+// FAB bottom offset (88px mini bar + 16px gap + safe area)
+const FAB_BOTTOM = 'calc(88px + 16px + env(safe-area-inset-bottom, 0px))'
+// Popup bottom offset (above FAB: FAB bottom + FAB height 56px + 8px gap)
+const POPUP_BOTTOM = 'calc(88px + 16px + 56px + 8px + env(safe-area-inset-bottom, 0px))'
+
 function MapPage({ initialArea }: { initialArea?: Area | null }) {
   useEffect(() => {
     document.body.style.overflow = 'hidden'
@@ -34,20 +41,32 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
     }
   }, [])
 
-  const { user, loading } = useAuth()
+  const { user, profile, loading } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [, startTransition] = useTransition()
   const [selectedSports, setSelectedSports] = useState<SportType[]>([])
   const [selectedPlaceType, setSelectedPlaceType] = useState<PlaceType[]>([])
-  const [selectedPlace, setSelectedPlace] = useState<PlaceMarker | null>(null)
-  const [filterOpen, setFilterOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [addSheetOpen, setAddSheetOpen] = useState(false)
+  const [addOpen, setAddOpen] = useState(false)
+  const [isDark, setIsDark] = useState(false)
+
+  useEffect(() => {
+    const stored = localStorage.getItem('debug-theme')
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const dark = stored ? stored === 'dark' : prefersDark
+    setIsDark(dark)
+    document.documentElement.classList.toggle('dark', dark)
+  }, [])
+
+  const toggleTheme = () => {
+    const next = !isDark
+    setIsDark(next)
+    document.documentElement.classList.toggle('dark', next)
+    localStorage.setItem('debug-theme', next ? 'dark' : 'light')
+  }
   const defaultFavoritesOpen = searchParams.get('favorites') === '1'
   const initialPlaceId = searchParams.get('place')
 
-  // Restore pointer-events when menu sheet is open (vaul/radix sets pointer-events:none on body)
   useEffect(() => {
     if (!menuOpen) return
     const raf = requestAnimationFrame(() => { document.body.style.pointerEvents = 'auto' })
@@ -55,6 +74,7 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
   }, [menuOpen])
 
   const handleAddPlace = () => {
+    setAddOpen(false)
     try {
       const stored = sessionStorage.getItem('map-position')
       if (stored) {
@@ -67,10 +87,7 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
   }
 
   const handleCourtSelect = (court: PlaceMarker) => {
-    setSelectedPlace(court)
-    startTransition(() => {
-      router.replace(`/?place=${court.id}`, { scroll: false })
-    })
+    router.replace(`/?place=${court.id}`, { scroll: false })
   }
 
   const handleSheetClose = () => {
@@ -90,19 +107,7 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
     enabled: !loading,
   })
 
-  const allMarkers = useMemo(() => [...places, ...inlineEvents], [places, inlineEvents])
-
-  const deferredSports = useDeferredValue(selectedSports)
-  const deferredPlaceType = useDeferredValue(selectedPlaceType)
-
-  // Only used for the pin count display — filtering is handled inside MarkerClusterGroup
-  const visibleCount = useMemo(() => {
-    return allMarkers.filter((marker) => {
-      if (deferredSports.length > 0 && !deferredSports.some(sport => marker.sports?.includes(sport))) return false
-      if (!marker.is_event_only && deferredPlaceType.length > 0 && !deferredPlaceType.includes((marker.place_type || 'öffentlich') as PlaceType)) return false
-      return true
-    }).length
-  }, [allMarkers, deferredSports, deferredPlaceType])
+  const allMarkers = [...places, ...inlineEvents]
 
   return (
     <>
@@ -117,7 +122,6 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
           onSportsChange={setSelectedSports}
           selectedPlaceType={selectedPlaceType}
           onPlaceTypeChange={setSelectedPlaceType}
-          placesCount={visibleCount}
           defaultFavoritesOpen={defaultFavoritesOpen}
           onFavoritesClose={() => router.replace('/')}
           onSheetClose={handleSheetClose}
@@ -127,12 +131,10 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
           initialArea={initialArea ?? undefined}
           trackPosition={true}
           isLoading={isInitialLoading}
-          externalFilterOpen={filterOpen}
-          onExternalFilterOpenChange={setFilterOpen}
         />
         <InstallBanner />
         {isLoadingMore && (
-          <div className="pointer-events-none absolute left-1/2 z-[1000] -translate-x-1/2" style={{ bottom: 'calc(80px + env(safe-area-inset-bottom, 0px))' }}>
+          <div className="pointer-events-none absolute left-1/2 z-[1000] -translate-x-1/2" style={{ bottom: 'calc(104px + env(safe-area-inset-bottom, 0px))' }}>
             <div className="flex items-center gap-2 rounded-full bg-background/80 px-3 py-1.5 text-xs font-medium text-foreground shadow backdrop-blur-sm">
               <div className="h-3 w-3 animate-spin rounded-full border border-foreground border-t-transparent" />
               Weitere Orte werden geladen…
@@ -141,19 +143,94 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
         )}
       </div>
 
-      <BottomSearchBar
-        onSearchTap={() => setFilterOpen(true)}
-        onAddTap={() => setAddSheetOpen(v => !v)}
-        onMenuTap={() => setMenuOpen(true)}
-        filterActive={selectedSports.length > 0 || selectedPlaceType.length > 0}
-        filterOpen={filterOpen}
-        isAddOpen={addSheetOpen}
-      />
-      <AddActionSheet
-        isOpen={addSheetOpen}
-        onClose={() => setAddSheetOpen(false)}
-        onCreatePlace={handleAddPlace}
-      />
+      {/* Profile FAB — top left */}
+      <button
+        onClick={() => setMenuOpen(true)}
+        className="fixed z-[1000] flex h-11 w-11 items-center justify-center rounded-full bg-background/90 backdrop-blur-xl border border-border/60 shadow-lg shadow-black/10 active:scale-95 transition-transform overflow-hidden"
+        style={{ top: 'calc(16px + env(safe-area-inset-top, 0px))', left: '16px' }}
+        aria-label="Profil"
+      >
+        {profile?.avatar ? (
+          <div className="relative h-full w-full">
+            <Image src={profile.avatar} alt={profile.name ?? ''} fill className="object-cover" />
+          </div>
+        ) : user && profile?.name ? (
+          <div className="h-full w-full flex items-center justify-center bg-primary text-primary-foreground text-[13px] font-bold select-none">
+            {profile.name.charAt(0).toUpperCase()}
+          </div>
+        ) : (
+          <User className="h-5 w-5 text-foreground" />
+        )}
+      </button>
+
+      {/* Add popup backdrop — closes popup on outside tap */}
+      {addOpen && (
+        <div
+          className="fixed inset-0 z-[151]"
+          onClick={() => setAddOpen(false)}
+        />
+      )}
+
+      {/* Add popup — anchored just above the FAB */}
+      {addOpen && (
+        <div
+          className="fixed z-[152] w-[220px] rounded-2xl overflow-hidden bg-white/[.92] dark:bg-[#1C1C1E]/[.90] backdrop-blur-[24px] saturate-[180%] border border-black/[.06] dark:border-white/[.08] shadow-[0_8px_40px_rgba(0,0,0,0.22)] animate-in fade-in zoom-in-95 slide-in-from-bottom-2 duration-150"
+          style={{ right: '16px', bottom: POPUP_BOTTOM }}
+        >
+          <button
+            onClick={handleAddPlace}
+            className="w-full flex items-center gap-3 px-4 py-3.5 text-left border-b border-black/[.06] dark:border-white/[.06] active:bg-black/[.04] dark:active:bg-white/[.04] transition-colors"
+          >
+            <div className="h-10 w-10 rounded-xl bg-emerald-500/15 flex items-center justify-center shrink-0">
+              <MapPin className="h-[18px] w-[18px] text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <div>
+              <div className="text-[14px] font-semibold leading-tight">Ort erstellen</div>
+              <div className="text-[12px] text-muted-foreground leading-tight mt-0.5">Neuen Sportplatz hinzufügen</div>
+            </div>
+          </button>
+          <Link
+            href="/events/new"
+            onClick={() => setAddOpen(false)}
+            className="flex items-center gap-3 px-4 py-3.5 text-left active:bg-black/[.04] dark:active:bg-white/[.04] transition-colors"
+          >
+            <div className="h-10 w-10 rounded-xl bg-indigo-500/15 flex items-center justify-center shrink-0">
+              <Calendar className="h-[18px] w-[18px] text-indigo-600 dark:text-indigo-400" />
+            </div>
+            <div>
+              <div className="text-[14px] font-semibold leading-tight">Event erstellen</div>
+              <div className="text-[12px] text-muted-foreground leading-tight mt-0.5">Veranstaltung organisieren</div>
+            </div>
+          </Link>
+        </div>
+      )}
+
+      {/* Add FAB — right side, above mini search bar */}
+      <button
+        onClick={() => setAddOpen(v => !v)}
+        className="fixed z-[150] flex h-14 w-14 items-center justify-center rounded-full bg-white/[.86] dark:bg-[#1C1C1E]/[.78] backdrop-blur-[24px] backdrop-saturate-[180%] border border-black/[.06] dark:border-white/[.08] shadow-[0_2px_16px_rgba(0,0,0,0.14),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_2px_16px_rgba(0,0,0,0.30),inset_0_1px_0_rgba(255,255,255,0.06)] active:scale-95 transition-all duration-200 text-foreground"
+        style={{ right: '16px', bottom: FAB_BOTTOM }}
+        aria-label={addOpen ? 'Schließen' : 'Erstellen'}
+      >
+        <div className={cn('transition-transform duration-200', addOpen ? 'rotate-45' : 'rotate-0')}>
+          <Plus className="h-6 w-6" />
+        </div>
+      </button>
+
+      {/* Debug: theme toggle — above attribution, bottom-left */}
+      <button
+        onClick={toggleTheme}
+        className="fixed z-[600] h-7 w-7 flex items-center justify-center rounded-full bg-background/80 backdrop-blur-sm border border-border/50 shadow-sm active:scale-95 transition-transform"
+        style={{ left: '16px', bottom: 'calc(108px + env(safe-area-inset-bottom, 0px))' }}
+        title="Toggle dark mode"
+        aria-label="Toggle dark mode"
+      >
+        {isDark
+          ? <Sun className="h-3.5 w-3.5 text-foreground" />
+          : <Moon className="h-3.5 w-3.5 text-foreground" />
+        }
+      </button>
+
       <MenuSheet open={menuOpen} onClose={() => setMenuOpen(false)} />
     </>
   )
