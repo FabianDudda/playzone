@@ -69,7 +69,7 @@ export default function FilterSheet({
 
   return (
     <Drawer open={open} onOpenChange={(o) => !o && onBack()} modal={false} shouldScaleBackground={false}>
-      <DrawerContent hideOverlay className="h-[92dvh] flex flex-col focus:outline-none">
+      <DrawerContent hideOverlay className="h-[97dvh] flex flex-col focus:outline-none">
         <VisuallyHidden><DrawerTitle>Filter</DrawerTitle></VisuallyHidden>
         {/* Header — identical to favorites sheet */}
         <div className="grid grid-cols-3 items-center px-4 pt-2 pb-3 shrink-0">

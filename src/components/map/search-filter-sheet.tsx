@@ -181,7 +181,7 @@ export default function SearchFilterSheet({
     setShowEvents(true)
   }
 
-  const miniBarBase = "fixed inset-x-0 z-[200] rounded-t-[22px] border-t border-black/[.04] dark:border-white/[.08] bg-white/[.86] dark:bg-[#1C1C1E]/[.78] backdrop-blur-[24px] backdrop-saturate-[180%] shadow-[0_-8px_30px_rgba(0,0,0,0.18)]"
+  const miniBarBase = "fixed inset-x-0 z-[200] rounded-t-[22px] border-t border-black/[.06] dark:border-white/[.08] bg-white/[.72] dark:bg-[#1C1C1E]/[.55] backdrop-blur-[24px] backdrop-saturate-[250%] shadow-[0_-8px_30px_rgba(0,0,0,0.18)] dark:shadow-[0_-8px_30px_rgba(0,0,0,0.30)]"
 
   return (
     <>
@@ -196,10 +196,10 @@ export default function SearchFilterSheet({
         <div className="px-4 pb-3 flex items-center gap-2">
           <button
             onClick={() => onReopen?.()}
-            className="relative flex-1 h-11 flex items-center gap-2.5 pl-3 pr-3 rounded-xl bg-[rgba(118,118,128,0.12)] dark:bg-white/[.08] text-left active:opacity-70 transition-opacity"
+            className="relative flex-1 h-11 flex items-center gap-2.5 pl-3 pr-3 rounded-xl bg-white/[.12] dark:bg-black/[.12] text-left active:opacity-70 transition-opacity"
             aria-label="Suche öffnen"
           >
-            <Search className="h-[18px] w-[18px] text-muted-foreground shrink-0" />
+            <Search className="h-[18px] w-[18px] text-foreground shrink-0" />
             <span className="text-[16px] text-muted-foreground flex-1 truncate">Sportplätze, Events, Stadt…</span>
             {hasActiveFilter && (
               <span className="shrink-0 h-2 w-2 rounded-full bg-primary" />
@@ -208,10 +208,10 @@ export default function SearchFilterSheet({
           <button
             onClick={() => { onClose(); setFilterSheetOpen(true) }}
             className={cn(
-              'relative h-11 w-11 rounded-xl flex items-center justify-center shrink-0 transition-colors',
+              'relative h-11 w-11 rounded-full flex items-center justify-center shrink-0 transition-colors',
               hasActiveFilter
                 ? 'bg-primary text-primary-foreground'
-                : 'bg-[rgba(118,118,128,0.12)] dark:bg-white/[.08] text-muted-foreground'
+                : 'bg-black/[.06] dark:bg-white/[.08] active:bg-black/[.12] dark:active:bg-white/[.14] text-foreground'
             )}
             aria-label="Filter"
           >
@@ -225,7 +225,7 @@ export default function SearchFilterSheet({
           {onOpenFavorites && (
             <button
               onClick={() => { onClose(); onOpenFavorites() }}
-              className="h-11 w-11 rounded-xl bg-[rgba(118,118,128,0.12)] dark:bg-white/[.08] flex items-center justify-center shrink-0 transition-colors text-muted-foreground active:opacity-70"
+              className="h-11 w-11 rounded-full bg-black/[.06] dark:bg-white/[.08] active:bg-black/[.12] dark:active:bg-white/[.14] flex items-center justify-center shrink-0 transition-colors text-foreground"
               aria-label="Gespeicherte Orte"
             >
               <Heart className="h-[18px] w-[18px]" />
@@ -236,7 +236,7 @@ export default function SearchFilterSheet({
 
       {/* Full Vaul drawer — only when open */}
       <Drawer open={open} onOpenChange={(o) => !o && onClose()} modal={false} shouldScaleBackground={false}>
-        <DrawerContent hideOverlay className="max-h-[92dvh] flex flex-col focus:outline-none">
+        <DrawerContent hideOverlay className="max-h-[97dvh] flex flex-col focus:outline-none">
           <VisuallyHidden><DrawerTitle>Suche & Filter</DrawerTitle></VisuallyHidden>
           {/* Fixed header */}
           <div className="px-4 pt-2 pb-3 shrink-0 space-y-3">
@@ -248,7 +248,7 @@ export default function SearchFilterSheet({
                   value={query}
                   onChange={e => setQuery(e.target.value)}
                   placeholder="Sportplätze, Events, Stadt…"
-                  className="w-full h-11 pl-10 pr-10 rounded-xl bg-[rgba(118,118,128,0.12)] dark:bg-white/[.08] text-[16px] outline-none focus:ring-2 focus:ring-primary/20 placeholder:text-muted-foreground border-0"
+                  className="w-full h-11 pl-10 pr-10 rounded-xl bg-white/[.12] dark:bg-black/[.12] text-[16px] outline-none focus:ring-2 focus:ring-primary/20 placeholder:text-muted-foreground border-0"
                 />
                 {query && (
                   <button
@@ -263,10 +263,10 @@ export default function SearchFilterSheet({
               <button
                 onClick={() => { onClose(); setFilterSheetOpen(true) }}
                 className={cn(
-                  'relative h-11 w-11 rounded-xl flex items-center justify-center shrink-0 transition-colors',
+                  'relative h-11 w-11 rounded-full flex items-center justify-center shrink-0 transition-colors',
                   hasActiveFilter
                     ? 'bg-primary text-primary-foreground'
-                    : 'bg-[rgba(118,118,128,0.12)] dark:bg-white/[.08] text-muted-foreground'
+                    : 'bg-black/[.06] dark:bg-white/[.08] active:bg-black/[.12] dark:active:bg-white/[.14] text-foreground'
                 )}
                 aria-label="Filter"
               >
@@ -280,7 +280,7 @@ export default function SearchFilterSheet({
               {onOpenFavorites && (
                 <button
                   onClick={() => { onClose(); onOpenFavorites() }}
-                  className="h-11 w-11 rounded-xl bg-[rgba(118,118,128,0.12)] dark:bg-white/[.08] flex items-center justify-center shrink-0 transition-colors text-muted-foreground"
+                  className="h-11 w-11 rounded-full bg-black/[.06] dark:bg-white/[.08] active:bg-black/[.12] dark:active:bg-white/[.14] flex items-center justify-center shrink-0 transition-colors text-foreground"
                   aria-label="Gespeicherte Orte"
                 >
                   <Heart className="h-[18px] w-[18px]" />

@@ -67,7 +67,7 @@ export default function MenuSheet({ open, onClose, onOpenFavorites }: MenuSheetP
 
   return (
     <Drawer open={open} onOpenChange={(o) => !o && onClose()} modal={false}>
-      <DrawerContent hideOverlay className="max-h-[92dvh] flex flex-col focus:outline-none">
+      <DrawerContent hideOverlay className="max-h-[97dvh] flex flex-col focus:outline-none">
         <VisuallyHidden><DrawerTitle>Menü</DrawerTitle></VisuallyHidden>
         {/* Header */}
         <div className="flex items-center justify-between px-4 pt-2 pb-4 shrink-0">

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef, useMemo, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { useQuery } from '@tanstack/react-query'
 import { database } from '@/lib/supabase/database'
 import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet'
@@ -19,6 +20,7 @@ import { sportNames, getSportBadgeClasses, sportIcons, PlaceType } from '@/lib/u
 import { createSportIcon, createEventOnlyIcon, createUserLocationIcon, createSelectedLocationIcon } from '@/lib/utils/sport-styles'
 import { MAP_LAYERS, DEFAULT_LAYER_ID, createTileLayer, getSavedLayerPreference, saveLayerPreference } from '@/lib/utils/map-layers'
 import { getDistanceText } from '@/lib/utils/distance'
+import { cn } from '@/lib/utils'
 import L from 'leaflet'
 import MarkerClusterGroup from './marker-cluster-group'
 import AreaBanner from './area-banner'
@@ -246,10 +248,10 @@ function MapControlPill({
   useEffect(() => { currentLayerIdRef.current = currentLayerId }, [currentLayerId])
   useEffect(() => { onLayerChangeRef.current = onLayerChange }, [onLayerChange])
 
+  const [isFollowing, setIsFollowing] = useState(false)
   const followModeRef = useRef(false)
   const watchIdRef = useRef<number | null>(null)
   const accuracyCircleRef = useRef<L.Circle | null>(null)
-  const locateBtnRef = useRef<HTMLButtonElement | null>(null)
 
   // Auto-locate silently on mount when no explicit center is provided
   useEffect(() => {
@@ -284,124 +286,97 @@ function MapControlPill({
     }
   }, [])
 
-  // Build pill DOM once
+  const stopWatch = useCallback(() => {
+    if (watchIdRef.current !== null) {
+      navigator.geolocation?.clearWatch(watchIdRef.current)
+      watchIdRef.current = null
+    }
+  }, [])
+
+  const exitFollow = useCallback(() => {
+    followModeRef.current = false
+    setIsFollowing(false)
+    stopWatch()
+  }, [stopWatch])
+
   useEffect(() => {
-    const setLocateActive = (active: boolean) => {
-      locateBtnRef.current?.classList.toggle('pill-btn-locate--follow', active)
-    }
-
-    const stopWatch = () => {
-      if (watchIdRef.current !== null) {
-        navigator.geolocation?.clearWatch(watchIdRef.current)
-        watchIdRef.current = null
-      }
-    }
-
-    const exitFollow = () => {
-      followModeRef.current = false
-      setLocateActive(false)
-      stopWatch()
-    }
-
-    const updateLocation = (lat: number, lng: number, accuracy: number) => {
-      callbackRef.current(lat, lng)
-      try { localStorage.setItem('user-location-cache', JSON.stringify({ lat, lng })) } catch {}
-      if (accuracyCircleRef.current) {
-        accuracyCircleRef.current.setLatLng([lat, lng])
-        accuracyCircleRef.current.setRadius(accuracy)
-      } else {
-        accuracyCircleRef.current = L.circle([lat, lng], {
-          radius: accuracy,
-          color: '#4F9CF9',
-          fillColor: '#4F9CF9',
-          fillOpacity: 0.15,
-          weight: 1,
-        }).addTo(map)
-      }
-    }
-
-    const handleLocateClick = () => {
-      if (!navigator.geolocation) return
-      if (followModeRef.current) {
-        exitFollow()
-        return
-      }
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const { latitude: lat, longitude: lng, accuracy } = pos.coords
-          updateLocation(lat, lng, accuracy)
-          map.setView([lat, lng], Math.max(map.getZoom(), 14))
-          followModeRef.current = true
-          setLocateActive(true)
-          watchIdRef.current = navigator.geolocation.watchPosition(
-            (p) => {
-              updateLocation(p.coords.latitude, p.coords.longitude, p.coords.accuracy)
-              if (followModeRef.current) map.setView([p.coords.latitude, p.coords.longitude], map.getZoom())
-            },
-            () => exitFollow()
-          )
-        },
-        (error) => console.warn('Could not get user location:', error)
-      )
-    }
-
-    const handleLayerClick = () => {
-      const cycle = ['light', 'voyager']
-      const nextIndex = (cycle.indexOf(currentLayerIdRef.current) + 1) % cycle.length
-      onLayerChangeRef.current(cycle[nextIndex])
-    }
-
     map.on('dragstart', exitFollow)
+    return () => { map.off('dragstart', exitFollow) }
+  }, [map, exitFollow])
 
-    let topRightStack = map.getContainer().querySelector('.map-control-top-right-stack') as HTMLElement
-    if (!topRightStack) {
-      topRightStack = L.DomUtil.create('div', 'map-control-top-right-stack')
-      map.getContainer().appendChild(topRightStack)
-    }
-    blockWheelOnStack(topRightStack)
-
-    const pillWrapper = L.DomUtil.create('div', 'leaflet-control-pill-wrapper')
-    const pill = L.DomUtil.create('div', 'map-control-pill', pillWrapper)
-
-    const layerBtn = L.DomUtil.create('button', 'pill-btn pill-btn-layer', pill) as HTMLButtonElement
-    layerBtn.title = 'Toggle Map Style'
-    layerBtn.innerHTML = `
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polygon points="12 2 2 7 12 12 22 7 12 2"/>
-        <polyline points="2 17 12 22 22 17"/>
-        <polyline points="2 12 12 17 22 12"/>
-      </svg>
-    `
-
-    L.DomUtil.create('div', 'pill-divider', pill)
-
-    const locateBtn = L.DomUtil.create('button', 'pill-btn pill-btn-locate', pill) as HTMLButtonElement
-    locateBtnRef.current = locateBtn
-    locateBtn.title = 'Find my location'
-    locateBtn.innerHTML = `
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polygon points="3 11 22 2 13 21 11 13 3 11"/>
-      </svg>
-    `
-
-    L.DomEvent.on(layerBtn, 'click', L.DomEvent.preventDefault)
-    L.DomEvent.on(layerBtn, 'click', handleLayerClick)
-    L.DomEvent.on(locateBtn, 'click', L.DomEvent.preventDefault)
-    L.DomEvent.on(locateBtn, 'click', handleLocateClick)
-    L.DomEvent.disableClickPropagation(pillWrapper)
-    L.DomEvent.disableScrollPropagation(pillWrapper)
-    topRightStack.appendChild(pillWrapper)
-
-    return () => {
-      map.off('dragstart', exitFollow)
-      pillWrapper.remove()
-      locateBtnRef.current = null
-      stopWatch()
-      if (accuracyCircleRef.current) { accuracyCircleRef.current.remove(); accuracyCircleRef.current = null }
+  const updateLocation = useCallback((lat: number, lng: number, accuracy: number) => {
+    callbackRef.current(lat, lng)
+    try { localStorage.setItem('user-location-cache', JSON.stringify({ lat, lng })) } catch {}
+    if (accuracyCircleRef.current) {
+      accuracyCircleRef.current.setLatLng([lat, lng])
+      accuracyCircleRef.current.setRadius(accuracy)
+    } else {
+      accuracyCircleRef.current = L.circle([lat, lng], {
+        radius: accuracy,
+        color: '#4F9CF9',
+        fillColor: '#4F9CF9',
+        fillOpacity: 0.15,
+        weight: 1,
+      }).addTo(map)
     }
   }, [map])
 
-  return null
+  const handleLayerClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation()
+    const cycle = ['light', 'voyager']
+    const nextIndex = (cycle.indexOf(currentLayerIdRef.current) + 1) % cycle.length
+    onLayerChangeRef.current(cycle[nextIndex])
+  }, [])
+
+  const handleLocateClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (!navigator.geolocation) return
+    if (followModeRef.current) { exitFollow(); return }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude: lat, longitude: lng, accuracy } = pos.coords
+        updateLocation(lat, lng, accuracy)
+        map.setView([lat, lng], Math.max(map.getZoom(), 14))
+        followModeRef.current = true
+        setIsFollowing(true)
+        watchIdRef.current = navigator.geolocation.watchPosition(
+          (p) => {
+            updateLocation(p.coords.latitude, p.coords.longitude, p.coords.accuracy)
+            if (followModeRef.current) map.setView([p.coords.latitude, p.coords.longitude], map.getZoom())
+          },
+          () => exitFollow()
+        )
+      },
+      (error) => console.warn('Could not get user location:', error)
+    )
+  }, [map, exitFollow, updateLocation])
+
+  return createPortal(
+    <div
+      className="fixed z-[1000]"
+      style={{ top: 'calc(16px + env(safe-area-inset-top, 0px))', right: '16px' }}
+      onMouseDown={e => e.stopPropagation()}
+      onTouchStart={e => e.stopPropagation()}
+      onWheel={e => e.stopPropagation()}
+    >
+      <div className="flex flex-col items-center w-11 rounded-[100px] overflow-hidden border border-black/[.06] dark:border-white/[.08] bg-white/[.72] dark:bg-[#1C1C1E]/[.55] backdrop-blur-[24px] backdrop-saturate-[250%] shadow-[0_2px_16px_rgba(0,0,0,0.14)] dark:shadow-[0_2px_16px_rgba(0,0,0,0.30)]">
+        <button className="pill-btn pill-btn-layer" title="Toggle Map Style" onClick={handleLayerClick}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+            <polyline points="2 17 12 22 22 17"/>
+            <polyline points="2 12 12 17 22 12"/>
+          </svg>
+        </button>
+        <div className="pill-divider" />
+        <button className={cn('pill-btn pill-btn-locate', isFollowing && 'pill-btn-locate--follow')} title="Find my location" onClick={handleLocateClick}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+          </svg>
+        </button>
+      </div>
+    </div>,
+    document.body
+  )
 }
 
 // Component to handle custom attribution control positioned at bottom-left corner

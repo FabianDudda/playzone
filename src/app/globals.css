@@ -100,6 +100,11 @@ input[type="password"]::-ms-clear {
   }
 }
 
+/* Fix: backdrop-filter compositing on Vaul drawers */
+[data-vaul-drawer] {
+  will-change: auto !important;
+}
+
 /* Custom Leaflet map styles */
 .leaflet-container {
   font-family: inherit;

@@ -35,9 +35,11 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
   useEffect(() => {
     document.body.style.overflow = 'hidden'
     document.documentElement.style.overflow = 'hidden'
+    document.body.style.background = 'transparent'
     return () => {
       document.body.style.overflow = ''
       document.documentElement.style.overflow = ''
+      document.body.style.background = ''
     }
   }, [])
 
@@ -174,7 +176,7 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
       {/* Add popup — anchored just above the FAB */}
       {addOpen && (
         <div
-          className="fixed z-[152] w-[220px] rounded-2xl overflow-hidden bg-white/[.92] dark:bg-[#1C1C1E]/[.90] backdrop-blur-[24px] saturate-[180%] border border-black/[.06] dark:border-white/[.08] shadow-[0_8px_40px_rgba(0,0,0,0.22)] animate-in fade-in zoom-in-95 slide-in-from-bottom-2 duration-150"
+          className="fixed z-[152] w-[220px] rounded-2xl overflow-hidden bg-white/[.92] dark:bg-[#1C1C1E]/[.90] backdrop-blur-[24px] backdrop-saturate-[180%] border border-black/[.06] dark:border-white/[.08] shadow-[0_8px_40px_rgba(0,0,0,0.22)] animate-in fade-in zoom-in-95 slide-in-from-bottom-2 duration-150"
           style={{ right: '16px', bottom: POPUP_BOTTOM }}
         >
           <button
@@ -208,7 +210,7 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
       {/* Add FAB — right side, above mini search bar */}
       <button
         onClick={() => setAddOpen(v => !v)}
-        className="fixed z-[150] flex h-14 w-14 items-center justify-center rounded-full bg-white/[.86] dark:bg-[#1C1C1E]/[.78] backdrop-blur-[24px] backdrop-saturate-[180%] border border-black/[.06] dark:border-white/[.08] shadow-[0_2px_16px_rgba(0,0,0,0.14),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_2px_16px_rgba(0,0,0,0.30),inset_0_1px_0_rgba(255,255,255,0.06)] active:scale-95 transition-all duration-200 text-foreground"
+        className="fixed z-[150] flex h-14 w-14 items-center justify-center rounded-full bg-white/[.72] dark:bg-[#1C1C1E]/[.55] backdrop-blur-[24px] backdrop-saturate-[250%] border border-black/[.06] dark:border-white/[.08] shadow-[0_2px_16px_rgba(0,0,0,0.14)] dark:shadow-[0_2px_16px_rgba(0,0,0,0.30)] active:scale-95 transition-all duration-200 text-foreground"
         style={{ right: '16px', bottom: FAB_BOTTOM }}
         aria-label={addOpen ? 'Schließen' : 'Erstellen'}
       >
