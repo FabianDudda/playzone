@@ -12,6 +12,7 @@ import { PlaceType } from '@/lib/utils/sport-utils'
 import InstallBanner from '@/components/install/install-banner'
 import BottomSearchBar from '@/components/map/bottom-search-bar'
 import MenuSheet from '@/components/layout/menu-sheet'
+import AddActionSheet from '@/components/map/add-action-sheet'
 
 const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map'), {
   ssr: false,
@@ -42,6 +43,7 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
   const [selectedPlace, setSelectedPlace] = useState<PlaceMarker | null>(null)
   const [filterOpen, setFilterOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [addSheetOpen, setAddSheetOpen] = useState(false)
   const defaultFavoritesOpen = searchParams.get('favorites') === '1'
   const initialPlaceId = searchParams.get('place')
 
@@ -141,10 +143,16 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
 
       <BottomSearchBar
         onSearchTap={() => setFilterOpen(true)}
-        onAddTap={handleAddPlace}
+        onAddTap={() => setAddSheetOpen(v => !v)}
         onMenuTap={() => setMenuOpen(true)}
         filterActive={selectedSports.length > 0 || selectedPlaceType.length > 0}
         filterOpen={filterOpen}
+        isAddOpen={addSheetOpen}
+      />
+      <AddActionSheet
+        isOpen={addSheetOpen}
+        onClose={() => setAddSheetOpen(false)}
+        onCreatePlace={handleAddPlace}
       />
       <MenuSheet open={menuOpen} onClose={() => setMenuOpen(false)} />
     </>

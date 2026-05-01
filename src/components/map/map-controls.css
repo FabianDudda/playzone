@@ -63,8 +63,7 @@
 
 .map-control-bottom-right-stack {
   position: absolute;
-  /* Clears bottom bar (68px) + margin */
-  bottom: calc(var(--map-control-margin) + 4.5rem);
+  bottom: var(--map-control-margin);
   right: var(--map-control-margin);
   z-index: var(--map-control-z-index);
   display: flex;
@@ -127,32 +126,62 @@
   /* Uses base .map-control-button styles */
 }
 
-/* Location Button */
-.leaflet-control-location-modern {
+/* Glass Pill Control (layer toggle + locate) */
+.leaflet-control-pill-wrapper {
   /* Positioning handled by parent stack */
 }
 
-.location-button {
-  /* Uses base .map-control-button styles */
+.map-control-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 44px;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  overflow: hidden;
 }
 
-.location-button--follow {
-  background: #3b82f6;
+.pill-btn {
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: transparent;
+  color: #374151;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.12s ease;
+  flex-shrink: 0;
+  outline: none;
+}
+
+.pill-btn:active {
+  transform: scale(0.88);
+}
+
+.pill-btn-layer:active {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.pill-divider {
+  width: 20px;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.pill-btn-locate--follow {
+  background: #007AFF;
   color: white;
 }
 
-.location-button--follow:hover {
-  background: #2563eb;
-  color: white;
-}
-
-/* Layer Toggle Button */
-.leaflet-control-layer-toggle {
-  /* Positioning handled by parent stack */
-}
-
-.layer-toggle-button {
-  /* Uses base .map-control-button styles */
+.pill-btn-locate--follow:active {
+  background: #005FCC;
 }
 
 /* Places Count Display */
@@ -170,14 +199,17 @@
   white-space: nowrap;
 }
 
-/* Ensure proper stacking order in bottom-left */
-.map-control-bottom-left-stack .leaflet-control-attribution {
-  order: 1; /* Bottom */
+/* Attribution pinned to viewport bottom-left — fixed so it's unaffected by container height or transforms */
+.map-attribution-corner {
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  z-index: 500;
   margin: 0 !important;
 }
 
 .map-control-bottom-left-stack .leaflet-control-places-count {
-  order: 2; /* Above attribution */
+  order: 1;
 }
 
 /* Embedded map (e.g. inside a form) — no bottom nav to avoid */

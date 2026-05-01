@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Drawer, DrawerContent } from '@/components/ui/drawer'
+import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer'
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { Heart, ChevronRight, ChevronLeft, X, Loader2 } from 'lucide-react'
 import { PlaceMarker, UserFavorite, EventWithDetails, EventSchedule } from '@/lib/supabase/types'
 import { sportIcons, sportColors } from '@/lib/utils/sport-utils'
@@ -234,6 +235,7 @@ export default function FavoritesBottomSheetVaul({
   return (
     <Drawer open={isOpen} onOpenChange={onOpenChange} modal={false} shouldScaleBackground={false}>
       <DrawerContent hideOverlay className="h-[92dvh] flex flex-col focus:outline-none">
+        <VisuallyHidden><DrawerTitle>Gespeichert</DrawerTitle></VisuallyHidden>
         {/* Header */}
         <div className="flex items-center justify-between px-4 pt-2 pb-3 shrink-0">
           <button

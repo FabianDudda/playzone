@@ -15,14 +15,14 @@ export const MAP_LAYERS: Record<string, MapLayer> = {
     id: 'light',
     name: 'Satellite',
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    attribution: 'Imagery &copy; <a href="https://www.esri.com/">Esri</a>, Maxar',
+    attribution: ' &copy; <a href="https://www.esri.com/en-us/legal/copyright-trademarks">Esri</a>',
     maxZoom: 19,
   },
   dark: {
     id: 'dark', 
     name: 'Dark',
     url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    attribution: 'Map tiles &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    attribution: ' &copy; <a href="https://carto.com/attributions">CARTO</a>',
     maxZoom: 19,
     subdomains: 'abcd'
   },
@@ -30,7 +30,7 @@ export const MAP_LAYERS: Record<string, MapLayer> = {
     id: 'street',
     name: 'Street',
     url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    attribution: ' &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     maxZoom: 19,
     subdomains: 'abc'
   },
@@ -38,7 +38,7 @@ export const MAP_LAYERS: Record<string, MapLayer> = {
     id: 'voyager',
     name: 'Voyager',
     url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-    attribution: 'Map tiles &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    attribution: ' &copy; <a href="https://carto.com/attributions">CARTO</a>',
     maxZoom: 19,
     subdomains: 'abcd'
   }

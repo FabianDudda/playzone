@@ -1,6 +1,6 @@
 'use client'
 
-import { Search, Plus, User } from 'lucide-react'
+import { Search, Plus, User, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/components/providers/auth-provider'
 
@@ -10,27 +10,29 @@ interface BottomSearchBarProps {
   onMenuTap: () => void
   filterActive?: boolean
   filterOpen?: boolean
+  isAddOpen?: boolean
 }
 
-export default function BottomSearchBar({ onSearchTap, onAddTap, onMenuTap, filterActive = false, filterOpen = false }: BottomSearchBarProps) {
+export default function BottomSearchBar({ onSearchTap, onAddTap, onMenuTap, filterActive = false, filterOpen = false, isAddOpen = false }: BottomSearchBarProps) {
   const { user, profile } = useAuth()
 
   return (
     <div
-      className="fixed left-3 right-3 z-[200] flex flex-col"
-      style={{ bottom: 'calc(12px + env(safe-area-inset-bottom, 0px))' }}
+      className="fixed left-1/2 -translate-x-1/2 z-[200] flex flex-col items-center"
+      style={{ bottom: 'calc(16px + env(safe-area-inset-bottom, 0px))' }}
     >
       {filterActive && !filterOpen && (
-        <div className="mb-2 self-start px-3 py-1.5 rounded-full bg-background/90 backdrop-blur-xl border border-border/60 shadow-sm shadow-black/10 text-[11px] font-semibold uppercase tracking-wider text-primary">
+        <div className="mb-2 px-3 py-1.5 rounded-full bg-background/90 backdrop-blur-xl border border-border/60 shadow-sm shadow-black/10 text-[11px] font-semibold uppercase tracking-wider text-primary">
           Gespeichert
         </div>
       )}
-      <div className="flex h-[56px] rounded-[18px] bg-background/90 backdrop-blur-xl border border-border/60 shadow-lg shadow-black/10 overflow-hidden">
+
+      <div className="flex w-[200px] h-[56px] items-center rounded-full bg-background/90 backdrop-blur-xl border border-border/60 shadow-lg shadow-black/10 overflow-visible">
 
         {/* Search */}
         <button
           onClick={onSearchTap}
-          className="flex flex-1 flex-col items-center justify-center gap-0.5 active:bg-muted/50 transition-colors"
+          className="flex flex-1 h-full flex-col items-center justify-center gap-0.5 rounded-l-full active:bg-muted/50 transition-colors"
           aria-label="Suche öffnen"
         >
           <div className="relative">
@@ -44,24 +46,21 @@ export default function BottomSearchBar({ onSearchTap, onAddTap, onMenuTap, filt
           </span>
         </button>
 
-        <div className="w-px h-8 self-center bg-border/60 shrink-0" />
-
-        {/* Add place */}
+        {/* Add / Close toggle */}
         <button
           onClick={onAddTap}
-          className="flex flex-1 flex-col items-center justify-center gap-0.5 active:bg-muted/50 transition-colors"
-          aria-label="Ort hinzufügen"
+          className="flex h-[64px] w-[64px] shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/25 active:scale-95 transition-transform"
+          aria-label={isAddOpen ? 'Schließen' : 'Erstellen'}
         >
-          <Plus className="h-5 w-5 text-foreground" />
-          <span className="text-[10px] font-medium leading-none text-muted-foreground">Hinzufügen</span>
+          <div className={cn('transition-transform duration-200', isAddOpen ? 'rotate-45' : 'rotate-0')}>
+            {isAddOpen ? <X className="h-6 w-6" /> : <Plus className="h-6 w-6" />}
+          </div>
         </button>
 
-        <div className="w-px h-8 self-center bg-border/60 shrink-0" />
-
-        {/* Profile */}
+        {/* Profile / Menu */}
         <button
           onClick={onMenuTap}
-          className="flex flex-1 flex-col items-center justify-center gap-0.5 active:bg-muted/50 transition-colors"
+          className="flex flex-1 h-full flex-col items-center justify-center gap-0.5 rounded-r-full active:bg-muted/50 transition-colors"
           aria-label="Menü öffnen"
         >
           {profile?.avatar ? (

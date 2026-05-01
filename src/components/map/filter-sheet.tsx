@@ -1,6 +1,7 @@
 'use client'
 
-import { Drawer, DrawerContent } from '@/components/ui/drawer'
+import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer'
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { ChevronLeft, X, RotateCcw } from 'lucide-react'
 import { SportType } from '@/lib/supabase/types'
 import {
@@ -69,7 +70,7 @@ export default function FilterSheet({
   return (
     <Drawer open={open} onOpenChange={(o) => !o && onBack()} modal={false} shouldScaleBackground={false}>
       <DrawerContent hideOverlay className="h-[92dvh] flex flex-col focus:outline-none">
-
+        <VisuallyHidden><DrawerTitle>Filter</DrawerTitle></VisuallyHidden>
         {/* Header — identical to favorites sheet */}
         <div className="grid grid-cols-3 items-center px-4 pt-2 pb-3 shrink-0">
           <div>

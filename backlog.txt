@@ -8,9 +8,6 @@
 
 ########################################
 
-search sheet: replace "filter section" (Sportart) with add favorites section there? (think about empty state favorites) (with tabs witch all/places/events)
-
-when user clicks on filter icon in searchsheet, the filter options should open in an own filter sheet with back and/or close buttons. also think about a save / reset button. should match with ios26 ux. give me a concept for this.
 
 #####
 

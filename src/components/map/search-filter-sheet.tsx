@@ -2,7 +2,8 @@
 
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Drawer, DrawerContent } from '@/components/ui/drawer'
+import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer'
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { Search, X, ChevronRight, Heart, SlidersHorizontal } from 'lucide-react'
 import FilterSheet from './filter-sheet'
 import { SportType, PlaceMarker, EventWithDetails, EventSchedule } from '@/lib/supabase/types'
@@ -187,6 +188,7 @@ export default function SearchFilterSheet({
     <>
     <Drawer open={open} onOpenChange={(o) => !o && onClose()} modal={false} shouldScaleBackground={false}>
       <DrawerContent hideOverlay className="max-h-[92dvh] flex flex-col focus:outline-none">
+        <VisuallyHidden><DrawerTitle>Suche & Filter</DrawerTitle></VisuallyHidden>
         {/* Fixed header */}
         <div className="px-4 pt-2 pb-3 shrink-0 space-y-3">
           {/* Search input + filter toggle */}

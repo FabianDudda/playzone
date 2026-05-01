@@ -226,22 +226,30 @@ function FavoritesButtonHandler({ onClick }: { onClick: () => void }) {
   return null
 }
 
-// Component to handle user location with auto-locate, follow mode, and accuracy circle
-function UserLocationHandler({
+// Combined glass pill: layer toggle (left) + locate/follow (right)
+function MapControlPill({
   onLocationFound,
   autoLocate,
+  currentLayerId,
+  onLayerChange,
 }: {
   onLocationFound: (lat: number, lng: number) => void
   autoLocate: boolean
+  currentLayerId: string
+  onLayerChange: (layerId: string) => void
 }) {
   const map = useMap()
   const callbackRef = useRef(onLocationFound)
+  const currentLayerIdRef = useRef(currentLayerId)
+  const onLayerChangeRef = useRef(onLayerChange)
   useEffect(() => { callbackRef.current = onLocationFound }, [onLocationFound])
+  useEffect(() => { currentLayerIdRef.current = currentLayerId }, [currentLayerId])
+  useEffect(() => { onLayerChangeRef.current = onLayerChange }, [onLayerChange])
 
   const followModeRef = useRef(false)
   const watchIdRef = useRef<number | null>(null)
   const accuracyCircleRef = useRef<L.Circle | null>(null)
-  const buttonRef = useRef<HTMLButtonElement | null>(null)
+  const locateBtnRef = useRef<HTMLButtonElement | null>(null)
 
   // Auto-locate silently on mount when no explicit center is provided
   useEffect(() => {
@@ -263,12 +271,12 @@ function UserLocationHandler({
           }).addTo(map)
         }
       },
-      () => {} // silent failure — user can still tap the button manually
+      () => {}
     )
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map])
 
-  // Cleanup watch and circle on unmount
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (watchIdRef.current !== null) navigator.geolocation?.clearWatch(watchIdRef.current)
@@ -276,10 +284,10 @@ function UserLocationHandler({
     }
   }, [])
 
-  // Button + follow mode setup (DOM created once)
+  // Build pill DOM once
   useEffect(() => {
-    const setButtonActive = (active: boolean) => {
-      buttonRef.current?.classList.toggle('location-button--follow', active)
+    const setLocateActive = (active: boolean) => {
+      locateBtnRef.current?.classList.toggle('pill-btn-locate--follow', active)
     }
 
     const stopWatch = () => {
@@ -291,11 +299,11 @@ function UserLocationHandler({
 
     const exitFollow = () => {
       followModeRef.current = false
-      setButtonActive(false)
+      setLocateActive(false)
       stopWatch()
     }
 
-    const updateUI = (lat: number, lng: number, accuracy: number) => {
+    const updateLocation = (lat: number, lng: number, accuracy: number) => {
       callbackRef.current(lat, lng)
       try { localStorage.setItem('user-location-cache', JSON.stringify({ lat, lng })) } catch {}
       if (accuracyCircleRef.current) {
@@ -312,26 +320,22 @@ function UserLocationHandler({
       }
     }
 
-    const handleClick = () => {
+    const handleLocateClick = () => {
       if (!navigator.geolocation) return
-
       if (followModeRef.current) {
         exitFollow()
         return
       }
-
-      // Locate once, fly to position, then enter live follow mode
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           const { latitude: lat, longitude: lng, accuracy } = pos.coords
-          updateUI(lat, lng, accuracy)
+          updateLocation(lat, lng, accuracy)
           map.setView([lat, lng], Math.max(map.getZoom(), 14))
-
           followModeRef.current = true
-          setButtonActive(true)
+          setLocateActive(true)
           watchIdRef.current = navigator.geolocation.watchPosition(
             (p) => {
-              updateUI(p.coords.latitude, p.coords.longitude, p.coords.accuracy)
+              updateLocation(p.coords.latitude, p.coords.longitude, p.coords.accuracy)
               if (followModeRef.current) map.setView([p.coords.latitude, p.coords.longitude], map.getZoom())
             },
             () => exitFollow()
@@ -341,7 +345,12 @@ function UserLocationHandler({
       )
     }
 
-    // Exit follow mode when user manually pans
+    const handleLayerClick = () => {
+      const cycle = ['light', 'voyager']
+      const nextIndex = (cycle.indexOf(currentLayerIdRef.current) + 1) % cycle.length
+      onLayerChangeRef.current(cycle[nextIndex])
+    }
+
     map.on('dragstart', exitFollow)
 
     let bottomRightStack = map.getContainer().querySelector('.map-control-bottom-right-stack') as HTMLElement
@@ -351,27 +360,42 @@ function UserLocationHandler({
     }
     blockWheelOnStack(bottomRightStack)
 
-    const locationContainer = L.DomUtil.create('div', 'leaflet-control-location-modern')
-    const locationButton = L.DomUtil.create('button', 'location-button map-control-button', locationContainer) as HTMLButtonElement
-    buttonRef.current = locationButton
-    locationButton.innerHTML = `
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-        <circle cx="12" cy="10" r="3"/>
+    const pillWrapper = L.DomUtil.create('div', 'leaflet-control-pill-wrapper')
+    const pill = L.DomUtil.create('div', 'map-control-pill', pillWrapper)
+
+    const layerBtn = L.DomUtil.create('button', 'pill-btn pill-btn-layer', pill) as HTMLButtonElement
+    layerBtn.title = 'Toggle Map Style'
+    layerBtn.innerHTML = `
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+        <polyline points="2 17 12 22 22 17"/>
+        <polyline points="2 12 12 17 22 12"/>
       </svg>
     `
-    locationButton.title = 'Find my location'
 
-    L.DomEvent.on(locationButton, 'click', L.DomEvent.preventDefault)
-    L.DomEvent.on(locationButton, 'click', handleClick)
-    L.DomEvent.disableClickPropagation(locationContainer)
-    L.DomEvent.disableScrollPropagation(locationContainer)
-    bottomRightStack.appendChild(locationContainer)
+    L.DomUtil.create('div', 'pill-divider', pill)
+
+    const locateBtn = L.DomUtil.create('button', 'pill-btn pill-btn-locate', pill) as HTMLButtonElement
+    locateBtnRef.current = locateBtn
+    locateBtn.title = 'Find my location'
+    locateBtn.innerHTML = `
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+      </svg>
+    `
+
+    L.DomEvent.on(layerBtn, 'click', L.DomEvent.preventDefault)
+    L.DomEvent.on(layerBtn, 'click', handleLayerClick)
+    L.DomEvent.on(locateBtn, 'click', L.DomEvent.preventDefault)
+    L.DomEvent.on(locateBtn, 'click', handleLocateClick)
+    L.DomEvent.disableClickPropagation(pillWrapper)
+    L.DomEvent.disableScrollPropagation(pillWrapper)
+    bottomRightStack.appendChild(pillWrapper)
 
     return () => {
       map.off('dragstart', exitFollow)
-      locationContainer.remove()
-      buttonRef.current = null
+      pillWrapper.remove()
+      locateBtnRef.current = null
       stopWatch()
       if (accuracyCircleRef.current) { accuracyCircleRef.current.remove(); accuracyCircleRef.current = null }
     }
@@ -380,79 +404,25 @@ function UserLocationHandler({
   return null
 }
 
-// Component to handle custom attribution control positioned at bottom-left
+// Component to handle custom attribution control positioned at bottom-left corner
 function AttributionControlHandler({ attribution }: { attribution: string }) {
   const map = useMap()
 
-  // Create DOM once
+  // Create DOM once — appended directly to map container, not the stack
   useEffect(() => {
-    let bottomLeftStack = map.getContainer().querySelector('.map-control-bottom-left-stack') as HTMLElement
-    if (!bottomLeftStack) {
-      bottomLeftStack = L.DomUtil.create('div', 'map-control-bottom-left-stack')
-      map.getContainer().appendChild(bottomLeftStack)
-    }
-
-    const container = L.DomUtil.create('div', 'leaflet-control-attribution leaflet-control')
+    const container = L.DomUtil.create('div', 'leaflet-control-attribution leaflet-control map-attribution-corner')
     L.DomEvent.disableClickPropagation(container)
     L.DomEvent.disableScrollPropagation(container)
-    bottomLeftStack.appendChild(container)
+    map.getContainer().appendChild(container)
 
     return () => { container.remove() }
   }, [map])
 
   // Update text via DOM mutation — no teardown
   useEffect(() => {
-    const container = map.getContainer().querySelector('.leaflet-control-attribution.leaflet-control') as HTMLElement | null
+    const container = map.getContainer().querySelector('.map-attribution-corner') as HTMLElement | null
     if (container) container.innerHTML = attribution
   }, [map, attribution])
-
-  return null
-}
-
-// Component to handle layer toggle button positioned above places count
-function LayerToggleHandler({ currentLayerId, onLayerChange }: { currentLayerId: string, onLayerChange: (layerId: string) => void }) {
-  const map = useMap()
-  const currentLayerIdRef = useRef(currentLayerId)
-  const onLayerChangeRef = useRef(onLayerChange)
-  useEffect(() => { currentLayerIdRef.current = currentLayerId }, [currentLayerId])
-  useEffect(() => { onLayerChangeRef.current = onLayerChange }, [onLayerChange])
-
-  // Create DOM once
-  useEffect(() => {
-    const toggleLayer = () => {
-      const cycle = ['light', 'voyager']
-      const nextIndex = (cycle.indexOf(currentLayerIdRef.current) + 1) % cycle.length
-      onLayerChangeRef.current(cycle[nextIndex])
-    }
-
-    let bottomRightStack = map.getContainer().querySelector('.map-control-bottom-right-stack') as HTMLElement
-    if (!bottomRightStack) {
-      bottomRightStack = L.DomUtil.create('div', 'map-control-bottom-right-stack')
-      map.getContainer().appendChild(bottomRightStack)
-    }
-    blockWheelOnStack(bottomRightStack)
-
-    const layerContainer = L.DomUtil.create('div', 'leaflet-control-layer-toggle')
-    const layerButton = L.DomUtil.create('button', 'layer-toggle-button map-control-button', layerContainer)
-    layerButton.innerHTML = `
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polygon points="12 2 2 7 12 12 22 7 12 2"/>
-        <polyline points="2 17 12 22 22 17"/>
-        <polyline points="2 12 12 17 22 12"/>
-      </svg>
-    `
-    layerButton.title = 'Toggle Map Style'
-
-    L.DomEvent.on(layerButton, 'click', (e) => {
-      L.DomEvent.preventDefault(e)
-      toggleLayer()
-    })
-    L.DomEvent.disableClickPropagation(layerContainer)
-    L.DomEvent.disableScrollPropagation(layerContainer)
-    bottomRightStack.appendChild(layerContainer)
-
-    return () => { layerContainer.remove() }
-  }, [map])
 
   return null
 }
@@ -821,17 +791,19 @@ export default function LeafletCourtMap({
             }}
           />
           
-          {/* User location control */}
-          <UserLocationHandler onLocationFound={handleLocationFound} autoLocate={autoLocate} />
+          {/* Glass pill: layer toggle + locate */}
+          <MapControlPill
+            onLocationFound={handleLocationFound}
+            autoLocate={autoLocate}
+            currentLayerId={currentLayerId}
+            onLayerChange={handleLayerChange}
+          />
 
           {/* Fly to target when selected from favorites */}
           {flyToTarget && <FlyToHandler target={flyToTarget} onDone={() => setFlyToTarget(null)} />}
-          
+
           {/* Custom attribution control */}
           <AttributionControlHandler attribution={currentLayer.attribution} />
-
-          {/* Layer toggle button */}
-          <LayerToggleHandler currentLayerId={currentLayerId} onLayerChange={handleLayerChange} />
         </MapContainer>
       
       {/* Area banner — shown when map was opened via ?area= QR link */}
