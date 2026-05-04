@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useRef, useEffect } from 'react'
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
@@ -15,6 +15,7 @@ import { calculateDistance, formatDistance } from '@/lib/utils/distance'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/components/providers/auth-provider'
 import { database } from '@/lib/supabase/database'
+import { useKeyboardHeight } from '@/hooks/use-keyboard-height'
 
 const MAX_RESULTS = 50
 
@@ -101,15 +102,23 @@ export default function SearchFilterSheet({
   const [showEvents, setShowEvents] = useState(true)
   const [filterSheetOpen, setFilterSheetOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const keyboardHeight = useKeyboardHeight()
+
+  const focusInput = useCallback(() => {
+    inputRef.current?.focus()
+  }, [])
 
   useEffect(() => {
     if (open) {
-      const t = setTimeout(() => inputRef.current?.focus(), 320)
+      // Wait for the drawer open animation, then focus.
+      // On Android, the subsequent visualViewport resize (keyboard appearing)
+      // is handled by useKeyboardHeight which repositions the drawer.
+      const t = setTimeout(focusInput, 320)
       return () => clearTimeout(t)
     } else {
       setQuery('')
     }
-  }, [open])
+  }, [open, focusInput])
 
   const { data: events = [] } = useQuery({
     queryKey: ['events', user?.id],
@@ -236,7 +245,14 @@ export default function SearchFilterSheet({
 
       {/* Full Vaul drawer — only when open */}
       <Drawer open={open} onOpenChange={(o) => !o && onClose()} modal={false} shouldScaleBackground={false}>
-        <DrawerContent hideOverlay className="max-h-[97dvh] flex flex-col focus:outline-none">
+        <DrawerContent
+          hideOverlay
+          className="max-h-[97dvh] flex flex-col focus:outline-none"
+          style={{
+            bottom: keyboardHeight,
+            maxHeight: `calc(97dvh - ${keyboardHeight}px)`,
+          }}
+        >
           <VisuallyHidden><DrawerTitle>Suche & Filter</DrawerTitle></VisuallyHidden>
           {/* Fixed header */}
           <div className="px-4 pt-2 pb-3 shrink-0 space-y-3">
