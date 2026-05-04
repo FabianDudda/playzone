@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom'
 import { useQuery } from '@tanstack/react-query'
 import { database } from '@/lib/supabase/database'
 import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet'
-import { Court, SportType, PlaceWithCourts, PlaceMarker, Area } from '@/lib/supabase/types'
+import { Court, SportType, PlaceWithCourts, PlaceMarker, EventForSearch, Area } from '@/lib/supabase/types'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 // import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
@@ -32,6 +32,8 @@ import './map-controls.css'
 
 interface LeafletCourtMapProps {
   courts: PlaceMarker[]
+  events?: EventForSearch[]
+  eventsLoading?: boolean
   onCourtSelect?: (court: PlaceMarker) => void
   onMapClick?: (lng: number, lat: number) => void
   height?: string
@@ -470,10 +472,10 @@ function AddCourtButtonHandler({ onAddCourtClick, user }: { onAddCourtClick: () 
 }
 
 
-function FlyToHandler({ target, onDone }: { target: { lat: number; lng: number }, onDone: () => void }) {
+function FlyToHandler({ target, onDone }: { target: { lat: number; lng: number; zoom?: number }, onDone: () => void }) {
   const map = useMap()
   useEffect(() => {
-    map.flyTo([target.lat, target.lng], Math.max(map.getZoom(), 16), { duration: 1 })
+    map.flyTo([target.lat, target.lng], target.zoom ?? Math.max(map.getZoom(), 16), { animate: true, duration: 1.2 })
     onDone()
   }, [map, target, onDone])
   return null
@@ -481,6 +483,8 @@ function FlyToHandler({ target, onDone }: { target: { lat: number; lng: number }
 
 export default function LeafletCourtMap({
   courts,
+  events = [],
+  eventsLoading = false,
   onCourtSelect,
   onMapClick,
   height = '400px',
@@ -523,11 +527,13 @@ export default function LeafletCourtMap({
 
   const [selectedCourt, setSelectedCourt] = useState<PlaceMarker | null>(null)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
-  const [flyToTarget, setFlyToTarget] = useState<{ lat: number; lng: number } | null>(null)
+  const [flyToTarget, setFlyToTarget] = useState<{ lat: number; lng: number; zoom?: number } | null>(null)
   const [currentLayerId, setCurrentLayerId] = useState<string>(() => getSavedLayerPreference())
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
   const [localFilterOpen, setLocalFilterOpen] = useState(false)
   const [isFavoritesOpen, setIsFavoritesOpen] = useState(defaultFavoritesOpen)
+  const [showOrte, setShowOrte] = useState(true)
+  const [showEvents, setShowEvents] = useState(true)
   const isClosingExplicitly = useRef(false)
   const isClosingFilterExplicitly = useRef(false)
   const isBottomSheetOpenRef = useRef(false)
@@ -548,9 +554,9 @@ export default function LeafletCourtMap({
 
   // Vaul renders via @radix-ui/react-dialog which sets pointer-events:none on the body
   // when its DismissableLayer fires (modal=true by default in Radix, regardless of vaul's modal=false).
-  // Restore pointer-events so the map remains pannable while a non-modal sheet is open.
+  // Restore pointer-events so the map remains pannable. The search drawer is always mounted
+  // (mini snap), so we always restore — no early-return condition.
   useEffect(() => {
-    if (!isBottomSheetOpen && !isFilterSheetOpen && !isFavoritesOpen) return
     const raf = requestAnimationFrame(() => {
       document.body.style.pointerEvents = 'auto'
     })
@@ -600,6 +606,10 @@ export default function LeafletCourtMap({
     setUserLocation({ lat, lng })
   }, [])
 
+  const handleLocationSelect = useCallback((lat: number, lng: number, zoom: number) => {
+    setFlyToTarget({ lat, lng, zoom })
+  }, [])
+
   const handleLayerChange = useCallback((layerId: string) => {
     setCurrentLayerId(layerId)
     saveLayerPreference(layerId)
@@ -625,6 +635,11 @@ export default function LeafletCourtMap({
     } catch {}
   }
   const autoLocate = !initialCenter && !initialArea
+
+  const visibleCourts = useMemo(() =>
+    courts.filter(c => (c as any).is_event_only ? showEvents : showOrte),
+    [courts, showOrte, showEvents]
+  )
 
   // Get current layer configuration (memoized)
   const currentLayer = useMemo(() => MAP_LAYERS[currentLayerId] || MAP_LAYERS[DEFAULT_LAYER_ID], [currentLayerId])
@@ -664,17 +679,19 @@ export default function LeafletCourtMap({
                   selectedSports={selectedSports}
                   selectedPlaceType={selectedPlaceType}
                   placeIdsWithEvents={placeIdsWithEvents}
+                  showOrte={showOrte}
+                  showEvents={showEvents}
                 />
               )
             }
 
             // Individual markers when not clustering — filter inline (few markers, trivial cost)
-            const visibleCourts = courts.filter(c => {
+            const sportFiltered = visibleCourts.filter(c => {
               if (selectedSports.length > 0 && !selectedSports.some(s => c.sports?.includes(s))) return false
               if (selectedPlaceType.length > 0 && !selectedPlaceType.includes((c.place_type || 'öffentlich') as PlaceType)) return false
               return true
             })
-            return visibleCourts.map((court) => {
+            return sportFiltered.map((court) => {
               const allSports = court.sports || []
               const matchingSports = allSports.filter(s => selectedSports.includes(s))
               const sportsForIcon = selectedSports.length === 0 ? allSports : matchingSports.length > 0 ? matchingSports : allSports
@@ -702,7 +719,7 @@ export default function LeafletCourtMap({
               />
             )
             })
-          }, [enableClustering, courts, selectedSports, selectedPlaceType, handleCourtSelect, placeIdsWithEvents, selectedCourt])}
+          }, [enableClustering, courts, visibleCourts, selectedSports, selectedPlaceType, handleCourtSelect, placeIdsWithEvents, selectedCourt])}
           
           {/* Selected court overlay marker — rendered outside MarkerClusterGroup so React owns the icon.
               Only used in embedded mode: the full map's MarkerClusterGroup already handles selected state
@@ -817,15 +834,21 @@ export default function LeafletCourtMap({
       <SearchFilterSheet
         open={isFilterSheetOpen}
         onClose={() => setIsFilterSheetOpen(false)}
-        onReopen={() => setIsFilterSheetOpen(true)}
         selectedSports={selectedSports}
         onSportsChange={onSportsChange ?? (() => {})}
         selectedPlaceType={selectedPlaceType}
         onPlaceTypeChange={onPlaceTypeChange ?? (() => {})}
         places={courts}
+        events={events}
+        eventsLoading={eventsLoading}
         userLocation={userLocation}
         onPlaceSelect={handleCourtSelect}
+        onLocationSelect={handleLocationSelect}
         onOpenFavorites={() => setIsFavoritesOpen(true)}
+        showOrte={showOrte}
+        showEvents={showEvents}
+        onShowOrteChange={setShowOrte}
+        onShowEventsChange={setShowEvents}
       />
 
       {/* Favorites Bottom Sheet — vaul Drawer */}

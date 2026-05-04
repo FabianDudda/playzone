@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode } from 'react'
+import { type ReactNode, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
@@ -9,7 +9,7 @@ import { useInstallPrompt } from '@/hooks/use-install-prompt'
 import {
   User, Shield, MapPin, Calendar, BookOpen, HelpCircle, Sparkles,
   Handshake, MessageSquare, List, LogIn, LogOut, Edit2, Bell,
-  Download, ChevronRight, Heart, Rss,
+  Download, ChevronRight, Heart, Rss, Sun, Moon,
 } from 'lucide-react'
 
 interface MenuSheetProps {
@@ -65,9 +65,24 @@ export default function MenuSheet({ open, onClose, onOpenFavorites }: MenuSheetP
   const { canInstall, isIOS, isStandalone, promptInstall } = useInstallPrompt()
   const isGuest = !user
 
+  const [isDark, setIsDark] = useState(false)
+  useEffect(() => {
+    const stored = localStorage.getItem('debug-theme')
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const dark = stored ? stored === 'dark' : prefersDark
+    setIsDark(dark)
+    document.documentElement.classList.toggle('dark', dark)
+  }, [])
+  const toggleTheme = () => {
+    const next = !isDark
+    setIsDark(next)
+    document.documentElement.classList.toggle('dark', next)
+    localStorage.setItem('debug-theme', next ? 'dark' : 'light')
+  }
+
   return (
     <Drawer open={open} onOpenChange={(o) => !o && onClose()} modal={false}>
-      <DrawerContent hideOverlay className="max-h-[97dvh] flex flex-col focus:outline-none">
+      <DrawerContent hideOverlay className="max-h-[100dvh] flex flex-col focus:outline-none">
         <VisuallyHidden><DrawerTitle>Menü</DrawerTitle></VisuallyHidden>
         {/* Header */}
         <div className="flex items-center justify-between px-4 pt-2 pb-4 shrink-0">
@@ -101,6 +116,16 @@ export default function MenuSheet({ open, onClose, onOpenFavorites }: MenuSheetP
               </>
             )}
           </div>
+          {isAdmin && (
+            <button
+              onClick={toggleTheme}
+              title="Debug: Dark/Light Mode (nur Admins)"
+              className="ml-3 h-8 w-8 flex items-center justify-center rounded-full bg-muted/60 border border-border/50 active:scale-95 transition-transform shrink-0"
+              aria-label="Debug: Dark/Light Mode umschalten"
+            >
+              {isDark ? <Sun className="h-4 w-4 text-foreground" /> : <Moon className="h-4 w-4 text-foreground" />}
+            </button>
+          )}
         </div>
 
         {/* Scrollable body */}

@@ -43,31 +43,14 @@ interface OpeningHoursEditorProps {
   onChange: (hours: OpeningHours | null) => void
 }
 
-const HOURS = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'))
-const MINUTES = ['00', '15', '30', '45']
-
 function TimePicker({ value, onChange }: { value: string; onChange: (v: string) => void }) {
-  const [h, m] = value.split(':')
-  const hour = HOURS.includes(h) ? h : '09'
-  const minute = MINUTES.includes(m) ? m : '00'
   return (
-    <div className="flex items-center gap-0.5">
-      <select
-        value={hour}
-        onChange={e => onChange(`${e.target.value}:${minute}`)}
-        className="text-sm border border-input rounded-md px-1.5 py-1 bg-background focus:outline-none"
-      >
-        {HOURS.map(h => <option key={h} value={h}>{h}</option>)}
-      </select>
-      <span className="text-sm text-muted-foreground">:</span>
-      <select
-        value={minute}
-        onChange={e => onChange(`${hour}:${e.target.value}`)}
-        className="text-sm border border-input rounded-md px-1.5 py-1 bg-background focus:outline-none"
-      >
-        {MINUTES.map(m => <option key={m} value={m}>{m}</option>)}
-      </select>
-    </div>
+    <input
+      type="time"
+      value={value}
+      onChange={e => onChange(e.target.value)}
+      className="text-sm border border-input rounded-md px-1.5 py-1 bg-background focus:outline-none"
+    />
   )
 }
 

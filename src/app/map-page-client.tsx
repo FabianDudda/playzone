@@ -1,17 +1,17 @@
 'use client'
 
-import { useState, Suspense, useEffect } from 'react'
+import { useState, Suspense, useEffect, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@/components/providers/auth-provider'
 import { useProgressivePlaces } from '@/hooks/use-progressive-places'
 import { database } from '@/lib/supabase/database'
-import { SportType, PlaceMarker, Area } from '@/lib/supabase/types'
+import { SportType, PlaceMarker, EventForSearch, Area } from '@/lib/supabase/types'
 import { PlaceType } from '@/lib/utils/sport-utils'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Plus, User, MapPin, Calendar, Sun, Moon } from 'lucide-react'
+import { Plus, User, MapPin, Calendar } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import InstallBanner from '@/components/install/install-banner'
 import MenuSheet from '@/components/layout/menu-sheet'
@@ -26,10 +26,10 @@ const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map
   ),
 })
 
-// FAB bottom offset (88px mini bar + 16px gap + safe area)
-const FAB_BOTTOM = 'calc(88px + 16px + env(safe-area-inset-bottom, 0px))'
+// FAB bottom offset (80px mini bar + 16px gap + safe area)
+const FAB_BOTTOM = 'calc(80px + 16px + env(safe-area-inset-bottom, 0px))'
 // Popup bottom offset (above FAB: FAB bottom + FAB height 56px + 8px gap)
-const POPUP_BOTTOM = 'calc(88px + 16px + 56px + 8px + env(safe-area-inset-bottom, 0px))'
+const POPUP_BOTTOM = 'calc(80px + 16px + 56px + 8px + env(safe-area-inset-bottom, 0px))'
 
 function MapPage({ initialArea }: { initialArea?: Area | null }) {
   useEffect(() => {
@@ -50,22 +50,7 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
   const [selectedPlaceType, setSelectedPlaceType] = useState<PlaceType[]>([])
   const [menuOpen, setMenuOpen] = useState(false)
   const [addOpen, setAddOpen] = useState(false)
-  const [isDark, setIsDark] = useState(false)
 
-  useEffect(() => {
-    const stored = localStorage.getItem('debug-theme')
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    const dark = stored ? stored === 'dark' : prefersDark
-    setIsDark(dark)
-    document.documentElement.classList.toggle('dark', dark)
-  }, [])
-
-  const toggleTheme = () => {
-    const next = !isDark
-    setIsDark(next)
-    document.documentElement.classList.toggle('dark', next)
-    localStorage.setItem('debug-theme', next ? 'dark' : 'light')
-  }
   const defaultFavoritesOpen = searchParams.get('favorites') === '1'
   const initialPlaceId = searchParams.get('place')
 
@@ -102,14 +87,28 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
 
   const { places, isInitialLoading, isLoadingMore } = useProgressivePlaces(!loading)
 
-  const { data: inlineEvents = [] } = useQuery({
-    queryKey: ['inline-location-events'],
-    queryFn: () => database.events.getInlineLocationEvents(),
+  const { data: events = [], isLoading: eventsLoading } = useQuery<EventForSearch[]>({
+    queryKey: ['events-for-search', user?.id],
+    queryFn: () => database.events.getEventsForSearch(user?.id),
     staleTime: 5 * 60 * 1000,
     enabled: !loading,
   })
 
-  const allMarkers = [...places, ...inlineEvents]
+  const inlineMarkers = useMemo<PlaceMarker[]>(() =>
+    events
+      .filter(e => !e.place_id && e.inline_location?.latitude && e.inline_location?.longitude)
+      .map(e => ({
+        id: e.id,
+        name: e.title,
+        latitude: e.inline_location!.latitude,
+        longitude: e.inline_location!.longitude,
+        sports: e.sports,
+        is_event_only: true,
+      })),
+    [events]
+  )
+
+  const allMarkers = [...places, ...inlineMarkers]
 
   return (
     <>
@@ -118,6 +117,8 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
         <h2 className="sr-only">Interaktive Karte mit über 13.000 Sportplätzen in Deutschland</h2>
         <LeafletCourtMap
           courts={allMarkers}
+          events={events}
+          eventsLoading={eventsLoading}
           onCourtSelect={handleCourtSelect}
           height="100%"
           selectedSports={selectedSports}
@@ -217,20 +218,6 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
         <div className={cn('transition-transform duration-200', addOpen ? 'rotate-45' : 'rotate-0')}>
           <Plus className="h-6 w-6" />
         </div>
-      </button>
-
-      {/* Debug: theme toggle — above attribution, bottom-left */}
-      <button
-        onClick={toggleTheme}
-        className="fixed z-[600] h-7 w-7 flex items-center justify-center rounded-full bg-background/80 backdrop-blur-sm border border-border/50 shadow-sm active:scale-95 transition-transform"
-        style={{ left: '16px', bottom: 'calc(108px + env(safe-area-inset-bottom, 0px))' }}
-        title="Toggle dark mode"
-        aria-label="Toggle dark mode"
-      >
-        {isDark
-          ? <Sun className="h-3.5 w-3.5 text-foreground" />
-          : <Moon className="h-3.5 w-3.5 text-foreground" />
-        }
       </button>
 
       <MenuSheet open={menuOpen} onClose={() => setMenuOpen(false)} />

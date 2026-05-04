@@ -1178,6 +1178,27 @@ export interface OrganizerImage {
   created_at: string
 }
 
+export interface EventForSearch {
+  id: string
+  title: string
+  sports: string[]
+  schedule: EventSchedule
+  place_id: string | null
+  place_name: string | null
+  place_city: string | null
+  inline_location: InlineLocation | null
+  is_bookmarked: boolean
+}
+
+export interface GeocodingResult {
+  id: string
+  shortName: string
+  subtitle: string
+  lat: number
+  lng: number
+  zoom: number
+}
+
 export interface EventWithDetails extends Event {
   creator_name: string
   creator_avatar: string | null

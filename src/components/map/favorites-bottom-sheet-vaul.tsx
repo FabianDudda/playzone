@@ -234,7 +234,7 @@ export default function FavoritesBottomSheetVaul({
 
   return (
     <Drawer open={isOpen} onOpenChange={onOpenChange} modal={false} shouldScaleBackground={false}>
-      <DrawerContent hideOverlay className="h-[97dvh] flex flex-col focus:outline-none">
+      <DrawerContent hideOverlay className="h-[100dvh] flex flex-col focus:outline-none">
         <VisuallyHidden><DrawerTitle>Gespeichert</DrawerTitle></VisuallyHidden>
         {/* Header */}
         <div className="flex items-center justify-between px-4 pt-2 pb-3 shrink-0">

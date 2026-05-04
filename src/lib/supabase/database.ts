@@ -1,5 +1,5 @@
 import { supabase } from './client'
-import { Profile, Place, Court, LegacyCourt, PlaceWithCourts, PlaceMarker, Match, MatchParticipant, SportType, MatchResult, LeaderboardEntry, ModerationStatus, PendingPlaceChange, PlaceChangeType, Event, EventWithDetails, EventBookmark, EventSchedule, UserFavorite, PlaceAttribute, CourtAttribute, Organizer, OrganizerImage, TablesInsert, TablesUpdate, InlineLocation, LocationType, AgeRestriction, GenderRestriction, OrganizerSummary } from './types'
+import { Profile, Place, Court, LegacyCourt, PlaceWithCourts, PlaceMarker, Match, MatchParticipant, SportType, MatchResult, LeaderboardEntry, ModerationStatus, PendingPlaceChange, PlaceChangeType, Event, EventWithDetails, EventForSearch, EventBookmark, EventSchedule, UserFavorite, PlaceAttribute, CourtAttribute, Organizer, OrganizerImage, TablesInsert, TablesUpdate, InlineLocation, LocationType, AgeRestriction, GenderRestriction, OrganizerSummary } from './types'
 
 // Helper function to fetch all records with automatic pagination
 async function fetchAllRecords<T>(queryBuilder: any): Promise<T[]> {
@@ -934,6 +934,50 @@ export const database = {
         return enrichEventsWithOrganizers(active.map((event: any) => mapToEventWithDetails(event, bookmarkedIds.has(event.id))))
       } catch (error) {
         console.error('Error fetching events:', error)
+        return []
+      }
+    },
+
+    getEventsForSearch: async (userId?: string): Promise<EventForSearch[]> => {
+      try {
+        const { data, error } = await supabase
+          .from('events')
+          .select('id, title, sports, schedule, place_id, inline_location, places:place_id(name, city)')
+          .eq('status', 'active')
+          .eq('moderation_status', 'approved')
+
+        if (error) return []
+
+        const now = new Date()
+        const active = ((data || []) as any[]).filter(event => {
+          const schedule = event.schedule as EventSchedule
+          if (!schedule || schedule.type === 'recurring') return true
+          return (schedule.dates || []).some((d: { date: string; start_time?: string }) =>
+            new Date(`${d.date}T${d.start_time || '23:59'}`) > now
+          )
+        })
+
+        let bookmarkedIds = new Set<string>()
+        if (userId) {
+          const { data: bk } = await (supabase as any)
+            .from('event_bookmarks')
+            .select('event_id')
+            .eq('user_id', userId)
+          bookmarkedIds = new Set(((bk || []) as any[]).map((b: any) => b.event_id))
+        }
+
+        return active.map((event: any) => ({
+          id: event.id,
+          title: event.title,
+          sports: event.sports ?? [],
+          schedule: event.schedule as EventSchedule,
+          place_id: event.place_id ?? null,
+          place_name: event.places?.name ?? null,
+          place_city: event.places?.city ?? null,
+          inline_location: (event.inline_location as InlineLocation) ?? null,
+          is_bookmarked: bookmarkedIds.has(event.id),
+        }))
+      } catch {
         return []
       }
     },

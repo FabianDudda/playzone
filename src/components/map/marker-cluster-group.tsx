@@ -17,6 +17,8 @@ interface MarkerClusterGroupProps {
   selectedSports?: SportType[]
   selectedPlaceType?: PlaceType[]
   placeIdsWithEvents?: Set<string>
+  showOrte?: boolean
+  showEvents?: boolean
 }
 
 function getPlaceIcon(court: PlaceMarker, sports: string[], isSelected: boolean, hasEvents: boolean): L.DivIcon {
@@ -26,7 +28,9 @@ function getPlaceIcon(court: PlaceMarker, sports: string[], isSelected: boolean,
   return createSportIcon(sports, isSelected, hasEvents)
 }
 
-function isMarkerVisible(court: PlaceMarker, selectedSports: SportType[], selectedPlaceType: PlaceType[] | undefined): boolean {
+function isMarkerVisible(court: PlaceMarker, selectedSports: SportType[], selectedPlaceType: PlaceType[] | undefined, showOrte = true, showEvents = true): boolean {
+  if (court.is_event_only && !showEvents) return false
+  if (!court.is_event_only && !showOrte) return false
   if (selectedSports.length > 0 && !selectedSports.some(s => court.sports?.includes(s))) return false
   if (!court.is_event_only && selectedPlaceType && selectedPlaceType.length > 0 && !selectedPlaceType.includes((court.place_type || 'öffentlich') as PlaceType)) return false
   return true
@@ -55,7 +59,7 @@ function createClusterIcon(cluster: L.MarkerCluster) {
   })
 }
 
-export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCourt, selectedSports = [], selectedPlaceType = [], placeIdsWithEvents = new Set() }: MarkerClusterGroupProps) {
+export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCourt, selectedSports = [], selectedPlaceType = [], placeIdsWithEvents = new Set(), showOrte = true, showEvents = true }: MarkerClusterGroupProps) {
   const map = useMap()
   const clusterGroupRef = useRef<L.MarkerClusterGroup | null>(null)
   // Stable maps: id → marker / court — rebuilt only when underlying data changes
@@ -65,12 +69,16 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
   const selectedSportsRef = useRef(selectedSports)
   const selectedPlaceTypeRef = useRef(selectedPlaceType)
   const placeIdsWithEventsRef = useRef(placeIdsWithEvents)
+  const showOrteRef = useRef(showOrte)
+  const showEventsRef = useRef(showEvents)
   const prevSelectedIdRef = useRef<string | null>(null)
 
   useEffect(() => { onCourtSelectRef.current = onCourtSelect }, [onCourtSelect])
   useEffect(() => { selectedSportsRef.current = selectedSports }, [selectedSports])
   useEffect(() => { selectedPlaceTypeRef.current = selectedPlaceType }, [selectedPlaceType])
   useEffect(() => { placeIdsWithEventsRef.current = placeIdsWithEvents }, [placeIdsWithEvents])
+  useEffect(() => { showOrteRef.current = showOrte }, [showOrte])
+  useEffect(() => { showEventsRef.current = showEvents }, [showEvents])
 
   // Incrementally add new markers when courts array grows — avoids full cluster rebuild on each batch
   useEffect(() => {
@@ -108,7 +116,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
       markerMapRef.current.set(court.id, marker)
       courtMapRef.current.set(court.id, court)
 
-      if (isMarkerVisible(court, selectedSportsRef.current, selectedPlaceTypeRef.current)) {
+      if (isMarkerVisible(court, selectedSportsRef.current, selectedPlaceTypeRef.current, showOrteRef.current, showEventsRef.current)) {
         toAdd.push(marker)
       }
     })
@@ -130,7 +138,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
       const court = courtMapRef.current.get(id)
       if (!court) return
 
-      const visible = isMarkerVisible(court, selectedSports, selectedPlaceType)
+      const visible = isMarkerVisible(court, selectedSports, selectedPlaceType, showOrte, showEvents)
       const inGroup = clusterGroup.hasLayer(marker)
 
       if (visible && !inGroup) {
@@ -150,7 +158,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
 
     if (toRemove.length > 0) clusterGroup.removeLayers(toRemove)
     if (toAdd.length > 0) clusterGroup.addLayers(toAdd)
-  }, [selectedSports, selectedPlaceType])
+  }, [selectedSports, selectedPlaceType, showOrte, showEvents])
 
   // Update active marker icon on selection change
   useEffect(() => {

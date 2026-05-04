@@ -8,6 +8,13 @@
 
 ########################################
 
+## CHANGELOG ##
+
+- big redesign
+- add search functionality
+- add event functinality
+- use native time picker for opening hours in add-place
+
 
 
 #####

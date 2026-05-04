@@ -5,47 +5,54 @@ import { database } from '@/lib/supabase/database'
 import { PlaceMarker } from '@/lib/supabase/types'
 
 const BATCH_SIZE = 1000
-const CACHE_TTL = 5 * 60 * 1000 // 5 minutes, matching old React Query staleTime
+const CACHE_TTL = 5 * 60 * 1000
 
 // Module-level cache — survives component unmount/remount (navigation), cleared on page refresh
-let cache: { places: PlaceMarker[]; timestamp: number } | null = null
+let cache: { places: PlaceMarker[]; timestamp: number; isComplete: boolean } | null = null
 
 function isCacheFresh(): boolean {
   return !!(cache && Date.now() - cache.timestamp < CACHE_TTL)
 }
 
 export function useProgressivePlaces(enabled: boolean) {
-  const [places, setPlaces] = useState<PlaceMarker[]>(() => isCacheFresh() ? cache!.places : [])
-  const [isInitialLoading, setIsInitialLoading] = useState(() => !isCacheFresh())
-  const [isLoadingMore, setIsLoadingMore] = useState(false)
+  const [places, setPlaces] = useState<PlaceMarker[]>(() => cache ? cache.places : [])
+  const [isInitialLoading, setIsInitialLoading] = useState(() => !cache)
+  const [isLoadingMore, setIsLoadingMore] = useState(() => !!(cache && !cache.isComplete))
 
   useEffect(() => {
     if (!enabled) return
-    if (isCacheFresh()) return // Serve from cache — no fetch needed
+    if (isCacheFresh() && cache!.isComplete) return // Full cache hit — nothing to do
 
-    // Local variable per effect invocation — each cleanup only cancels its own load,
-    // not the next one. This prevents the shared-ref race condition in React Strict Mode.
     let aborted = false
-    setPlaces([])
-    setIsInitialLoading(true)
-    setIsLoadingMore(false)
 
     async function load() {
       try {
-        const firstBatch = await database.courts.getAllPlacesLightweightBatch(0, BATCH_SIZE - 1)
-        if (aborted) return
+        // If we have a fresh partial cache, resume from where we left off
+        const resumeFrom = isCacheFresh() && cache ? cache.places.length : 0
+        let allPlaces = resumeFrom > 0 ? cache!.places : []
 
-        let allPlaces = firstBatch
-        setPlaces(allPlaces)
-        setIsInitialLoading(false)
+        if (resumeFrom === 0) {
+          setPlaces([])
+          setIsInitialLoading(true)
+          setIsLoadingMore(false)
 
-        if (firstBatch.length < BATCH_SIZE) {
-          if (!aborted) cache = { places: allPlaces, timestamp: Date.now() }
-          return
+          const firstBatch = await database.courts.getAllPlacesLightweightBatch(0, BATCH_SIZE - 1)
+          if (aborted) return
+
+          allPlaces = firstBatch
+          setPlaces(allPlaces)
+          setIsInitialLoading(false)
+          // Cache after first batch so partial loads survive navigation
+          cache = { places: allPlaces, timestamp: Date.now(), isComplete: false }
+
+          if (firstBatch.length < BATCH_SIZE) {
+            cache = { ...cache, isComplete: true }
+            return
+          }
         }
 
         setIsLoadingMore(true)
-        let start = BATCH_SIZE
+        let start = resumeFrom > 0 ? resumeFrom : BATCH_SIZE
 
         while (true) {
           if (aborted) break
@@ -54,14 +61,13 @@ export function useProgressivePlaces(enabled: boolean) {
           if (!batch.length) break
           allPlaces = [...allPlaces, ...batch]
           setPlaces(allPlaces)
+          // Keep cache updated each batch so any navigation mid-load still benefits
+          cache = { places: allPlaces, timestamp: Date.now(), isComplete: false }
           if (batch.length < BATCH_SIZE) break
           start += BATCH_SIZE
         }
 
-        // Only cache the complete dataset — partial loads are not cached
-        if (!aborted) {
-          cache = { places: allPlaces, timestamp: Date.now() }
-        }
+        if (!aborted) cache = { places: allPlaces, timestamp: Date.now(), isComplete: true }
       } catch (err) {
         console.error('[Map] Failed to load places:', err)
       } finally {
