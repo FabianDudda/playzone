@@ -2,7 +2,8 @@
 
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
-import { ChevronLeft, X, RotateCcw } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { X, RotateCcw } from 'lucide-react'
 import { SportType } from '@/lib/supabase/types'
 import {
   sportNames, sportIcons, SPORT_ORDER,
@@ -14,7 +15,6 @@ const PLACE_TYPES: PlaceType[] = ['öffentlich', 'verein', 'schule']
 
 interface FilterSheetProps {
   open: boolean
-  onBack: () => void
   onClose: () => void
   selectedSports: SportType[]
   onSportsChange: (sports: SportType[]) => void
@@ -38,7 +38,6 @@ function SectionLabel({ label }: { label: string }) {
 
 export default function FilterSheet({
   open,
-  onBack,
   onClose,
   selectedSports,
   onSportsChange,
@@ -68,38 +67,21 @@ export default function FilterSheet({
   }
 
   return (
-    <Drawer open={open} onOpenChange={(o) => !o && onBack()} modal={false} shouldScaleBackground={false}>
-      <DrawerContent hideOverlay className="h-[100dvh] flex flex-col focus:outline-none">
+    <Drawer open={open} onOpenChange={(o) => !o && onClose()} modal={false} shouldScaleBackground={false}>
+      <DrawerContent hideOverlay className="h-[100dvh] flex flex-col focus:outline-none max-w-2xl mx-auto">
         <VisuallyHidden><DrawerTitle>Filter</DrawerTitle></VisuallyHidden>
         {/* Header — identical to favorites sheet */}
-        <div className="grid grid-cols-3 items-center px-4 pt-2 pb-3 shrink-0">
-          <div>
-            <button
-              onClick={onBack}
-              className="h-8 w-8 rounded-full bg-black/[.06] dark:bg-white/[.08] flex items-center justify-center active:bg-black/[.12] dark:active:bg-white/[.14] transition-colors"
-              aria-label="Zurück"
-            >
-              <ChevronLeft className="h-4 w-4 text-foreground" />
-            </button>
-          </div>
-          <span className="text-[17px] font-bold text-center">Filter</span>
-          <div className="flex items-center justify-end gap-2">
+        <div className="flex items-center justify-between px-4 pt-2 pb-3 shrink-0">
+          <span className="text-[17px] font-bold">Filter</span>
+          <div className="flex items-center gap-2">
             {hasActive && (
-              <button
-                onClick={onReset}
-                className="h-8 w-8 rounded-full bg-black/[.06] dark:bg-white/[.08] flex items-center justify-center active:bg-black/[.12] dark:active:bg-white/[.14] transition-colors"
-                aria-label="Zurücksetzen"
-              >
-                <RotateCcw className="h-4 w-4 text-foreground" />
-              </button>
+              <Button variant="glass-secondary" size="icon" className="rounded-full h-8 w-8" onClick={onReset} aria-label="Zurücksetzen">
+                <RotateCcw className="h-4 w-4" />
+              </Button>
             )}
-            <button
-              onClick={onClose}
-              className="h-8 w-8 rounded-full bg-black/[.06] dark:bg-white/[.08] flex items-center justify-center active:bg-black/[.12] dark:active:bg-white/[.14] transition-colors"
-              aria-label="Schließen"
-            >
-              <X className="h-4 w-4 text-foreground" />
-            </button>
+            <Button variant="glass-secondary" size="icon" className="rounded-full h-8 w-8" onClick={onClose} aria-label="Schließen">
+              <X className="h-4 w-4" />
+            </Button>
           </div>
         </div>
 

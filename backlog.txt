@@ -15,9 +15,11 @@
 - add event functinality
 - use native time picker for opening hours in add-place
 
+## TO DO ##
 
 
-#####
+- position of "+" button on desktop (cause max-width of sheets)
+
 
   ┌─────┬───────────────────────────────────────────────┬────────┬────────┐
   │  #  │                     Step                      │ Effort │  Risk  │

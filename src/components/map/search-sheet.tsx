@@ -4,11 +4,13 @@ import { useState, useMemo, useRef, useEffect, useLayoutEffect, useCallback } fr
 import { useQuery } from '@tanstack/react-query'
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
+import { Button } from '@/components/ui/button'
 import { Search, ArrowLeft, X, ChevronRight, Heart, SlidersHorizontal, MapPin } from 'lucide-react'
 import FilterSheet from './filter-sheet'
 import { SportType, PlaceMarker, EventForSearch, EventSchedule, GeocodingResult } from '@/lib/supabase/types'
 import {
   sportIcons,
+  sportNames,
   PlaceType,
 } from '@/lib/utils/sport-utils'
 import { calculateDistance, formatDistance } from '@/lib/utils/distance'
@@ -21,6 +23,7 @@ import { useGeocodingSearch } from '@/hooks/use-geocoding-search'
 
 const MAX_RESULTS = 50
 const FULL_SNAP = 1
+const SPORT_KEYWORDS = new Set(Object.keys(sportNames).map(k => k.toLowerCase()))
 
 const DAY_ORDER = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 const DAY_SHORT: Record<string, string> = {
@@ -76,6 +79,14 @@ type SearchResult =
   | { type: 'place'; data: PlaceMarker; distanceKm: number | null; score: number }
   | { type: 'event'; data: EventForSearch; score: number }
 
+function parseQuery(q: string): { sportTokens: string[]; textTokens: string[] } {
+  const tokens = q.split(/\s+/).filter(Boolean)
+  return {
+    sportTokens: tokens.filter(t => SPORT_KEYWORDS.has(t)),
+    textTokens: tokens.filter(t => !SPORT_KEYWORDS.has(t)),
+  }
+}
+
 function textScore(name: string, secondary: string, q: string): number {
   const n = name.toLowerCase()
   const s = secondary.toLowerCase()
@@ -97,7 +108,7 @@ function eventTimeScore(event: EventForSearch): number {
   return 1 / (1 + hoursUntil / 24)
 }
 
-interface SearchFilterSheetProps {
+interface SearchSheetProps {
   open: boolean
   onClose: () => void
   selectedSports: SportType[]
@@ -110,6 +121,8 @@ interface SearchFilterSheetProps {
   userLocation: { lat: number; lng: number } | null
   onPlaceSelect: (place: PlaceMarker) => void
   onLocationSelect: (lat: number, lng: number, zoom: number) => void
+  onOpen?: () => void
+  onInnerFilterChange?: (open: boolean) => void
   onOpenFavorites?: () => void
   showOrte?: boolean
   showEvents?: boolean
@@ -117,7 +130,7 @@ interface SearchFilterSheetProps {
   onShowEventsChange?: (v: boolean) => void
 }
 
-export default function SearchFilterSheet({
+export default function SearchSheet({
   open,
   onClose,
   selectedSports,
@@ -130,12 +143,14 @@ export default function SearchFilterSheet({
   userLocation,
   onPlaceSelect,
   onLocationSelect,
+  onOpen,
+  onInnerFilterChange,
   onOpenFavorites,
   showOrte: showOrteProp,
   showEvents: showEventsProp,
   onShowOrteChange,
   onShowEventsChange,
-}: SearchFilterSheetProps) {
+}: SearchSheetProps) {
   const { user } = useAuth()
   const [query, setQuery] = useState('')
   const debouncedQuery = useDebouncedValue(query, 200)
@@ -145,6 +160,7 @@ export default function SearchFilterSheet({
   const showOrte = showOrteProp ?? localShowOrte
   const showEvents = showEventsProp ?? localShowEvents
   const [filterSheetOpen, setFilterSheetOpen] = useState(false)
+  const filterOpenedFromFull = useRef(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const keyboardHeight = useKeyboardHeight()
 
@@ -181,6 +197,14 @@ export default function SearchFilterSheet({
   }, [miniSnap, onClose])
 
   const focusInput = useCallback(() => { inputRef.current?.focus() }, [])
+
+  useEffect(() => { onInnerFilterChange?.(filterSheetOpen) }, [filterSheetOpen, onInnerFilterChange])
+
+  const onOpenRef = useRef(onOpen)
+  useEffect(() => { onOpenRef.current = onOpen })
+  useEffect(() => {
+    if (isFullOpen) onOpenRef.current?.()
+  }, [isFullOpen])
 
   useEffect(() => {
     if (isFullOpen) {
@@ -221,11 +245,22 @@ export default function SearchFilterSheet({
       })
     }
 
+    const { sportTokens, textTokens } = hasQuery ? parseQuery(q) : { sportTokens: [], textTokens: [] }
+    const scoreQuery = textTokens.length > 0 ? textTokens.join(' ') : q
+
     if (showOrte) {
       let ps = places.filter(p => !p.is_event_only)
       if (selectedSports.length > 0) ps = ps.filter(p => selectedSports.some(s => p.sports?.includes(s)))
       if (selectedPlaceType.length > 0) ps = ps.filter(p => selectedPlaceType.includes((p.place_type || 'öffentlich') as PlaceType))
-      if (hasQuery) ps = ps.filter(p => p.name.toLowerCase().includes(q) || p.city?.toLowerCase().includes(q))
+      if (hasQuery) {
+        ps = ps.filter(p => {
+          const sportMatch = sportTokens.length === 0 || sportTokens.some(s => p.sports?.includes(s))
+          const textMatch = textTokens.length === 0 || textTokens.some(t =>
+            p.name.toLowerCase().includes(t) || p.city?.toLowerCase().includes(t)
+          )
+          return sportMatch && textMatch
+        })
+      }
       for (const place of ps) {
         const distanceKm = userLocation
           ? calculateDistance(userLocation, { lat: place.latitude, lng: place.longitude })
@@ -235,7 +270,7 @@ export default function SearchFilterSheet({
           type: 'place',
           data: place,
           distanceKm,
-          score: hasQuery ? textScore(place.name, place.city ?? '', q) + ds : ds,
+          score: hasQuery ? textScore(place.name, place.city ?? '', scoreQuery) + ds : ds,
         })
       }
     }
@@ -243,17 +278,23 @@ export default function SearchFilterSheet({
     if (showEvents) {
       let es = events
       if (selectedSports.length > 0) es = es.filter(e => selectedSports.some(s => e.sports?.includes(s as SportType)))
-      if (hasQuery) es = es.filter(e =>
-        e.title.toLowerCase().includes(q) ||
-        e.place_name?.toLowerCase().includes(q) ||
-        e.place_city?.toLowerCase().includes(q)
-      )
+      if (hasQuery) {
+        es = es.filter(e => {
+          const sportMatch = sportTokens.length === 0 || sportTokens.some(s => e.sports?.includes(s as SportType))
+          const textMatch = textTokens.length === 0 || textTokens.some(t =>
+            e.title.toLowerCase().includes(t) ||
+            e.place_name?.toLowerCase().includes(t) ||
+            e.place_city?.toLowerCase().includes(t)
+          )
+          return sportMatch && textMatch
+        })
+      }
       for (const event of es) {
         const ths = eventTimeScore(event)
         merged.push({
           type: 'event',
           data: event,
-          score: hasQuery ? textScore(event.title, event.place_city ?? event.place_name ?? '', q) + ths : ths,
+          score: hasQuery ? textScore(event.title, event.place_city ?? event.place_name ?? '', scoreQuery) + ths : ths,
         })
       }
     }
@@ -311,7 +352,7 @@ export default function SearchFilterSheet({
       >
         <DrawerContent
           hideOverlay
-          className="h-[100dvh] flex flex-col focus:outline-none"
+          className="h-[100dvh] flex flex-col focus:outline-none max-w-2xl mx-auto"
           style={keyboardHeight > 0 ? {
             bottom: keyboardHeight,
             height: `calc(100dvh - ${keyboardHeight}px)`,
@@ -357,14 +398,11 @@ export default function SearchFilterSheet({
                 <span className="text-[16px] text-muted-foreground flex-1 truncate">Sportplätze, Events, Stadt…</span>
               </button>
             )}
-            <button
-              onClick={() => { onClose(); setFilterSheetOpen(true) }}
-              className={cn(
-                'relative h-11 w-11 rounded-full flex items-center justify-center shrink-0 transition-colors',
-                hasActiveFilter
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-black/[.06] dark:bg-white/[.08] active:bg-black/[.12] dark:active:bg-white/[.14] text-foreground'
-              )}
+            <Button
+              variant={hasActiveFilter ? 'default' : 'glass-secondary'}
+              size="icon"
+              className="relative rounded-full h-11 w-11 shrink-0"
+              onClick={() => { filterOpenedFromFull.current = isFullOpen; if (!isFullOpen) onClose(); setFilterSheetOpen(true) }}
               aria-label="Filter"
             >
               <SlidersHorizontal className="h-[18px] w-[18px]" />
@@ -373,15 +411,17 @@ export default function SearchFilterSheet({
                   {activeFilterCount}
                 </span>
               )}
-            </button>
+            </Button>
             {onOpenFavorites && (
-              <button
-                onClick={() => { onClose(); onOpenFavorites() }}
-                className="h-11 w-11 rounded-full bg-black/[.06] dark:bg-white/[.08] active:bg-black/[.12] dark:active:bg-white/[.14] flex items-center justify-center shrink-0 transition-colors text-foreground"
+              <Button
+                variant="glass-secondary"
+                size="icon"
+                className="rounded-full h-11 w-11 shrink-0"
+                onClick={() => { if (!isFullOpen) onClose(); onOpenFavorites() }}
                 aria-label="Gespeicherte Orte"
               >
                 <Heart className="h-[18px] w-[18px]" />
-              </button>
+              </Button>
             )}
           </div>
 
@@ -414,7 +454,7 @@ export default function SearchFilterSheet({
 
       <FilterSheet
         open={filterSheetOpen}
-        onBack={() => { setFilterSheetOpen(false); setActiveSnapPoint(FULL_SNAP) }}
+        onBack={() => { setFilterSheetOpen(false); if (filterOpenedFromFull.current) setActiveSnapPoint(FULL_SNAP) }}
         onClose={() => setFilterSheetOpen(false)}
         selectedSports={selectedSports}
         onSportsChange={onSportsChange}
@@ -439,7 +479,7 @@ function LocationRow({ result, onSelect }: {
       onClick={onSelect}
       className="w-full flex items-center gap-3 px-4 py-3 text-left border-b border-black/[.05] dark:border-white/[.06] active:bg-black/[.03] dark:active:bg-white/[.03] transition-colors"
     >
-      <div className="h-10 w-20 rounded-xl flex items-center justify-center shrink-0 bg-muted">
+      <div className="h-10 w-20 rounded-xl flex items-center justify-center shrink-0 glass-chip">
         <MapPin className="h-5 w-5 text-muted-foreground" />
       </div>
       <div className="flex-1 min-w-0">
@@ -475,7 +515,7 @@ function SportIconBox({ sports }: { sports: string[] }) {
   const overflow = sports.length > 3 ? sports.length - 2 : 0
 
   return (
-    <div className="h-10 w-20 rounded-xl flex items-center justify-center shrink-0 bg-muted">
+    <div className="h-10 w-20 rounded-xl flex items-center justify-center shrink-0 glass-chip">
       {visible.map((s, i) => (
         <span key={i} className="text-base leading-none">{sportIcons[s] ?? '📍'}</span>
       ))}

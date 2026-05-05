@@ -52,7 +52,7 @@ function EventOnlyContent({ eventId, userLocation, onClose }: { eventId: string;
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <Button
-              variant="secondary"
+              variant="glass-secondary"
               size="icon"
               className="rounded-full h-10 w-10"
               onClick={() => {
@@ -69,7 +69,7 @@ function EventOnlyContent({ eventId, userLocation, onClose }: { eventId: string;
             >
               <Share2 className="h-4 w-4" />
             </Button>
-            <Button variant="secondary" size="icon" className="rounded-full h-10 w-10" onClick={onClose}>
+            <Button variant="glass-secondary" size="icon" className="rounded-full h-10 w-10" onClick={onClose}>
               <X className="h-4 w-4" />
             </Button>
           </div>
@@ -88,7 +88,7 @@ function EventOnlyContent({ eventId, userLocation, onClose }: { eventId: string;
             {event.image_url && (
               <div className="-mx-4 overflow-hidden shrink-0">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={event.image_url} alt={event.title} className="w-full max-h-[260px] object-contain block" />
+                <img src={event.image_url} alt={event.title} className="w-full object-contain block" />
               </div>
             )}
 
@@ -152,7 +152,7 @@ function EventOnlyContent({ eventId, userLocation, onClose }: { eventId: string;
                     {event.description}
                   </p>
                   {!isDescriptionExpanded && event.description.length > 200 && (
-                    <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+                    <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white/[.72] dark:from-[#1c1c1e]/[.55] to-transparent pointer-events-none" />
                   )}
                 </div>
                 {event.description.length > 200 && (
@@ -217,7 +217,7 @@ function EventOnlyContent({ eventId, userLocation, onClose }: { eventId: string;
                 <Navigation className="h-4 w-4 mr-1" />
                 Route
               </Button>
-              <Button variant="secondary" className="flex-1" asChild>
+              <Button variant="glass-secondary" className="flex-1" asChild>
                 <Link href={`/events/${event.id}`}>
                   <Calendar className="h-4 w-4 mr-1" />
                   Zum Event
@@ -231,7 +231,7 @@ function EventOnlyContent({ eventId, userLocation, onClose }: { eventId: string;
   )
 }
 
-interface PlaceBottomSheetV2Props {
+interface PlaceSheetProps {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
   selectedCourt: PlaceMarker | null
@@ -241,7 +241,7 @@ interface PlaceBottomSheetV2Props {
   showFavorite?: boolean
 }
 
-export default function PlaceBottomSheetV2({
+export default function PlaceSheet({
   isOpen,
   onOpenChange,
   selectedCourt,
@@ -249,7 +249,7 @@ export default function PlaceBottomSheetV2({
   user,
   profile,
   showFavorite = true,
-}: PlaceBottomSheetV2Props) {
+}: PlaceSheetProps) {
   const { toast } = useToast()
   const queryClient = useQueryClient()
   const [isSaveLoginPromptOpen, setIsSaveLoginPromptOpen] = useState(false)
@@ -440,7 +440,7 @@ export default function PlaceBottomSheetV2({
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <Button
-                    variant="secondary"
+                    variant="glass-secondary"
                     size="icon"
                     className="rounded-full h-10 w-10"
                     onClick={() => { window.location.href = `/places/${selectedCourt.id}/edit` }}
@@ -449,7 +449,7 @@ export default function PlaceBottomSheetV2({
                     <Pencil className="h-4 w-4" />
                   </Button>
                   <Button
-                    variant="secondary"
+                    variant="glass-secondary"
                     size="icon"
                     className="rounded-full h-10 w-10"
                     onClick={() => {
@@ -566,7 +566,7 @@ export default function PlaceBottomSheetV2({
                             return (
                               <div key={court.id} className="flex items-center gap-x-2 gap-y-0.5 flex-wrap">
                                 <span className="text-sm text-muted-foreground shrink-0">Platz {idx + 1}</span>
-                                <span className="text-sm text-muted-foreground bg-muted rounded px-1.5 py-0.5 shrink-0">{surfaceLabel}</span>
+                                <span className="text-sm text-muted-foreground glass-chip rounded px-1.5 py-0.5 shrink-0">{surfaceLabel}</span>
                                 {activeKeys.map((key, i) => (
                                   <Fragment key={key}>
                                     {i > 0 && <span className="text-sm text-muted-foreground/40">·</span>}
@@ -694,7 +694,7 @@ export default function PlaceBottomSheetV2({
                 </Button>
                 {showFavorite && (
                   <Button
-                    variant="secondary"
+                    variant="glass-secondary"
                     className="flex-1 text-base"
                     onClick={() => {
                       if (!user) { setIsSaveLoginPromptOpen(true); return }

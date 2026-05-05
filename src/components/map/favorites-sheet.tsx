@@ -4,7 +4,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
-import { Heart, ChevronRight, ChevronLeft, X, Loader2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Heart, ChevronRight, X, Loader2 } from 'lucide-react'
 import { PlaceMarker, UserFavorite, EventWithDetails, EventSchedule } from '@/lib/supabase/types'
 import { sportIcons, sportColors } from '@/lib/utils/sport-utils'
 import { calculateDistance, formatDistance } from '@/lib/utils/distance'
@@ -66,7 +67,6 @@ function formatNextOccurrence(event: EventWithDetails): string {
 interface FavoritesBottomSheetProps {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
-  onBack?: () => void
   user: { id: string } | null
   userLocation: { lat: number; lng: number } | null
   onPlaceSelect: (place: PlaceMarker) => void
@@ -206,10 +206,9 @@ function EventFavoriteRow({
   )
 }
 
-export default function FavoritesBottomSheetVaul({
+export default function FavoritesSheet({
   isOpen,
   onOpenChange,
-  onBack,
   user,
   userLocation,
   onPlaceSelect,
@@ -234,25 +233,14 @@ export default function FavoritesBottomSheetVaul({
 
   return (
     <Drawer open={isOpen} onOpenChange={onOpenChange} modal={false} shouldScaleBackground={false}>
-      <DrawerContent hideOverlay className="h-[100dvh] flex flex-col focus:outline-none">
+      <DrawerContent hideOverlay className="h-[100dvh] flex flex-col focus:outline-none max-w-2xl mx-auto">
         <VisuallyHidden><DrawerTitle>Gespeichert</DrawerTitle></VisuallyHidden>
         {/* Header */}
         <div className="flex items-center justify-between px-4 pt-2 pb-3 shrink-0">
-          <button
-            onClick={() => onBack ? onBack() : onOpenChange(false)}
-            className="h-8 w-8 rounded-full bg-black/[.06] dark:bg-white/[.08] flex items-center justify-center active:bg-black/[.12] dark:active:bg-white/[.14] transition-colors"
-            aria-label="Zurück"
-          >
-            <ChevronLeft className="h-4 w-4 text-foreground" />
-          </button>
           <span className="text-[17px] font-bold">Gespeichert</span>
-          <button
-            onClick={() => onOpenChange(false)}
-            className="h-8 w-8 rounded-full bg-black/[.06] dark:bg-white/[.08] flex items-center justify-center active:bg-black/[.12] dark:active:bg-white/[.14] transition-colors"
-            aria-label="Schließen"
-          >
-            <X className="h-4 w-4 text-foreground" />
-          </button>
+          <Button variant="glass-secondary" size="icon" className="rounded-full h-8 w-8" onClick={() => onOpenChange(false)} aria-label="Schließen">
+            <X className="h-4 w-4" />
+          </Button>
         </div>
 
         {/* Tab switcher */}
@@ -295,13 +283,11 @@ export default function FavoritesBottomSheetVaul({
                 >
                   Anmelden
                 </Link>
-                <Link
-                  href="/auth/signup"
-                  onClick={() => onOpenChange(false)}
-                  className="flex-1 h-11 bg-muted text-foreground rounded-xl text-[15px] font-semibold flex items-center justify-center"
-                >
-                  Registrieren
-                </Link>
+                <Button variant="glass-secondary" className="flex-1 h-11 rounded-xl text-[15px] font-semibold" asChild>
+                  <Link href="/auth/signup" onClick={() => onOpenChange(false)}>
+                    Registrieren
+                  </Link>
+                </Button>
               </div>
             </div>
           ) : isLoading ? (

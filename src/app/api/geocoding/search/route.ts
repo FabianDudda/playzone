@@ -68,19 +68,25 @@ export async function GET(request: NextRequest) {
       lat: string
       lon: string
       place_rank: number
+      class: string
+      type: string
     }>
 
-    const results: GeocodingResult[] = (data || []).map(item => {
-      const parts = item.display_name.split(',').map(s => s.trim())
-      return {
-        id: String(item.osm_id),
-        shortName: parts[0] ?? item.display_name,
-        subtitle: parts.slice(1, 3).join(', '),
-        lat: parseFloat(item.lat),
-        lng: parseFloat(item.lon),
-        zoom: zoomFromPlaceRank(item.place_rank),
-      }
-    })
+    const NAVIGABLE_CLASSES = new Set(['place', 'highway', 'boundary', 'landuse', 'natural', 'waterway'])
+
+    const results: GeocodingResult[] = (data || [])
+      .filter(item => NAVIGABLE_CLASSES.has(item.class))
+      .map(item => {
+        const parts = item.display_name.split(',').map(s => s.trim())
+        return {
+          id: String(item.osm_id),
+          shortName: parts[0] ?? item.display_name,
+          subtitle: parts.slice(1, 3).join(', '),
+          lat: parseFloat(item.lat),
+          lng: parseFloat(item.lon),
+          zoom: zoomFromPlaceRank(item.place_rank),
+        }
+      })
 
     return NextResponse.json(results)
   } catch (error) {

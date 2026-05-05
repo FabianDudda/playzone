@@ -9,13 +9,12 @@ import { Court, SportType, PlaceWithCourts, PlaceMarker, EventForSearch, Area } 
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 // import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
-// import FilterBottomSheet from './filter-bottom-sheet'
 import { Plus, MapPin, Navigation, Share2, Search, Filter, Edit, Pencil, X, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { useAuth } from '@/components/providers/auth-provider'
-import SearchFilterSheet from './search-filter-sheet'
-import PlaceBottomSheetVaul from './place-bottom-sheet-v2'
-import FavoritesBottomSheetVaul from './favorites-bottom-sheet-vaul'
+import SearchSheet from './search-sheet'
+import PlaceSheet from './place-sheet'
+import FavoritesSheet from './favorites-sheet'
 import { sportNames, getSportBadgeClasses, sportIcons, PlaceType } from '@/lib/utils/sport-utils'
 import { createSportIcon, createEventOnlyIcon, createUserLocationIcon, createSelectedLocationIcon } from '@/lib/utils/sport-styles'
 import { MAP_LAYERS, DEFAULT_LAYER_ID, createTileLayer, getSavedLayerPreference, saveLayerPreference } from '@/lib/utils/map-layers'
@@ -361,7 +360,7 @@ function MapControlPill({
       onTouchStart={e => e.stopPropagation()}
       onWheel={e => e.stopPropagation()}
     >
-      <div className="flex flex-col items-center w-11 rounded-[100px] overflow-hidden border border-black/[.06] dark:border-white/[.08] bg-white/[.72] dark:bg-[#1C1C1E]/[.55] backdrop-blur-[24px] backdrop-saturate-[250%] shadow-[0_2px_16px_rgba(0,0,0,0.14)] dark:shadow-[0_2px_16px_rgba(0,0,0,0.30)]">
+      <div className="flex flex-col items-center w-11 rounded-[100px] overflow-hidden border border-black/[.06] dark:border-white/[.08] glass-surface shadow-[0_2px_16px_rgba(0,0,0,0.14)] dark:shadow-[0_2px_16px_rgba(0,0,0,0.30)]">
         <button className="pill-btn pill-btn-layer" title="Toggle Map Style" onClick={handleLayerClick}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polygon points="12 2 2 7 12 12 22 7 12 2"/>
@@ -532,6 +531,7 @@ export default function LeafletCourtMap({
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
   const [localFilterOpen, setLocalFilterOpen] = useState(false)
   const [isFavoritesOpen, setIsFavoritesOpen] = useState(defaultFavoritesOpen)
+  const [isInnerFilterOpen, setIsInnerFilterOpen] = useState(false)
   const [showOrte, setShowOrte] = useState(true)
   const [showEvents, setShowEvents] = useState(true)
   const isClosingExplicitly = useRef(false)
@@ -820,7 +820,7 @@ export default function LeafletCourtMap({
       )}
 
       {/* Bottom Sheet for Court Details — vaul Drawer */}
-      <PlaceBottomSheetVaul
+      <PlaceSheet
         isOpen={isBottomSheetOpen}
         onOpenChange={setIsBottomSheetOpen}
         selectedCourt={selectedCourt}
@@ -830,10 +830,17 @@ export default function LeafletCourtMap({
         showFavorite={showFavorite}
       />
 
+      {/* Tap-outside overlay: closes search sheet when full-open on desktop */}
+      {isFilterSheetOpen && !isFavoritesOpen && !isInnerFilterOpen && (
+        <div className="fixed inset-0 z-[1099]" onClick={() => setIsFilterSheetOpen(false)} />
+      )}
+
       {/* Filter + Search Sheet */}
-      <SearchFilterSheet
+      <SearchSheet
         open={isFilterSheetOpen}
+        onOpen={() => setIsFilterSheetOpen(true)}
         onClose={() => setIsFilterSheetOpen(false)}
+        onInnerFilterChange={setIsInnerFilterOpen}
         selectedSports={selectedSports}
         onSportsChange={onSportsChange ?? (() => {})}
         selectedPlaceType={selectedPlaceType}
@@ -852,52 +859,16 @@ export default function LeafletCourtMap({
       />
 
       {/* Favorites Bottom Sheet — vaul Drawer */}
-      <FavoritesBottomSheetVaul
+      <FavoritesSheet
         isOpen={isFavoritesOpen}
         onOpenChange={(open) => {
           setIsFavoritesOpen(open)
           if (!open) onFavoritesClose?.()
         }}
-        onBack={() => {
-          setIsFavoritesOpen(false)
-          setIsFilterSheetOpen(true)
-        }}
         user={user}
         userLocation={userLocation}
         onPlaceSelect={handleFavoriteSelect}
       />
-
-      {/* OLD Sheet-based bottom sheets (commented out for vaul testing)
-      <Sheet
-        open={isBottomSheetOpen}
-        onOpenChange={(open) => {
-          if (open === false) {
-            if (isClosingExplicitly.current) { isClosingExplicitly.current = false; return }
-            if (selectedCourt) return
-          }
-          setIsBottomSheetOpen(open)
-        }}
-        modal={false}
-      >
-        <SheetContent side="bottom" className="border-0 h-auto max-w-2xl mx-auto rounded-t-xl" hideOverlay onClose={handleExplicitClose}>
-          ... (original place sheet content)
-        </SheetContent>
-      </Sheet>
-
-      <FilterBottomSheet
-        isOpen={isFilterSheetOpen}
-        onClose={(open) => {
-          if (open === false) {
-            if (isClosingFilterExplicitly.current) { isClosingFilterExplicitly.current = false; return }
-            if (isFilterSheetOpen) return
-          }
-          setIsFilterSheetOpen(open)
-        }}
-        onExplicitClose={handleExplicitFilterClose}
-        selectedSport={selectedSport}
-        onSportChange={onSportChange}
-      />
-      */}
     </div>
   )
 }
