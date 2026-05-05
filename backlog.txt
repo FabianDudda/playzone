@@ -18,7 +18,10 @@
 ## TO DO ##
 
 
-- position of "+" button on desktop (cause max-width of sheets)
+- test/rework all navigation/back handlers from the pages which open from menuSheet
+
+- position of "+" button & map contributions on desktop (cause max-width of sheets)
+
 
 
   ┌─────┬───────────────────────────────────────────────┬────────┬────────┐

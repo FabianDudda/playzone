@@ -487,7 +487,6 @@ export default function PlaceForm({
             embedded={true}
             selectedLocation={location}
             placesCount={allPlaces.length}
-            showFilter={false}
             showFavorite={false}
             disableMarkerClick={true}
             initialCenter={initialData ? { lat: initialData.latitude, lng: initialData.longitude } : undefined}

@@ -12,7 +12,6 @@ import { Badge } from '@/components/ui/badge'
 import { Plus, MapPin, Navigation, Share2, Search, Filter, Edit, Pencil, X, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { useAuth } from '@/components/providers/auth-provider'
-import SearchSheet from './search-sheet'
 import PlaceSheet from './place-sheet'
 import FavoritesSheet from './favorites-sheet'
 import { sportNames, getSportBadgeClasses, sportIcons, PlaceType } from '@/lib/utils/sport-utils'
@@ -28,6 +27,12 @@ import AreaBanner from './area-banner'
 import 'leaflet/dist/leaflet.css'
 import './cluster-styles.css'
 import './map-controls.css'
+
+export interface LeafletCourtMapHandle {
+  selectCourt: (court: PlaceMarker) => void
+  flyTo: (lat: number, lng: number, zoom: number) => void
+  openFavorites: () => void
+}
 
 interface LeafletCourtMapProps {
   courts: PlaceMarker[]
@@ -46,8 +51,11 @@ interface LeafletCourtMapProps {
   placesCount?: number
   showAddCourtButton?: boolean
   onAddCourtClick?: () => void
-  showFilter?: boolean
   showFavorite?: boolean
+  showOrte?: boolean
+  showEvents?: boolean
+  onUserLocationChange?: (loc: { lat: number; lng: number } | null) => void
+  onReady?: (handle: LeafletCourtMapHandle) => void
   disableMarkerClick?: boolean
   defaultFavoritesOpen?: boolean
   onFavoritesClose?: () => void
@@ -235,11 +243,15 @@ function MapControlPill({
   autoLocate,
   currentLayerId,
   onLayerChange,
+  container,
+  embedded,
 }: {
   onLocationFound: (lat: number, lng: number) => void
   autoLocate: boolean
   currentLayerId: string
   onLayerChange: (layerId: string) => void
+  container: HTMLElement | null
+  embedded?: boolean
 }) {
   const map = useMap()
   const callbackRef = useRef(onLocationFound)
@@ -352,10 +364,11 @@ function MapControlPill({
     )
   }, [map, exitFollow, updateLocation])
 
+  if (!container) return null
   return createPortal(
     <div
-      className="fixed z-[1000]"
-      style={{ top: 'calc(16px + env(safe-area-inset-top, 0px))', right: '16px' }}
+      className="absolute z-[1000]"
+      style={{ top: embedded ? '16px' : 'calc(16px + env(safe-area-inset-top, 0px))', right: '16px' }}
       onMouseDown={e => e.stopPropagation()}
       onTouchStart={e => e.stopPropagation()}
       onWheel={e => e.stopPropagation()}
@@ -376,7 +389,7 @@ function MapControlPill({
         </button>
       </div>
     </div>,
-    document.body
+    container
   )
 }
 
@@ -497,8 +510,11 @@ export default function LeafletCourtMap({
   placesCount = 0,
   showAddCourtButton = false,
   onAddCourtClick,
-  showFilter = true,
   showFavorite = true,
+  showOrte = true,
+  showEvents = true,
+  onUserLocationChange,
+  onReady,
   disableMarkerClick = false,
   defaultFavoritesOpen = false,
   onFavoritesClose,
@@ -531,9 +547,7 @@ export default function LeafletCourtMap({
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
   const [localFilterOpen, setLocalFilterOpen] = useState(false)
   const [isFavoritesOpen, setIsFavoritesOpen] = useState(defaultFavoritesOpen)
-  const [isInnerFilterOpen, setIsInnerFilterOpen] = useState(false)
-  const [showOrte, setShowOrte] = useState(true)
-  const [showEvents, setShowEvents] = useState(true)
+  const [containerEl, setContainerEl] = useState<HTMLDivElement | null>(null)
   const isClosingExplicitly = useRef(false)
   const isClosingFilterExplicitly = useRef(false)
   const isBottomSheetOpenRef = useRef(false)
@@ -552,16 +566,14 @@ export default function LeafletCourtMap({
   isFilterSheetOpenRef.current = isFilterSheetOpen
   isFavoritesOpenRef.current = isFavoritesOpen
 
-  // Vaul renders via @radix-ui/react-dialog which sets pointer-events:none on the body
-  // when its DismissableLayer fires (modal=true by default in Radix, regardless of vaul's modal=false).
-  // Restore pointer-events so the map remains pannable. The search drawer is always mounted
-  // (mini snap), so we always restore — no early-return condition.
+  // Vaul renders via @radix-ui/react-dialog which sets pointer-events:none on the body.
+  // Restore pointer-events so the map remains pannable after PlaceSheet / FavoritesSheet close.
   useEffect(() => {
     const raf = requestAnimationFrame(() => {
       document.body.style.pointerEvents = 'auto'
     })
     return () => cancelAnimationFrame(raf)
-  }, [isBottomSheetOpen, isFilterSheetOpen, isFavoritesOpen])
+  }, [isBottomSheetOpen, isFavoritesOpen])
 
   const handleCourtSelect = useCallback((court: PlaceMarker) => {
     if (disableMarkerClick) return
@@ -604,6 +616,25 @@ export default function LeafletCourtMap({
 
   const handleLocationFound = useCallback((lat: number, lng: number) => {
     setUserLocation({ lat, lng })
+    onUserLocationChange?.({ lat, lng })
+  }, [onUserLocationChange])
+
+  // Stable refs so the imperative handle never needs to be recreated
+  const onReadyRef = useRef(onReady)
+  useEffect(() => { onReadyRef.current = onReady }, [onReady])
+  const handleCourtSelectRef = useRef(handleCourtSelect)
+  useEffect(() => { handleCourtSelectRef.current = handleCourtSelect }, [handleCourtSelect])
+
+  useEffect(() => {
+    onReadyRef.current?.({
+      selectCourt: (court) => {
+        setFlyToTarget({ lat: court.latitude, lng: court.longitude })
+        handleCourtSelectRef.current(court)
+      },
+      flyTo: (lat, lng, zoom) => setFlyToTarget({ lat, lng, zoom }),
+      openFavorites: () => setIsFavoritesOpen(true),
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleLocationSelect = useCallback((lat: number, lng: number, zoom: number) => {
@@ -645,7 +676,7 @@ export default function LeafletCourtMap({
   const currentLayer = useMemo(() => MAP_LAYERS[currentLayerId] || MAP_LAYERS[DEFAULT_LAYER_ID], [currentLayerId])
 
   return (
-    <div className={`relative${embedded ? ' map-embedded' : ''}`} style={{ height }}>
+    <div ref={setContainerEl} className={`relative${embedded ? ' map-embedded' : ''}`} style={{ height }}>
       <MapContainer
         center={mapCenter}
         zoom={mapZoom}
@@ -789,6 +820,8 @@ export default function LeafletCourtMap({
             autoLocate={autoLocate}
             currentLayerId={currentLayerId}
             onLayerChange={handleLayerChange}
+            container={containerEl}
+            embedded={embedded}
           />
 
           {/* Fly to target when selected from favorites */}
@@ -828,34 +861,6 @@ export default function LeafletCourtMap({
         user={user}
         profile={profile}
         showFavorite={showFavorite}
-      />
-
-      {/* Tap-outside overlay: closes search sheet when full-open on desktop */}
-      {isFilterSheetOpen && !isFavoritesOpen && !isInnerFilterOpen && (
-        <div className="fixed inset-0 z-[1099]" onClick={() => setIsFilterSheetOpen(false)} />
-      )}
-
-      {/* Filter + Search Sheet */}
-      <SearchSheet
-        open={isFilterSheetOpen}
-        onOpen={() => setIsFilterSheetOpen(true)}
-        onClose={() => setIsFilterSheetOpen(false)}
-        onInnerFilterChange={setIsInnerFilterOpen}
-        selectedSports={selectedSports}
-        onSportsChange={onSportsChange ?? (() => {})}
-        selectedPlaceType={selectedPlaceType}
-        onPlaceTypeChange={onPlaceTypeChange ?? (() => {})}
-        places={courts}
-        events={events}
-        eventsLoading={eventsLoading}
-        userLocation={userLocation}
-        onPlaceSelect={handleCourtSelect}
-        onLocationSelect={handleLocationSelect}
-        onOpenFavorites={() => setIsFavoritesOpen(true)}
-        showOrte={showOrte}
-        showEvents={showEvents}
-        onShowOrteChange={setShowOrte}
-        onShowEventsChange={setShowEvents}
       />
 
       {/* Favorites Bottom Sheet — vaul Drawer */}

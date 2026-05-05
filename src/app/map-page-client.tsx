@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, Suspense, useEffect, useMemo } from 'react'
+import { useState, Suspense, useEffect, useMemo, useRef, useCallback } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
@@ -11,10 +11,12 @@ import { SportType, PlaceMarker, EventForSearch, Area } from '@/lib/supabase/typ
 import { PlaceType } from '@/lib/utils/sport-utils'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Plus, User, MapPin, Calendar } from 'lucide-react'
+import { Plus, Menu, MapPin, Calendar } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import InstallBanner from '@/components/install/install-banner'
 import MenuSheet from '@/components/layout/menu-sheet'
+import SearchSheet from '@/components/map/search-sheet'
+import type { LeafletCourtMapHandle } from '@/components/map/leaflet-court-map'
 
 const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map'), {
   ssr: false,
@@ -50,6 +52,16 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
   const [selectedPlaceType, setSelectedPlaceType] = useState<PlaceType[]>([])
   const [menuOpen, setMenuOpen] = useState(false)
   const [addOpen, setAddOpen] = useState(false)
+  const [filterSheetOpen, setFilterSheetOpen] = useState(false)
+  const [isInnerFilterOpen, setIsInnerFilterOpen] = useState(false)
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
+  const [showOrte, setShowOrte] = useState(true)
+  const [showEvents, setShowEvents] = useState(true)
+
+  const mapHandleRef = useRef<LeafletCourtMapHandle | null>(null)
+  const handleMapReady = useCallback((handle: LeafletCourtMapHandle) => {
+    mapHandleRef.current = handle
+  }, [])
 
   const defaultFavoritesOpen = searchParams.get('favorites') === '1'
   const initialPlaceId = searchParams.get('place')
@@ -59,6 +71,11 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
     const raf = requestAnimationFrame(() => { document.body.style.pointerEvents = 'auto' })
     return () => cancelAnimationFrame(raf)
   }, [menuOpen])
+
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => { document.body.style.pointerEvents = 'auto' })
+    return () => cancelAnimationFrame(raf)
+  }, [filterSheetOpen])
 
   const handleAddPlace = () => {
     setAddOpen(false)
@@ -134,6 +151,12 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
           initialArea={initialArea ?? undefined}
           trackPosition={true}
           isLoading={isInitialLoading}
+          externalFilterOpen={filterSheetOpen}
+          onExternalFilterOpenChange={setFilterSheetOpen}
+          showOrte={showOrte}
+          showEvents={showEvents}
+          onUserLocationChange={setUserLocation}
+          onReady={handleMapReady}
         />
         <InstallBanner />
         {isLoadingMore && (
@@ -149,21 +172,11 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
       {/* Profile FAB — top left */}
       <button
         onClick={() => setMenuOpen(true)}
-        className="fixed z-[1000] flex h-11 w-11 items-center justify-center rounded-full bg-background/90 backdrop-blur-xl border border-border/60 shadow-lg shadow-black/10 active:scale-95 transition-transform overflow-hidden"
+        className="fixed z-[1000] flex h-11 w-11 items-center justify-center rounded-full glass-surface border border-black/[.06] dark:border-white/[.08] shadow-[0_2px_16px_rgba(0,0,0,0.14)] dark:shadow-[0_2px_16px_rgba(0,0,0,0.30)] active:scale-95 transition-transform"
         style={{ top: 'calc(16px + env(safe-area-inset-top, 0px))', left: '16px' }}
         aria-label="Profil"
       >
-        {profile?.avatar ? (
-          <div className="relative h-full w-full">
-            <Image src={profile.avatar} alt={profile.name ?? ''} fill className="object-cover" />
-          </div>
-        ) : user && profile?.name ? (
-          <div className="h-full w-full flex items-center justify-center bg-primary text-primary-foreground text-[13px] font-bold select-none">
-            {profile.name.charAt(0).toUpperCase()}
-          </div>
-        ) : (
-          <User className="h-5 w-5 text-foreground" />
-        )}
+        <Menu className="h-5 w-5 text-foreground" />
       </button>
 
       {/* Add popup backdrop — closes popup on outside tap */}
@@ -221,6 +234,38 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
       </button>
 
       <MenuSheet open={menuOpen} onClose={() => setMenuOpen(false)} />
+
+      {/* Tap-outside overlay: closes search sheet when full-open */}
+      {filterSheetOpen && !isInnerFilterOpen && (
+        <div className="fixed inset-0 z-[1099]" onClick={() => setFilterSheetOpen(false)} />
+      )}
+
+      <SearchSheet
+        open={filterSheetOpen}
+        onOpen={() => setFilterSheetOpen(true)}
+        onClose={() => setFilterSheetOpen(false)}
+        onInnerFilterChange={setIsInnerFilterOpen}
+        selectedSports={selectedSports}
+        onSportsChange={setSelectedSports}
+        selectedPlaceType={selectedPlaceType}
+        onPlaceTypeChange={setSelectedPlaceType}
+        places={allMarkers}
+        events={events}
+        eventsLoading={eventsLoading}
+        userLocation={userLocation}
+        onPlaceSelect={(court) => mapHandleRef.current?.selectCourt(court)}
+        onEventSelect={(event) => {
+          const markerId = event.place_id ?? event.id
+          const marker = allMarkers.find(m => m.id === markerId)
+          if (marker) mapHandleRef.current?.selectCourt(marker)
+        }}
+        onLocationSelect={(lat, lng, zoom) => mapHandleRef.current?.flyTo(lat, lng, zoom)}
+        onOpenFavorites={() => mapHandleRef.current?.openFavorites()}
+        showOrte={showOrte}
+        showEvents={showEvents}
+        onShowOrteChange={setShowOrte}
+        onShowEventsChange={setShowEvents}
+      />
     </>
   )
 }

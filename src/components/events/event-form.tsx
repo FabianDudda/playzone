@@ -400,7 +400,6 @@ export default function EventForm({
                     selectedLocation={form.inlineLocationCoords ?? undefined}
                     initialCenter={initialCenter}
                     height="220px"
-                    showFilter={false}
                     showFavorite={false}
                     embedded
                   />

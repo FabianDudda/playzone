@@ -942,7 +942,7 @@ export const database = {
       try {
         const { data, error } = await supabase
           .from('events')
-          .select('id, title, sports, schedule, place_id, inline_location, places:place_id(name, city)')
+          .select('id, title, sports, schedule, place_id, inline_location, places:place_id(name, city, latitude, longitude)')
           .eq('status', 'active')
           .eq('moderation_status', 'approved')
 
@@ -974,6 +974,8 @@ export const database = {
           place_id: event.place_id ?? null,
           place_name: event.places?.name ?? null,
           place_city: event.places?.city ?? null,
+          place_latitude: event.places?.latitude ?? null,
+          place_longitude: event.places?.longitude ?? null,
           inline_location: (event.inline_location as InlineLocation) ?? null,
           is_bookmarked: bookmarkedIds.has(event.id),
         }))

@@ -142,7 +142,6 @@ export default function PlaceMapSelector({
           showAddCourtButton={false}
           placesCount={0}
           embedded={true}
-          showFilter={false}
           showFavorite={false}
         />
       </div>

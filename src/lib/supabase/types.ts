@@ -1186,6 +1186,8 @@ export interface EventForSearch {
   place_id: string | null
   place_name: string | null
   place_city: string | null
+  place_latitude: number | null
+  place_longitude: number | null
   inline_location: InlineLocation | null
   is_bookmarked: boolean
 }

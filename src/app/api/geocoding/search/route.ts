@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
     url.searchParams.set('q', q)
     url.searchParams.set('countrycodes', 'de')
     url.searchParams.set('limit', '5')
-    url.searchParams.set('addressdetails', '0')
+    url.searchParams.set('addressdetails', '1')
     url.searchParams.set('accept-language', 'de')
 
     const contact = process.env.NOMINATIM_CONTACT ?? 'court-sports-app'
@@ -70,18 +70,31 @@ export async function GET(request: NextRequest) {
       place_rank: number
       class: string
       type: string
+      address?: {
+        city?: string
+        town?: string
+        village?: string
+        suburb?: string
+        state?: string
+        postcode?: string
+      }
     }>
 
-    const NAVIGABLE_CLASSES = new Set(['place', 'highway', 'boundary', 'landuse', 'natural', 'waterway'])
+    const NAVIGABLE_CLASSES = new Set(['place', 'highway', 'boundary', 'natural', 'waterway'])
 
     const results: GeocodingResult[] = (data || [])
       .filter(item => NAVIGABLE_CLASSES.has(item.class))
       .map(item => {
         const parts = item.display_name.split(',').map(s => s.trim())
+        const addr = item.address ?? {}
+        const city = addr.city ?? addr.town ?? addr.village ?? null
+        const subtitle = item.place_rank <= 16
+          ? (addr.state ?? parts.slice(1, 3).join(', '))
+          : [city, addr.state].filter(Boolean).join(', ')
         return {
           id: String(item.osm_id),
           shortName: parts[0] ?? item.display_name,
-          subtitle: parts.slice(1, 3).join(', '),
+          subtitle: subtitle || undefined,
           lat: parseFloat(item.lat),
           lng: parseFloat(item.lon),
           zoom: zoomFromPlaceRank(item.place_rank),

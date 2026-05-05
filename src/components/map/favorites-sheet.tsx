@@ -7,13 +7,28 @@ import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { Button } from '@/components/ui/button'
 import { Heart, ChevronRight, X, Loader2 } from 'lucide-react'
 import { PlaceMarker, UserFavorite, EventWithDetails, EventSchedule } from '@/lib/supabase/types'
-import { sportIcons, sportColors } from '@/lib/utils/sport-utils'
+import { sportIcons } from '@/lib/utils/sport-utils'
 import { calculateDistance, formatDistance } from '@/lib/utils/distance'
 import { database } from '@/lib/supabase/database'
 import { useToast } from '@/hooks/use-toast'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 type Tab = 'orte' | 'events'
+
+function SportIconBox({ sports }: { sports: string[] }) {
+  const visible = sports.length <= 3 ? sports : sports.slice(0, 2)
+  const overflow = sports.length > 3 ? sports.length - 2 : 0
+  return (
+    <div className="h-10 w-20 rounded-xl flex items-center justify-center shrink-0 glass-chip">
+      {visible.map((s, i) => (
+        <span key={i} className="text-base leading-none">{sportIcons[s] ?? '📍'}</span>
+      ))}
+      {overflow > 0 && (
+        <span className="text-[11px] font-bold text-muted-foreground leading-none">+{overflow}</span>
+      )}
+    </div>
+  )
+}
 
 const DAY_ORDER = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 const DAY_SHORT: Record<string, string> = {
@@ -102,9 +117,6 @@ function FavoriteRow({
 
   if (!place) return null
 
-  const primarySport = place.sports?.[0] as string | undefined
-  const color = sportColors[primarySport ?? ''] || '#9CA3AF'
-  const icon = sportIcons[primarySport ?? ''] || '📍'
   const dist = userLocation
     ? formatDistance(calculateDistance(userLocation, { lat: place.latitude, lng: place.longitude }))
     : null
@@ -115,31 +127,26 @@ function FavoriteRow({
         onClick={onSelect}
         className="flex flex-1 items-center gap-3 text-left min-w-0 active:opacity-70 transition-opacity"
       >
-        <div
-          className="h-11 w-11 rounded-xl flex items-center justify-center text-xl shrink-0"
-          style={{ backgroundColor: color }}
-        >
-          {icon}
-        </div>
+        <SportIconBox sports={(place.sports ?? []) as string[]} />
         <div className="flex-1 min-w-0">
           <div className="text-[15px] font-semibold truncate">{place.name}</div>
           <div className="text-[13px] text-muted-foreground truncate">
             {[place.city, dist].filter(Boolean).join(' · ')}
           </div>
         </div>
-        <ChevronRight className="h-4 w-4 text-muted-foreground/50 shrink-0" />
       </button>
 
       <button
         onClick={() => removeMutation.mutate()}
         disabled={removeMutation.isPending}
-        className="h-9 w-9 flex items-center justify-center rounded-full active:bg-black/[.05] dark:active:bg-white/[.06] transition-colors shrink-0 ml-1"
+        className="h-9 w-9 flex items-center justify-center rounded-full active:bg-black/[.05] dark:active:bg-white/[.06] transition-colors shrink-0"
         aria-label="Aus Gespeichert entfernen"
       >
         {removeMutation.isPending
           ? <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-          : <Heart className="h-4 w-4 text-rose-500 fill-rose-500" />}
+          : <Heart className="h-3.5 w-3.5 text-rose-500 fill-rose-500" />}
       </button>
+      <ChevronRight className="h-4 w-4 text-muted-foreground/50 shrink-0" />
     </div>
   )
 }
@@ -153,9 +160,6 @@ function EventFavoriteRow({
 }) {
   const { toast } = useToast()
   const queryClient = useQueryClient()
-  const primarySport = event.sports?.[0] as string | undefined
-  const color = sportColors[primarySport ?? ''] || '#6366f1'
-  const icon = sportIcons[primarySport ?? ''] || '📅'
   const dateLabel = formatNextOccurrence(event)
   const location = event.place_city || event.place_name || null
 
@@ -177,31 +181,26 @@ function EventFavoriteRow({
         href={`/events/${event.id}`}
         className="flex flex-1 items-center gap-3 text-left min-w-0"
       >
-        <div
-          className="h-11 w-11 rounded-xl flex items-center justify-center text-xl shrink-0"
-          style={{ backgroundColor: color }}
-        >
-          {icon}
-        </div>
+        <SportIconBox sports={(event.sports ?? []) as string[]} />
         <div className="flex-1 min-w-0">
           <div className="text-[15px] font-semibold truncate">{event.title}</div>
           <div className="text-[13px] text-muted-foreground truncate">
             {[dateLabel, location].filter(Boolean).join(' · ')}
           </div>
         </div>
-        <ChevronRight className="h-4 w-4 text-muted-foreground/50 shrink-0" />
       </a>
 
       <button
         onClick={() => removeMutation.mutate()}
         disabled={removeMutation.isPending}
-        className="h-9 w-9 flex items-center justify-center rounded-full active:bg-black/[.05] dark:active:bg-white/[.06] transition-colors shrink-0 ml-1"
+        className="h-9 w-9 flex items-center justify-center rounded-full active:bg-black/[.05] dark:active:bg-white/[.06] transition-colors shrink-0"
         aria-label="Lesezeichen entfernen"
       >
         {removeMutation.isPending
           ? <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-          : <Heart className="h-4 w-4 text-rose-500 fill-rose-500" />}
+          : <Heart className="h-3.5 w-3.5 text-rose-500 fill-rose-500" />}
       </button>
+      <ChevronRight className="h-4 w-4 text-muted-foreground/50 shrink-0" />
     </div>
   )
 }

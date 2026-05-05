@@ -467,7 +467,6 @@ function AddPlacePage() {
                 allowAddCourt={true}
                 selectedLocation={location}
                 placesCount={places.length}
-                showFilter={false}
                 showFavorite={false}
                 disableMarkerClick={true}
                 initialCenter={mapInitialCenter}

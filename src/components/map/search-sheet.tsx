@@ -7,7 +7,7 @@ import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { Button } from '@/components/ui/button'
 import { Search, ArrowLeft, X, ChevronRight, Heart, SlidersHorizontal, MapPin } from 'lucide-react'
 import FilterSheet from './filter-sheet'
-import { SportType, PlaceMarker, EventForSearch, EventSchedule, GeocodingResult } from '@/lib/supabase/types'
+import { SportType, PlaceMarker, EventForSearch, GeocodingResult } from '@/lib/supabase/types'
 import {
   sportIcons,
   sportNames,
@@ -25,59 +25,12 @@ const MAX_RESULTS = 50
 const FULL_SNAP = 1
 const SPORT_KEYWORDS = new Set(Object.keys(sportNames).map(k => k.toLowerCase()))
 
-const DAY_ORDER = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
-const DAY_SHORT: Record<string, string> = {
-  monday: 'Mo', tuesday: 'Di', wednesday: 'Mi',
-  thursday: 'Do', friday: 'Fr', saturday: 'Sa', sunday: 'So',
-}
 
-function getNextOccurrence(event: EventForSearch): Date {
-  const schedule = event.schedule as EventSchedule
-  const now = new Date()
-  const far = new Date(8640000000000000)
-  if (!schedule) return far
-  if (schedule.type === 'recurring') {
-    if (!schedule.slots.length) return far
-    const todayIndex = (now.getDay() + 6) % 7
-    let earliest: Date | null = null
-    for (const slot of schedule.slots) {
-      const dayIndex = DAY_ORDER.indexOf(slot.day)
-      const daysUntil = (dayIndex - todayIndex + 7) % 7
-      const [h, m] = slot.start_time.split(':').map(Number)
-      const occ = new Date()
-      occ.setDate(occ.getDate() + daysUntil)
-      occ.setHours(h, m, 0, 0)
-      if (occ <= now) occ.setDate(occ.getDate() + 7)
-      if (!earliest || occ < earliest) earliest = occ
-    }
-    return earliest ?? far
-  }
-  const future = (schedule.dates || [])
-    .map(d => new Date(`${d.date}T${d.start_time || '00:00'}`))
-    .filter(d => d > now)
-    .sort((a, b) => a.getTime() - b.getTime())
-  return future[0] ?? far
-}
-
-function formatNextOccurrence(event: EventForSearch): string {
-  const schedule = event.schedule as EventSchedule
-  if (!schedule) return ''
-  const next = getNextOccurrence(event)
-  if (next.getTime() === new Date(8640000000000000).getTime()) return 'Wiederkehrend'
-  if (schedule.type === 'recurring') {
-    const day = DAY_SHORT[DAY_ORDER[(next.getDay() + 6) % 7]] ?? ''
-    const time = next.toLocaleTimeString('de', { hour: '2-digit', minute: '2-digit' })
-    return `${day} · ${time} Uhr`
-  }
-  const dateStr = next.toLocaleDateString('de', { day: 'numeric', month: 'short' })
-  const time = next.toLocaleTimeString('de', { hour: '2-digit', minute: '2-digit' })
-  return `${dateStr} · ${time} Uhr`
-}
 
 type SearchResult =
   | { type: 'location'; data: GeocodingResult; score: number }
   | { type: 'place'; data: PlaceMarker; distanceKm: number | null; score: number }
-  | { type: 'event'; data: EventForSearch; score: number }
+  | { type: 'event'; data: EventForSearch; distanceKm: number | null; score: number }
 
 function parseQuery(q: string): { sportTokens: string[]; textTokens: string[] } {
   const tokens = q.split(/\s+/).filter(Boolean)
@@ -102,11 +55,6 @@ function distanceScore(km: number | null): number {
   return 1 / (1 + km)
 }
 
-function eventTimeScore(event: EventForSearch): number {
-  const hoursUntil = (getNextOccurrence(event).getTime() - Date.now()) / 3_600_000
-  if (hoursUntil < 0) return 0
-  return 1 / (1 + hoursUntil / 24)
-}
 
 interface SearchSheetProps {
   open: boolean
@@ -120,6 +68,7 @@ interface SearchSheetProps {
   eventsLoading?: boolean
   userLocation: { lat: number; lng: number } | null
   onPlaceSelect: (place: PlaceMarker) => void
+  onEventSelect?: (event: EventForSearch) => void
   onLocationSelect: (lat: number, lng: number, zoom: number) => void
   onOpen?: () => void
   onInnerFilterChange?: (open: boolean) => void
@@ -142,6 +91,7 @@ export default function SearchSheet({
   eventsLoading = false,
   userLocation,
   onPlaceSelect,
+  onEventSelect,
   onLocationSelect,
   onOpen,
   onInnerFilterChange,
@@ -266,11 +216,12 @@ export default function SearchSheet({
           ? calculateDistance(userLocation, { lat: place.latitude, lng: place.longitude })
           : null
         const ds = distanceScore(distanceKm)
+        const favBoost = favoriteIds.has(place.id) ? (hasQuery ? 2 : 0.5) : 0
         merged.push({
           type: 'place',
           data: place,
           distanceKm,
-          score: hasQuery ? textScore(place.name, place.city ?? '', scoreQuery) + ds : ds,
+          score: hasQuery ? textScore(place.name, place.city ?? '', scoreQuery) + ds + favBoost : ds + favBoost,
         })
       }
     }
@@ -290,11 +241,19 @@ export default function SearchSheet({
         })
       }
       for (const event of es) {
-        const ths = eventTimeScore(event)
+        const coords = event.inline_location
+          ? { lat: event.inline_location.latitude, lng: event.inline_location.longitude }
+          : event.place_latitude !== null && event.place_longitude !== null
+            ? { lat: event.place_latitude, lng: event.place_longitude }
+            : null
+        const distanceKm = userLocation && coords ? calculateDistance(userLocation, coords) : null
+        const ds = distanceScore(distanceKm)
+        const bookmarkBoost = event.is_bookmarked ? (hasQuery ? 2 : 0.5) : 0
         merged.push({
           type: 'event',
           data: event,
-          score: hasQuery ? textScore(event.title, event.place_city ?? event.place_name ?? '', scoreQuery) + ths : ths,
+          distanceKm,
+          score: hasQuery ? textScore(event.title, event.place_city ?? event.place_name ?? '', scoreQuery) + ds + bookmarkBoost : ds + bookmarkBoost,
         })
       }
     }
@@ -375,6 +334,8 @@ export default function SearchSheet({
                   ref={inputRef}
                   value={query}
                   onChange={e => setQuery(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter') inputRef.current?.blur() }}
+                  enterKeyHint="search"
                   placeholder="Sportplätze, Events, Stadt…"
                   className="w-full h-11 pl-10 pr-10 rounded-xl bg-white/[.12] dark:bg-black/[.12] text-[16px] outline-none focus:ring-2 focus:ring-primary/20 placeholder:text-muted-foreground border-0"
                 />
@@ -443,7 +404,7 @@ export default function SearchSheet({
                   onSelect={() => { onPlaceSelect(result.data); closeSheet() }}
                 />
               ) : (
-                <EventRow key={result.data.id} event={result.data} isBookmarked={result.data.is_bookmarked} onClose={closeSheet} />
+                <EventRow key={result.data.id} event={result.data} distanceKm={result.distanceKm} isBookmarked={result.data.is_bookmarked} onSelect={onEventSelect} onClose={closeSheet} />
               )
             )}
             {showEventsSkeleton && <EventsLoadingIndicator />}
@@ -548,29 +509,25 @@ function PlaceRow({ place, distanceKm, isFavorite, onSelect }: {
           {[place.city, dist].filter(Boolean).join(' · ')}
         </div>
       </div>
-      {isFavorite && (
-        <span className="shrink-0 flex items-center gap-0.5 text-[10px] font-semibold text-rose-500 bg-rose-500/10 px-1.5 py-0.5 rounded-md">
-          <Heart className="h-2.5 w-2.5 fill-rose-500" />
-          Gespeichert
-        </span>
-      )}
+      {isFavorite && <Heart className="h-3.5 w-3.5 text-rose-500 fill-rose-500 shrink-0" />}
       <ChevronRight className="h-4 w-4 text-muted-foreground/50 shrink-0" />
     </button>
   )
 }
 
-function EventRow({ event, isBookmarked, onClose }: {
+function EventRow({ event, distanceKm, isBookmarked, onSelect, onClose }: {
   event: EventForSearch
+  distanceKm: number | null
   isBookmarked: boolean
+  onSelect?: (event: EventForSearch) => void
   onClose: () => void
 }) {
-  const dateLabel = formatNextOccurrence(event)
-  const location = event.place_city || event.place_name || null
+  const city = event.place_city || event.inline_location?.city || event.place_name || null
+  const dist = distanceKm !== null ? formatDistance(distanceKm) : null
 
   return (
-    <a
-      href={`/events/${event.id}`}
-      onClick={onClose}
+    <button
+      onClick={() => { onSelect?.(event); onClose() }}
       className="w-full flex items-center gap-3 px-4 py-3 text-left border-b border-black/[.05] dark:border-white/[.06] active:bg-black/[.03] dark:active:bg-white/[.03] transition-colors"
     >
       <SportIconBox sports={(event.sports ?? []) as string[]} />
@@ -580,11 +537,11 @@ function EventRow({ event, isBookmarked, onClose }: {
           <span className="shrink-0 text-[10px] font-medium px-1.5 py-0.5 rounded-md bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">Event</span>
         </div>
         <div className="text-[13px] text-muted-foreground truncate">
-          {[dateLabel, location].filter(Boolean).join(' · ')}
+          {[city, dist].filter(Boolean).join(' · ')}
         </div>
       </div>
       {isBookmarked && <Heart className="h-3.5 w-3.5 text-rose-500 fill-rose-500 shrink-0" />}
       <ChevronRight className="h-4 w-4 text-muted-foreground/50 shrink-0" />
-    </a>
+    </button>
   )
 }
