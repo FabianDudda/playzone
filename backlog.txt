@@ -17,13 +17,17 @@
 
 ## TO DO ##
 
-- benachrichtigung an user via admin dashboard (how to send, where to show?)
+
+- Tutorial/Whats new (einmal anzeigen)
 
 - rework menu sheet
 -- SPENDEN BUTTON
 -- how many places have been added last week
 -- newest places that have been added
 -- badge/level system for user?
+
+- benachrichtigung an user via admin dashboard (how to send, where to show?)
+
 
 - position of "+" button & map contributions on desktop (cause max-width of sheets)
 

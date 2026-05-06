@@ -367,13 +367,13 @@ function MapControlPill({
   return createPortal(
     <div
       className="absolute z-[1000]"
-      style={{ top: embedded ? '16px' : 'calc(16px + env(safe-area-inset-top, 0px))', right: '16px' }}
+      style={{ top: embedded ? '8px' : 'calc(16px + env(safe-area-inset-top, 0px))', right: embedded ? '8px' : '16px' }}
       onMouseDown={e => e.stopPropagation()}
       onTouchStart={e => e.stopPropagation()}
       onWheel={e => e.stopPropagation()}
     >
       <div className="flex flex-col items-center w-11 rounded-[100px] overflow-hidden border border-black/[.06] dark:border-white/[.08] glass-surface shadow-[0_2px_16px_rgba(0,0,0,0.14)] dark:shadow-[0_2px_16px_rgba(0,0,0,0.30)]">
-        <button className="pill-btn pill-btn-layer" title="Toggle Map Style" onClick={handleLayerClick}>
+        <button type="button" className="pill-btn pill-btn-layer" title="Toggle Map Style" onClick={handleLayerClick}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polygon points="12 2 2 7 12 12 22 7 12 2"/>
             <polyline points="2 17 12 22 22 17"/>
@@ -381,7 +381,7 @@ function MapControlPill({
           </svg>
         </button>
         <div className="pill-divider" />
-        <button className={cn('pill-btn pill-btn-locate', isFollowing && 'pill-btn-locate--follow')} title="Find my location" onClick={handleLocateClick}>
+        <button type="button" className={cn('pill-btn pill-btn-locate', isFollowing && 'pill-btn-locate--follow')} title="Find my location" onClick={handleLocateClick}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polygon points="3 11 22 2 13 21 11 13 3 11"/>
           </svg>

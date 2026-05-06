@@ -220,7 +220,7 @@
 /* Attribution pinned above the mini search bar */
 .map-attribution-corner {
   position: fixed;
-  bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+  bottom: calc(96px + env(safe-area-inset-bottom, 0px));
   left: 16px;
   z-index: 500;
   margin: 0 !important;
@@ -237,6 +237,12 @@
 }
 
 .map-embedded .map-control-bottom-left-stack {
+  bottom: 8px;
+  left: 8px;
+}
+
+.map-embedded .map-attribution-corner {
+  position: absolute;
   bottom: 8px;
   left: 8px;
 }

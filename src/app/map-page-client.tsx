@@ -29,9 +29,9 @@ const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map
 })
 
 // FAB bottom offset (80px mini bar + 16px gap + safe area)
-const FAB_BOTTOM = 'calc(80px + 16px + env(safe-area-inset-bottom, 0px))'
+const FAB_BOTTOM = 'calc(96px + env(safe-area-inset-bottom, 0px))'
 // Popup bottom offset (above FAB: FAB bottom + FAB height 56px + 8px gap)
-const POPUP_BOTTOM = 'calc(80px + 16px + 56px + 8px + env(safe-area-inset-bottom, 0px))'
+const POPUP_BOTTOM = 'calc(96px + 64px + env(safe-area-inset-bottom, 0px))'
 
 function MapPage({ initialArea }: { initialArea?: Area | null }) {
   useEffect(() => {
