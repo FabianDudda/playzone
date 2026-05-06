@@ -1,7 +1,7 @@
-import { ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
 import { Card, CardContent } from '@/components/ui/card'
 import Link from 'next/link'
+import BackButton from '@/components/layout/back-button'
 import { blogPosts } from './posts'
 import BlogFilter from './_components/blog-filter'
 
@@ -25,9 +25,7 @@ export default async function BlogPage({ searchParams }: Props) {
     <div className="container px-4 py-4 overflow-x-hidden">
       <div className="max-w-xl mx-auto space-y-6">
         <div className="flex items-center gap-3">
-          <Link href="/profile" className="text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
+          <BackButton />
           <h1 className="text-2xl font-bold">Blog</h1>
         </div>
 

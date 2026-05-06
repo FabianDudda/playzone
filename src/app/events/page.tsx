@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { Plus, Calendar } from 'lucide-react'
+import { Calendar } from 'lucide-react'
+import BackButton from '@/components/layout/back-button'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useAuth } from '@/components/providers/auth-provider'
@@ -67,20 +68,15 @@ export default function EventsPage() {
     <div className="container px-4 overflow-x-hidden">
       <div className="max-w-xl mx-auto py-6 pb-24">
       <div className="flex justify-between items-center mb-5">
-        <div>
-          <h1 className="text-3xl font-bold">Events</h1>
-          <p className="text-muted-foreground text-sm mt-0.5">
-            Kostenlose Angebote in deiner Nähe
-          </p>
+        <div className="flex items-center gap-3">
+          <BackButton />
+          <div>
+            <h1 className="text-3xl font-bold">Events</h1>
+            <p className="text-muted-foreground text-sm mt-0.5">
+              Kostenlose Angebote in deiner Nähe
+            </p>
+          </div>
         </div>
-        {user && (
-          <Link href="/events/new">
-            <Button size="sm" className="pr-4">
-              <Plus className="h-4 w-4 mr-1" />
-              Erstellen
-            </Button>
-          </Link>
-        )}
       </div>
 
       <EventFiltersComponent

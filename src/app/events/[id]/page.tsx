@@ -3,7 +3,7 @@
 import { Suspense, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { MapPin, Pencil, Trash2, ExternalLink, Share2 } from 'lucide-react'
+import { MapPin, Pencil, Trash2, ExternalLink } from 'lucide-react'
 import BackButton from '@/components/places/back-button'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import React from 'react'
@@ -16,7 +16,6 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { sportNames, sportIcons } from '@/lib/utils/sport-utils'
 import ScheduleDisplay from '@/components/events/schedule-display'
-import BookmarkButton from '@/components/events/bookmark-button'
 import dynamic from 'next/dynamic'
 
 const EventLocationMap = dynamic(
@@ -120,17 +119,6 @@ function EventContent({ params }: EventPageProps) {
     ? `${postcode} ${city}`
     : city || null
 
-  const handleShare = () => {
-    const shareUrl = `${window.location.origin}/events/${event.id}`
-    if (navigator.share) {
-      navigator.share({ title: event.title, url: shareUrl }).catch(() => {})
-    } else {
-      navigator.clipboard.writeText(shareUrl)
-        .then(() => toast({ title: 'Link kopiert!' }))
-        .catch(() => toast({ title: 'Link konnte nicht kopiert werden', variant: 'destructive' }))
-    }
-  }
-
   return (
     <div className="container px-4 overflow-x-hidden">
     <div className="max-w-xl mx-auto py-4 pb-24">
@@ -144,28 +132,20 @@ function EventContent({ params }: EventPageProps) {
           {isCreator && (
             <>
               <Button
-                variant="secondary"
+                variant="glass-secondary"
                 size="icon"
-                className="rounded-full text-destructive hover:text-destructive"
+                className="rounded-full h-9 w-9 text-destructive hover:text-destructive"
                 onClick={() => setShowDeleteDialog(true)}
               >
                 <Trash2 className="h-[18px] w-[18px]" />
               </Button>
-              <Button variant="secondary" size="icon" className="rounded-full" asChild>
+              <Button variant="glass-secondary" size="icon" className="rounded-full h-9 w-9" asChild>
                 <Link href={`/events/${event.id}/edit`}>
                   <Pencil className="h-[18px] w-[18px]" />
                 </Link>
               </Button>
             </>
           )}
-          <BookmarkButton
-            eventId={event.id}
-            isBookmarked={event.is_bookmarked}
-            userId={user?.id}
-          />
-          <Button variant="secondary" size="icon" className="rounded-full" onClick={handleShare} title="Teilen">
-            <Share2 className="h-[18px] w-[18px]" />
-          </Button>
         </div>
       </div>
 

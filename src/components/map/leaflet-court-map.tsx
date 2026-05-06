@@ -52,8 +52,7 @@ interface LeafletCourtMapProps {
   showAddCourtButton?: boolean
   onAddCourtClick?: () => void
   showFavorite?: boolean
-  showOrte?: boolean
-  showEvents?: boolean
+  selectedContentTypes?: ('orte' | 'events')[]
   onUserLocationChange?: (loc: { lat: number; lng: number } | null) => void
   onReady?: (handle: LeafletCourtMapHandle) => void
   disableMarkerClick?: boolean
@@ -511,8 +510,7 @@ export default function LeafletCourtMap({
   showAddCourtButton = false,
   onAddCourtClick,
   showFavorite = true,
-  showOrte = true,
-  showEvents = true,
+  selectedContentTypes = [],
   onUserLocationChange,
   onReady,
   disableMarkerClick = false,
@@ -666,6 +664,9 @@ export default function LeafletCourtMap({
     } catch {}
   }
   const autoLocate = !initialCenter && !initialArea
+
+  const showOrte = selectedContentTypes.length === 0 || selectedContentTypes.includes('orte')
+  const showEvents = selectedContentTypes.length === 0 || selectedContentTypes.includes('events')
 
   const visibleCourts = useMemo(() =>
     courts.filter(c => (c as any).is_event_only ? showEvents : showOrte),

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Plus, Calendar, Bookmark, ChevronRight } from 'lucide-react'
+import BackButton from '@/components/layout/back-button'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/components/providers/auth-provider'
 import { database } from '@/lib/supabase/database'
@@ -187,7 +188,10 @@ export default function MyEventsPage() {
   return (
     <div className="container px-4 py-6 max-w-xl mx-auto pb-24">
       <div className="flex justify-between items-center mb-5">
-        <h1 className="text-3xl font-bold">Meine Events</h1>
+        <div className="flex items-center gap-3">
+          <BackButton />
+          <h1 className="text-3xl font-bold">Meine Events</h1>
+        </div>
         {canCreate && (
           <Link href="/events/new">
             <Button size="sm">

@@ -15,7 +15,7 @@ import { ATTRIBUTE_DEFINITIONS, getRelevantAttributes, rowsToAttributeMap } from
 import { reverseGeocode, AddressComponents } from '@/lib/geocoding'
 import { uploadCourtImage, uploadPlaceImageScoped, UploadProgress } from '@/lib/supabase/storage'
 import { useAuth } from '@/components/providers/auth-provider'
-import { sportIcons, sportNames } from '@/lib/utils/sport-utils'
+import { sportIcons, sportNames, CURATED_SPORTS } from '@/lib/utils/sport-utils'
 import { cn, validateWebsite } from '@/lib/utils'
 import { MapPin, Plus, Upload, X, Image, Camera, Loader2, Phone, Mail, Globe } from 'lucide-react'
 import { Textarea } from '@/components/ui/textarea'
@@ -34,30 +34,6 @@ const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map
   ),
 })
 
-const SPORTS = [
-  { id: 'calisthenics', label: 'Calisthenics' },
-  { id: 'fußball', label: 'Fußball' },
-  { id: 'basketball', label: 'Basketball' },
-  { id: 'skatepark', label: 'Skatepark' },
-  { id: 'tischtennis', label: 'Tischtennis' },
-  { id: 'tennis', label: 'Tennis' },
-  { id: 'laufen', label: 'Laufen' },
-  { id: 'schwimmen', label: 'Schwimmen' },
-  { id: 'klettern', label: 'Klettern' },
-  { id: 'volleyball', label: 'Volleyball' },
-  { id: 'beachvolleyball', label: 'Beachvolleyball' },
-  { id: 'boule', label: 'Boule' },
-  { id: 'padel', label: 'Padel' },
-  { id: 'badminton', label: 'Badminton' },
-  { id: 'hockey', label: 'Hockey' },
-  { id: 'schach', label: 'Schach' },
-  { id: 'parkour', label: 'Parkour' },
-  { id: 'rugby', label: 'Rugby' },
-  { id: 'inliner', label: 'Inliner' },
-  { id: 'discgolf', label: 'Discgolf' },
-  { id: 'bmx', label: 'BMX' },
-  { id: 'dirtbike', label: 'Dirtbike' },
-] as const
 
 const SURFACE_TYPES = [
   'Unbekannt', 'Rasen', 'Kunstrasen', 'Hartplatz', 'Asphalt',
@@ -549,13 +525,13 @@ export default function PlaceForm({
       <div className="space-y-2">
         <Label>Verfügbare Sportarten *</Label>
         <div className="grid grid-cols-3 gap-2">
-          {SPORTS.map(sport => {
-            const isSelected = selectedSports.includes(sport.id as SportType)
+          {CURATED_SPORTS.map(sport => {
+            const isSelected = selectedSports.includes(sport as SportType)
             return (
               <button
-                key={sport.id}
+                key={sport}
                 type="button"
-                onClick={() => handleSportToggle(sport.id as SportType)}
+                onClick={() => handleSportToggle(sport as SportType)}
                 className={cn(
                   'flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border transition-all cursor-pointer',
                   isSelected
@@ -563,8 +539,8 @@ export default function PlaceForm({
                     : 'border-border bg-background text-muted-foreground hover:border-primary/40 hover:text-foreground'
                 )}
               >
-                <span className="text-[20px] leading-none">{sportIcons[sport.id as SportType] || '📍'}</span>
-                <span className="text-sm font-medium">{sport.label}</span>
+                <span className="text-[20px] leading-none">{sportIcons[sport] || '📍'}</span>
+                <span className="text-sm font-medium">{sportNames[sport] || sport}</span>
               </button>
             )
           })}

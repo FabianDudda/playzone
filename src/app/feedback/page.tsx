@@ -1,8 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { ArrowLeft, Bug, Lightbulb, MessageSquare, CheckCircle2 } from 'lucide-react'
+import { Bug, Lightbulb, MessageSquare, CheckCircle2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import BackButton from '@/components/layout/back-button'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
@@ -21,6 +23,7 @@ const CATEGORIES: { value: FeedbackCategory; label: string; icon: React.ElementT
 
 export default function FeedbackPage() {
   const { user } = useAuth()
+  const router = useRouter()
   const [category, setCategory] = useState<FeedbackCategory | null>(null)
   const [message, setMessage] = useState('')
   const [email, setEmail] = useState('')
@@ -56,9 +59,7 @@ export default function FeedbackPage() {
     <div className="container px-4 py-4 overflow-x-hidden">
       <div className="max-w-xl mx-auto space-y-6">
         <div className="flex items-center gap-3">
-          <Link href="/profile" className="text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
+          <BackButton />
           <h1 className="text-2xl font-bold">Give Feedback</h1>
         </div>
 
@@ -72,8 +73,8 @@ export default function FeedbackPage() {
                   Your message has been received and will help improve the app.
                 </p>
               </div>
-              <Button asChild variant="outline">
-                <Link href="/profile">Back to Profile</Link>
+              <Button variant="outline" onClick={() => router.back()}>
+                Zurück
               </Button>
             </CardContent>
           </Card>

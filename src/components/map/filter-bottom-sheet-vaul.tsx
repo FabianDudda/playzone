@@ -4,7 +4,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Button } from '@/components/ui/button'
 import { X } from 'lucide-react'
 import { SportType } from '@/lib/supabase/types'
-import { sportNames, sportIcons, PlaceType, placeTypeLabels, placeTypeIcons, getPlaceTypeBadgeClasses } from '@/lib/utils/sport-utils'
+import { sportNames, sportIcons, CURATED_SPORTS, PlaceType, placeTypeLabels, placeTypeIcons, getPlaceTypeBadgeClasses } from '@/lib/utils/sport-utils'
 import { cn } from '@/lib/utils'
 
 const PLACE_TYPES: PlaceType[] = ['öffentlich', 'verein', 'schule']
@@ -18,30 +18,6 @@ interface FilterBottomSheetVaulProps {
   selectedPlaceType: PlaceType | null
   onPlaceTypeChange: (type: PlaceType | null) => void
 }
-
-const SPORTS: SportType[] = [
-  'calisthenics',
-  'fußball',
-  'basketball',
-  'skatepark',
-  'tischtennis',
-  'tennis',
-  'laufen',
-  'schwimmen',
-  'klettern',
-  'volleyball',
-  'beachvolleyball',
-  'boule',
-  'padel',
-  'badminton',
-  'hockey',
-  'schach',
-  'parkour',
-  'rugby',
-  'inliner',
-  'discgolf',
-  'bmx',
-]
 
 export default function FilterBottomSheetVaul({
   isOpen,
@@ -121,7 +97,7 @@ export default function FilterBottomSheetVaul({
           <div className="space-y-2">
             <p className="text-sm font-medium text-muted-foreground">Sportart</p>
             <div className="grid grid-cols-3 gap-2">
-              {SPORTS.map((sport) => {
+              {CURATED_SPORTS.map((sport) => {
                 const isSelected = selectedSports.includes(sport)
                 const sportName = sportNames[sport] || sport
                 const sportIcon = sportIcons[sport] || '📍'

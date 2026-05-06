@@ -830,6 +830,7 @@ export type Database = {
         | "discgolf"
         | "bmx"
         | "dirtbike"
+        | "pumptrack"
         | "other"
     }
     CompositeTypes: {
@@ -988,6 +989,7 @@ export const Constants = {
         "discgolf",
         "bmx",
         "dirtbike",
+        "pumptrack",
       ],
     },
   },

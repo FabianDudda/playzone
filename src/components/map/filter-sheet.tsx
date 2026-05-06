@@ -3,10 +3,10 @@
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { Button } from '@/components/ui/button'
-import { X, RotateCcw } from 'lucide-react'
+import { X, RotateCcw, MapPin, Calendar } from 'lucide-react'
 import { SportType } from '@/lib/supabase/types'
 import {
-  sportNames, sportIcons, SPORT_ORDER,
+  sportNames, sportIcons, CURATED_SPORTS,
   PlaceType, placeTypeLabels, placeTypeIcons,
 } from '@/lib/utils/sport-utils'
 import { cn } from '@/lib/utils'
@@ -20,9 +20,8 @@ interface FilterSheetProps {
   onSportsChange: (sports: SportType[]) => void
   selectedPlaceType: PlaceType[]
   onPlaceTypeChange: (types: PlaceType[]) => void
-  showOrte: boolean
-  showEvents: boolean
-  onToggleContentType: (type: 'orte' | 'events') => void
+  selectedContentTypes: ('orte' | 'events')[]
+  onContentTypesChange: (types: ('orte' | 'events')[]) => void
   onReset: () => void
 }
 
@@ -43,12 +42,11 @@ export default function FilterSheet({
   onSportsChange,
   selectedPlaceType,
   onPlaceTypeChange,
-  showOrte,
-  showEvents,
-  onToggleContentType,
+  selectedContentTypes,
+  onContentTypesChange,
   onReset,
 }: FilterSheetProps) {
-  const hasActive = selectedSports.length > 0 || selectedPlaceType.length > 0 || !showOrte || !showEvents
+  const hasActive = selectedSports.length > 0 || selectedPlaceType.length > 0 || selectedContentTypes.length > 0
 
   const toggleSport = (sport: SportType) => {
     onSportsChange(
@@ -66,6 +64,14 @@ export default function FilterSheet({
     )
   }
 
+  const toggleContentType = (type: 'orte' | 'events') => {
+    onContentTypesChange(
+      selectedContentTypes.includes(type)
+        ? selectedContentTypes.filter(t => t !== type)
+        : [...selectedContentTypes, type]
+    )
+  }
+
   return (
     <Drawer open={open} onOpenChange={(o) => !o && onClose()} modal={false} shouldScaleBackground={false}>
       <DrawerContent hideOverlay className="h-[100dvh] flex flex-col focus:outline-none max-w-2xl mx-auto">
@@ -75,11 +81,11 @@ export default function FilterSheet({
           <span className="text-[17px] font-bold">Filter</span>
           <div className="flex items-center gap-2">
             {hasActive && (
-              <Button variant="glass-secondary" size="icon" className="rounded-full h-8 w-8" onClick={onReset} aria-label="Zurücksetzen">
+              <Button variant="glass-secondary" size="icon" className="rounded-full h-9 w-9" onClick={onReset} aria-label="Zurücksetzen">
                 <RotateCcw className="h-4 w-4" />
               </Button>
             )}
-            <Button variant="glass-secondary" size="icon" className="rounded-full h-8 w-8" onClick={onClose} aria-label="Schließen">
+            <Button variant="glass-secondary" size="icon" className="rounded-full h-9 w-9" onClick={onClose} aria-label="Schließen">
               <X className="h-4 w-4" />
             </Button>
           </div>
@@ -117,7 +123,7 @@ export default function FilterSheet({
           <div>
             <SectionLabel label="Sportart" />
             <div className="px-4 grid grid-cols-4 gap-2">
-              {SPORT_ORDER.map(sport => {
+              {CURATED_SPORTS.map(sport => {
                 const active = selectedSports.includes(sport as SportType)
                 return (
                   <button
@@ -145,19 +151,22 @@ export default function FilterSheet({
             <SectionLabel label="Inhalte" />
             <div className="px-4 flex gap-2">
               {(['orte', 'events'] as const).map(type => {
-                const active = type === 'orte' ? showOrte : showEvents
+                const active = selectedContentTypes.includes(type)
                 return (
                   <button
                     key={type}
-                    onClick={() => onToggleContentType(type)}
+                    onClick={() => toggleContentType(type)}
                     className={cn(
-                      'flex-1 h-9 rounded-[10px] border text-[13px] font-medium transition-all',
+                      'flex-1 h-9 flex items-center justify-center gap-1.5 rounded-[10px] border text-[13px] font-medium transition-all',
                       active
                         ? 'border-primary bg-primary text-primary-foreground'
-                        : 'border-black/[.1] dark:border-white/[.12] bg-transparent text-muted-foreground'
+                        : 'border-black/[.1] dark:border-white/[.12] bg-transparent text-foreground'
                     )}
                   >
-                    {type === 'orte' ? 'Orte' : 'Events'}
+                    {type === 'orte'
+                      ? <><MapPin className="h-3.5 w-3.5" />Orte</>
+                      : <><Calendar className="h-3.5 w-3.5" />Events</>
+                    }
                   </button>
                 )
               })}

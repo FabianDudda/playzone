@@ -5,8 +5,9 @@ import { database } from '@/lib/supabase/database'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useQuery } from '@tanstack/react-query'
-import { ArrowLeft, Edit, MapPin } from 'lucide-react'
+import { Edit, MapPin } from 'lucide-react'
 import Link from 'next/link'
+import BackButton from '@/components/layout/back-button'
 import { sportNames, sportIcons } from '@/lib/utils/sport-utils'
 
 function StatusBadge({ status }: { status: string }) {
@@ -85,9 +86,7 @@ export default function MessagesPage() {
     <div className="container px-4 py-4 overflow-x-hidden">
       <div className="max-w-xl mx-auto space-y-6">
         <div className="flex items-center gap-3">
-          <Link href="/profile" className="text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
+          <BackButton />
           <h1 className="text-2xl font-bold">My Contributions</h1>
         </div>
 

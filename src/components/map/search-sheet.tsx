@@ -73,10 +73,8 @@ interface SearchSheetProps {
   onOpen?: () => void
   onInnerFilterChange?: (open: boolean) => void
   onOpenFavorites?: () => void
-  showOrte?: boolean
-  showEvents?: boolean
-  onShowOrteChange?: (v: boolean) => void
-  onShowEventsChange?: (v: boolean) => void
+  selectedContentTypes?: ('orte' | 'events')[]
+  onContentTypesChange?: (types: ('orte' | 'events')[]) => void
 }
 
 export default function SearchSheet({
@@ -96,19 +94,17 @@ export default function SearchSheet({
   onOpen,
   onInnerFilterChange,
   onOpenFavorites,
-  showOrte: showOrteProp,
-  showEvents: showEventsProp,
-  onShowOrteChange,
-  onShowEventsChange,
+  selectedContentTypes: selectedContentTypesProp,
+  onContentTypesChange,
 }: SearchSheetProps) {
   const { user } = useAuth()
   const [query, setQuery] = useState('')
   const debouncedQuery = useDebouncedValue(query, 200)
   const { results: geoResults } = useGeocodingSearch(query)
-  const [localShowOrte, setLocalShowOrte] = useState(true)
-  const [localShowEvents, setLocalShowEvents] = useState(true)
-  const showOrte = showOrteProp ?? localShowOrte
-  const showEvents = showEventsProp ?? localShowEvents
+  const [localContentTypes, setLocalContentTypes] = useState<('orte' | 'events')[]>([])
+  const effectiveContentTypes = selectedContentTypesProp ?? localContentTypes
+  const showOrte = effectiveContentTypes.length === 0 || effectiveContentTypes.includes('orte')
+  const showEvents = effectiveContentTypes.length === 0 || effectiveContentTypes.includes('events')
   const [filterSheetOpen, setFilterSheetOpen] = useState(false)
   const filterOpenedFromFull = useRef(false)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -177,8 +173,8 @@ export default function SearchSheet({
     enabled: !!user && isFullOpen,
   })
 
-  const hasActiveFilter = selectedSports.length > 0 || selectedPlaceType.length > 0 || !showOrte || !showEvents
-  const activeFilterCount = selectedSports.length + selectedPlaceType.length + (!showOrte ? 1 : 0) + (!showEvents ? 1 : 0)
+  const hasActiveFilter = selectedSports.length > 0 || selectedPlaceType.length > 0 || effectiveContentTypes.length > 0
+  const activeFilterCount = selectedSports.length + selectedPlaceType.length + effectiveContentTypes.length
 
   const results = useMemo(() => {
     const q = debouncedQuery.trim().toLowerCase()
@@ -262,26 +258,18 @@ export default function SearchSheet({
   }, [places, events, geoResults, selectedSports, selectedPlaceType, debouncedQuery, userLocation, showOrte, showEvents])
 
   const toggleContentType = (type: 'orte' | 'events') => {
-    if (type === 'orte') {
-      if (showOrte && !showEvents) return
-      const next = !showOrte
-      if (onShowOrteChange) onShowOrteChange(next)
-      else setLocalShowOrte(next)
-    } else {
-      if (!showOrte && showEvents) return
-      const next = !showEvents
-      if (onShowEventsChange) onShowEventsChange(next)
-      else setLocalShowEvents(next)
-    }
+    const next = effectiveContentTypes.includes(type)
+      ? effectiveContentTypes.filter(t => t !== type)
+      : [...effectiveContentTypes, type]
+    if (onContentTypesChange) onContentTypesChange(next)
+    else setLocalContentTypes(next)
   }
 
   const handleFilterReset = () => {
     onSportsChange([])
     onPlaceTypeChange([])
-    if (onShowOrteChange) onShowOrteChange(true)
-    else setLocalShowOrte(true)
-    if (onShowEventsChange) onShowEventsChange(true)
-    else setLocalShowEvents(true)
+    if (onContentTypesChange) onContentTypesChange([])
+    else setLocalContentTypes([])
   }
 
   const showEventsSkeleton = showEvents && eventsLoading && events.length === 0
@@ -421,9 +409,11 @@ export default function SearchSheet({
         onSportsChange={onSportsChange}
         selectedPlaceType={selectedPlaceType}
         onPlaceTypeChange={onPlaceTypeChange}
-        showOrte={showOrte}
-        showEvents={showEvents}
-        onToggleContentType={toggleContentType}
+        selectedContentTypes={effectiveContentTypes}
+        onContentTypesChange={(types) => {
+          if (onContentTypesChange) onContentTypesChange(types)
+          else setLocalContentTypes(types)
+        }}
         onReset={handleFilterReset}
       />
     </>

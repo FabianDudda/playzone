@@ -237,7 +237,7 @@ export default function FavoritesSheet({
         {/* Header */}
         <div className="flex items-center justify-between px-4 pt-2 pb-3 shrink-0">
           <span className="text-[17px] font-bold">Gespeichert</span>
-          <Button variant="glass-secondary" size="icon" className="rounded-full h-8 w-8" onClick={() => onOpenChange(false)} aria-label="Schließen">
+          <Button variant="glass-secondary" size="icon" className="rounded-full h-9 w-9" onClick={() => onOpenChange(false)} aria-label="Schließen">
             <X className="h-4 w-4" />
           </Button>
         </div>

@@ -55,8 +55,7 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
   const [filterSheetOpen, setFilterSheetOpen] = useState(false)
   const [isInnerFilterOpen, setIsInnerFilterOpen] = useState(false)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
-  const [showOrte, setShowOrte] = useState(true)
-  const [showEvents, setShowEvents] = useState(true)
+  const [selectedContentTypes, setSelectedContentTypes] = useState<('orte' | 'events')[]>([])
 
   const mapHandleRef = useRef<LeafletCourtMapHandle | null>(null)
   const handleMapReady = useCallback((handle: LeafletCourtMapHandle) => {
@@ -153,8 +152,7 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
           isLoading={isInitialLoading}
           externalFilterOpen={filterSheetOpen}
           onExternalFilterOpenChange={setFilterSheetOpen}
-          showOrte={showOrte}
-          showEvents={showEvents}
+          selectedContentTypes={selectedContentTypes}
           onUserLocationChange={setUserLocation}
           onReady={handleMapReady}
         />
@@ -261,10 +259,8 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
         }}
         onLocationSelect={(lat, lng, zoom) => mapHandleRef.current?.flyTo(lat, lng, zoom)}
         onOpenFavorites={() => mapHandleRef.current?.openFavorites()}
-        showOrte={showOrte}
-        showEvents={showEvents}
-        onShowOrteChange={setShowOrte}
-        onShowEventsChange={setShowEvents}
+        selectedContentTypes={selectedContentTypes}
+        onContentTypesChange={setSelectedContentTypes}
       />
     </>
   )

@@ -8,14 +8,14 @@ import { useAuth } from '@/components/providers/auth-provider'
 import { useInstallPrompt } from '@/hooks/use-install-prompt'
 import {
   User, Shield, MapPin, Calendar, BookOpen, HelpCircle, Sparkles,
-  Handshake, MessageSquare, List, LogIn, LogOut, Edit2, Bell,
-  Download, ChevronRight, Heart, Rss, Sun, Moon,
+  Handshake, MessageSquare, LogIn, LogOut, Edit2, Bell,
+  Download, ChevronRight, Rss, Sun, Moon, X,
 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 interface MenuSheetProps {
   open: boolean
   onClose: () => void
-  onOpenFavorites?: () => void
 }
 
 function Section({ label, children }: { label?: string; children: ReactNode }) {
@@ -60,7 +60,7 @@ function Row({
   return <button onClick={onClick} className="w-full text-left">{inner}</button>
 }
 
-export default function MenuSheet({ open, onClose, onOpenFavorites }: MenuSheetProps) {
+export default function MenuSheet({ open, onClose }: MenuSheetProps) {
   const { user, profile, isAdmin, signOut } = useAuth()
   const { canInstall, isIOS, isStandalone, promptInstall } = useInstallPrompt()
   const isGuest = !user
@@ -81,8 +81,8 @@ export default function MenuSheet({ open, onClose, onOpenFavorites }: MenuSheetP
   }
 
   return (
-    <Drawer open={open} onOpenChange={(o) => !o && onClose()} modal={false}>
-      <DrawerContent hideOverlay className="max-h-[100dvh] flex flex-col focus:outline-none max-w-2xl mx-auto">
+    <Drawer open={open} onOpenChange={(o) => !o && onClose()} modal={false} snapPoints={[1]} activeSnapPoint={1}>
+      <DrawerContent hideOverlay className="h-[100dvh] flex flex-col focus:outline-none max-w-2xl mx-auto">
         <VisuallyHidden><DrawerTitle>Menü</DrawerTitle></VisuallyHidden>
         {/* Header */}
         <div className="flex items-center justify-between px-4 pt-2 pb-4 shrink-0">
@@ -116,16 +116,29 @@ export default function MenuSheet({ open, onClose, onOpenFavorites }: MenuSheetP
               </>
             )}
           </div>
-          {isAdmin && (
-            <button
-              onClick={toggleTheme}
-              title="Debug: Dark/Light Mode (nur Admins)"
-              className="ml-3 h-8 w-8 flex items-center justify-center rounded-full bg-muted/60 border border-border/50 active:scale-95 transition-transform shrink-0"
-              aria-label="Debug: Dark/Light Mode umschalten"
+          <div className="flex items-center gap-2 ml-3 shrink-0">
+            {!isGuest && (
+              <Button
+                variant="glass-secondary"
+                size="icon"
+                className="rounded-full h-9 w-9"
+                asChild
+              >
+                <a href="/profile/edit" onClick={onClose} aria-label="Profil bearbeiten">
+                  <Edit2 className="h-4 w-4" />
+                </a>
+              </Button>
+            )}
+            <Button
+              variant="glass-secondary"
+              size="icon"
+              className="rounded-full h-9 w-9"
+              onClick={onClose}
+              aria-label="Schließen"
             >
-              {isDark ? <Sun className="h-4 w-4 text-foreground" /> : <Moon className="h-4 w-4 text-foreground" />}
-            </button>
-          )}
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
 
         {/* Scrollable body */}
@@ -154,14 +167,16 @@ export default function MenuSheet({ open, onClose, onOpenFavorites }: MenuSheetP
           {/* KONTO — logged-in only */}
           {!isGuest && (
             <Section label="Konto">
-              <Row icon={<Edit2 className="h-[17px] w-[17px]" />} label="Profil bearbeiten" href="/profile/edit" onClick={onClose} />
               <Row icon={<Bell className="h-[17px] w-[17px]" />} label="Meine Beiträge" href="/contributions" onClick={onClose} />
               <Row icon={<Calendar className="h-[17px] w-[17px]" />} label="Meine Events" href="/events/mine" onClick={onClose} />
-              <Row
-                icon={<Heart className="h-[17px] w-[17px]" />}
-                label="Gespeichert"
-                onClick={() => { onClose(); onOpenFavorites?.() }}
-              />
+              {isAdmin && (
+                <Row
+                  icon={isDark ? <Sun className="h-[17px] w-[17px]" /> : <Moon className="h-[17px] w-[17px]" />}
+                  label="Erscheinungsbild"
+                  sub="Admin"
+                  onClick={toggleTheme}
+                />
+              )}
               {isAdmin && (
                 <Row
                   icon={<Shield className="h-[17px] w-[17px] text-amber-600" />}
@@ -176,8 +191,9 @@ export default function MenuSheet({ open, onClose, onOpenFavorites }: MenuSheetP
 
           {/* ENTDECKEN — identical for all users */}
           <Section label="Entdecken">
+            <Row icon={<Calendar className="h-[17px] w-[17px]" />} label="Events" href="/events" onClick={onClose} />
+            <Row icon={<MapPin className="h-[17px] w-[17px]" />} label="Orte" href="/orte" onClick={onClose} />
             <Row icon={<Rss className="h-[17px] w-[17px]" />} label="Blog" href="/blog" onClick={onClose} />
-            <Row icon={<MapPin className="h-[17px] w-[17px]" />} label="Orte nach Stadt" href="/orte" onClick={onClose} />
           </Section>
 
           {/* APP — identical for all users */}
@@ -194,7 +210,6 @@ export default function MenuSheet({ open, onClose, onOpenFavorites }: MenuSheetP
             <Row icon={<Sparkles className="h-[17px] w-[17px]" />} label="Was ist OpenSportMap?" href="/about" onClick={onClose} />
             <Row icon={<Handshake className="h-[17px] w-[17px]" />} label="Partner" href="/partner" onClick={onClose} />
             <Row icon={<MessageSquare className="h-[17px] w-[17px]" />} label="Feedback geben" href="/feedback" onClick={onClose} />
-            <Row icon={<List className="h-[17px] w-[17px]" />} label="Changelog" sub="v0.4.0" href="/changelog" onClick={onClose} />
           </Section>
 
           {/* Sign out — logged-in only */}
@@ -213,7 +228,7 @@ export default function MenuSheet({ open, onClose, onOpenFavorites }: MenuSheetP
           <div className="flex gap-3 justify-center text-[12px] text-muted-foreground/60 mt-2 pt-2">
             <Link href="/impressum" onClick={onClose} className="hover:text-muted-foreground transition-colors">Impressum</Link>
             <span>·</span>
-            <Link href="/daten" onClick={onClose} className="hover:text-muted-foreground transition-colors">Datenschutz</Link>
+            <Link href="/changelog" onClick={onClose} className="hover:text-muted-foreground transition-colors">Changelog</Link>
           </div>
         </div>
       </DrawerContent>

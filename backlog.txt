@@ -12,13 +12,18 @@
 
 - big redesign
 - add search functionality
-- add event functinality
+- add event functionality
 - use native time picker for opening hours in add-place
 
 ## TO DO ##
 
+- benachrichtigung an user via admin dashboard (how to send, where to show?)
 
-- test/rework all navigation/back handlers from the pages which open from menuSheet
+- rework menu sheet
+-- SPENDEN BUTTON
+-- how many places have been added last week
+-- newest places that have been added
+-- badge/level system for user?
 
 - position of "+" button & map contributions on desktop (cause max-width of sheets)
 

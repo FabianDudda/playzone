@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Metadata } from 'next'
+import BackButton from '@/components/layout/back-button'
 import { getCityList } from '@/lib/supabase/seo-queries'
 import { toSlug } from '@/lib/utils/seo-slugs'
 
@@ -30,8 +31,11 @@ export default async function OrtePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-bold">Sportplätze entdecken</h1>
+        <div className="space-y-2">
+          <div className="flex items-center gap-3">
+            <BackButton />
+            <h1 className="text-2xl font-bold">Sportplätze entdecken</h1>
+          </div>
           <p className="text-muted-foreground">
             Wähle eine Stadt, um alle Sportplätze in deiner Region zu finden.
           </p>

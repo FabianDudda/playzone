@@ -102,6 +102,10 @@ input[type="password"]::-ms-clear {
   .glass-chip {
     @apply bg-black/[.06] dark:bg-white/[.08];
   }
+  /* Glass border — alpha-based border that works on frosted drawer backgrounds */
+  .glass-border {
+    @apply border-black/[.12] dark:border-white/[.12];
+  }
   /* Glass surface — frosted background for floating panels, drawers, FABs */
   .glass-surface {
     background: rgba(255, 255, 255, 0.80);

@@ -23,7 +23,7 @@ git push
 ------------------------------
 
 # stage, commit, push to dev 
-git add . && git commit -m "" && git push origin dev
+git add . && git commit -m "commit note" && git push origin dev
 
 # then merge into main  
 git checkout main && git merge dev && git push origin main && git checkout dev 

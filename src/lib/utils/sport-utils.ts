@@ -26,15 +26,26 @@ export const sportColors: Record<string, string> = {
   discgolf: '#65A30D',     // Olive Green
   bmx: '#DC2626',          // Red
   dirtbike: '#92400E',     // Brown
+  pumptrack: '#0D9488',    // Teal
   other: '#9CA3AF',        // Gray
 }
+
+// Curated list of sports shown in forms and filters (same set, same order everywhere)
+export const CURATED_SPORTS: string[] = [
+  'calisthenics', 'fußball', 'basketball', 'skatepark', 
+  'tischtennis',  'laufen', 'volleyball', 'beachvolleyball',
+  'bmx', 'dirtbike', 'inliner', 'pumptrack', 
+  'boule', 'hockey', 'parkour', 'rugby', 
+  'discgolf', 'tennis', 'padel', 'badminton',
+  'klettern', 'schwimmen', 'schach', 
+]
 
 // Ordered list of sports for display in forms (priority sports first)
 export const SPORT_ORDER: string[] = [
   'fußball', 'basketball', 'tischtennis', 'skatepark', 'beachvolleyball', 'volleyball',
   'tennis', 'spikeball', 'badminton', 'squash', 'pickleball', 'hockey',
   'boule', 'calisthenics', 'laufen', 'schwimmen', 'klettern', 'padel',
-  'schach', 'parkour', 'rugby', 'inliner', 'discgolf', 'bmx', 'dirtbike', 'other',
+  'schach', 'parkour', 'rugby', 'inliner', 'discgolf', 'bmx', 'dirtbike', 'pumptrack', 'other',
 ]
 
 // Sport display names (for consistency)
@@ -66,6 +77,7 @@ export const sportNames: Record<string, string> = {
   discgolf: 'Discgolf',
   bmx: 'BMX',
   dirtbike: 'Dirtbike',
+  pumptrack: 'Pumptrack',
   other: 'Andere Sportart',
 }
 
@@ -98,6 +110,7 @@ export const sportBadgeStyles: Record<string, { bg: string, text: string }> = {
   discgolf: { bg: 'bg-lime-50', text: 'text-foreground' },
   bmx: { bg: 'bg-red-50', text: 'text-foreground' },
   dirtbike: { bg: 'bg-amber-50', text: 'text-foreground' },
+  pumptrack: { bg: 'bg-teal-50', text: 'text-foreground' },
   other: { bg: 'bg-gray-50', text: 'text-foreground' },
 }
 
@@ -130,6 +143,7 @@ export const sportIcons: Record<string, string> = {
   discgolf: '🥏',       // Flying disc
   bmx: '🚲',            // BMX bike
   dirtbike: '🚲',       // Dirtbike
+  pumptrack: '🚵',      // Mountain biker
   other: '🏅',          // Other sport
 }
 
@@ -217,7 +231,8 @@ export function getSportBadgeStyles(sport: string): { backgroundColor: string, c
     'bg-pink-50': '#fdf2f8',
     'bg-yellow-50': '#fefce8',
     'bg-gray-50': '#f9fafb',
-    'bg-purple-50': '#faf5ff'
+    'bg-purple-50': '#faf5ff',
+    'bg-teal-50': '#f0fdfa'
   }
   
   const styles = sportBadgeStyles[sport]

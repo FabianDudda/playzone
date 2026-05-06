@@ -1,8 +1,8 @@
 'use client'
 
-import { ArrowLeft } from 'lucide-react'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import Link from 'next/link'
+import BackButton from '@/components/layout/back-button'
 
 type FaqItem = {
   question: string
@@ -114,9 +114,7 @@ export default function FaqPage() {
     <div className="container px-4 py-4 overflow-x-hidden">
       <div className="max-w-xl mx-auto space-y-6">
         <div className="flex items-center gap-3">
-          <Link href="/profile" className="text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
+          <BackButton />
           <h1 className="text-2xl font-bold">Häufige Fragen</h1>
         </div>
 
