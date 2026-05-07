@@ -9,14 +9,12 @@ import { useProgressivePlaces } from '@/hooks/use-progressive-places'
 import { database } from '@/lib/supabase/database'
 import { SportType, PlaceMarker, EventForSearch, Area } from '@/lib/supabase/types'
 import { PlaceType } from '@/lib/utils/sport-utils'
-import Image from 'next/image'
 import Link from 'next/link'
-import { Plus, MapPin, Calendar } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { MapPin, Calendar, SlidersHorizontal } from 'lucide-react'
 import InstallBanner from '@/components/install/install-banner'
 import MenuSheet from '@/components/layout/menu-sheet'
 import SearchSheet from '@/components/map/search-sheet'
-import TopSearchBar from '@/components/map/top-search-bar'
+import BottomNavBar from '@/components/map/bottom-nav-bar'
 import ListViewSheet from '@/components/map/list-view-sheet'
 import FilterSheet from '@/components/map/filter-sheet'
 import type { LeafletCourtMapHandle } from '@/components/map/leaflet-court-map'
@@ -32,10 +30,8 @@ const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map
   ),
 })
 
-// FAB bottom offset (80px mini bar + 16px gap + safe area)
-const FAB_BOTTOM = 'calc(96px + env(safe-area-inset-bottom, 0px))'
-// Popup bottom offset (above FAB: FAB bottom + FAB height 56px + 8px gap)
-const POPUP_BOTTOM = 'calc(96px + 64px + env(safe-area-inset-bottom, 0px))'
+// Add popup bottom offset — just above the nav bar (56px) + gap
+const POPUP_BOTTOM = 'calc(68px + env(safe-area-inset-bottom, 0px))'
 
 function MapPage({ initialArea }: { initialArea?: Area | null }) {
   useEffect(() => {
@@ -166,7 +162,7 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
         />
         <InstallBanner />
         {isLoadingMore && (
-          <div className="pointer-events-none absolute left-1/2 z-[1000] -translate-x-1/2" style={{ bottom: 'calc(104px + env(safe-area-inset-bottom, 0px))' }}>
+          <div className="pointer-events-none absolute left-1/2 z-[1000] -translate-x-1/2" style={{ bottom: 'calc(192px + env(safe-area-inset-bottom, 0px))' }}>
             <div className="flex items-center gap-2 rounded-full bg-background/80 px-3 py-1.5 text-xs font-medium text-foreground shadow backdrop-blur-sm">
               <div className="h-3 w-3 animate-spin rounded-full border border-foreground border-t-transparent" />
               Weitere Orte werden geladen…
@@ -175,27 +171,41 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
         )}
       </div>
 
-      {/* Top search bar — always visible */}
-      <TopSearchBar
+      <BottomNavBar
         onMenuOpen={() => setMenuOpen(true)}
         onSearchOpen={() => setFilterSheetOpen(true)}
-        onFilterOpen={() => setFilterDirectOpen(true)}
-        hasActiveFilter={selectedSports.length > 0 || selectedPlaceType.length > 0 || selectedContentTypes.length > 0}
-        activeFilterCount={selectedSports.length + selectedPlaceType.length + selectedContentTypes.length}
+        onFavoritesOpen={() => mapHandleRef.current?.openFavorites()}
+        onAddOpen={() => setAddOpen(v => !v)}
+        addOpen={addOpen}
       />
+
+      {/* Floating filter button — always visible above the mini list sheet */}
+      <button
+        onClick={() => setFilterDirectOpen(true)}
+        className="fixed z-[1100] flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-primary text-primary-foreground shadow-[0_2px_16px_rgba(0,0,0,0.14)] dark:shadow-[0_2px_16px_rgba(0,0,0,0.30)] text-[14px] font-semibold active:scale-95 transition-transform"
+        style={{ bottom: 'calc(68px + env(safe-area-inset-bottom, 0px))', right: '12px' }}
+      >
+        <SlidersHorizontal className="h-4 w-4" />
+        Filter
+        {(selectedSports.length + selectedPlaceType.length + selectedContentTypes.length) > 0 && (
+          <span className="h-[18px] min-w-[18px] px-1 rounded-full bg-white/25 text-[10px] font-bold flex items-center justify-center leading-none">
+            {selectedSports.length + selectedPlaceType.length + selectedContentTypes.length}
+          </span>
+        )}
+      </button>
 
       {/* Add popup backdrop — closes popup on outside tap */}
       {addOpen && (
         <div
-          className="fixed inset-0 z-[151]"
+          className="fixed inset-0 z-[1103]"
           onClick={() => setAddOpen(false)}
         />
       )}
 
-      {/* Add popup — anchored just above the FAB */}
+      {/* Add popup — anchored just above the nav bar */}
       {addOpen && (
         <div
-          className="fixed z-[152] w-[248px] rounded-2xl overflow-hidden glass-surface border border-black/[.06] dark:border-white/[.08] shadow-[0_8px_30px_rgba(0,0,0,0.18)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.30)] animate-in fade-in zoom-in-95 slide-in-from-bottom-2 duration-150"
+          className="fixed z-[1104] w-[248px] rounded-2xl overflow-hidden glass-surface border border-black/[.06] dark:border-white/[.08] shadow-[0_8px_30px_rgba(0,0,0,0.18)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.30)] animate-in fade-in zoom-in-95 slide-in-from-bottom-2 duration-150"
           style={{ right: '16px', bottom: POPUP_BOTTOM }}
         >
           <button
@@ -226,18 +236,6 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
         </div>
       )}
 
-      {/* Add FAB — right side, above mini search bar */}
-      <button
-        onClick={() => setAddOpen(v => !v)}
-        className="fixed z-[150] flex h-14 w-14 items-center justify-center rounded-full glass-surface border border-black/[.06] dark:border-white/[.08] shadow-[0_2px_16px_rgba(0,0,0,0.14)] dark:shadow-[0_2px_16px_rgba(0,0,0,0.30)] active:scale-95 transition-all duration-200 text-foreground"
-        style={{ right: '16px', bottom: FAB_BOTTOM }}
-        aria-label={addOpen ? 'Schließen' : 'Erstellen'}
-      >
-        <div className={cn('transition-transform duration-200', addOpen ? 'rotate-45' : 'rotate-0')}>
-          <Plus className="h-6 w-6" />
-        </div>
-      </button>
-
       <MenuSheet open={menuOpen} onClose={() => setMenuOpen(false)} onOpenFavorites={() => mapHandleRef.current?.openFavorites()} />
 
       {/* Tap-outside overlay: closes search sheet when full-open */}
@@ -249,11 +247,6 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
         open={filterSheetOpen}
         onOpen={() => setFilterSheetOpen(true)}
         onClose={() => setFilterSheetOpen(false)}
-        onFilterOpen={() => setFilterDirectOpen(true)}
-        selectedSports={selectedSports}
-        onSportsChange={setSelectedSports}
-        selectedPlaceType={selectedPlaceType}
-        onPlaceTypeChange={setSelectedPlaceType}
         places={allMarkers}
         events={events}
         eventsLoading={eventsLoading}
@@ -266,8 +259,6 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
         }}
         onLocationSelect={(lat, lng, zoom) => mapHandleRef.current?.flyTo(lat, lng, zoom)}
         onOpenFavorites={() => mapHandleRef.current?.openFavorites()}
-        selectedContentTypes={selectedContentTypes}
-        onContentTypesChange={setSelectedContentTypes}
       />
 
       <FilterSheet

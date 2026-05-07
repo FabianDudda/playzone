@@ -9,7 +9,6 @@ import { X, CircleX, ChevronRight, MapPin } from 'lucide-react'
 import { SportType, PlaceMarker, EventForSearch, GeocodingResult } from '@/lib/supabase/types'
 import {
   sportNames,
-  PlaceType,
 } from '@/lib/utils/sport-utils'
 import { calculateDistance } from '@/lib/utils/distance'
 import { useAuth } from '@/components/providers/auth-provider'
@@ -56,10 +55,6 @@ function distanceScore(km: number | null): number {
 interface SearchSheetProps {
   open: boolean
   onClose: () => void
-  selectedSports: SportType[]
-  onSportsChange: (sports: SportType[]) => void
-  selectedPlaceType: PlaceType[]
-  onPlaceTypeChange: (types: PlaceType[]) => void
   places: PlaceMarker[]
   events?: EventForSearch[]
   eventsLoading?: boolean
@@ -68,19 +63,12 @@ interface SearchSheetProps {
   onEventSelect?: (event: EventForSearch) => void
   onLocationSelect: (lat: number, lng: number, zoom: number) => void
   onOpen?: () => void
-  onFilterOpen?: () => void
   onOpenFavorites?: () => void
-  selectedContentTypes?: ('orte' | 'events')[]
-  onContentTypesChange?: (types: ('orte' | 'events')[]) => void
 }
 
 export default function SearchSheet({
   open,
   onClose,
-  selectedSports,
-  onSportsChange,
-  selectedPlaceType,
-  onPlaceTypeChange,
   places,
   events: eventsProp = [],
   eventsLoading = false,
@@ -89,19 +77,12 @@ export default function SearchSheet({
   onEventSelect,
   onLocationSelect,
   onOpen,
-  onFilterOpen,
   onOpenFavorites,
-  selectedContentTypes: selectedContentTypesProp,
-  onContentTypesChange,
 }: SearchSheetProps) {
   const { user } = useAuth()
   const [query, setQuery] = useState('')
   const debouncedQuery = useDebouncedValue(query, 200)
   const { results: geoResults } = useGeocodingSearch(query)
-  const [localContentTypes, setLocalContentTypes] = useState<('orte' | 'events')[]>([])
-  const effectiveContentTypes = selectedContentTypesProp ?? localContentTypes
-  const showOrte = effectiveContentTypes.length === 0 || effectiveContentTypes.includes('orte')
-  const showEvents = effectiveContentTypes.length === 0 || effectiveContentTypes.includes('events')
   const inputRef = useRef<HTMLInputElement>(null)
   const keyboardHeight = useKeyboardHeight()
 
@@ -139,9 +120,6 @@ export default function SearchSheet({
     enabled: !!user && open,
   })
 
-  const hasActiveFilter = selectedSports.length > 0 || selectedPlaceType.length > 0 || effectiveContentTypes.length > 0
-  const activeFilterCount = selectedSports.length + selectedPlaceType.length + effectiveContentTypes.length
-
   const results = useMemo(() => {
     const q = debouncedQuery.trim().toLowerCase()
     const hasQuery = q.length > 0
@@ -160,10 +138,8 @@ export default function SearchSheet({
     const { sportTokens, textTokens } = hasQuery ? parseQuery(q) : { sportTokens: [], textTokens: [] }
     const scoreQuery = textTokens.length > 0 ? textTokens.join(' ') : q
 
-    if (showOrte) {
+    {
       let ps = places.filter(p => !p.is_event_only)
-      if (selectedSports.length > 0) ps = ps.filter(p => selectedSports.some(s => p.sports?.includes(s)))
-      if (selectedPlaceType.length > 0) ps = ps.filter(p => selectedPlaceType.includes((p.place_type || 'öffentlich') as PlaceType))
       if (hasQuery) {
         ps = ps.filter(p => {
           const sportMatch = sportTokens.length === 0 || sportTokens.some(s => p.sports?.includes(s))
@@ -188,9 +164,8 @@ export default function SearchSheet({
       }
     }
 
-    if (showEvents) {
+    {
       let es = events
-      if (selectedSports.length > 0) es = es.filter(e => selectedSports.some(s => e.sports?.includes(s as SportType)))
       if (hasQuery) {
         es = es.filter(e => {
           const sportMatch = sportTokens.length === 0 || sportTokens.some(s => e.sports?.includes(s as SportType))
@@ -221,19 +196,10 @@ export default function SearchSheet({
     }
 
     return merged.sort((a, b) => b.score - a.score).slice(0, MAX_RESULTS)
-  }, [places, events, geoResults, selectedSports, selectedPlaceType, debouncedQuery, userLocation, showOrte, showEvents])
+  }, [places, events, geoResults, debouncedQuery, userLocation, favoriteIds])
 
-  const toggleContentType = (type: 'orte' | 'events') => {
-    const next = effectiveContentTypes.includes(type)
-      ? effectiveContentTypes.filter(t => t !== type)
-      : [...effectiveContentTypes, type]
-    if (onContentTypesChange) onContentTypesChange(next)
-    else setLocalContentTypes(next)
-  }
-
-  const showEventsSkeleton = showEvents && eventsLoading && events.length === 0
-  const showEmptyState = results.length === 0 && !showEventsSkeleton && open
-    && (debouncedQuery.trim().length > 0 || hasActiveFilter)
+  const showEventsSkeleton = eventsLoading && events.length === 0
+  const showEmptyState = results.length === 0 && !showEventsSkeleton && open && debouncedQuery.trim().length > 0
 
   return (
     <>

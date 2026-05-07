@@ -3,7 +3,8 @@
 import { useState, useEffect, useLayoutEffect, useMemo } from 'react'
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
-import { Map } from 'lucide-react'
+import { X } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { PlaceMarker, EventForSearch, SportType } from '@/lib/supabase/types'
 import { PlaceType } from '@/lib/utils/sport-utils'
 import { calculateDistance } from '@/lib/utils/distance'
@@ -41,8 +42,8 @@ export default function ListViewSheet({
   selectedPlaceType,
   onFullOpenChange,
 }: ListViewSheetProps) {
-  const [miniSnap, setMiniSnap] = useState('80px')
-  const [activeSnapPoint, setActiveSnapPoint] = useState<string | number>('80px')
+  const [miniSnap, setMiniSnap] = useState('124px')
+  const [activeSnapPoint, setActiveSnapPoint] = useState<string | number>('124px')
   const [drawerOpen, setDrawerOpen] = useState(false)
   const isFullOpen = activeSnapPoint === FULL_SNAP
 
@@ -52,7 +53,7 @@ export default function ListViewSheet({
     document.body.appendChild(probe)
     const safeArea = probe.offsetHeight
     document.body.removeChild(probe)
-    const snap = `${80 + safeArea}px`
+    const snap = `${124 + safeArea}px`
     setMiniSnap(snap)
     setActiveSnapPoint(snap)
   }, [])
@@ -126,17 +127,26 @@ export default function ListViewSheet({
 
         {/* Mini header — always visible */}
         <div
-          className="px-4 pb-3 shrink-0 flex items-center justify-center cursor-pointer"
+          className={cn('px-4 pt-2 pb-3 shrink-0 flex items-center justify-between', !isFullOpen && 'cursor-pointer' && 'pt-0 h-[36px]')}
           onClick={() => !isFullOpen && setActiveSnapPoint(FULL_SNAP)}
         >
           <span className="text-[14px] font-medium text-muted-foreground select-none">
             {countLabel}
           </span>
+          <Button
+            variant="glass-secondary"
+            size="icon"
+            className={cn('rounded-full h-9 w-9 shrink-0', !isFullOpen && 'invisible pointer-events-none')}
+            onClick={(e) => { e.stopPropagation(); setActiveSnapPoint(miniSnap) }}
+            aria-label="Schließen"
+          >
+            <X className="h-4 w-4" />
+          </Button>
         </div>
 
         {/* Results list — rendered but hidden at mini snap so snap points work */}
         <div className={cn('relative flex-1 min-h-0', !isFullOpen && 'invisible')}>
-          <div className="h-full overflow-y-auto" style={{ paddingBottom: isFullOpen ? 'calc(60px + env(safe-area-inset-bottom, 0px))' : undefined }}>
+          <div className="h-full overflow-y-auto" style={{ paddingBottom: isFullOpen ? 'calc(80px + env(safe-area-inset-bottom, 0px))' : undefined }}>
             {visibleItems.map((item) =>
               item.type === 'place' ? (
                 <PlaceRow
@@ -167,17 +177,6 @@ export default function ListViewSheet({
             )}
           </div>
 
-          {/* "Karte" button — floats over the list */}
-          {isFullOpen && (
-            <button
-              onClick={() => setActiveSnapPoint(miniSnap)}
-              className="absolute left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_2px_16px_rgba(0,0,0,0.14)] dark:shadow-[0_2px_16px_rgba(0,0,0,0.30)] text-[14px] font-semibold active:scale-95 transition-transform"
-              style={{ bottom: 'calc(32px + env(safe-area-inset-bottom, 0px))' }}
-            >
-              <Map className="h-4 w-4" />
-              Karte
-            </button>
-          )}
         </div>
       </DrawerContent>
     </Drawer>
