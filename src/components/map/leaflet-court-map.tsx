@@ -69,6 +69,7 @@ interface LeafletCourtMapProps {
   // External filter control — when provided, filter sheet is fully controlled from outside
   externalFilterOpen?: boolean
   onExternalFilterOpenChange?: (open: boolean) => void
+  onBoundsChange?: (bounds: L.LatLngBoundsLiteral, center: { lat: number; lng: number }) => void
 }
 
 // Attach a wheel listener that stops both propagation and default scroll/zoom.
@@ -143,6 +144,28 @@ function FitBoundsHandler({ area }: { area: Area }) {
     window.history.replaceState(null, '', url.toString())
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  return null
+}
+
+
+function BoundsTracker({ onBoundsChange }: { onBoundsChange: (bounds: L.LatLngBoundsLiteral, center: { lat: number; lng: number }) => void }) {
+  const map = useMap()
+  const callbackRef = useRef(onBoundsChange)
+  useEffect(() => { callbackRef.current = onBoundsChange }, [onBoundsChange])
+
+  const emit = useCallback(() => {
+    const b = map.getBounds()
+    const c = map.getCenter()
+    callbackRef.current(
+      [[b.getSouth(), b.getWest()], [b.getNorth(), b.getEast()]],
+      { lat: c.lat, lng: c.lng }
+    )
+  }, [map])
+
+  useMapEvents({ moveend: emit, zoomend: emit })
+
+  useEffect(() => { emit() }, [emit])
+
   return null
 }
 
@@ -367,7 +390,7 @@ function MapControlPill({
   return createPortal(
     <div
       className="absolute z-[1000]"
-      style={{ top: embedded ? '8px' : 'calc(16px + env(safe-area-inset-top, 0px))', right: embedded ? '8px' : '16px' }}
+      style={{ top: embedded ? '8px' : 'calc(72px + env(safe-area-inset-top, 0px))', right: embedded ? '8px' : '16px' }}
       onMouseDown={e => e.stopPropagation()}
       onTouchStart={e => e.stopPropagation()}
       onWheel={e => e.stopPropagation()}
@@ -526,6 +549,7 @@ export default function LeafletCourtMap({
   initialArea,
   externalFilterOpen,
   onExternalFilterOpenChange,
+  onBoundsChange,
 }: LeafletCourtMapProps) {
   const { user, profile } = useAuth()
 
@@ -804,8 +828,11 @@ export default function LeafletCourtMap({
             />
           )}
           
+          {/* Bounds tracker for list view */}
+          {onBoundsChange && <BoundsTracker onBoundsChange={onBoundsChange} />}
+
           {/* Handle map clicks */}
-          <MapClickHandler 
+          <MapClickHandler
             onMapClick={onMapClick} 
             allowAddCourt={allowAddCourt} 
             onCloseFilterSheet={handleExplicitFilterClose}

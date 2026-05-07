@@ -11,12 +11,16 @@ import { SportType, PlaceMarker, EventForSearch, Area } from '@/lib/supabase/typ
 import { PlaceType } from '@/lib/utils/sport-utils'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Plus, Menu, MapPin, Calendar } from 'lucide-react'
+import { Plus, MapPin, Calendar } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import InstallBanner from '@/components/install/install-banner'
 import MenuSheet from '@/components/layout/menu-sheet'
 import SearchSheet from '@/components/map/search-sheet'
+import TopSearchBar from '@/components/map/top-search-bar'
+import ListViewSheet from '@/components/map/list-view-sheet'
+import FilterSheet from '@/components/map/filter-sheet'
 import type { LeafletCourtMapHandle } from '@/components/map/leaflet-court-map'
+import type L from 'leaflet'
 
 const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map'), {
   ssr: false,
@@ -53,9 +57,12 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [addOpen, setAddOpen] = useState(false)
   const [filterSheetOpen, setFilterSheetOpen] = useState(false)
-  const [isInnerFilterOpen, setIsInnerFilterOpen] = useState(false)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [selectedContentTypes, setSelectedContentTypes] = useState<('orte' | 'events')[]>([])
+  const [mapBounds, setMapBounds] = useState<L.LatLngBoundsLiteral | null>(null)
+  const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number } | null>(null)
+  const [listViewFullOpen, setListViewFullOpen] = useState(false)
+  const [filterDirectOpen, setFilterDirectOpen] = useState(false)
 
   const mapHandleRef = useRef<LeafletCourtMapHandle | null>(null)
   const handleMapReady = useCallback((handle: LeafletCourtMapHandle) => {
@@ -155,6 +162,7 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
           selectedContentTypes={selectedContentTypes}
           onUserLocationChange={setUserLocation}
           onReady={handleMapReady}
+          onBoundsChange={(bounds, center) => { setMapBounds(bounds); setMapCenter(center) }}
         />
         <InstallBanner />
         {isLoadingMore && (
@@ -167,15 +175,14 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
         )}
       </div>
 
-      {/* Profile FAB — top left */}
-      <button
-        onClick={() => setMenuOpen(true)}
-        className="fixed z-[1000] flex h-11 w-11 items-center justify-center rounded-full glass-surface border border-black/[.06] dark:border-white/[.08] shadow-[0_2px_16px_rgba(0,0,0,0.14)] dark:shadow-[0_2px_16px_rgba(0,0,0,0.30)] active:scale-95 transition-transform"
-        style={{ top: 'calc(16px + env(safe-area-inset-top, 0px))', left: '16px' }}
-        aria-label="Profil"
-      >
-        <Menu className="h-5 w-5 text-foreground" />
-      </button>
+      {/* Top search bar — always visible */}
+      <TopSearchBar
+        onMenuOpen={() => setMenuOpen(true)}
+        onSearchOpen={() => setFilterSheetOpen(true)}
+        onFilterOpen={() => setFilterDirectOpen(true)}
+        hasActiveFilter={selectedSports.length > 0 || selectedPlaceType.length > 0 || selectedContentTypes.length > 0}
+        activeFilterCount={selectedSports.length + selectedPlaceType.length + selectedContentTypes.length}
+      />
 
       {/* Add popup backdrop — closes popup on outside tap */}
       {addOpen && (
@@ -231,10 +238,10 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
         </div>
       </button>
 
-      <MenuSheet open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <MenuSheet open={menuOpen} onClose={() => setMenuOpen(false)} onOpenFavorites={() => mapHandleRef.current?.openFavorites()} />
 
       {/* Tap-outside overlay: closes search sheet when full-open */}
-      {filterSheetOpen && !isInnerFilterOpen && (
+      {filterSheetOpen && !filterDirectOpen && (
         <div className="fixed inset-0 z-[1099]" onClick={() => setFilterSheetOpen(false)} />
       )}
 
@@ -242,7 +249,7 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
         open={filterSheetOpen}
         onOpen={() => setFilterSheetOpen(true)}
         onClose={() => setFilterSheetOpen(false)}
-        onInnerFilterChange={setIsInnerFilterOpen}
+        onFilterOpen={() => setFilterDirectOpen(true)}
         selectedSports={selectedSports}
         onSportsChange={setSelectedSports}
         selectedPlaceType={selectedPlaceType}
@@ -261,6 +268,42 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
         onOpenFavorites={() => mapHandleRef.current?.openFavorites()}
         selectedContentTypes={selectedContentTypes}
         onContentTypesChange={setSelectedContentTypes}
+      />
+
+      <FilterSheet
+        open={filterDirectOpen}
+        onClose={() => setFilterDirectOpen(false)}
+        selectedSports={selectedSports}
+        onSportsChange={setSelectedSports}
+        selectedPlaceType={selectedPlaceType}
+        onPlaceTypeChange={setSelectedPlaceType}
+        selectedContentTypes={selectedContentTypes}
+        onContentTypesChange={setSelectedContentTypes}
+        onReset={() => { setSelectedSports([]); setSelectedPlaceType([]); setSelectedContentTypes([]) }}
+      />
+
+      <ListViewSheet
+        places={allMarkers}
+        events={events}
+        mapBounds={mapBounds}
+        mapCenter={mapCenter}
+        userLocation={userLocation}
+        selectedSports={selectedSports}
+        selectedPlaceType={selectedPlaceType}
+        onPlaceSelect={(court) => {
+          router.replace(`/?place=${court.id}`, { scroll: false })
+          mapHandleRef.current?.selectCourt(court)
+        }}
+        onEventSelect={(event) => {
+          const markerId = event.place_id ?? event.id
+          const marker = allMarkers.find(m => m.id === markerId)
+          if (marker) {
+            router.replace(`/?place=${marker.id}`, { scroll: false })
+            mapHandleRef.current?.selectCourt(marker)
+          }
+        }}
+        selectedContentTypes={selectedContentTypes}
+        onFullOpenChange={setListViewFullOpen}
       />
     </>
   )

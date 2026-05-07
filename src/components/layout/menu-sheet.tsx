@@ -9,13 +9,14 @@ import { useInstallPrompt } from '@/hooks/use-install-prompt'
 import {
   User, Shield, MapPin, Calendar, BookOpen, HelpCircle, Sparkles,
   Handshake, MessageSquare, LogIn, LogOut, Edit2, Bell,
-  Download, ChevronRight, Rss, Sun, Moon, X,
+  Download, ChevronRight, Rss, Sun, Moon, X, Heart,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 interface MenuSheetProps {
   open: boolean
   onClose: () => void
+  onOpenFavorites?: () => void
 }
 
 function Section({ label, children }: { label?: string; children: ReactNode }) {
@@ -60,7 +61,7 @@ function Row({
   return <button onClick={onClick} className="w-full text-left">{inner}</button>
 }
 
-export default function MenuSheet({ open, onClose }: MenuSheetProps) {
+export default function MenuSheet({ open, onClose, onOpenFavorites }: MenuSheetProps) {
   const { user, profile, isAdmin, signOut } = useAuth()
   const { canInstall, isIOS, isStandalone, promptInstall } = useInstallPrompt()
   const isGuest = !user
@@ -193,6 +194,9 @@ export default function MenuSheet({ open, onClose }: MenuSheetProps) {
           <Section label="Entdecken">
             <Row icon={<Calendar className="h-[17px] w-[17px]" />} label="Events" href="/events" onClick={onClose} />
             <Row icon={<MapPin className="h-[17px] w-[17px]" />} label="Orte" href="/orte" onClick={onClose} />
+            {onOpenFavorites && (
+              <Row icon={<Heart className="h-[17px] w-[17px]" />} label="Gespeicherte Orte" onClick={() => { onOpenFavorites(); onClose() }} />
+            )}
             <Row icon={<Rss className="h-[17px] w-[17px]" />} label="Blog" href="/blog" onClick={onClose} />
           </Section>
 
