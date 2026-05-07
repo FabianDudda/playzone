@@ -52,7 +52,7 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
   const [selectedPlaceType, setSelectedPlaceType] = useState<PlaceType[]>([])
   const [menuOpen, setMenuOpen] = useState(false)
   const [addOpen, setAddOpen] = useState(false)
-  const [filterSheetOpen, setFilterSheetOpen] = useState(false)
+  const [searchSheetOpen, setSearchSheetOpen] = useState(false)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [selectedContentTypes, setSelectedContentTypes] = useState<('orte' | 'events')[]>([])
   const [mapBounds, setMapBounds] = useState<L.LatLngBoundsLiteral | null>(null)
@@ -77,7 +77,7 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
   useEffect(() => {
     const raf = requestAnimationFrame(() => { document.body.style.pointerEvents = 'auto' })
     return () => cancelAnimationFrame(raf)
-  }, [filterSheetOpen])
+  }, [searchSheetOpen])
 
   const handleAddPlace = () => {
     setAddOpen(false)
@@ -153,8 +153,8 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
           initialArea={initialArea ?? undefined}
           trackPosition={true}
           isLoading={isInitialLoading}
-          externalFilterOpen={filterSheetOpen}
-          onExternalFilterOpenChange={setFilterSheetOpen}
+          externalFilterOpen={searchSheetOpen}
+          onExternalFilterOpenChange={setSearchSheetOpen}
           selectedContentTypes={selectedContentTypes}
           onUserLocationChange={setUserLocation}
           onReady={handleMapReady}
@@ -173,7 +173,7 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
 
       <BottomNavBar
         onMenuOpen={() => setMenuOpen(true)}
-        onSearchOpen={() => setFilterSheetOpen(true)}
+        onSearchOpen={() => setSearchSheetOpen(true)}
         onFavoritesOpen={() => mapHandleRef.current?.openFavorites()}
         onAddOpen={() => setAddOpen(v => !v)}
         addOpen={addOpen}
@@ -239,14 +239,14 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
       <MenuSheet open={menuOpen} onClose={() => setMenuOpen(false)} onOpenFavorites={() => mapHandleRef.current?.openFavorites()} />
 
       {/* Tap-outside overlay: closes search sheet when full-open */}
-      {filterSheetOpen && !filterDirectOpen && (
-        <div className="fixed inset-0 z-[1099]" onClick={() => setFilterSheetOpen(false)} />
+      {searchSheetOpen && !filterDirectOpen && (
+        <div className="fixed inset-0 z-[1099]" onClick={() => setSearchSheetOpen(false)} />
       )}
 
       <SearchSheet
-        open={filterSheetOpen}
-        onOpen={() => setFilterSheetOpen(true)}
-        onClose={() => setFilterSheetOpen(false)}
+        open={searchSheetOpen}
+        onOpen={() => setSearchSheetOpen(true)}
+        onClose={() => setSearchSheetOpen(false)}
         places={allMarkers}
         events={events}
         eventsLoading={eventsLoading}
@@ -295,6 +295,7 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
         }}
         selectedContentTypes={selectedContentTypes}
         onFullOpenChange={setListViewFullOpen}
+        snapToMini={searchSheetOpen && listViewFullOpen}
       />
     </>
   )

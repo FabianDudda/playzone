@@ -84,8 +84,8 @@
 
 .map-control-bottom-left-stack {
   position: absolute;
-  /* Clears search bar top edge (~68px) */
-  bottom: calc(var(--map-control-margin) + 4.5rem);
+  /* Clears minimized list view sheet (124px) + safe area */
+  bottom: calc(132px + env(safe-area-inset-bottom, 0px));
   left: var(--map-control-margin);
   z-index: var(--map-control-z-index);
   display: flex;
@@ -220,8 +220,8 @@
 /* Attribution pinned above the mini search bar */
 .map-attribution-corner {
   position: fixed;
-  bottom: calc(96px + env(safe-area-inset-bottom, 0px));
-  left: 16px;
+  bottom: calc(132px + env(safe-area-inset-bottom, 0px));
+  left: 12px;
   z-index: 500;
   margin: 0 !important;
 }

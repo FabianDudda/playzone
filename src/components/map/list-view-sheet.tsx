@@ -27,6 +27,7 @@ interface ListViewSheetProps {
   selectedSports: SportType[]
   selectedPlaceType: PlaceType[]
   onFullOpenChange?: (open: boolean) => void
+  snapToMini?: boolean
 }
 
 export default function ListViewSheet({
@@ -41,6 +42,7 @@ export default function ListViewSheet({
   selectedSports,
   selectedPlaceType,
   onFullOpenChange,
+  snapToMini,
 }: ListViewSheetProps) {
   const [miniSnap, setMiniSnap] = useState('124px')
   const [activeSnapPoint, setActiveSnapPoint] = useState<string | number>('124px')
@@ -61,6 +63,8 @@ export default function ListViewSheet({
   useEffect(() => { setDrawerOpen(true) }, [])
 
   useEffect(() => { onFullOpenChange?.(isFullOpen) }, [isFullOpen, onFullOpenChange])
+
+  useEffect(() => { if (snapToMini) setActiveSnapPoint(miniSnap) }, [snapToMini, miniSnap])
 
   const showOrte = selectedContentTypes.length === 0 || selectedContentTypes.includes('orte')
   const showEvents = selectedContentTypes.length === 0 || selectedContentTypes.includes('events')

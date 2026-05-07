@@ -390,7 +390,7 @@ function MapControlPill({
   return createPortal(
     <div
       className="absolute z-[1000]"
-      style={{ bottom: embedded ? '8px' : 'calc(136px + env(safe-area-inset-top, 0px))', right: embedded ? '8px' : '12px' }}
+      style={{ top: embedded ? '8px' : '12px', right: embedded ? '8px' : '12px' }}
       onMouseDown={e => e.stopPropagation()}
       onTouchStart={e => e.stopPropagation()}
       onWheel={e => e.stopPropagation()}

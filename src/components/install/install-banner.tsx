@@ -23,7 +23,7 @@ export default function InstallBanner() {
   if (isStandalone || dismissed || (!canInstall && !isIOS)) return null
 
   return (
-    <div className="absolute bottom-20 left-1/2 z-[1000] w-[calc(100%-2rem)] max-w-sm -translate-x-1/2">
+    <div className="absolute left-1/2 z-[1000] w-[calc(100%-2rem)] max-w-sm -translate-x-1/2" style={{ bottom: 'calc(132px + env(safe-area-inset-bottom, 0px))' }}>
       <div className="flex items-center gap-3 rounded-xl border bg-background/95 px-4 py-3 shadow-lg backdrop-blur-sm">
         <Download className="h-4 w-4 shrink-0 text-muted-foreground" />
         {canInstall ? (

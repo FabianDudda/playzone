@@ -8,16 +8,21 @@
 
 ########################################
 
+
 ## CHANGELOG ##
 
 - big redesign
-- add search functionality
-- add event functionality
+- add search 
+- add list view
+- add event 
 - use native time picker for opening hours in add-place
 
 ## TO DO ##
 
+
+
 - listviewsheet weird behaviour (on android). if listviewsheet is open and we open and close search sheet, the listviewsheet is either gone, half open or to big in heigth
+
 
 - remove glass design
 
