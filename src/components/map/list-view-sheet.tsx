@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useLayoutEffect, useMemo } from 'react'
+import { useState, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { X } from 'lucide-react'
@@ -64,7 +64,13 @@ export default function ListViewSheet({
 
   useEffect(() => { onFullOpenChange?.(isFullOpen) }, [isFullOpen, onFullOpenChange])
 
-  useEffect(() => { if (snapToMini) setActiveSnapPoint(miniSnap) }, [snapToMini, miniSnap])
+  const suppressNextClose = useRef(false)
+  useEffect(() => {
+    if (snapToMini) {
+      suppressNextClose.current = true
+      setActiveSnapPoint(miniSnap)
+    }
+  }, [snapToMini, miniSnap])
 
   const showOrte = selectedContentTypes.length === 0 || selectedContentTypes.includes('orte')
   const showEvents = selectedContentTypes.length === 0 || selectedContentTypes.includes('events')
@@ -112,7 +118,10 @@ export default function ListViewSheet({
     <Drawer
       open={drawerOpen}
       onOpenChange={(o) => {
-        if (!o) setActiveSnapPoint(miniSnap)
+        if (!o) {
+          if (suppressNextClose.current) { suppressNextClose.current = false; return }
+          setActiveSnapPoint(miniSnap)
+        }
       }}
       modal={false}
       shouldScaleBackground={false}

@@ -19,10 +19,9 @@
 
 ## TO DO ##
 
-
-
-- listviewsheet weird behaviour (on android). if listviewsheet is open and we open and close search sheet, the listviewsheet is either gone, half open or to big in heigth
-
+- when user set filter to "basketball" and search for "soccer", he get soccer places because search result didnt get affected by filter settings.
+when user clicks on the soccer place, the map zooms to the speicfic location and showing the bottom sheet, but not the pin, because the pins on the maps are affected by the filter.
+whats your solution?
 
 - remove glass design
 
