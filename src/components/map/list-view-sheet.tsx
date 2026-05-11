@@ -125,6 +125,7 @@ export default function ListViewSheet({
       }}
       modal={false}
       shouldScaleBackground={false}
+      repositionInputs={false}
       snapPoints={[miniSnap, FULL_SNAP]}
       activeSnapPoint={activeSnapPoint}
       setActiveSnapPoint={(snap) => {
