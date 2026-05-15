@@ -120,7 +120,7 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
                       type="date"
                       value={slot.date}
                       onChange={e => updateDate(i, 'date', e.target.value)}
-                      className="pl-9"
+                      className="pl-9 min-w-0"
                     />
                   </div>
                 </div>
@@ -152,7 +152,7 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
                       type="time"
                       value={slot.end_time ?? ''}
                       onChange={e => updateDate(i, 'end_time', e.target.value || null)}
-                      className="flex-1"
+                      className="w-full"
                     />
                     {slot.end_time && (
                       <button type="button" onClick={() => updateDate(i, 'end_time', null)} className="text-muted-foreground hover:text-foreground transition-colors">
