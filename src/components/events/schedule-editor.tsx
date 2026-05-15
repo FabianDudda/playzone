@@ -1,6 +1,6 @@
 'use client'
 
-import { Plus, Trash2, Calendar, X } from 'lucide-react'
+import { Plus, Trash2, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
@@ -114,15 +114,12 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
               <div className="flex gap-2">
                 <div className="flex-1 min-w-0">
                   {i === 0 && <Label className="text-xs mb-1 block">Datum</Label>}
-                  <div className="relative w-full">
-                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-                    <Input
-                      type="date"
-                      value={slot.date}
-                      onChange={e => updateDate(i, 'date', e.target.value)}
-                      className="pl-9 min-w-0"
-                    />
-                  </div>
+                  <Input
+                    type="date"
+                    value={slot.date}
+                    onChange={e => updateDate(i, 'date', e.target.value)}
+                    className="min-w-0"
+                  />
                 </div>
                 {dates.length > 1 && (
                   <Button type="button" variant="ghost" size="icon" className="self-end" onClick={() => removeDate(i)}>
@@ -147,7 +144,7 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
                       Endzeit <span className="text-muted-foreground font-normal">(optional)</span>
                     </Label>
                   )}
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 w-full">
                     <Input
                       type="time"
                       value={slot.end_time ?? ''}
