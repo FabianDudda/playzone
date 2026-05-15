@@ -9,6 +9,10 @@
 ########################################
 
 
+- only allow logged in user to go to /events/new 
+
+
+
 ## CHANGELOG ##
 
 - add search 

@@ -9,16 +9,19 @@ input[type="date"]::-webkit-inner-spin-button,
 input[type="time"]::-webkit-inner-spin-button {
   display: none;
 }
-/* Desktop: keep indicator present but invisible so clicking opens the picker */
+/* Desktop: expand date indicator to full input so clicking anywhere opens the picker */
 @media (hover: hover) and (pointer: fine) {
-  input[type="date"]::-webkit-calendar-picker-indicator,
-  input[type="time"]::-webkit-calendar-picker-indicator {
+  input[type="date"]::-webkit-calendar-picker-indicator {
     opacity: 0;
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     cursor: pointer;
+  }
+  /* Time: just hide the indicator; Chrome opens the picker on any click natively */
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    opacity: 0;
   }
 }
 /* Mobile: picker opens on any tap, indicator not needed */

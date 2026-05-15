@@ -566,7 +566,12 @@ export default function LeafletCourtMap({
   const [selectedCourt, setSelectedCourt] = useState<PlaceMarker | null>(null)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [flyToTarget, setFlyToTarget] = useState<{ lat: number; lng: number; zoom?: number } | null>(null)
-  const [currentLayerId, setCurrentLayerId] = useState<string>(() => getSavedLayerPreference())
+  const [currentLayerId, setCurrentLayerId] = useState<string>(() => {
+    const saved = typeof window !== 'undefined' ? localStorage.getItem('preferred-map-layer') : null
+    if (saved) return saved
+    const isDark = typeof document !== 'undefined' && document.documentElement.classList.contains('dark')
+    return isDark ? 'dark' : DEFAULT_LAYER_ID
+  })
   const [themeKey, setThemeKey] = useState<'light' | 'dark'>(() =>
     typeof document !== 'undefined' && document.documentElement.classList.contains('dark') ? 'dark' : 'light'
   )

@@ -1,6 +1,6 @@
 'use client'
 
-import { Plus, Trash2, Calendar, Clock, X } from 'lucide-react'
+import { Plus, Trash2, Calendar, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
@@ -105,63 +105,63 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
         ))}
       </div>
 
-      {/* Single / multiple dates */}
+      {/* Single / multiple dates — two-row layout per slot */}
       {mode === 'dates' && (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {dates.map((slot, i) => (
-            <div key={i} className="flex gap-2 items-end">
-              <div className="flex-1 min-w-0 max-w-[132px]">
-                {i === 0 && <Label className="text-xs mb-1 block">Datum</Label>}
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-                  <Input
-                    type="date"
-                    value={slot.date}
-                    onChange={e => updateDate(i, 'date', e.target.value)}
-                    className="pl-9"
-                  />
+            <div key={i} className="space-y-2">
+              {/* Row 1: date field + trash */}
+              <div className="flex gap-2">
+                <div className="flex-1 min-w-0">
+                  {i === 0 && <Label className="text-xs mb-1 block">Datum</Label>}
+                  <div className="relative">
+                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                    <Input
+                      type="date"
+                      value={slot.date}
+                      onChange={e => updateDate(i, 'date', e.target.value)}
+                      className="pl-9"
+                    />
+                  </div>
                 </div>
+                {dates.length > 1 && (
+                  <Button type="button" variant="ghost" size="icon" className="self-end" onClick={() => removeDate(i)}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
-              <div>
-                {i === 0 && <Label className="text-xs mb-1 block">Startzeit</Label>}
-                <div className="relative">
-                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+              {/* Row 2: start + end time */}
+              <div className="flex gap-2 items-center">
+                <div>
+                  {i === 0 && <Label className="text-xs mb-1 block">Startzeit</Label>}
                   <Input
                     type="time"
                     value={slot.start_time}
                     onChange={e => updateDate(i, 'start_time', e.target.value)}
-                    className="w-[90px] pl-9"
+                    className="w-[90px]"
                   />
                 </div>
-              </div>
-              <div>
-                {i === 0 && (
-                  <Label className="text-xs mb-1 block">
-                    Endzeit <span className="text-muted-foreground font-normal">(optional)</span>
-                  </Label>
-                )}
-                <div className="flex items-center gap-1">
-                  <div className="relative">
-                    <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                <div>
+                  {i === 0 && (
+                    <Label className="text-xs mb-1 block">
+                      Endzeit <span className="text-muted-foreground font-normal">(optional)</span>
+                    </Label>
+                  )}
+                  <div className="flex items-center gap-1">
                     <Input
                       type="time"
                       value={slot.end_time ?? ''}
                       onChange={e => updateDate(i, 'end_time', e.target.value || null)}
-                      className="w-[90px] pl-9"
+                      className="w-[90px]"
                     />
+                    {slot.end_time && (
+                      <button type="button" onClick={() => updateDate(i, 'end_time', null)} className="text-muted-foreground hover:text-foreground transition-colors">
+                        <X className="h-4 w-4" />
+                      </button>
+                    )}
                   </div>
-                  {slot.end_time && (
-                    <button type="button" onClick={() => updateDate(i, 'end_time', null)} className="text-muted-foreground hover:text-foreground transition-colors">
-                      <X className="h-4 w-4" />
-                    </button>
-                  )}
                 </div>
               </div>
-              {dates.length > 1 && (
-                <Button type="button" variant="ghost" size="icon" onClick={() => removeDate(i)}>
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              )}
             </div>
           ))}
           <Button type="button" variant="outline" size="sm" onClick={addDate} className="w-full">
@@ -200,7 +200,7 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
           {slots.length > 0 && (
             <div className="flex gap-2 items-center">
               <span className="w-7 flex-shrink-0" />
-              <Label className="text-xs w-24 block">Startzeit</Label>
+              <Label className="text-xs w-[90px] block">Startzeit</Label>
               <Label className="text-xs block">
                 Endzeit <span className="text-muted-foreground font-normal">(optional)</span>
               </Label>
@@ -211,25 +211,19 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
             return (
               <div key={key} className="flex gap-2 items-center">
                 <span className="w-7 text-sm font-medium flex-shrink-0">{label}</span>
-                <div className="relative">
-                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                <Input
+                  type="time"
+                  value={slot.start_time}
+                  onChange={e => updateDayTime(key, 'start_time', e.target.value)}
+                  className="w-[90px]"
+                />
+                <div className="flex items-center gap-1">
                   <Input
                     type="time"
-                    value={slot.start_time}
-                    onChange={e => updateDayTime(key, 'start_time', e.target.value)}
-                    className="w-24 pl-9"
+                    value={slot.end_time ?? ''}
+                    onChange={e => updateDayTime(key, 'end_time', e.target.value || null)}
+                    className="w-[90px]"
                   />
-                </div>
-                <div className="flex items-center gap-1">
-                  <div className="relative">
-                    <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-                    <Input
-                      type="time"
-                      value={slot.end_time ?? ''}
-                      onChange={e => updateDayTime(key, 'end_time', e.target.value || null)}
-                      className="w-24 pl-9"
-                    />
-                  </div>
                   {slot.end_time && (
                     <button type="button" onClick={() => updateDayTime(key, 'end_time', null)} className="text-muted-foreground hover:text-foreground transition-colors">
                       <X className="h-4 w-4" />
