@@ -18,6 +18,7 @@
 - add search 
 - add list view
 - add event 
+- add light/dark mode
 - use native time picker for opening hours in add-place
 
 ## TO DO ##
