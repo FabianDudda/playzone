@@ -114,7 +114,7 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
               <div className="flex gap-2">
                 <div className="flex-1 min-w-0">
                   {i === 0 && <Label className="text-xs mb-1 block">Datum</Label>}
-                  <div className="relative">
+                  <div className="relative w-full">
                     <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                     <Input
                       type="date"
@@ -132,16 +132,16 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
               </div>
               {/* Row 2: start + end time */}
               <div className="flex gap-2 items-center">
-                <div>
+                <div className="flex-1 min-w-0">
                   {i === 0 && <Label className="text-xs mb-1 block">Startzeit</Label>}
                   <Input
                     type="time"
                     value={slot.start_time}
                     onChange={e => updateDate(i, 'start_time', e.target.value)}
-                    className="w-[90px]"
+                    className="w-full"
                   />
                 </div>
-                <div>
+                <div className="flex-1 min-w-0">
                   {i === 0 && (
                     <Label className="text-xs mb-1 block">
                       Endzeit <span className="text-muted-foreground font-normal">(optional)</span>
@@ -152,7 +152,7 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
                       type="time"
                       value={slot.end_time ?? ''}
                       onChange={e => updateDate(i, 'end_time', e.target.value || null)}
-                      className="w-[90px]"
+                      className="flex-1"
                     />
                     {slot.end_time && (
                       <button type="button" onClick={() => updateDate(i, 'end_time', null)} className="text-muted-foreground hover:text-foreground transition-colors">
@@ -200,8 +200,8 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
           {slots.length > 0 && (
             <div className="flex gap-2 items-center">
               <span className="w-7 flex-shrink-0" />
-              <Label className="text-xs w-[90px] block">Startzeit</Label>
-              <Label className="text-xs block">
+              <Label className="text-xs flex-1 block">Startzeit</Label>
+              <Label className="text-xs flex-1 block">
                 Endzeit <span className="text-muted-foreground font-normal">(optional)</span>
               </Label>
             </div>
@@ -215,14 +215,14 @@ export default function ScheduleEditor({ value, onChange }: ScheduleEditorProps)
                   type="time"
                   value={slot.start_time}
                   onChange={e => updateDayTime(key, 'start_time', e.target.value)}
-                  className="w-[90px]"
+                  className="flex-1"
                 />
-                <div className="flex items-center gap-1">
+                <div className="flex flex-1 items-center gap-1">
                   <Input
                     type="time"
                     value={slot.end_time ?? ''}
                     onChange={e => updateDayTime(key, 'end_time', e.target.value || null)}
-                    className="w-[90px]"
+                    className="flex-1"
                   />
                   {slot.end_time && (
                     <button type="button" onClick={() => updateDayTime(key, 'end_time', null)} className="text-muted-foreground hover:text-foreground transition-colors">

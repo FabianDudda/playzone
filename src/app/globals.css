@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Force date input to match shadcn h-11 — iOS Safari overrides it otherwise */
+input[type="date"] {
+  height: 2.75rem;
+}
+
 /* Hide native date/time picker chrome */
 input[type="date"]::-webkit-clear-button,
 input[type="time"]::-webkit-clear-button,
