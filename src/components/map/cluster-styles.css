@@ -42,6 +42,12 @@
   backdrop-filter: blur(1px);
 }
 
+.dark .cluster-icon {
+  background: #374151;
+  color: #f3f4f6;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
 .cluster-small {
   width: 30px;
   height: 30px;

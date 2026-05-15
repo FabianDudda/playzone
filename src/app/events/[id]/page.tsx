@@ -132,14 +132,14 @@ function EventContent({ params }: EventPageProps) {
           {isCreator && (
             <>
               <Button
-                variant="glass-secondary"
+                variant="secondary"
                 size="icon"
                 className="rounded-full h-9 w-9 text-destructive hover:text-destructive"
                 onClick={() => setShowDeleteDialog(true)}
               >
                 <Trash2 className="h-[18px] w-[18px]" />
               </Button>
-              <Button variant="glass-secondary" size="icon" className="rounded-full h-9 w-9" asChild>
+              <Button variant="secondary" size="icon" className="rounded-full h-9 w-9" asChild>
                 <Link href={`/events/${event.id}/edit`}>
                   <Pencil className="h-[18px] w-[18px]" />
                 </Link>

@@ -17,7 +17,7 @@ export default function AboutPage() {
         <Card>
           <CardContent className="p-4 text-sm space-y-3">
             <p className="text-muted-foreground leading-relaxed">
-              OpenSportMap ist eine Community-App, mit der du Sportplätze in deiner Nähe entdecken, speichern und selbst hinzufügen kannst.
+              OpenSportMap ist eine interaktive Karte mit der du Sportplätze in deiner Nähe entdecken, speichern und selbst hinzufügen kannst.
             </p>
             <p className="text-muted-foreground leading-relaxed">
               Die Karte zeigt dir Basketballplätze, Fußballfelder, Tischtennisplatten, Skateparks und viele weitere Sportanlagen – alles an einem Ort.
@@ -61,23 +61,7 @@ export default function AboutPage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="p-4 text-sm space-y-2">
-            <h2 className="font-semibold">Open Source & kostenlos</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              OpenSportMap ist kostenlos und wird ohne kommerzielle Absichten betrieben. Daten werden nicht verkauft.
-            </p>
-            <a
-              href="https://github.com/FabianDudda/opensportmap"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <Github className="h-4 w-4" />
-              GitHub Repository
-            </a>
-          </CardContent>
-        </Card>
+  
 
         <div className="text-center">
           <Link href="/faq" className="text-sm text-muted-foreground hover:text-foreground transition-colors underline underline-offset-4">

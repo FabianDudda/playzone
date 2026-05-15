@@ -19,13 +19,14 @@ interface MarkerClusterGroupProps {
   placeIdsWithEvents?: Set<string>
   showOrte?: boolean
   showEvents?: boolean
+  themeKey?: string
 }
 
-function getPlaceIcon(court: PlaceMarker, sports: string[], isSelected: boolean, hasEvents: boolean): L.DivIcon {
+function getPlaceIcon(court: PlaceMarker, sports: string[], isSelected: boolean, hasEvents: boolean, isDark = false): L.DivIcon {
   if (court.is_event_only) {
-    return createEventOnlyIcon(sports, isSelected)
+    return createEventOnlyIcon(sports, isSelected, isDark)
   }
-  return createSportIcon(sports, isSelected, hasEvents)
+  return createSportIcon(sports, isSelected, hasEvents, isDark)
 }
 
 function isMarkerVisible(court: PlaceMarker, selectedSports: SportType[], selectedPlaceType: PlaceType[] | undefined, showOrte = true, showEvents = true): boolean {
@@ -59,7 +60,7 @@ function createClusterIcon(cluster: L.MarkerCluster) {
   })
 }
 
-export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCourt, selectedSports = [], selectedPlaceType = [], placeIdsWithEvents = new Set(), showOrte = true, showEvents = true }: MarkerClusterGroupProps) {
+export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCourt, selectedSports = [], selectedPlaceType = [], placeIdsWithEvents = new Set(), showOrte = true, showEvents = true, themeKey = 'light' }: MarkerClusterGroupProps) {
   const map = useMap()
   const clusterGroupRef = useRef<L.MarkerClusterGroup | null>(null)
   // Stable maps: id → marker / court — rebuilt only when underlying data changes
@@ -71,6 +72,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
   const placeIdsWithEventsRef = useRef(placeIdsWithEvents)
   const showOrteRef = useRef(showOrte)
   const showEventsRef = useRef(showEvents)
+  const themeKeyRef = useRef(themeKey)
   const prevSelectedIdRef = useRef<string | null>(null)
 
   useEffect(() => { onCourtSelectRef.current = onCourtSelect }, [onCourtSelect])
@@ -79,6 +81,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
   useEffect(() => { placeIdsWithEventsRef.current = placeIdsWithEvents }, [placeIdsWithEvents])
   useEffect(() => { showOrteRef.current = showOrte }, [showOrte])
   useEffect(() => { showEventsRef.current = showEvents }, [showEvents])
+  useEffect(() => { themeKeyRef.current = themeKey }, [themeKey])
 
   // Incrementally add new markers when courts array grows — avoids full cluster rebuild on each batch
   useEffect(() => {
@@ -104,7 +107,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
 
       const availableSports = court.sports || []
       const marker = L.marker([court.latitude, court.longitude], {
-        icon: getPlaceIcon(court, availableSports, false, placeIdsWithEventsRef.current.has(court.id)),
+        icon: getPlaceIcon(court, availableSports, false, placeIdsWithEventsRef.current.has(court.id), themeKeyRef.current === 'dark'),
         zIndexOffset: availableSports.length > 1 ? 1000 : availableSports.length === 1 && availableSports[0] === 'tischtennis' ? -1000 : 0,
       } as any)
       ;(marker as any).options.placeData = court
@@ -139,26 +142,28 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
       if (!court) return
 
       const visible = isMarkerVisible(court, selectedSports, selectedPlaceType, showOrte, showEvents)
+      const isSelected = id === selectedCourt?.id
+      const shouldBeVisible = visible || isSelected
       const inGroup = clusterGroup.hasLayer(marker)
 
-      if (visible && !inGroup) {
+      if (shouldBeVisible && !inGroup) {
         toAdd.push(marker)
-      } else if (!visible && inGroup) {
+      } else if (!shouldBeVisible && inGroup) {
         toRemove.push(marker)
       }
 
       // Also update icon for sport highlight
-      if (visible) {
+      if (shouldBeVisible) {
         const availableSports = court.sports || []
         const matchingSports = availableSports.filter(s => selectedSports.includes(s))
         const sportsForIcon = selectedSports.length === 0 ? availableSports : matchingSports.length > 0 ? matchingSports : availableSports
-        marker.setIcon(getPlaceIcon(court, sportsForIcon, false, placeIdsWithEventsRef.current.has(court.id)))
+        marker.setIcon(getPlaceIcon(court, sportsForIcon, isSelected, placeIdsWithEventsRef.current.has(court.id), themeKey === 'dark'))
       }
     })
 
     if (toRemove.length > 0) clusterGroup.removeLayers(toRemove)
     if (toAdd.length > 0) clusterGroup.addLayers(toAdd)
-  }, [selectedSports, selectedPlaceType, showOrte, showEvents])
+  }, [selectedSports, selectedPlaceType, showOrte, showEvents, selectedCourt, themeKey])
 
   // Update active marker icon on selection change
   useEffect(() => {
@@ -173,7 +178,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
       const prevMarker = markerMapRef.current.get(prevSelectedIdRef.current)
       const prevCourt = courtMapRef.current.get(prevSelectedIdRef.current)
       if (prevMarker && prevCourt) {
-        prevMarker.setIcon(getPlaceIcon(prevCourt, getSportsForIcon(prevCourt), false, placeIdsWithEventsRef.current.has(prevSelectedIdRef.current)))
+        prevMarker.setIcon(getPlaceIcon(prevCourt, getSportsForIcon(prevCourt), false, placeIdsWithEventsRef.current.has(prevSelectedIdRef.current), themeKeyRef.current === 'dark'))
       }
     }
 
@@ -182,7 +187,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
       const marker = markerMapRef.current.get(selectedCourt.id)
       const court = courtMapRef.current.get(selectedCourt.id)
       if (marker && court) {
-        marker.setIcon(getPlaceIcon(court, getSportsForIcon(court), true, placeIdsWithEventsRef.current.has(selectedCourt.id)))
+        marker.setIcon(getPlaceIcon(court, getSportsForIcon(court), true, placeIdsWithEventsRef.current.has(selectedCourt.id), themeKeyRef.current === 'dark'))
       }
     }
 
@@ -201,7 +206,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
       const matchingSports = availableSports.filter(s => selectedSportsRef.current.includes(s))
       const sportsForIcon = selectedSportsRef.current.length === 0 ? availableSports : matchingSports.length > 0 ? matchingSports : availableSports
       const isSelected = prevSelectedIdRef.current === id
-      marker.setIcon(getPlaceIcon(court, sportsForIcon, isSelected, placeIdsWithEvents.has(id)))
+      marker.setIcon(getPlaceIcon(court, sportsForIcon, isSelected, placeIdsWithEvents.has(id), themeKeyRef.current === 'dark'))
     })
   }, [placeIdsWithEvents])
 

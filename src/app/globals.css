@@ -98,22 +98,6 @@ input[type="password"]::-ms-clear {
   .scrollbar-none::-webkit-scrollbar {
     display: none;
   }
-  /* Glass surface chip — alpha-based bg that works on frosted drawer backgrounds */
-  .glass-chip {
-    @apply bg-black/[.06] dark:bg-white/[.08];
-  }
-  /* Glass border — alpha-based border that works on frosted drawer backgrounds */
-  .glass-border {
-    @apply border-black/[.12] dark:border-white/[.12];
-  }
-  /* Glass surface — frosted background for floating panels, drawers, FABs */
-  .glass-surface {
-    background: rgba(255, 255, 255, 0.80);
-    @apply backdrop-blur-[24px] backdrop-saturate-[250%];
-  }
-  .dark .glass-surface {
-    background: rgba(28, 28, 30, 0.55);
-  }
 }
 
 /* Fix: backdrop-filter compositing on Vaul drawers */

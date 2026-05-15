@@ -19,7 +19,7 @@ function SportIconBox({ sports }: { sports: string[] }) {
   const visible = sports.length <= 3 ? sports : sports.slice(0, 2)
   const overflow = sports.length > 3 ? sports.length - 2 : 0
   return (
-    <div className="h-10 w-20 rounded-xl flex items-center justify-center shrink-0 glass-chip">
+    <div className="h-10 w-20 rounded-xl flex items-center justify-center shrink-0 bg-muted">
       {visible.map((s, i) => (
         <span key={i} className="text-base leading-none">{sportIcons[s] ?? '📍'}</span>
       ))}
@@ -85,6 +85,7 @@ interface FavoritesBottomSheetProps {
   user: { id: string } | null
   userLocation: { lat: number; lng: number } | null
   onPlaceSelect: (place: PlaceMarker) => void
+  onEventSelect: (event: EventWithDetails) => void
 }
 
 function FavoriteRow({
@@ -122,7 +123,7 @@ function FavoriteRow({
     : null
 
   return (
-    <div className="flex items-center gap-3 px-4 py-3 border-b border-black/[.05] dark:border-white/[.06]">
+    <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
       <button
         onClick={onSelect}
         className="flex flex-1 items-center gap-3 text-left min-w-0 active:opacity-70 transition-opacity"
@@ -139,7 +140,7 @@ function FavoriteRow({
       <button
         onClick={() => removeMutation.mutate()}
         disabled={removeMutation.isPending}
-        className="h-9 w-9 flex items-center justify-center rounded-full active:bg-black/[.05] dark:active:bg-white/[.06] transition-colors shrink-0"
+        className="h-9 w-9 flex items-center justify-center rounded-full active:bg-muted transition-colors shrink-0"
         aria-label="Aus Gespeichert entfernen"
       >
         {removeMutation.isPending
@@ -154,9 +155,11 @@ function FavoriteRow({
 function EventFavoriteRow({
   event,
   userId,
+  onSelect,
 }: {
   event: EventWithDetails
   userId: string
+  onSelect: () => void
 }) {
   const { toast } = useToast()
   const queryClient = useQueryClient()
@@ -176,10 +179,10 @@ function EventFavoriteRow({
   })
 
   return (
-    <div className="flex items-center gap-3 px-4 py-3 border-b border-black/[.05] dark:border-white/[.06]">
-      <a
-        href={`/events/${event.id}`}
-        className="flex flex-1 items-center gap-3 text-left min-w-0"
+    <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
+      <button
+        onClick={onSelect}
+        className="flex flex-1 items-center gap-3 text-left min-w-0 active:opacity-70 transition-opacity"
       >
         <SportIconBox sports={(event.sports ?? []) as string[]} />
         <div className="flex-1 min-w-0">
@@ -188,12 +191,12 @@ function EventFavoriteRow({
             {[dateLabel, location].filter(Boolean).join(' · ')}
           </div>
         </div>
-      </a>
+      </button>
 
       <button
         onClick={() => removeMutation.mutate()}
         disabled={removeMutation.isPending}
-        className="h-9 w-9 flex items-center justify-center rounded-full active:bg-black/[.05] dark:active:bg-white/[.06] transition-colors shrink-0"
+        className="h-9 w-9 flex items-center justify-center rounded-full active:bg-muted transition-colors shrink-0"
         aria-label="Lesezeichen entfernen"
       >
         {removeMutation.isPending
@@ -211,6 +214,7 @@ export default function FavoritesSheet({
   user,
   userLocation,
   onPlaceSelect,
+  onEventSelect,
 }: FavoritesBottomSheetProps) {
   const [tab, setTab] = useState<Tab>('orte')
 
@@ -237,7 +241,7 @@ export default function FavoritesSheet({
         {/* Header */}
         <div className="flex items-center justify-between px-4 pt-2 pb-3 shrink-0">
           <span className="text-[17px] font-bold">Gespeichert</span>
-          <Button variant="glass-secondary" size="icon" className="rounded-full h-9 w-9" onClick={() => onOpenChange(false)} aria-label="Schließen">
+          <Button variant="secondary" size="icon" className="rounded-full h-9 w-9" onClick={() => onOpenChange(false)} aria-label="Schließen">
             <X className="h-4 w-4" />
           </Button>
         </div>
@@ -282,7 +286,7 @@ export default function FavoritesSheet({
                 >
                   Anmelden
                 </Link>
-                <Button variant="glass-secondary" className="flex-1 h-11 rounded-xl text-[15px] font-semibold" asChild>
+                <Button variant="secondary" className="flex-1 h-11 rounded-xl text-[15px] font-semibold" asChild>
                   <Link href="/auth/signup" onClick={() => onOpenChange(false)}>
                     Registrieren
                   </Link>
@@ -338,6 +342,10 @@ export default function FavoritesSheet({
                     key={event.id}
                     event={event}
                     userId={user.id}
+                    onSelect={() => {
+                      onOpenChange(false)
+                      onEventSelect(event)
+                    }}
                   />
                 ))}
               </div>

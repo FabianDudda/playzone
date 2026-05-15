@@ -225,6 +225,7 @@ export type Database = {
           location_type: string | null
           age_restriction: Json | null
           gender_restriction: string | null
+          pending_changes: Json | null
         }
         Insert: {
           created_at?: string
@@ -252,6 +253,7 @@ export type Database = {
           location_type?: string | null
           age_restriction?: Json | null
           gender_restriction?: string | null
+          pending_changes?: Json | null
         }
         Update: {
           created_at?: string
@@ -279,6 +281,7 @@ export type Database = {
           location_type?: string | null
           age_restriction?: Json | null
           gender_restriction?: string | null
+          pending_changes?: Json | null
         }
         Relationships: [
           {

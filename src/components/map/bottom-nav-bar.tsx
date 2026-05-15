@@ -21,7 +21,7 @@ export default function BottomNavBar({
 }: BottomNavBarProps) {
   return (
     <div
-      className="fixed left-0 right-0 z-[1100] glass-surface border-t border-black/[.06] dark:border-white/[.08] shadow-[0_-2px_16px_rgba(0,0,0,0.08)] dark:shadow-[0_-2px_16px_rgba(0,0,0,0.20)]"
+      className="fixed left-0 right-0 z-[1100] bg-background border-t border-border shadow-[0_-2px_16px_rgba(0,0,0,0.08)] dark:shadow-[0_-2px_16px_rgba(0,0,0,0.20)]"
       style={{ bottom: 0, paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
     >
       <div className="flex items-stretch max-w-2xl mx-auto">
@@ -46,7 +46,7 @@ function NavItem({ icon, label, onClick }: { icon: ReactNode; label: string; onC
   return (
     <button
       onClick={onClick}
-      className="flex-1 h-14 flex flex-col items-center justify-center gap-1 active:bg-black/[.05] dark:active:bg-white/[.05] transition-colors"
+      className="flex-1 h-14 flex flex-col items-center justify-center gap-1 active:bg-muted transition-colors"
     >
       {icon}
       <span className="text-[10px] font-medium text-muted-foreground leading-none">{label}</span>

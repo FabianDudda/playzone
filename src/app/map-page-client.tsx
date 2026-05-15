@@ -23,7 +23,7 @@ import type L from 'leaflet'
 const LeafletCourtMap = dynamic(() => import('@/components/map/leaflet-court-map'), {
   ssr: false,
   loading: () => (
-    <div className="flex flex-col items-center justify-center gap-3 bg-background/60 backdrop-blur-sm" style={{ height: '100dvh' }}>
+    <div className="flex flex-col items-center justify-center gap-3 bg-background" style={{ height: '100dvh' }}>
       <div className="h-8 w-8 animate-spin rounded-full border-2 border-foreground border-t-transparent" />
       <span className="text-sm font-medium text-foreground">Orte werden geladen…</span>
     </div>
@@ -163,7 +163,7 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
         <InstallBanner />
         {isLoadingMore && (
           <div className="pointer-events-none absolute left-1/2 z-[1000] -translate-x-1/2" style={{ bottom: 'calc(192px + env(safe-area-inset-bottom, 0px))' }}>
-            <div className="flex items-center gap-2 rounded-full bg-background/80 px-3 py-1.5 text-xs font-medium text-foreground shadow backdrop-blur-sm">
+            <div className="flex items-center gap-2 rounded-full bg-background border border-border px-3 py-1.5 text-xs font-medium text-foreground shadow-sm">
               <div className="h-3 w-3 animate-spin rounded-full border border-foreground border-t-transparent" />
               Weitere Orte werden geladen…
             </div>
@@ -205,12 +205,12 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
       {/* Add popup — anchored just above the nav bar */}
       {addOpen && (
         <div
-          className="fixed z-[1104] w-[248px] rounded-2xl overflow-hidden glass-surface border border-black/[.06] dark:border-white/[.08] shadow-[0_8px_30px_rgba(0,0,0,0.18)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.30)] animate-in fade-in zoom-in-95 slide-in-from-bottom-2 duration-150"
+          className="fixed z-[1104] w-[248px] rounded-2xl overflow-hidden bg-background border border-border shadow-lg animate-in fade-in zoom-in-95 slide-in-from-bottom-2 duration-150"
           style={{ right: '16px', bottom: POPUP_BOTTOM }}
         >
           <button
             onClick={handleAddPlace}
-            className="w-full flex items-center gap-3 px-4 py-3.5 text-left border-b border-black/[.06] dark:border-white/[.06] active:bg-black/[.04] dark:active:bg-white/[.04] transition-colors"
+            className="w-full flex items-center gap-3 px-4 py-3.5 text-left border-b border-border active:bg-muted transition-colors"
           >
             <div className="h-10 w-10 rounded-xl bg-emerald-500/15 flex items-center justify-center shrink-0">
               <MapPin className="h-[18px] w-[18px] text-emerald-600 dark:text-emerald-400" />
@@ -223,7 +223,7 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
           <Link
             href="/events/new"
             onClick={() => setAddOpen(false)}
-            className="flex items-center gap-3 px-4 py-3.5 text-left active:bg-black/[.04] dark:active:bg-white/[.04] transition-colors"
+            className="flex items-center gap-3 px-4 py-3.5 text-left active:bg-muted transition-colors"
           >
             <div className="h-10 w-10 rounded-xl bg-indigo-500/15 flex items-center justify-center shrink-0">
               <Calendar className="h-[18px] w-[18px] text-indigo-600 dark:text-indigo-400" />

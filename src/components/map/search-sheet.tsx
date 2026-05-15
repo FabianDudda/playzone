@@ -242,7 +242,7 @@ export default function SearchSheet({
                 </button>
               )}
             </div>
-            <Button variant="glass-secondary" size="icon" className="rounded-full h-9 w-9 shrink-0" onClick={closeSheet} aria-label="Schließen">
+            <Button variant="secondary" size="icon" className="rounded-full h-9 w-9 shrink-0" onClick={closeSheet} aria-label="Schließen">
               <X className="h-4 w-4" />
             </Button>
           </div>
@@ -286,9 +286,9 @@ function LocationRow({ result, onSelect }: {
   return (
     <button
       onClick={onSelect}
-      className="w-full flex items-center gap-3 px-4 py-3 text-left border-b border-black/[.05] dark:border-white/[.06] active:bg-black/[.03] dark:active:bg-white/[.03] transition-colors"
+      className="w-full flex items-center gap-3 px-4 py-3 text-left border-b border-border active:bg-muted transition-colors"
     >
-      <div className="h-10 w-20 rounded-xl flex items-center justify-center shrink-0 glass-chip">
+      <div className="h-10 w-20 rounded-xl flex items-center justify-center shrink-0 bg-muted">
         <MapPin className="h-5 w-5 text-muted-foreground" />
       </div>
       <div className="flex-1 min-w-0">

@@ -5,11 +5,15 @@ import L from 'leaflet'
 const iconCache = new Map<string, L.DivIcon>()
 
 // Helper function to generate cache key for sports array
-function getSportsCacheKey(sports: string[], isSelected: boolean, hasEvents: boolean): string {
-  return `${sports.sort().join(',')}-${isSelected}-${hasEvents}`
+function getSportsCacheKey(sports: string[], isSelected: boolean, hasEvents: boolean, isDark = false): string {
+  return `${sports.sort().join(',')}-${isSelected}-${hasEvents}-${isDark}`
 }
 
-// Export function to clear icon cache (useful for memory management)\nexport function clearIconCache(): void {\n  iconCache.clear()\n}\n\n// Export function to get cache size (for debugging)\nexport function getIconCacheSize(): number {\n  return iconCache.size\n}\n\n// Sport color mapping
+export function clearIconCache(): void {
+  iconCache.clear()
+}
+
+// Sport color mapping
 export const sportColors: Record<string, string> = {
   // Original sports
   tennis: '#10B981',      // Green
@@ -272,9 +276,9 @@ function buildIconElements(sports: string[], pinSize: number): string {
 }
 
 // Create horizontal sport icons layout within pin
-function createSimpleSportIcon(sports: string[], baseSize: number, isSelected: boolean = false, hasEvents: boolean = false): string {
+function createSimpleSportIcon(sports: string[], baseSize: number, isSelected: boolean = false, hasEvents: boolean = false, isDark: boolean = false): string {
   const pinSize = 36
-  const bgColor = isSelected ? 'hsl(var(--primary))' : hasEvents ? '#6366F1' : 'white'
+  const bgColor = isSelected ? 'hsl(var(--primary))' : hasEvents ? '#6366F1' : isDark ? '#2b3442' : 'white'
 
   return `
     <div style="position:absolute;top:0;left:0;width:${pinSize}px;height:${pinSize}px;background-color:${bgColor};border-radius:50% 50% 50% 0;transform:rotate(-45deg);transform-origin:center center;box-shadow:0 3px 8px rgba(0,0,0,0.3);z-index:10;"></div>
@@ -283,12 +287,12 @@ function createSimpleSportIcon(sports: string[], baseSize: number, isSelected: b
 }
 
 // Create custom Leaflet icon for a sport
-export function createSportIcon(sports: string[], isSelected = false, hasEvents = false): L.DivIcon {
+export function createSportIcon(sports: string[], isSelected = false, hasEvents = false, isDark = false): L.DivIcon {
   // Ensure we have a valid sports array
   const validSports = Array.isArray(sports) ? sports.filter(Boolean) : []
 
   // Generate cache key
-  const cacheKey = getSportsCacheKey(validSports, isSelected, hasEvents)
+  const cacheKey = getSportsCacheKey(validSports, isSelected, hasEvents, isDark)
 
   // Check if icon is already cached
   const cachedIcon = iconCache.get(cacheKey)
@@ -309,7 +313,7 @@ export function createSportIcon(sports: string[], isSelected = false, hasEvents 
         width: ${containerWidth}px;
         height: ${containerHeight}px;
       ">
-        ${createSimpleSportIcon(validSports, pinSize, isSelected, hasEvents)}
+        ${createSimpleSportIcon(validSports, pinSize, isSelected, hasEvents, isDark)}
       </div>
     `,
     iconSize: [containerWidth, containerHeight],
@@ -380,9 +384,9 @@ export function createOrganizerIcon(color: string, logoUrl?: string | null, isSe
 }
 
 // Create event-only place marker: indigo diamond with sport icons using same layout as place pins
-export function createEventOnlyIcon(sports: string[], isSelected = false): L.DivIcon {
+export function createEventOnlyIcon(sports: string[], isSelected = false, isDark = false): L.DivIcon {
   const validSports = Array.isArray(sports) ? sports.filter(Boolean) : []
-  const cacheKey = `event-only-${getSportsCacheKey(validSports, isSelected, false)}`
+  const cacheKey = `event-only-${getSportsCacheKey(validSports, isSelected, false, isDark)}`
   const cached = iconCache.get(cacheKey)
   if (cached) return cached
 

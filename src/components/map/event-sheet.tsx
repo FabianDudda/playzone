@@ -124,7 +124,7 @@ export default function EventSheet({ isOpen, onOpenChange, eventId, userLocation
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <Button
-                  variant="glass-secondary"
+                  variant="secondary"
                   size="icon"
                   className="rounded-full h-9 w-9"
                   onClick={() => {
@@ -141,7 +141,7 @@ export default function EventSheet({ isOpen, onOpenChange, eventId, userLocation
                 >
                   <Share2 className="h-4 w-4" />
                 </Button>
-                <Button variant="glass-secondary" size="icon" className="rounded-full h-9 w-9" onClick={() => onOpenChange(false)}>
+                <Button variant="secondary" size="icon" className="rounded-full h-9 w-9" onClick={() => onOpenChange(false)}>
                   <X className="h-4 w-4" />
                 </Button>
               </div>
@@ -181,15 +181,15 @@ export default function EventSheet({ isOpen, onOpenChange, eventId, userLocation
 
                   <div className="flex flex-col gap-1 min-w-0 pt-0.5">
                     <div className="flex flex-wrap gap-1">
-                      {event.location_type === 'indoor' && <Badge variant="outline" className="text-sm pl-2 glass-border">🏠 Indoor</Badge>}
-                      {event.location_type === 'outdoor' && <Badge variant="outline" className="text-sm pl-2 glass-border">☀️ Outdoor</Badge>}
-                      {event.gender_restriction === 'male' && <Badge variant="outline" className="text-sm pl-2 glass-border">♂ Nur Männer</Badge>}
-                      {event.gender_restriction === 'female' && <Badge variant="outline" className="text-sm pl-2 glass-border">♀ Nur Frauen</Badge>}
+                      {event.location_type === 'indoor' && <Badge variant="outline" className="text-sm pl-2 border-border">🏠 Indoor</Badge>}
+                      {event.location_type === 'outdoor' && <Badge variant="outline" className="text-sm pl-2 border-border">☀️ Outdoor</Badge>}
+                      {event.gender_restriction === 'male' && <Badge variant="outline" className="text-sm pl-2 border-border">♂ Nur Männer</Badge>}
+                      {event.gender_restriction === 'female' && <Badge variant="outline" className="text-sm pl-2 border-border">♀ Nur Frauen</Badge>}
                       {event.age_restriction?.type === 'min' && event.age_restriction.min && (
-                        <Badge variant="outline" className="text-sm pl-2 glass-border">👤 Ab {event.age_restriction.min} Jahren</Badge>
+                        <Badge variant="outline" className="text-sm pl-2 border-border">👤 Ab {event.age_restriction.min} Jahren</Badge>
                       )}
                       {event.age_restriction?.type === 'range' && event.age_restriction.min && event.age_restriction.max && (
-                        <Badge variant="outline" className="text-sm pl-2 glass-border">👤 {event.age_restriction.min}–{event.age_restriction.max} Jahre</Badge>
+                        <Badge variant="outline" className="text-sm pl-2 border-border">👤 {event.age_restriction.min}–{event.age_restriction.max} Jahre</Badge>
                       )}
                     </div>
                     {quickAddress && (
@@ -209,7 +209,7 @@ export default function EventSheet({ isOpen, onOpenChange, eventId, userLocation
                 {/* Sport badges */}
                 <div className="flex flex-wrap gap-1.5">
                   {event.sports.map(sport => (
-                    <Badge key={sport} variant="outline" className="text-sm pl-2 glass-border">
+                    <Badge key={sport} variant="outline" className="text-sm pl-2 border-border">
                       {sportIcons[sport]} {sportNames[sport]}
                     </Badge>
                   ))}
@@ -298,7 +298,7 @@ export default function EventSheet({ isOpen, onOpenChange, eventId, userLocation
                     Route
                   </Button>
                   <Button
-                    variant="glass-secondary"
+                    variant="secondary"
                     className="flex-1"
                     onClick={() => {
                       if (!user) { setIsSaveLoginPromptOpen(true); return }

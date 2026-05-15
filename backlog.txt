@@ -11,7 +11,6 @@
 
 ## CHANGELOG ##
 
-- big redesign
 - add search 
 - add list view
 - add event 
@@ -19,13 +18,7 @@
 
 ## TO DO ##
 
-- when user set filter to "basketball" and search for "soccer", he get soccer places because search result didnt get affected by filter settings.
-when user clicks on the soccer place, the map zooms to the speicfic location and showing the bottom sheet, but not the pin, because the pins on the maps are affected by the filter.
-whats your solution?
-
-- remove glass design
-
-- light/dark mode: auto set by system so dark mode needs to be polised
+- add/edit place in multiple steps instead of one page?
 
 - Tutorial/Whats new (einmal anzeigen)
 
@@ -38,36 +31,6 @@ whats your solution?
 - benachrichtigung an user via admin dashboard (how to send, where to show?)
 
 
-- position of "+" button & map contributions on desktop (cause max-width of sheets)
 
 
 
-  ┌─────┬───────────────────────────────────────────────┬────────┬────────┐
-  │  #  │                     Step                      │ Effort │  Risk  │
-  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
-  │ 1   │ Remove bottom nav, fix layout shell           │ XS     │ Low    │
-  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
-  │ 2   │ Map overlay container in map-page-client      │ S      │ Low    │
-  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
-  │ 3   │ Bottom search bar (tap to open, no input)     │ S      │ Low    │
-  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
-  │ 4   │ Map controls (locate + layers, repositioned)  │ S      │ Low    │
-  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
-  │ 5   │ FAB (add place)                               │ S      │ Low    │
-  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
-  │ 6   │ Quick chips + active filter chips             │ S      │ Low    │
-  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
-  │ 7   │ Search + filter sheet (new unified component) │ L      │ Medium │
-  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
-  │ 8   │ Place detail sheet polish                     │ M      │ Low    │
-  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
-  │ 9   │ Add place overlay                             │ S      │ Low    │
-  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
-  │ 10  │ Menu/profile sheet (replaces header drawer)   │ M      │ Medium │
-  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
-  │ 11  │ Favorites sheet update                        │ S      │ Low    │
-  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
-  │ 12  │ Profile page cleanup                          │ XS     │ Low    │
-  ├─────┼───────────────────────────────────────────────┼────────┼────────┤
-  │ 13  │ Dark mode wiring                              │ S      │ Low    │
-  └─────┴───────────────────────────────────────────────┴────────┴────────┘

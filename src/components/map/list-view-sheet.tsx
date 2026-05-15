@@ -148,7 +148,7 @@ export default function ListViewSheet({
             {countLabel}
           </span>
           <Button
-            variant="glass-secondary"
+            variant="secondary"
             size="icon"
             className={cn('rounded-full h-9 w-9 shrink-0', !isFullOpen && 'invisible pointer-events-none')}
             onClick={(e) => { e.stopPropagation(); setActiveSnapPoint(miniSnap) }}

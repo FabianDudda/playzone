@@ -81,11 +81,11 @@ export default function FilterSheet({
           <span className="text-[17px] font-bold">Filter</span>
           <div className="flex items-center gap-2">
             {hasActive && (
-              <Button variant="glass-secondary" size="icon" className="rounded-full h-9 w-9" onClick={onReset} aria-label="Zurücksetzen">
+              <Button variant="secondary" size="icon" className="rounded-full h-9 w-9" onClick={onReset} aria-label="Zurücksetzen">
                 <RotateCcw className="h-4 w-4" />
               </Button>
             )}
-            <Button variant="glass-secondary" size="icon" className="rounded-full h-9 w-9" onClick={onClose} aria-label="Schließen">
+            <Button variant="secondary" size="icon" className="rounded-full h-9 w-9" onClick={onClose} aria-label="Schließen">
               <X className="h-4 w-4" />
             </Button>
           </div>
@@ -108,7 +108,7 @@ export default function FilterSheet({
                       'flex-1 h-9 flex items-center justify-center gap-1.5 rounded-[10px] border text-[13px] font-medium transition-all',
                       active
                         ? 'border-primary bg-primary text-primary-foreground'
-                        : 'border-black/[.1] dark:border-white/[.12] bg-transparent text-foreground'
+                        : 'border-border bg-transparent text-foreground'
                     )}
                   >
                     <span>{placeTypeIcons[type]}</span>
@@ -133,7 +133,7 @@ export default function FilterSheet({
                       'flex flex-col items-center justify-center gap-1 h-16 rounded-xl border transition-all',
                       active
                         ? 'border-primary bg-primary text-primary-foreground'
-                        : 'border-black/[.05] dark:border-white/[.06] bg-black/[.025] dark:bg-white/[.04] text-foreground'
+                        : 'border-border bg-muted text-foreground'
                     )}
                   >
                     <span className="text-[22px] leading-none">{sportIcons[sport] || '📍'}</span>
@@ -160,7 +160,7 @@ export default function FilterSheet({
                       'flex-1 h-9 flex items-center justify-center gap-1.5 rounded-[10px] border text-[13px] font-medium transition-all',
                       active
                         ? 'border-primary bg-primary text-primary-foreground'
-                        : 'border-black/[.1] dark:border-white/[.12] bg-transparent text-foreground'
+                        : 'border-border bg-transparent text-foreground'
                     )}
                   >
                     {type === 'orte'

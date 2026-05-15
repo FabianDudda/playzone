@@ -15,7 +15,7 @@ import { useAuth } from '@/components/providers/auth-provider'
 import PlaceSheet from './place-sheet'
 import FavoritesSheet from './favorites-sheet'
 import { sportNames, getSportBadgeClasses, sportIcons, PlaceType } from '@/lib/utils/sport-utils'
-import { createSportIcon, createEventOnlyIcon, createUserLocationIcon, createSelectedLocationIcon } from '@/lib/utils/sport-styles'
+import { createSportIcon, createEventOnlyIcon, createUserLocationIcon, createSelectedLocationIcon, clearIconCache } from '@/lib/utils/sport-styles'
 import { MAP_LAYERS, DEFAULT_LAYER_ID, createTileLayer, getSavedLayerPreference, saveLayerPreference } from '@/lib/utils/map-layers'
 import { getDistanceText } from '@/lib/utils/distance'
 import { cn } from '@/lib/utils'
@@ -358,7 +358,8 @@ function MapControlPill({
 
   const handleLayerClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation()
-    const cycle = ['light', 'voyager']
+    const isDark = document.documentElement.classList.contains('dark')
+    const cycle = isDark ? ['light', 'dark'] : ['light', 'voyager']
     const nextIndex = (cycle.indexOf(currentLayerIdRef.current) + 1) % cycle.length
     onLayerChangeRef.current(cycle[nextIndex])
   }, [])
@@ -395,7 +396,7 @@ function MapControlPill({
       onTouchStart={e => e.stopPropagation()}
       onWheel={e => e.stopPropagation()}
     >
-      <div className="flex flex-col items-center w-11 rounded-[100px] overflow-hidden border border-black/[.06] dark:border-white/[.08] glass-surface shadow-[0_2px_16px_rgba(0,0,0,0.14)] dark:shadow-[0_2px_16px_rgba(0,0,0,0.30)]">
+      <div className="flex flex-col items-center w-11 rounded-[100px] overflow-hidden border border-border bg-background shadow-[0_2px_16px_rgba(0,0,0,0.14)] dark:shadow-[0_2px_16px_rgba(0,0,0,0.30)]">
         <button type="button" className="pill-btn pill-btn-layer" title="Toggle Map Style" onClick={handleLayerClick}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polygon points="12 2 2 7 12 12 22 7 12 2"/>
@@ -566,6 +567,9 @@ export default function LeafletCourtMap({
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [flyToTarget, setFlyToTarget] = useState<{ lat: number; lng: number; zoom?: number } | null>(null)
   const [currentLayerId, setCurrentLayerId] = useState<string>(() => getSavedLayerPreference())
+  const [themeKey, setThemeKey] = useState<'light' | 'dark'>(() =>
+    typeof document !== 'undefined' && document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+  )
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
   const [localFilterOpen, setLocalFilterOpen] = useState(false)
   const [isFavoritesOpen, setIsFavoritesOpen] = useState(defaultFavoritesOpen)
@@ -668,6 +672,22 @@ export default function LeafletCourtMap({
     saveLayerPreference(layerId)
   }, [])
 
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const isDark = document.documentElement.classList.contains('dark')
+      setCurrentLayerId(prev => {
+        if (prev === 'light') return prev
+        const next = isDark ? 'dark' : 'voyager'
+        saveLayerPreference(next)
+        return next
+      })
+      setThemeKey(isDark ? 'dark' : 'light')
+      clearIconCache()
+    })
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    return () => observer.disconnect()
+  }, [])
+
 
 
   // Default center (Germany) — prefer explicit prop, then localStorage cache, then country default
@@ -737,12 +757,14 @@ export default function LeafletCourtMap({
                   placeIdsWithEvents={placeIdsWithEvents}
                   showOrte={showOrte}
                   showEvents={showEvents}
+                  themeKey={themeKey}
                 />
               )
             }
 
             // Individual markers when not clustering — filter inline (few markers, trivial cost)
             const sportFiltered = visibleCourts.filter(c => {
+              if (selectedCourt && c.id === selectedCourt.id) return true
               if (selectedSports.length > 0 && !selectedSports.some(s => c.sports?.includes(s))) return false
               if (selectedPlaceType.length > 0 && !selectedPlaceType.includes((c.place_type || 'öffentlich') as PlaceType)) return false
               return true
@@ -753,9 +775,10 @@ export default function LeafletCourtMap({
               const sportsForIcon = selectedSports.length === 0 ? allSports : matchingSports.length > 0 ? matchingSports : allSports
 
               const isSelected = selectedCourt?.id === court.id
+              const isDark = themeKey === 'dark'
               const icon = (court as any).is_event_only
-                ? createEventOnlyIcon(sportsForIcon, isSelected)
-                : createSportIcon(sportsForIcon, isSelected, placeIdsWithEvents.has(court.id))
+                ? createEventOnlyIcon(sportsForIcon, isSelected, isDark)
+                : createSportIcon(sportsForIcon, isSelected, placeIdsWithEvents.has(court.id), isDark)
 
               return (
               <Marker
@@ -775,7 +798,7 @@ export default function LeafletCourtMap({
               />
             )
             })
-          }, [enableClustering, courts, visibleCourts, selectedSports, selectedPlaceType, handleCourtSelect, placeIdsWithEvents, selectedCourt])}
+          }, [enableClustering, courts, visibleCourts, selectedSports, selectedPlaceType, handleCourtSelect, placeIdsWithEvents, selectedCourt, themeKey])}
           
           {/* Selected court overlay marker — rendered outside MarkerClusterGroup so React owns the icon.
               Only used in embedded mode: the full map's MarkerClusterGroup already handles selected state
@@ -784,24 +807,17 @@ export default function LeafletCourtMap({
             <Marker
               key={`selected-overlay-${selectedCourt.id}`}
               position={[selectedCourt.latitude, selectedCourt.longitude]}
-              icon={(selectedCourt as any).is_event_only
-                ? createEventOnlyIcon(
-                    selectedSports.length === 0
-                      ? (selectedCourt.sports || [])
-                      : (selectedCourt.sports || []).filter(s => selectedSports.includes(s)).length > 0
-                        ? (selectedCourt.sports || []).filter(s => selectedSports.includes(s))
-                        : (selectedCourt.sports || []),
-                    true
-                  )
-                : createSportIcon(
-                    selectedSports.length === 0
-                      ? (selectedCourt.sports || [])
-                      : (selectedCourt.sports || []).filter(s => selectedSports.includes(s)).length > 0
-                        ? (selectedCourt.sports || []).filter(s => selectedSports.includes(s))
-                        : (selectedCourt.sports || []),
-                    true,
-                    placeIdsWithEvents.has(selectedCourt.id)
-                  )}
+              icon={(() => {
+                  const isDark = themeKey === 'dark'
+                  const sports = selectedSports.length === 0
+                    ? (selectedCourt.sports || [])
+                    : (selectedCourt.sports || []).filter(s => selectedSports.includes(s)).length > 0
+                      ? (selectedCourt.sports || []).filter(s => selectedSports.includes(s))
+                      : (selectedCourt.sports || [])
+                  return (selectedCourt as any).is_event_only
+                    ? createEventOnlyIcon(sports, true, isDark)
+                    : createSportIcon(sports, true, placeIdsWithEvents.has(selectedCourt.id), isDark)
+                })()}
               zIndexOffset={2000}
               eventHandlers={{
                 click: (e) => {
@@ -864,7 +880,7 @@ export default function LeafletCourtMap({
 
       {/* Loading overlay */}
       {isLoading && (
-        <div className="absolute inset-0 z-[1000] flex flex-col items-center justify-center gap-3 bg-background/60 backdrop-blur-sm">
+        <div className="absolute inset-0 z-[1000] flex flex-col items-center justify-center gap-3 bg-background">
           <Loader2 className="h-8 w-8 animate-spin text-foreground" />
           <span className="text-sm font-medium text-foreground">Orte werden geladen…</span>
         </div>
@@ -901,6 +917,11 @@ export default function LeafletCourtMap({
         user={user}
         userLocation={userLocation}
         onPlaceSelect={handleFavoriteSelect}
+        onEventSelect={(event) => {
+          const markerId = event.place_id ?? event.id
+          const marker = courts.find(c => c.id === markerId)
+          if (marker) handleFavoriteSelect(marker)
+        }}
       />
     </div>
   )

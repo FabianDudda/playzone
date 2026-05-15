@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode, useState, useEffect } from 'react'
+import { type ReactNode } from 'react'
 import Link from 'next/link'
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
@@ -9,8 +9,9 @@ import { useInstallPrompt } from '@/hooks/use-install-prompt'
 import {
   User, Shield, MapPin, Calendar, BookOpen, HelpCircle, Sparkles,
   Handshake, MessageSquare, LogIn, LogOut, Edit2, Bell,
-  Download, ChevronRight, Rss, Sun, Moon, X, Heart,
+  Download, ChevronRight, Rss, Sun, X, Heart,
 } from 'lucide-react'
+import { useTheme } from 'next-themes'
 import { Button } from '@/components/ui/button'
 
 interface MenuSheetProps {
@@ -29,6 +30,39 @@ function Section({ label, children }: { label?: string; children: ReactNode }) {
       )}
       <div className="rounded-[14px] bg-muted/40 overflow-hidden divide-y divide-border/50">
         {children}
+      </div>
+    </div>
+  )
+}
+
+function ThemeRow() {
+  const { theme, setTheme } = useTheme()
+  const options = [
+    { value: 'light', label: 'Hell' },
+    { value: 'system', label: 'Auto' },
+    { value: 'dark', label: 'Dunkel' },
+  ] as const
+
+  return (
+    <div className="flex items-center gap-3 px-3.5 py-[11px]">
+      <div className="w-[22px] flex justify-center shrink-0 text-muted-foreground">
+        <Sun className="h-[17px] w-[17px]" />
+      </div>
+      <div className="flex-1 text-[15px] font-medium">Erscheinungsbild</div>
+      <div className="flex rounded-lg bg-muted overflow-hidden border border-border/50 text-[12px] font-medium">
+        {options.map(({ value, label }) => (
+          <button
+            key={value}
+            onClick={() => setTheme(value)}
+            className={`px-2.5 py-1 transition-colors ${
+              theme === value
+                ? 'bg-background text-foreground shadow-sm'
+                : 'text-muted-foreground'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
     </div>
   )
@@ -65,21 +99,6 @@ export default function MenuSheet({ open, onClose, onOpenFavorites }: MenuSheetP
   const { user, profile, isAdmin, signOut } = useAuth()
   const { canInstall, isIOS, isStandalone, promptInstall } = useInstallPrompt()
   const isGuest = !user
-
-  const [isDark, setIsDark] = useState(false)
-  useEffect(() => {
-    const stored = localStorage.getItem('debug-theme')
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    const dark = stored ? stored === 'dark' : prefersDark
-    setIsDark(dark)
-    document.documentElement.classList.toggle('dark', dark)
-  }, [])
-  const toggleTheme = () => {
-    const next = !isDark
-    setIsDark(next)
-    document.documentElement.classList.toggle('dark', next)
-    localStorage.setItem('debug-theme', next ? 'dark' : 'light')
-  }
 
   return (
     <Drawer open={open} onOpenChange={(o) => !o && onClose()} modal={false} snapPoints={[1]} activeSnapPoint={1}>
@@ -120,7 +139,7 @@ export default function MenuSheet({ open, onClose, onOpenFavorites }: MenuSheetP
           <div className="flex items-center gap-2 ml-3 shrink-0">
             {!isGuest && (
               <Button
-                variant="glass-secondary"
+                variant="secondary"
                 size="icon"
                 className="rounded-full h-9 w-9"
                 asChild
@@ -131,7 +150,7 @@ export default function MenuSheet({ open, onClose, onOpenFavorites }: MenuSheetP
               </Button>
             )}
             <Button
-              variant="glass-secondary"
+              variant="secondary"
               size="icon"
               className="rounded-full h-9 w-9"
               onClick={onClose}
@@ -172,14 +191,6 @@ export default function MenuSheet({ open, onClose, onOpenFavorites }: MenuSheetP
               <Row icon={<Calendar className="h-[17px] w-[17px]" />} label="Meine Events" href="/events/mine" onClick={onClose} />
               {isAdmin && (
                 <Row
-                  icon={isDark ? <Sun className="h-[17px] w-[17px]" /> : <Moon className="h-[17px] w-[17px]" />}
-                  label="Erscheinungsbild"
-                  sub="Admin"
-                  onClick={toggleTheme}
-                />
-              )}
-              {isAdmin && (
-                <Row
                   icon={<Shield className="h-[17px] w-[17px] text-amber-600" />}
                   label="Admin Dashboard"
                   sub="Admin"
@@ -190,15 +201,13 @@ export default function MenuSheet({ open, onClose, onOpenFavorites }: MenuSheetP
             </Section>
           )}
 
-          {/* ENTDECKEN — identical for all users */}
-          <Section label="Entdecken">
-            <Row icon={<Calendar className="h-[17px] w-[17px]" />} label="Events" href="/events" onClick={onClose} />
-            <Row icon={<MapPin className="h-[17px] w-[17px]" />} label="Orte" href="/orte" onClick={onClose} />
-            {onOpenFavorites && (
-              <Row icon={<Heart className="h-[17px] w-[17px]" />} label="Gespeicherte Orte" onClick={() => { onOpenFavorites(); onClose() }} />
-            )}
-            <Row icon={<Rss className="h-[17px] w-[17px]" />} label="Blog" href="/blog" onClick={onClose} />
-          </Section>
+          {/* ENTDECKEN — admin only */}
+          {isAdmin && (
+            <Section label="Entdecken (Admin)">
+              <Row icon={<Calendar className="h-[17px] w-[17px]" />} label="Events" href="/events" onClick={onClose} />
+              <Row icon={<MapPin className="h-[17px] w-[17px]" />} label="Orte" href="/orte" onClick={onClose} />
+            </Section>
+          )}
 
           {/* APP — identical for all users */}
           <Section label="App">
@@ -210,10 +219,12 @@ export default function MenuSheet({ open, onClose, onOpenFavorites }: MenuSheetP
                 onClick={canInstall ? () => { promptInstall(); onClose() } : undefined}
               />
             )}
-            <Row icon={<HelpCircle className="h-[17px] w-[17px]" />} label="Häufige Fragen" href="/faq" onClick={onClose} />
+            <ThemeRow />
             <Row icon={<Sparkles className="h-[17px] w-[17px]" />} label="Was ist OpenSportMap?" href="/about" onClick={onClose} />
-            <Row icon={<Handshake className="h-[17px] w-[17px]" />} label="Partner" href="/partner" onClick={onClose} />
+            <Row icon={<HelpCircle className="h-[17px] w-[17px]" />} label="Häufige Fragen" href="/faq" onClick={onClose} />
             <Row icon={<MessageSquare className="h-[17px] w-[17px]" />} label="Feedback geben" href="/feedback" onClick={onClose} />
+            <Row icon={<Handshake className="h-[17px] w-[17px]" />} label="Partner" href="/partner" onClick={onClose} />
+            <Row icon={<Rss className="h-[17px] w-[17px]" />} label="Blog" href="/blog" onClick={onClose} />
           </Section>
 
           {/* Sign out — logged-in only */}

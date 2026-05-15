@@ -6,6 +6,7 @@ import "./globals.css"
 import { Analytics } from "@vercel/analytics/next"
 import QueryProvider from "@/components/providers/query-provider"
 import AuthProvider from "@/components/providers/auth-provider"
+import { ThemeProvider } from "@/components/providers/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 
 const geistSans = Geist({
@@ -63,7 +64,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="de">
+    <html lang="de" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://abminvrgugkbzgxvqxap.supabase.co" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://abminvrgugkbzgxvqxap.supabase.co" />
@@ -89,15 +90,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <QueryProvider>
-          <AuthProvider>
-            <div className="relative flex min-h-screen flex-col">
-              <main className="flex-1">{children}</main>
-            </div>
-            <Toaster />
-            <Analytics />
-          </AuthProvider>
-        </QueryProvider>
+        <ThemeProvider>
+          <QueryProvider>
+            <AuthProvider>
+              <div className="relative flex min-h-screen flex-col">
+                <main className="flex-1">{children}</main>
+              </div>
+              <Toaster />
+              <Analytics />
+            </AuthProvider>
+          </QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

@@ -233,7 +233,7 @@ export default function PlaceSheet({
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <Button
-                    variant="glass-secondary"
+                    variant="secondary"
                     size="icon"
                     className="rounded-full h-9 w-9"
                     onClick={() => { window.location.href = `/places/${selectedCourt.id}/edit` }}
@@ -242,7 +242,7 @@ export default function PlaceSheet({
                     <Pencil className="h-4 w-4" />
                   </Button>
                   <Button
-                    variant="glass-secondary"
+                    variant="secondary"
                     size="icon"
                     className="rounded-full h-9 w-9"
                     onClick={() => {
@@ -261,7 +261,7 @@ export default function PlaceSheet({
                     <Share2 className="h-4 w-4" />
                   </Button>
                   <Button
-                    variant="glass-secondary"
+                    variant="secondary"
                     size="icon"
                     className="rounded-full h-9 w-9"
                     onClick={() => onOpenChange(false)}
@@ -371,7 +371,7 @@ export default function PlaceSheet({
                             return (
                               <div key={court.id} className="flex items-center gap-x-2 gap-y-0.5 flex-wrap">
                                 <span className="text-sm text-muted-foreground shrink-0">Platz {idx + 1}</span>
-                                <span className="text-sm text-muted-foreground glass-chip rounded px-1.5 py-0.5 shrink-0">{surfaceLabel}</span>
+                                <span className="text-sm text-muted-foreground bg-muted rounded px-1.5 py-0.5 shrink-0">{surfaceLabel}</span>
                                 {activeKeys.map((key, i) => (
                                   <Fragment key={key}>
                                     {i > 0 && <span className="text-sm text-muted-foreground/40">·</span>}
@@ -499,7 +499,7 @@ export default function PlaceSheet({
                 </Button>
                 {showFavorite && (
                   <Button
-                    variant="glass-secondary"
+                    variant="secondary"
                     className="flex-1 text-base"
                     onClick={() => {
                       if (!user) { setIsSaveLoginPromptOpen(true); return }
