@@ -9,9 +9,9 @@ import { useProgressivePlaces } from '@/hooks/use-progressive-places'
 import { database } from '@/lib/supabase/database'
 import { SportType, PlaceMarker, EventForSearch, Area } from '@/lib/supabase/types'
 import { PlaceType } from '@/lib/utils/sport-utils'
-import Link from 'next/link'
 import { MapPin, Calendar, SlidersHorizontal } from 'lucide-react'
 import InstallBanner from '@/components/install/install-banner'
+import LoginPromptBottomSheet from '@/components/map/login-prompt-bottom-sheet-vaul'
 import MenuSheet from '@/components/layout/menu-sheet'
 import SearchSheet from '@/components/map/search-sheet'
 import BottomNavBar from '@/components/map/bottom-nav-bar'
@@ -59,6 +59,7 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number } | null>(null)
   const [listViewFullOpen, setListViewFullOpen] = useState(false)
   const [filterDirectOpen, setFilterDirectOpen] = useState(false)
+  const [isEventLoginPromptOpen, setIsEventLoginPromptOpen] = useState(false)
 
   const mapHandleRef = useRef<LeafletCourtMapHandle | null>(null)
   const handleMapReady = useCallback((handle: LeafletCourtMapHandle) => {
@@ -220,10 +221,9 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
               <div className="text-[12px] text-muted-foreground leading-tight mt-0.5">Neuen Sportplatz hinzufügen</div>
             </div>
           </button>
-          <Link
-            href="/events/new"
-            onClick={() => setAddOpen(false)}
-            className="flex items-center gap-3 px-4 py-3.5 text-left active:bg-muted transition-colors"
+          <button
+            onClick={() => { setAddOpen(false); user ? router.push('/events/new') : setIsEventLoginPromptOpen(true) }}
+            className="w-full flex items-center gap-3 px-4 py-3.5 text-left active:bg-muted transition-colors"
           >
             <div className="h-10 w-10 rounded-xl bg-indigo-500/15 flex items-center justify-center shrink-0">
               <Calendar className="h-[18px] w-[18px] text-indigo-600 dark:text-indigo-400" />
@@ -232,9 +232,17 @@ function MapPage({ initialArea }: { initialArea?: Area | null }) {
               <div className="text-[14px] font-semibold leading-tight">Event erstellen</div>
               <div className="text-[12px] text-muted-foreground leading-tight mt-0.5">Veranstaltung organisieren</div>
             </div>
-          </Link>
+          </button>
         </div>
       )}
+
+      <LoginPromptBottomSheet
+        isOpen={isEventLoginPromptOpen}
+        onOpenChange={setIsEventLoginPromptOpen}
+        title="Event erstellen"
+        description="Melde dich an, um Events zu erstellen und zu organisieren."
+        icon={Calendar}
+      />
 
       <MenuSheet open={menuOpen} onClose={() => setMenuOpen(false)} onOpenFavorites={() => mapHandleRef.current?.openFavorites()} />
 

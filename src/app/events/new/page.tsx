@@ -17,7 +17,7 @@ import Link from 'next/link'
 function NewEventContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { user, profile, isAdmin } = useAuth()
+  const { user, profile, isAdmin, loading } = useAuth()
   const { toast } = useToast()
   const queryClient = useQueryClient()
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -96,34 +96,6 @@ function NewEventContent() {
           }
         : null
 
-      // Guest flow — API route with service role key
-      if (!user) {
-        const res = await fetch('/api/guest/submit-event', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            title: form.title.trim(),
-            description: form.description.trim() || null,
-            event_type: 'session',
-            place_id: placeId,
-            sports: form.sports,
-            schedule: form.schedule,
-            contact: {},
-            image_url: form.imageUrl,
-            inline_location: inlineLocation,
-            location_type: form.locationType,
-            age_restriction: form.ageRestriction,
-            gender_restriction: form.genderRestriction,
-            organizer_id: form.organizerIds[0] ?? null,
-            organizer_ids: form.organizerIds,
-          }),
-        })
-        const json = await res.json()
-        if (!res.ok) throw new Error(json.error || 'Fehler beim Einreichen des Events')
-        return json
-      }
-
-      // Logged-in flow
       const { data, error } = await database.events.createEvent({
         title: form.title.trim(),
         description: form.description.trim() || null,
@@ -179,7 +151,13 @@ function NewEventContent() {
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
-  if (user && !isAdmin && !isLoadingOrganizer && userOrganizer === null) {
+  if (loading) return null
+  if (!user) {
+    router.replace('/auth/signin?redirect=/events/new')
+    return null
+  }
+
+  if (!isAdmin && !isLoadingOrganizer && userOrganizer === null) {
     return (
       <div className="container px-4 py-8 max-w-xl mx-auto">
         <Card>

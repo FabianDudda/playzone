@@ -9,9 +9,6 @@
 ########################################
 
 
-- only allow logged in user to go to /events/new 
-
-
 
 ## CHANGELOG ##
 
@@ -22,6 +19,8 @@
 - use native time picker for opening hours in add-place
 
 ## TO DO ##
+
+- fix layout of date/time picker in add events page (only for iOS buggy)
 
 - add/edit place in multiple steps instead of one page?
 

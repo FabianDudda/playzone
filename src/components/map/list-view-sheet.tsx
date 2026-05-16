@@ -107,12 +107,18 @@ export default function ListViewSheet({
     return items.sort((a, b) => (a.dist ?? Infinity) - (b.dist ?? Infinity)).slice(0, MAX_LIST)
   }, [places, events, mapBounds, mapCenter, showOrte, showEvents, selectedSports, selectedPlaceType])
 
-  const count = visibleItems.length
-  const countLabel = count >= MAX_LIST
-    ? `${MAX_LIST}+ Plätze`
-    : count === 1
-      ? '1 Ort gefunden'
-      : `${count} Plätze gefunden`
+  const placeCount = visibleItems.filter(i => i.type === 'place').length
+  const eventCount = visibleItems.filter(i => i.type === 'event').length
+  const totalCount = visibleItems.length
+
+  const countLabel = (() => {
+    if (totalCount >= MAX_LIST) return `${MAX_LIST}+ Plätze & Events gefunden`
+    const placePart = placeCount === 1 ? '1 Ort' : placeCount > 1 ? `${placeCount} Plätze` : null
+    const eventPart = eventCount === 1 ? '1 Event' : eventCount > 1 ? `${eventCount} Events` : null
+    const parts = [placePart, eventPart].filter(Boolean)
+    if (parts.length === 0) return 'Keine Ergebnisse'
+    return `${parts.join(' & ')} gefunden`
+  })()
 
   return (
     <Drawer
