@@ -718,8 +718,10 @@ export default function LeafletCourtMap({
   const showEvents = selectedContentTypes.length === 0 || selectedContentTypes.includes('events')
 
   const visibleCourts = useMemo(() =>
-    courts.filter(c => (c as any).is_event_only ? showEvents : showOrte),
-    [courts, showOrte, showEvents]
+    courts.filter(c => (c as any).is_event_only
+      ? showEvents
+      : showOrte || (showEvents && placeIdsWithEvents.has(c.id))),
+    [courts, showOrte, showEvents, placeIdsWithEvents]
   )
 
   // Get current layer configuration (memoized)

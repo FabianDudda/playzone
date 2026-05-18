@@ -29,9 +29,9 @@ function getPlaceIcon(court: PlaceMarker, sports: string[], isSelected: boolean,
   return createSportIcon(sports, isSelected, hasEvents, isDark)
 }
 
-function isMarkerVisible(court: PlaceMarker, selectedSports: SportType[], selectedPlaceType: PlaceType[] | undefined, showOrte = true, showEvents = true): boolean {
+function isMarkerVisible(court: PlaceMarker, selectedSports: SportType[], selectedPlaceType: PlaceType[] | undefined, showOrte = true, showEvents = true, placeIdsWithEvents = new Set<string>()): boolean {
   if (court.is_event_only && !showEvents) return false
-  if (!court.is_event_only && !showOrte) return false
+  if (!court.is_event_only && !showOrte && !(showEvents && placeIdsWithEvents.has(court.id))) return false
   if (selectedSports.length > 0 && !selectedSports.some(s => court.sports?.includes(s))) return false
   if (!court.is_event_only && selectedPlaceType && selectedPlaceType.length > 0 && !selectedPlaceType.includes((court.place_type || 'öffentlich') as PlaceType)) return false
   return true
@@ -119,7 +119,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
       markerMapRef.current.set(court.id, marker)
       courtMapRef.current.set(court.id, court)
 
-      if (isMarkerVisible(court, selectedSportsRef.current, selectedPlaceTypeRef.current, showOrteRef.current, showEventsRef.current)) {
+      if (isMarkerVisible(court, selectedSportsRef.current, selectedPlaceTypeRef.current, showOrteRef.current, showEventsRef.current, placeIdsWithEventsRef.current)) {
         toAdd.push(marker)
       }
     })
@@ -141,7 +141,7 @@ export default function MarkerClusterGroup({ courts, onCourtSelect, selectedCour
       const court = courtMapRef.current.get(id)
       if (!court) return
 
-      const visible = isMarkerVisible(court, selectedSports, selectedPlaceType, showOrte, showEvents)
+      const visible = isMarkerVisible(court, selectedSports, selectedPlaceType, showOrte, showEvents, placeIdsWithEvents)
       const isSelected = id === selectedCourt?.id
       const shouldBeVisible = visible || isSelected
       const inGroup = clusterGroup.hasLayer(marker)
