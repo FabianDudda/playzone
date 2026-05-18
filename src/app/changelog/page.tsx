@@ -6,9 +6,21 @@ import BackButton from '@/components/layout/back-button'
 
 const CHANGELOG = [
   {
+    version: '0.5.0-alpha',
+    date: '18.05.2026',
+    current: true,
+    items: [
+      'add search',
+      'add list view',
+      'add event system',
+      'add light/dark mode',
+      'use native time picker for opening hours in add-place',
+    ],
+  },
+  {
     version: '0.4.0-alpha',
     date: '17.04.2026',
-    current: true,
+    current: false,
     items: [
       'added place and court specific attribute system',
       'added new sport types',

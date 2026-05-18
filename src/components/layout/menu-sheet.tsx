@@ -220,6 +220,7 @@ export default function MenuSheet({ open, onClose, onOpenFavorites }: MenuSheetP
               />
             )}
             <ThemeRow />
+            <Row icon={<Heart className="h-[17px] w-[17px]" />} label="Unterstützen" href="/unterstuetzen" onClick={onClose} />
             <Row icon={<Sparkles className="h-[17px] w-[17px]" />} label="Was ist OpenSportMap?" href="/about" onClick={onClose} />
             <Row icon={<HelpCircle className="h-[17px] w-[17px]" />} label="Häufige Fragen" href="/faq" onClick={onClose} />
             <Row icon={<MessageSquare className="h-[17px] w-[17px]" />} label="Feedback geben" href="/feedback" onClick={onClose} />
