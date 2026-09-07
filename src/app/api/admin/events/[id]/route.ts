@@ -41,10 +41,25 @@ export async function PATCH(
       return NextResponse.json({ error: 'No pending changes found' }, { status: 400 })
     }
 
+    const changes = event.pending_changes as Record<string, unknown>
+
+    // Validate organizer_id in pending changes to avoid FK violations
+    if (changes.organizer_id) {
+      const { data: org } = await adminSupabase
+        .from('organizers')
+        .select('id')
+        .eq('id', changes.organizer_id as string)
+        .maybeSingle()
+      if (!org) {
+        changes.organizer_id = null
+        changes.organizer_ids = []
+      }
+    }
+
     const { error } = await adminSupabase
       .from('events')
       .update({
-        ...event.pending_changes,
+        ...changes,
         pending_changes: null,
         updated_at: new Date().toISOString(),
       })
@@ -61,6 +76,39 @@ export async function PATCH(
       .eq('id', id)
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ success: true })
+  }
+
+  // Admin direct edit of event fields
+  if (action === 'edit') {
+    const allowedFields = [
+      'title', 'description', 'sports', 'place_id', 'inline_location',
+      'schedule', 'contact', 'image_url', 'location_type', 'age_restriction',
+      'gender_restriction', 'organizer_id', 'organizer_ids',
+    ]
+    const updates: Record<string, unknown> = { updated_at: new Date().toISOString() }
+    for (const field of allowedFields) {
+      if (body[field] !== undefined) updates[field] = body[field]
+    }
+
+    // Validate organizer_id — stale IDs in organizer_ids[] can violate the FK
+    if (updates.organizer_id) {
+      const { data: org } = await adminSupabase
+        .from('organizers')
+        .select('id')
+        .eq('id', updates.organizer_id as string)
+        .maybeSingle()
+      if (!org) {
+        updates.organizer_id = null
+        updates.organizer_ids = []
+      }
+    }
+
+    const { error } = await adminSupabase.from('events').update(updates as any).eq('id', id)
+    if (error) {
+      console.error('[admin/events PATCH edit] supabase error:', error)
+      return NextResponse.json({ error: error.message, code: error.code, details: error.details, hint: error.hint }, { status: 500 })
+    }
     return NextResponse.json({ success: true })
   }
 

@@ -9,6 +9,25 @@ export interface MapLayer {
   subdomains?: string[]
 }
 
+// CARTO basemaps now require an API key (https://carto.com/basemaps/apikey/).
+// Inlined at build time by Next.js since it is a NEXT_PUBLIC_ variable.
+const CARTO_API_KEY = process.env.NEXT_PUBLIC_CARTO_API_KEY
+
+// Append the CARTO key to a raster tile URL. Falls back to the bare URL if the
+// key is missing (tiles will render with an "API key required" watermark).
+function withCartoKey(url: string): string {
+  if (!CARTO_API_KEY) {
+    if (typeof window !== 'undefined') {
+      console.warn('NEXT_PUBLIC_CARTO_API_KEY is not set - CARTO basemaps will be watermarked')
+    }
+    return url
+  }
+  return `${url}?key=${CARTO_API_KEY}`
+}
+
+const CARTO_ATTRIBUTION =
+  ' &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+
 // Available map layer configurations
 export const MAP_LAYERS: Record<string, MapLayer> = {
   light: {
@@ -21,8 +40,8 @@ export const MAP_LAYERS: Record<string, MapLayer> = {
   dark: {
     id: 'dark', 
     name: 'Dark',
-    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    attribution: ' &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    url: withCartoKey('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'),
+    attribution: CARTO_ATTRIBUTION,
     maxZoom: 19,
     subdomains: 'abcd'
   },
@@ -37,8 +56,8 @@ export const MAP_LAYERS: Record<string, MapLayer> = {
   voyager: {
     id: 'voyager',
     name: 'Voyager',
-    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-    attribution: ' &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    url: withCartoKey('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'),
+    attribution: CARTO_ATTRIBUTION,
     maxZoom: 19,
     subdomains: 'abcd'
   }

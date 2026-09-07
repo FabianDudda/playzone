@@ -2,10 +2,9 @@
 
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useAuth } from '@/components/providers/auth-provider'
 import { database } from '@/lib/supabase/database'
 import { EventWithDetails } from '@/lib/supabase/types'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
@@ -20,31 +19,51 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { useToast } from '@/hooks/use-toast'
-import { CheckCircle, XCircle, Calendar, MapPin, User, Clock, ChevronRight } from 'lucide-react'
+import { CheckCircle, XCircle, Calendar, MapPin, User, Clock, ChevronRight, Trash2, Pencil, Building2 } from 'lucide-react'
 import { sportNames, sportIcons } from '@/lib/utils/sport-utils'
 import Link from 'next/link'
+
+const DAY_NAMES: Record<string, string> = {
+  monday: 'Mo', tuesday: 'Di', wednesday: 'Mi', thursday: 'Do',
+  friday: 'Fr', saturday: 'Sa', sunday: 'So',
+}
+
+function formatTime(t: string | null | undefined) {
+  return t ? t.slice(0, 5) : null
+}
 
 function formatScheduleSummary(event: EventWithDetails): string {
   const s = event.schedule
   if (!s) return '–'
   if (s.type === 'recurring') {
-    const days = (s as any).slots?.map((sl: any) => sl.day).join(', ') || '–'
-    return `Wiederkehrend: ${days}`
+    const slots = s.slots ?? []
+    if (slots.length === 0) return 'Wiederkehrend'
+    const days = slots.map(sl => DAY_NAMES[sl.day] ?? sl.day).join(', ')
+    const first = slots[0]
+    const time = formatTime(first.start_time)
+    const end = formatTime(first.end_time)
+    const timeStr = time ? (end ? ` · ${time}–${end}` : ` · ${time}`) : ''
+    return `Wiederkehrend: ${days}${timeStr}`
   }
-  const dates = (s as any).dates || []
+  const dates = s.dates ?? []
   if (dates.length === 0) return '–'
   const first = dates[0]
-  return `${first.date} ${first.start_time}–${first.end_time}${dates.length > 1 ? ` (+${dates.length - 1})` : ''}`
+  const start = formatTime(first.start_time)
+  const end = formatTime(first.end_time)
+  const timeStr = start ? (end ? ` ${start}–${end}` : ` ${start}`) : ''
+  return `${first.date}${timeStr}${dates.length > 1 ? ` (+${dates.length - 1})` : ''}`
 }
 
 function EventCard({
   event,
   onApprove,
   onReject,
+  onDelete,
 }: {
   event: EventWithDetails
   onApprove: (id: string) => void
   onReject: (event: EventWithDetails) => void
+  onDelete: (event: EventWithDetails) => void
 }) {
   return (
     <Card className="mb-3">
@@ -92,6 +111,12 @@ function EventCard({
                 <span>{event.creator_name || '–'}</span>
                 {event.creator_email && <span className="text-muted-foreground/70">({event.creator_email})</span>}
               </div>
+              {event.organizer_name && (
+                <div className="flex items-center gap-1.5">
+                  <Building2 className="h-3 w-3 shrink-0" />
+                  <span>{event.organizer_name}</span>
+                </div>
+              )}
               <div className="flex items-center gap-1.5">
                 <Clock className="h-3 w-3 shrink-0" />
                 <span>{new Date(event.created_at).toLocaleDateString('de-DE')}</span>
@@ -124,16 +149,40 @@ function EventCard({
                 <XCircle className="h-3.5 w-3.5 mr-1" />
                 Ablehnen
               </Button>
+              <Link href={`/events/${event.id}/edit`} target="_blank">
+                <Button size="sm" variant="outline" className="h-8 px-3 text-xs w-full">
+                  <Pencil className="h-3.5 w-3.5 mr-1" />
+                  Bearbeiten
+                </Button>
+              </Link>
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-8 px-3 text-xs text-destructive hover:text-destructive"
+                onClick={() => onDelete(event)}
+              >
+                <Trash2 className="h-3.5 w-3.5 mr-1" />
+                Löschen
+              </Button>
             </div>
           )}
 
           {event.moderation_status !== 'pending' && (
-            <div className="shrink-0">
+            <div className="flex flex-col gap-1.5 shrink-0">
               <Link href={`/events/${event.id}`} target="_blank">
-                <Button size="sm" variant="outline" className="h-8 px-3 text-xs">
+                <Button size="sm" variant="outline" className="h-8 px-3 text-xs w-full">
                   Ansehen
                 </Button>
               </Link>
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-8 px-3 text-xs text-destructive hover:text-destructive"
+                onClick={() => onDelete(event)}
+              >
+                <Trash2 className="h-3.5 w-3.5 mr-1" />
+                Löschen
+              </Button>
             </div>
           )}
         </div>
@@ -267,12 +316,13 @@ function UpdateCard({
 }
 
 export default function AdminEventsPage() {
-  const { user } = useAuth()
+
   const { toast } = useToast()
   const queryClient = useQueryClient()
 
   const [rejectTarget, setRejectTarget] = useState<EventWithDetails | null>(null)
   const [rejectionReason, setRejectionReason] = useState('')
+  const [deleteTarget, setDeleteTarget] = useState<EventWithDetails | null>(null)
 
   const { data: pendingEvents = [], isLoading: loadingPending } = useQuery({
     queryKey: ['admin-events', 'pending'],
@@ -325,6 +375,25 @@ export default function AdminEventsPage() {
     },
     onError: () => {
       toast({ title: 'Fehler', description: 'Aktion konnte nicht ausgeführt werden.', variant: 'destructive' })
+    },
+  })
+
+  const deleteMutation = useMutation({
+    mutationFn: async (eventId: string) => {
+      const res = await fetch(`/api/admin/events/${eventId}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const json = await res.json()
+        throw new Error(json.error || 'Fehler beim Löschen')
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-events'] })
+      queryClient.invalidateQueries({ queryKey: ['events'] })
+      toast({ title: 'Event gelöscht' })
+      setDeleteTarget(null)
+    },
+    onError: () => {
+      toast({ title: 'Fehler beim Löschen', variant: 'destructive' })
     },
   })
 
@@ -399,7 +468,7 @@ export default function AdminEventsPage() {
             <Card><CardContent className="py-8 text-center text-muted-foreground text-sm">Keine ausstehenden Events</CardContent></Card>
           ) : (
             pendingEvents.map(e => (
-              <EventCard key={e.id} event={e} onApprove={handleApprove} onReject={setRejectTarget} />
+              <EventCard key={e.id} event={e} onApprove={handleApprove} onReject={setRejectTarget} onDelete={setDeleteTarget} />
             ))
           )}
         </TabsContent>
@@ -429,7 +498,7 @@ export default function AdminEventsPage() {
             <Card><CardContent className="py-8 text-center text-muted-foreground text-sm">Keine freigegebenen Events</CardContent></Card>
           ) : (
             approvedEvents.map(e => (
-              <EventCard key={e.id} event={e} onApprove={handleApprove} onReject={setRejectTarget} />
+              <EventCard key={e.id} event={e} onApprove={handleApprove} onReject={setRejectTarget} onDelete={setDeleteTarget} />
             ))
           )}
         </TabsContent>
@@ -441,7 +510,7 @@ export default function AdminEventsPage() {
             <Card><CardContent className="py-8 text-center text-muted-foreground text-sm">Keine abgelehnten Events</CardContent></Card>
           ) : (
             rejectedEvents.map(e => (
-              <EventCard key={e.id} event={e} onApprove={handleApprove} onReject={setRejectTarget} />
+              <EventCard key={e.id} event={e} onApprove={handleApprove} onReject={setRejectTarget} onDelete={setDeleteTarget} />
             ))
           )}
         </TabsContent>
@@ -477,6 +546,27 @@ export default function AdminEventsPage() {
               disabled={moderateMutation.isPending}
             >
               {moderateMutation.isPending ? 'Wird abgelehnt…' : 'Ablehnen'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      {/* Delete dialog */}
+      <Dialog open={!!deleteTarget} onOpenChange={open => { if (!open) setDeleteTarget(null) }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Event löschen?</DialogTitle>
+            <DialogDescription>
+              „{deleteTarget?.title}" dauerhaft löschen? Diese Aktion kann nicht rückgängig gemacht werden.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteTarget(null)}>Abbrechen</Button>
+            <Button
+              variant="destructive"
+              disabled={deleteMutation.isPending}
+              onClick={() => deleteTarget && deleteMutation.mutate(deleteTarget.id)}
+            >
+              {deleteMutation.isPending ? 'Wird gelöscht…' : 'Endgültig löschen'}
             </Button>
           </DialogFooter>
         </DialogContent>

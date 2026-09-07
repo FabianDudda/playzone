@@ -102,6 +102,17 @@ function EditEventContent({ params }: EventPageProps) {
     staleTime: 60_000,
   })
 
+  // Strip stale organizer IDs that no longer exist once the organizers list loads
+  React.useEffect(() => {
+    if (!isAdmin || organizers.length === 0 || !formReady) return
+    const validIds = new Set(organizers.map(o => o.id))
+    setForm(f => {
+      const filtered = f.organizerIds.filter(id => validIds.has(id))
+      if (filtered.length === f.organizerIds.length) return f
+      return { ...f, organizerIds: filtered }
+    })
+  }, [organizers, isAdmin, formReady])
+
   const { data: userOrganizer = null } = useQuery({
     queryKey: ['my-organizer', user?.id],
     queryFn: () => database.organizers.getByOwner(user!.id),
@@ -159,8 +170,15 @@ function EditEventContent({ params }: EventPageProps) {
       }
 
       if (isAdmin) {
-        const { error } = await database.events.updateEvent(eventId, payload)
-        if (error) throw new Error('Fehler beim Speichern')
+        const res = await fetch(`/api/admin/events/${eventId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'edit', ...payload }),
+        })
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}))
+          throw new Error(body.error || 'Fehler beim Speichern')
+        }
       } else {
         const { error } = await database.events.submitUpdate(eventId, payload)
         if (error) throw new Error('Fehler beim Einreichen')

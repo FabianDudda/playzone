@@ -31,11 +31,16 @@ function compressImage(file: File, maxWidth: number = 1200, quality: number = 0.
       // Draw and compress
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
       
+      // Always normalize to JPEG — canvas can't encode HEIC/AVIF/WEBP on all
+      // browsers, so passing file.type would produce PNG bytes with a wrong MIME
+      // label, causing Supabase to reject the upload with 400.
+      const outputType = 'image/jpeg'
       canvas.toBlob(
         (blob) => {
           if (blob) {
-            const compressedFile = new File([blob], file.name, {
-              type: file.type,
+            const baseName = file.name.replace(/\.[^.]+$/, '')
+            const compressedFile = new File([blob], `${baseName}.jpg`, {
+              type: outputType,
               lastModified: Date.now(),
             })
             resolve(compressedFile)
@@ -43,7 +48,7 @@ function compressImage(file: File, maxWidth: number = 1200, quality: number = 0.
             resolve(file) // Fallback to original if compression fails
           }
         },
-        file.type,
+        outputType,
         quality
       )
     }
@@ -210,7 +215,7 @@ export async function uploadOrganizerLogo(organizerId: string, file: File): Prom
     .upload(filePath, fileToUpload, {
       cacheControl: '3600',
       upsert: true,
-      contentType: file.type,
+      contentType: fileToUpload.type,
     })
 
   if (error) throw new Error(`Upload failed: ${error.message}`)
@@ -240,7 +245,7 @@ export async function uploadOrganizerCover(organizerId: string, file: File): Pro
 
   const timestamp = Date.now()
   const random = Math.random().toString(36).substring(2, 10)
-  const ext = file.name.split('.').pop()
+  const ext = fileToUpload.name.split('.').pop()
   const filePath = `${organizerId}/covers/${timestamp}_${random}.${ext}`
 
   const { data, error } = await supabase.storage
@@ -248,7 +253,7 @@ export async function uploadOrganizerCover(organizerId: string, file: File): Pro
     .upload(filePath, fileToUpload, {
       cacheControl: '3600',
       upsert: false,
-      contentType: file.type,
+      contentType: fileToUpload.type,
     })
 
   if (error) throw new Error(`Upload failed: ${error.message}`)
